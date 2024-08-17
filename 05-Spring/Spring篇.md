@@ -148,6 +148,33 @@
 
 
 
+# 注解篇
+
+
+
+## @Component与@Bean的区别？
+
+**用途不同**
+
+-   @Component是一个通用组件，可用于普通的Java类，业务逻辑组件，持久化对象等
+
+-   @Bean通常用于配置类上的方法上面，表示将该方法的返回对象注册到SpringIOC容器中
+
+**使用方式不同**
+
+-   @Component是一个类级别的注解，Spring通过@ComponentScan注解扫描@Component注解修饰的类，并将该类的实例对象到注册到SpringIOC容器中
+
+-   @Bean用于配置类在的方法上面，用于在配置类中声明和配置Bean
+
+**控制权不同**
+
+-   @Component修饰的类是由Spring框架来创建和初始化的
+
+-   @Bean允许开发者自定义Bean的创建和配置过程，包括指定Bean的名称、作用域、依赖关系等
+    -   所以Bean注解更加的灵活
+
+
+
 ## @Autowrited注解的作用？它与@Resource的区别？
 
 
