@@ -481,6 +481,12 @@ public class Arrays {
 -   HashSet 集合中元素的**无序性，不等同于随机性**。这里的无序性与元素的添加位置有关。
     -   具体来说：我们在添加每一个元素到数组中时，具体的存储位置是由元素的hashCode()调用后返回的 hash 值决定的。导致在数组中每个元素不是依次紧密存放的，表现出一定的无序性。 
 
+注意：
+
+​	**如果两个元素的 equals() 方法返回 true，但它们的hashCode() 返回值不相等，hashSet 将会把它们存储在不同的位置，但依然可以添加成功。** 
+
+实例代码：
+
 ```java
 public class HashSetDemo2 {
     public static void main(String[] args) {
