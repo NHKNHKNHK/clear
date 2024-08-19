@@ -1,3 +1,359 @@
+## 请你介绍以下常见的List实现类？
+
+首先，List是一个接口，它属于Collection的一部分。`List`接口有几个常用的实现类有：
+
+-   ArrayList
+-   LinkedList
+-   Vector（古老的遗留类）
+
+### **ArrayList**
+
+ArrayList 是 List 接口的主要实现类。线程不安全，内部是通过**数组**实现的，继承了AbstractList，实现了List。
+
+优点：它允许对元素进行快速随机访问。
+
+缺点：每个元素之间不能有间隔，当数组大小不足时，会触发扩容操作（开销较大）
+
+从 ArrayList 的中间位置插入或者删除元素时，需要对数组进行复制、移动、代价比较高。
+
+因此，它适合随机查找和遍历，不适合插入和删除。
+
+本质上，ArrayList 是对象引用的一个**”变长”数组** 
+
+ArrayList扩容公式：newCapacity = oldCapacity + (oldCapacity >> 1)，这实际上是将原容量增加50%（即乘以1.5）
+
+```java
+private void grow(int minCapacity) {
+   	// 。。。
+    int newCapacity = oldCapacity + (oldCapacity >> 1);  // 新数组的容量
+ 	// 。。
+    elementData = Arrays.copyOf(elementData, newCapacity);  // 将旧数组中的数据进行copy
+}
+```
+
+ArrayList实现了RandomAccess接口，即提供了随机访问功能。RandomAccess是java中用来被List实现，为List提供快速访问功能的。在ArrayList中，我们即可以通过元素的序号快速获取元素对象，这就是快速随机访问。
+
+ArrayList实现java.io.Serializable接口，这意味着ArrayList支持序列化，能通过序列化去传输。
+
+### LinkedList（链表）
+
+LinkedList 是用链表结构存储数据的（基于双向链表实现），它实现了 List 接口和 Deque 接口，存储**有序**的、**可重复**的数据，**线程不安全。**
+
+LinkedList 的特点包括：
+
+-   **链表结构**：LinkedList 内部使用双向链表来存储元素，每个节点包含一个指向前一个节点和后一个节点的引用。这使得在插入和删除元素时具有较好的性能，但在**随机访问元素时性能较差**。
+-   **可以在任意位置插入和删除元素**：由于 LinkedList 是基于链表实现的，因此可以在任意位置插入和删除元素，而不需要像数组那样进行元素的移动。（增删性能高）
+-   **不支持随机访问**：由于 LinkedList 不是基于数组实现的，因此无法通过索引直接访问元素，而是需要从头节点或尾节点开始遍历链表来查找元素。
+-   **支持双向遍历**：LinkedList 实现了**双向链表**，可以从头到尾或从尾到头遍历链表
+
+LinkedList是一个继承于AbstractSequentialList的双向链表。**它也可以被当作堆栈、队列或双端队列进行操作。**
+
+### Vector（数组实现、线程同步）
+
+Vector 是一个古老的集合，JDK1.0 就有了。Vector 是 Java 中的一个动态数组实现的数据结构，它实现了 List 接口，存储**有序**的、**可重复**的数据。**与 ArrayList 类似**，Vector 也是**基于数组**实现的，用法上几乎相同，但它是**线程安全**的，效率低，支持同步访问。
+
+Vector 的特点包括：
+
+-   **动态数组**：Vector 内部使用数组来存储元素，可以根据需要自动调整数组的大小。当元素数量超过当前数组容量时，Vector 会自动增加数组的大小。
+-   **线程安全**：Vector 是线程安全的，支持多线程环境下的并发访问。它的方法都使用了 synchronized 关键字来保证线程安全，但这也导致了一定的性能损失。
+-   **支持随机访问**：由于 Vector 是基于数组实现的，因此可以通过索引直接访问元素，具有较好的随机访问性能。
+-   **可以在任意位置插入和删除元素**：与 ArrayList 类似，Vector 也可以在任意位置插入和删除元素。但由于需要调整数组的大小，插入和删除元素的性能较差。
+
+扩容时，默认扩展一倍容量。
+
+建议：在各种 List 中，最好把 ArrayList 作为默认选择。当插入、删除频繁时，使用LinkedList；Vector 总是比ArrayList 慢，所以尽量避免使用。 
+
+
+
+## ArrayList 与 Vector 的区别
+
+-   **数据结构相同**ArrayList 和 Vector它们的底层物理结构都是数组，我们称为**动态数组**。
+
+-   **线程安全不同**
+    -   ArrayList 是新版的动态数组，**线程不安全**，效率高
+    -   Vector 是旧版的动态数组，**线程安全**，效率低。 
+-   **动态数组的扩容机制不同**
+    -   ArrayList 默认扩容为原来的 1.5 倍
+    -   Vector 默认扩容增加为原来的 2 倍。
+-   **数组的初始化容量不同**
+    -   如果在构建 ArrayList 与 Vector 的集合对象时，没有显式指定初始化容量，那么 Vector 的内部数组的初始容量默认为 10，而 ArrayList 在 JDK 6.0 及之前的版本也是 10，JDK8.0 之后的版本 ArrayList 初始化为长度为 0 的空数组，之后在添加第一个元素时，再创建长度为 10 的数组。
+    -   原因： 用的时候，再创建数组，避免浪费。因为很多方法的返回值是 ArrayList 类型，需要返回一个 ArrayList 的对象，例如：后期从数据库查询对象的方法，返回值很多就是 ArrayList。有可能你要查询的数据不存在，要么返回null，要么返回一个没有元素的 ArrayList 对象。 
+
+
+
+## ArrayList初始容量是多少？
+
+ArrayList 有一个默认的初始容量，这个容量是在你创建 ArrayList 实例时如果没有明确指定容量参数时所使用的。
+
+在 Java 的 ArrayList 实现中，默认的初始容量是 10。这意味着当你创建一个新的 ArrayList 而不指定其容量时，它会以一个内部数组长度为 10 的数组来开始。当添加的元素数量超过这个初始容量时，ArrayList 的内部数组会进行扩容，通常是增长为原来的 1.5 倍。
+
+例如：
+
+```java
+ArrayList<String> list = new ArrayList<>(); // 默认的初始容量是 10
+```
+
+但是，如果你可以预算到将要在 ArrayList 中存储多少元素，那么最好在创建时指定一个初始容量，这样可以减少由于扩容而导致的重新分配数组和复制元素的操作，从而提高性能。
+
+```java
+ArrayList<String> list = new ArrayList<>(50); // 初始容量设置为 50
+```
+
+自从JDK1.7之后，Arraylist初始化的时候为一个空数组。
+
+```java
+private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
+
+// 这是new一个ArrayList时，不指定初始容量的构造器
+public ArrayList() {
+    this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
+}
+```
+
+但是当你去放入第一个元素的时候，会触发他的懒加载机制（在懒加载之前是0），使得数量变为10。
+
+```java
+private static int calculateCapacity(Object[] elementData, int minCapacity) {
+    if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
+        return Math.max(DEFAULT_CAPACITY, minCapacity);        
+    }        
+    return minCapacity;    
+}
+```
+
+所以我们的Arraylist初始容量的确是10。只不过jdk8变为懒加载来节省内存。进行了一点优化
+
+总结：
+
+​	在JDK7后，对于无参数构造函数创建的 `ArrayList`，初始容量默认为0，但在首次添加元素时会扩展到至少10个元素的容量。对于带有初始容量参数的构造函数，初始容量就是你指定的值。
+
+## ArrayList是如何扩容的？
+
+1.  **初始容量和扩容因子**:
+
+    当创建一个新的ArrayList对象时，它通常会分配一个初始容量，这个初始容量默认为10。
+
+    -   当使用无参数构造函数创建 `ArrayList` 时，其内部使用的数组 `elementData` 会被初始为空数组 `DEFAULTCAPACITY_EMPTY_ELEMENTDATA`。
+    -   第一次添加元素时，`ArrayList` 会将其容量扩展至默认容量 `DEFAULT_CAPACITY`，这个值通常是10
+
+    ```java
+    /**
+     * Default initial capacity.
+     */
+    private static final int DEFAULT_CAPACITY = 10;
+    ```
+
+2.  **扩容规则**:
+
+    -   当 `ArrayList` 的实际元素数量超过其当前容量时，`ArrayList` 会自动进行扩容。
+
+    -   扩容时，新的容量通常是当前容量的1.5倍。
+
+        ```java
+        newCapacity = oldCapacity + (oldCapacity >> 1)
+        ```
+
+    -   例如，如果当前容量为10，那么扩容后的容量将是15；如果当前容量为15，则扩容后的容量将是22
+
+3.  **扩容过程**:
+
+    -   扩容时，`ArrayList` 会创建一个新的数组，并将原有数组中的元素复制到新数组中。
+    -   新数组的大小是原数组大小的1.5倍，向上取整得到一个整数。
+    -   原有数组会被释放，从而减少内存占用。
+
+4.  **扩容示例**:
+
+    -   假设 `ArrayList` 的当前容量为10，且已经满了。
+    -   当尝试添加第11个元素时，`ArrayList` 会创建一个新的数组，大小为15（10 * 1.5 = 15）。
+    -   然后将旧数组中的所有元素复制到新数组中，并将新元素添加到新数组的末尾。
+    -   最后，旧数组被垃圾回收机制回收。
+
+5.  **扩容阈值**:
+
+    -   `ArrayList` 在每次添加元素前都会检查是否需要扩容。这个检查是通过比较元素的数量（`size`）与当前容量（`elementData.length`）来完成的。
+    -   如果 `size` 大于等于 `elementData.length`，则触发扩容操作。
+
+6.  **扩容方法、源码**:
+
+    -   扩容的具体逻辑通常封装在 `ensureCapacityInternal` 或者 `grow` 方法中。
+
+    ```java
+    private void grow(int minCapacity) {
+        // overflow-conscious code
+        int oldCapacity = elementData.length;
+        int newCapacity = oldCapacity + (oldCapacity >> 1);	// 位运算指定新数组的容量
+        if (newCapacity - minCapacity < 0)
+            newCapacity = minCapacity;
+        if (newCapacity - MAX_ARRAY_SIZE > 0)
+            newCapacity = hugeCapacity(minCapacity);
+        // minCapacity is usually close to size, so this is a win:
+        elementData = Arrays.copyOf(elementData, newCapacity);
+    }
+    ```
+
+7.  **注意事项**:
+
+    -   `ArrayList` 没有缩容机制。即使删除了大量元素，`ArrayList` 的容量也不会减小，除非显式调用 `trimToSize` 方法。
+    -   `trimToSize` 方法会将 `ArrayList` 的容量调整为其实际大小，从而避免不必要的内存浪费。
+
+## ArrayList第二次扩容时容量大小？
+
+ArrayList扩容规则：
+
+```java
+newCapacity = oldCapacity + (oldCapacity >> 1)
+```
+
+先说结论：
+
+​	**在JDK8中，ArrayList第二次扩容时容量为22**
+
+代码如下：
+
+```java
+public class ArrayListDemo {
+    public static void main(String[] args) {
+        List<Integer> list = new ArrayList<>();
+
+        for (int i = 1; i < 17; i++) {
+            list.add(i);
+        }
+
+        list.forEach(e -> System.out.print(e + " "));
+    }
+}
+```
+
+ArrayList第一次添加元素时，首次进入add方法，可以发现，此时为动态数组容量为0
+
+![1724058604176](assets/ArrayList第一次添加元素之前.png)
+
+ArrayList第一次添加元素时，进入了ensureCapacityInternal方法，会将动态数组容量初始化为10
+
+![1724058423849](assets/ArrayList第一次添加元素时.png)
+
+ArrayList第一次扩容时
+
+![1724058089057](D:\video\workspace\easy-interview\02-Java集合篇\assets\ArrayList第一次扩容.png)
+
+ArrayList第二次扩容时
+
+![1724058227556](assets/ArrayList第二次扩容.png)
+
+
+
+## ArrayList的添加与删除元素为什么慢？
+
+主要原因是由于其内部实现基于数组的特性所导致的。
+
+ArrayList的添加与删除操作慢，主要是因为其内部实现基于数组，而数组在插入和删除元素时需要移动其他元素来保证连续性和顺序性，这个过程需要耗费较多的时间。
+
+相对于基于链表的数据结构（如LinkedList），ArrayList的插入和删除操作的时间复杂度是O(n)级别的，而链表的时间复杂度为O(1)。
+
+**添加元素**
+
+1.  **尾部添加**：
+
+-   -   当在ArrayList的尾部添加元素时，如果当前数组的容量还未达到最大值，只需要将新元素添加到数组的末尾即可，此时时间复杂度为**O(1)**。
+    -   但是，当数组容量已满时，会触发**扩容**操作。扩容操作通常会将数组的容量增加到当前容量的1.5倍或2倍，并将原数组中的所有元素复制到新的更大的数组中。这一过程的时间复杂度为**O(n)**，其中n为当前数组中的元素数量。
+
+1.  **指定位置插入**：
+
+-   -   当在ArrayList的指定位置（非尾部）插入元素时，需要将目标位置之后的所有元素向后移动一个位置，然后将新元素插入到指定位置。这个过程涉及到移动元素的操作，时间复杂度为**O(n)**，在最坏情况下，如头部插入，需要移动所有的元素。
+
+**删除元素**
+
+1.  **尾部删除**：
+
+-   -   当删除的元素位于列表末尾时，只需要将末尾元素移除即可，时间复杂度为**O(1)**。
+
+1.  **指定位置删除**：
+
+-   -   当在ArrayList的指定位置（非尾部）删除元素时，需要将删除点之后的所有元素向前移动一个位置，以填补被删除元素的位置。这个过程同样涉及到移动元素的操作，时间复杂度为**O(n)**，在最坏情况下，如头部删除，需要移动除了被删除元素之外的所有元素。
+
+
+
+## ArrayList是线程安全的吗？
+
+ArrayList是**线程不安全**的。在多线程环境下，如果多个线程同时对ArrayList进行操作，可能会出现数据不一致的情况。
+
+当多个线程同时对ArrayList进行添加、删除等操作时，可能会导致数组大小的变化，从而引发数据不一致的问题。例如，当一个线程在对ArrayList进行添加元素的操作时（这通常分为两步：先在指定位置存放元素，然后增加size的值），另一个线程可能同时进行删除或其他操作，导致数据的不一致或错误。
+
+
+
+比如下面的这个代码，就是实际上ArrayList 放入元素的代码：
+
+```java
+elementData[size] = e;
+size = size + 1;
+```
+
+1.  elementData[size] = e; 这一行代码是将新的元素 e 放置在 ArrayList 的内部数组 elementData 的当前大小 size 的位置上。这里假设 elementData 数组已经足够大，可以容纳新添加的元素（实际上 ArrayList 在必要时会增长数组的大小）。
+2.  size = size + 1; 这一行代码是更新 ArrayList 的大小，使其包含新添加的元素。
+
+如果两个线程同时尝试向同一个 ArrayList 实例中添加元素，那么可能会发生以下情况：
+
+-   线程 A 执行 elementData[size] = eA;（假设当前 size 是 0）
+-   线程 B 执行 elementData[size] = eB;（由于线程 A 尚未更新 size，线程 B 看到的 size 仍然是 0）
+-   此时，elementData[0] 被线程 B 的 eB 覆盖，线程 A 的 eA 丢失
+-   线程 A 更新 size = 1;
+-   线程 B 更新 size = 1;（现在 size 仍然是 1，但是应该是 2，因为有两个元素被添加）
+
+
+
+为了解决ArrayList的线程安全问题，可以采取以下几种方式：
+
+-   1、使用Collections类的synchronizedList方法：**将ArrayList转换为线程安全的List**。这种方式通过在对ArrayList进行操作时加锁来保证线程安全，但可能会带来一定的性能损耗。
+-   2、使用**CopyOnWriteArrayList**类：它是Java并发包中提供的线程安全的List实现。CopyOnWriteArrayList在对集合进行修改时，会创建一个新的数组来保存修改后的数据，这样就不会影响到其他线程对原数组的访问。因此，它**适合在读操作远远多于写操作的场景**下使用。
+-   3、使用并发包中的锁机制：如Lock或Semaphore等，显式地使用锁来保护对ArrayList的操作，可以确保在多线程环境下数据的一致性。但这种方式需要开发人员自行管理锁的获取和释放，容易出现死锁等问题。
+-   还可以考虑使用其他线程安全的集合类，如Vector或ConcurrentLinkedQueue等，它们本身就是线程安全的，可以直接在多线程环境下使用。
+
+
+
+## ArrayList如何保证线程安全？
+
+为了保证 ArrayList 的线程安全，一般有以下几种方式：
+
+-   1、借助**锁**：
+
+可以通过在访问 ArrayList 的代码块上使用 synchronized 关键字来手动同步对 ArrayList 的访问。这要求所有访问 ArrayList 的代码都知道并使用相同的锁。
+
+```java
+List<String> list = new ArrayList<>();
+// ... 填充列表 ...
+
+synchronized(list) {
+    Iterator<String> it = list.iterator();
+    while (it.hasNext()) {
+        String element = it.next();
+        // 处理元素...
+    }
+}
+```
+
+-   2、使用 **Collections.synchronizedList**：
+
+Collections.synchronizedList 方法返回一个线程安全的列表，该列表是通过在每个公共方法（如 add(), get(), iterator() 等）上添加同步来实现的，其中同步是基于里面的同步代码块实现。
+
+但是，和手动同步一样，它也**不能解决在迭代过程中进行结构修改导致的问题**。
+
+```java
+List<String> list = Collections.synchronizedList(new ArrayList<>());
+```
+
+-   **4、 使用并发集合**：
+
+Java 并发包 java.util.concurrent 提供了一些线程安全的集合类，如 **CopyOnWriteArrayList**。这些类提供了不同的线程安全保证和性能特性。
+
+CopyOnWriteArrayList是一个线程安全的变体，其中所有可变操作（add、set 等等）都是通过对底层数组进行新的复制来实现的。因此，迭代器不会受到并发修改的影响，并且遍历期间不需要额外的同步。但是，当有很多**写操作**时，这种方法可能会**很昂贵**，因为它需要在每次修改时复制整个底层数组。
+
+```java
+List<String> list = new CopyOnWriteArrayList<>();List<String> list = new CopyOnWriteArrayList<>();
+```
+
+选择解决方案时，需要考虑并发模式、读写比例以及性能需求。如果你的应用主要是读操作并且偶尔有写操作，CopyOnWriteArrayList是一个好选择。如果你的应用有大量的写操作，那么可能需要使用其他并发集合或手动同步策略。
+
+
 
 ## Arrays.asList() 方法把数组转换成集合
 
