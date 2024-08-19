@@ -314,7 +314,7 @@ size = size + 1;
 
 为了保证 ArrayList 的线程安全，一般有以下几种方式：
 
--   1、借助**锁**：
+-   1、借助**锁**、手动同步
 
 可以通过在访问 ArrayList 的代码块上使用 synchronized 关键字来手动同步对 ArrayList 的访问。这要求所有访问 ArrayList 的代码都知道并使用相同的锁。
 
@@ -331,7 +331,7 @@ synchronized(list) {
 }
 ```
 
--   2、使用 **Collections.synchronizedList**：
+-   2、使用 **Collections.synchronizedList**
 
 Collections.synchronizedList 方法返回一个线程安全的列表，该列表是通过在每个公共方法（如 add(), get(), iterator() 等）上添加同步来实现的，其中同步是基于里面的同步代码块实现。
 
@@ -465,7 +465,7 @@ public class Arrays {
 
 ### HashSet
 
--   HashSet是Set接口的一个实现类，它基**基于哈希表实现（底层使用的是HashMap）**  （主要是应用场景是用于过滤数据）
+-   HashSet是Set接口的一个实现类，它基**基于哈希表实现（底层使用的是HashMap（HashMap底层在JDK8及之后是数组+链表（长度>8 红黑树）））**  （主要是应用场景是用于过滤数据）
 
 -   HashSet 按 Hash 算法来存储集合中的元素，因此具有很好的存储、查找、删除性能。 
 -   HashSet 具有以下特点：
@@ -585,6 +585,102 @@ class Student{
  		如果 equals()方法结果为 true，则添加失败。第 2 步添加成功，元素会保存在底层数组中。 
 
 第 3 步两种添加成功的操作，由于该底层数组的位置已经有元素了，则会通过链表的方式继续链接，存储。 
+
+
+
+## HashSet如何实现线程安全？
+
+HashSet本身不是线程安全的。如果多个线程在没有外部同步的情况下同时访问一个HashSet，并且至少有一个线程修改了集合，那么它必须保持同步。否则，会导致不可预知的行为和数据损坏。变为线程安全，主要有以下几种方式：
+
+-   1、 使用**Collections.synchronizedSet**
+
+Java 提供了一个简单的方法来创建一个同步的集合，通过Collections.synchronizedSet方法。这个方法返回一个线程安全的集合包装器。
+
+```java
+Set<String> synchronizedSet = Collections.synchronizedSet(newHashSet<>());
+```
+
+使用这个方法后，所有对集合的访问都将是同步的。但是，需要注意的是，对于迭代操作，必须手动同步：
+
+```java
+Set<String> synchronizedSet = Collections.synchronizedSet(newHashSet<>());
+synchronized (synchronizedSet) {
+    Iterator<String> iterator = synchronizedSet.iterator();
+    while (iterator.hasNext()) {
+        System.out.println(iterator.next());
+    }
+}
+```
+
+-   2、使用**ConcurrentHashMap**
+
+如果需要更高效的并发访问，可以使用ConcurrentHashMap来实现类似HashSet的功能。ConcurrentHashMap提供了更细粒度的锁机制，在高并发环境下性能更好
+
+```java
+Set<String> concurrentSet = ConcurrentHashMap.newKeySet();
+```
+
+ConcurrentHashMap.newKeySet()返回一个基于ConcurrentHashMap的Set实现，它是线程安全的，并且在高并发环境下性能优越。
+
+-   3、 使用**CopyOnWriteArraySet**
+
+对于**读操作远多于写操作**的场景，可以使用CopyOnWriteArraySet。它的实现基于CopyOnWriteArrayList，在每次修改时都会复制整个底层数组，因此在写操作较少时性能较好。
+
+```java
+Set<String> copyOnWriteArraySet = new CopyOnWriteArraySet<>();
+```
+
+-   4、手动同步
+
+如果你不想使用上述任何一种方法，也可以手动同步HashSet的访问。可以使用synchronized关键字来保护对HashSet的访问：
+
+```java
+Set<String> hashSet = newHashSet<>();
+synchronized (hashSet) {
+    // 对 hashSet 的操作
+}
+```
+
+**选择合适的方案**
+
+-   如果你的应用程序是单线程的，或只有少量的线程访问集合，可以使用Collections.synchronizedSet。
+-   如果你的应用程序有大量的并发读写操作，可以使用ConcurrentHashMap.newKeySet。
+-   如果你的应用程序读操作远多于写操作，可以使用CopyOnWriteArraySet。
+
+下面是一个ConcurrentHashMap实现线程安全Set的示例代码：
+
+```java
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class ConcurrentHashSetExample {
+    public static void main(String[] args) {
+        Set<String> concurrentSet = ConcurrentHashMap.newKeySet();
+
+        // 多线程环境下的操作示例
+        Runnable task = () -> {
+            for (int i = 0; i < 1000; i++) {
+                concurrentSet.add(Thread.currentThread().getName() + "-" + i);
+            }
+        };
+
+        Thread thread1 = new Thread(task, "Thread1");
+        Thread thread2 = new Thread(task, "Thread2");
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Set size: " + concurrentSet.size());
+    }
+}
+```
 
 
 
