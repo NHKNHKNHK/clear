@@ -1131,6 +1131,211 @@ static final int tableSizeFor(int cap) {
 
 
 
+## HashMap的主要参数都有哪些？
+
+1、**初始容量（Initial Capacity）**
+
+初始容量是HashMap在创建时分配的桶（bucket）数组的大小。**默认初始容量是 16**。可以在创建HashMap时通过构造函数指定初始容量。
+
+```java
+HashMap<K, V> map = new HashMap<>(initialCapacity);
+```
+
+2、**负载因子（Load Factor）**
+
+负载因子是一个衡量HashMap何时需要调整大小（即扩容）的参数。**默认负载因子是 0.75**，这意味着当HashMap中的条目数达到当前容量的 75% 时，HashMap会进行扩容。负载因子越低，哈希表中的空闲空间越多，冲突越少，但空间利用率也越低。
+
+```java
+HashMap<K, V> map = new HashMap<>(initialCapacity, loadFactor);
+```
+
+3、**阈值（Threshold）**
+
+阈值是HashMap需要**扩容的临界点**，计算方式为**初始容量 * 负载因子**。当实际存储的键值对数量超过这个阈值时，HashMap会进行扩容。
+
+4、 **桶（Bucket）**
+
+HashMap内部使用一个数组来存储链表或树（在 Java 8 及之后的版本中，当链表长度超过一定阈值时，会转化为树）。数组中每个元素称为一个桶（bucket）。哈希值经过计算后决定了键值对存储在哪个桶中。
+
+5、 **哈希函数（Hash Function）**
+
+HashMap使用哈希函数将键的**哈希码转换为数组索引**。Java 的HashMap使用了**扰动函数**（perturbation function）来减少哈希冲突：
+
+```java
+static final int hash(Object key) {
+    int h;
+    return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+}
+```
+
+6、 **链表和树（Linked List and Tree）**
+
+在桶中的键值对存储方式上，HashMap使用链表来处理哈希冲突。在 Java 8 及之后的版本中，当链表的长度超过阈值（默认是 8）时，链表会转换为红黑树，以提高查找效率。
+
+7、**红黑树转换阈值（Treeify Threshold）**
+
+这是一个阈值，当单个桶中的链表长度超过这个值时，链表会转换为红黑树。**默认值是 8**。
+
+8、**最小树化容量（Minimum Treeify Capacity）**
+
+这是一个阈值，当HashMap的容量小于这个值时，即使链表长度超过Treeify Threshold，也不会将链表转换为红黑树，而是会先进行扩容。**默认值是 64**。
+
+9、**扩容因子（Resize Factor）**
+
+当HashMap的大小超过阈值时，容量会加倍。即新的容量是旧容量的两倍。
+
+10、**迭代器（Iterators）**
+
+HashMap提供了键、值和条目的迭代器，用于遍历HashMap中的元素。**迭代器是快速失败的（fail-fast**），即在迭代过程中，如果HashMap结构被修改（除了通过迭代器自身的remove方法），迭代器会抛出ConcurrentModificationException。
+
+11、 **版本（ModCount）**
+
+HashMap维护了一个内部版本号modCount，用于跟踪HashMap的结构修改次数。这在迭代器中用于**检测并发修改。**
+
+这些参数和属性共同决定了HashMap的性能和行为。理解这些参数可以帮助开发者更好地使用HashMap，并在需要时进行适当的调整以满足特定的性能需求。
+
+## 解决hash碰撞的方法？
+
+1、**链地址法（Chaining）**
+
+链地址法是最常见的解决哈希碰撞的方法之一。当发生哈希碰撞时，使用链表或其他数据结构来存储具有相同哈希值的元素。
+
+在这种方法中，每个桶（bucket）包含一个链表（Java 8 及以上版本引入了树化机制），新的键值对被添加到相应桶的链表中。
+
+优点：
+
+-   简单易实现。
+-   动态调整链表长度，不需要提前知道元素数量。
+
+缺点：
+
+-   当链表长度增加时，查找效率下降。
+-   需要额外的存储空间来存储指针。
+
+```java
+class HashMapNode<K, V> {
+    K key;
+    V value;
+    HashMapNode<K, V> next;
+
+    HashMapNode(K key, V value) {
+        this.key = key;
+        this.value = value;
+    }
+}
+```
+
+2、**开放地址法（Open Addressing）**
+
+-   当发生冲突时，使用某种探测技术在哈希表中寻找下一个可用的槽位。来存储碰撞的元素。
+
+-   探测技术包括线性探测、二次探测、双重哈希（Double Hashing）和伪随机探测等。
+
+常见的开放地址法有以下几种：
+
+2.1、**线性探测（Linear Probing）**
+
+当发生哈希碰撞时，线性探测法在哈希表中向后依次查找下一个空闲位置。
+
+优点：
+
+-   实现简单。
+-   不需要额外的存储空间。
+
+缺点：
+
+-   当哈希表接近满时，查找效率急剧下降（称为“主群集”问题）。
+
+```java
+int hash = key.hashCode() % table.length;
+while (table[hash] != null) {
+    hash = (hash + 1) % table.length;
+}
+table[hash] = new Entry(key, value);
+```
+
+2.2、**二次探测（Quadratic Probing）**
+
+二次探测法在发生哈希碰撞时，按照平方序列查找空闲位置（如 1, 4, 9, 16, ...）。
+
+优点：
+
+-   减少主群集问题。
+
+缺点：
+
+-   实现较复杂。
+-   可能会导致二次群集问题。
+
+```java
+int hash = key.hashCode() % table.length;
+int i = 1;
+while (table[hash] != null) {
+    hash = (hash + i * i) % table.length;
+    i++;
+}
+table[hash] = new Entry(key, value);
+```
+
+2.3、**双重散列（Double Hashing）**
+
+双重散列法使用两个不同的哈希函数。当第一个哈希函数发生碰撞时，使用第二个哈希函数计算新的索引。
+
+优点：
+
+-   减少群集问题。
+-   较好的查找性能。
+
+缺点：
+
+-   实现复杂。
+-   需要设计两个有效的哈希函数。
+
+```java
+int hash1 = key.hashCode() % table.length;
+int hash2 = 1 + (key.hashCode() % (table.length - 1));
+while (table[hash1] != null) {
+    hash1 = (hash1 + hash2) % table.length;
+}
+table[hash1] = new Entry(key, value);
+```
+
+3、 **再哈希法（Rehashing）**
+
+再哈希法在发生碰撞时，使用不同的哈希函数重新计算哈希值，直到找到空闲位置。
+
+优点：
+
+-   减少群集问题。
+
+缺点：
+
+-   实现复杂。
+-   需要设计多个有效的哈希函数。
+
+4、**分离链接法（Separate Chaining with Linked List or Tree）**
+
+在 Java 8 及以上版本中，当链表长度超过一定阈值（默认是 8）时，链表会转换为红黑树，以提高查找效率。
+
+优点：
+
+-   在高冲突情况下性能较好。
+-   动态调整链表和树的长度。
+
+缺点：
+
+-   实现复杂。
+-   需要额外的存储空间。
+
+5、其他方法
+
+-   **Cuckoo Hashing**：使用两个哈希表和两个哈希函数，如果插入时发生冲突，将原来的元素“踢出”并重新插入到另一个哈希表中。
+-   **Hopscotch Hashing**：类似于线性探测，但在插入时会调整元素的位置，使得查找路径更短。
+
+链地址法是最常见的解决哈希碰撞的方法，适用于大多数情况。开放地址法在空间利用率上有优势，但在高负载情况下性能可能下降。再哈希法和其他高级方法适用于特定的高性能需求场景。
+
+
+
 ## HashMap的实现原理？
 
 ## HashMap和Hashtable的区别？
