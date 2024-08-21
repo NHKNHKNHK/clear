@@ -940,7 +940,15 @@ Properties类的**特点**如下：
 
 ## HashMap的实现原理？
 
-## HashMap和HsahTable的区别？
+## HashMap和Hashtable的区别？
+
+-   HashMap：底层是一个哈希表（jdk7:数组+链表; jdk8:数组+链表+红黑树，是一个线程不安全的集合，执行效率高 
+-   Hashtable：底层也是一个哈希表（数组+链表），是一个线程安全的集合，执行效率低 
+-   **HashMap集合，可以存储一个 null 的键、多个 null 的值** 
+-   **Hashtable 集合，不能存储 null 的键、null 的值** 
+-   Hashtable 和 Vector 集合一样,在 jdk1.2 版本之后被更先进的集合(HashMap,ArrayList)取代了。所以 HashMap 是 Map 的主要实现类，Hashtable 是 Map 的古老实现类。 
+-   Hashtable 的子类 Properties（配置文件）依然活跃在历史舞台 
+-   **Properties 集合是一个唯一和 IO 流相结合的集合** 
 
 
 
