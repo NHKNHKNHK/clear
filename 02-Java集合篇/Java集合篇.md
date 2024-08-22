@@ -1965,6 +1965,226 @@ String和Integer是 Java 中最常用的基本数据类型的包装类。这些�
 
 
 
+## JDK7中ConcurrentHashMap的实现？
+
+在JDK 7中，ConcurrentHashMap的实现与JDK 8有所不同。JDK 7中的ConcurrentHashMap使用了分段锁（Segment Locking）来实现高并发性能。
+
+**主要结构**
+
+JDK 7中的ConcurrentHashMap由以下几个主要部分组成：
+
+1.  **Segment**：分段锁的核心，每个Segment是一个小的哈希表，拥有独立的锁。
+2.  **HashEntry**：哈希表中的每个节点，存储键值对。
+3.  **ConcurrentHashMap**：包含多个Segment，每个Segment管理一部分哈希表。
+
+**Segment 类**
+
+Segment类是ReentrantLock的子类，它是ConcurrentHashMap的核心部分。
+
+```java
+static final class Segment<K,V> extends ReentrantLock implements Serializable {
+    transient volatile HashEntry<K,V>[] table;
+    transient int count;
+    transient int modCount;
+    transient int threshold;
+    final float loadFactor;
+
+    Segment(float lf, int threshold, HashEntry<K,V>[] tab) {
+        this.loadFactor = lf;
+        this.threshold = threshold;
+        this.table = tab;
+    }
+}
+```
+
+**HashEntry 类**
+
+HashEntry类是哈希表中的节点，存储键值对和指向下一个节点的指针
+
+```java
+static final class HashEntry<K,V> {
+    final K key;
+    final int hash;
+    volatile V value;
+    volatile HashEntry<K,V> next;
+
+    HashEntry(K key, int hash, HashEntry<K,V> next, V value) {
+        this.key = key;
+        this.hash = hash;
+        this.next = next;
+        this.value = value;
+    }
+}
+```
+
+**ConcurrentHashMap 类**
+
+ConcurrentHashMap类包含多个Segment，每个Segment管理一部分哈希表
+
+```java
+public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
+    implements ConcurrentMap<K,V>, Serializable {
+
+    final Segment<K,V>[] segments;
+    transient Set<K> keySet;
+    transient Set<Map.Entry<K,V>> entrySet;
+    transient Collection<V> values;
+    static final int DEFAULT_INITIAL_CAPACITY = 16;
+    static final float DEFAULT_LOAD_FACTOR = 0.75f;
+    static final int DEFAULT_CONCURRENCY_LEVEL = 16;
+    static final int MAXIMUM_CAPACITY = 1 << 30;
+    static final int MIN_SEGMENT_TABLE_CAPACITY = 2;
+    static final int MAX_SEGMENTS = 1 << 16; // slightly conservative
+
+    // Other fields and methods...
+}
+```
+
+**put 操作**
+
+put操作是ConcurrentHashMap的核心操作之一，以下是其简化版实现：
+
+```java
+public V put(K key, V value) {
+    Segment<K,V> s;
+    if (value == null)
+        throw new NullPointerException();
+    int hash = hash(key);
+    int j = (hash >>> segmentShift) & segmentMask;
+    if ((s = (Segment<K,V>)UNSAFE.getObject          // nonvolatile; recheck
+         (segments, (j << SSHIFT) + SBASE)) == null) // in ensureSegment
+        s = ensureSegment(j);
+    return s.put(key, hash, value, false);
+}
+
+final V put(K key, int hash, V value, boolean onlyIfAbsent) {
+    HashEntry<K,V> node = tryLock() ? null : scanAndLockForPut(key, hash, value);
+    V oldValue;
+    try {
+        HashEntry<K,V>[] tab = table;
+        int index = (tab.length - 1) & hash;
+        HashEntry<K,V> first = entryAt(tab, index);
+        for (HashEntry<K,V> e = first;;) {
+            if (e != null) {
+                K k;
+                if ((k = e.key) == key || (e.hash == hash && key.equals(k))) {
+                    oldValue = e.value;
+                    if (!onlyIfAbsent) {
+                        e.value = value;
+                        ++modCount;
+                    }
+                    break;
+                }
+                e = e.next;
+            } else {
+                if (node != null)
+                    node.setNext(first);
+                else
+                    node = new HashEntry<K,V>(key, hash, first, value);
+                int c = count + 1;
+                if (c > threshold && tab.length < MAXIMUM_CAPACITY)
+                    rehash(node);
+                else
+                    setEntryAt(tab, index, node);
+                ++modCount;
+                count = c;
+                oldValue = null;
+                break;
+            }
+        }
+    } finally {
+        unlock();
+    }
+    return oldValue;
+}
+```
+
+**get 操作**
+
+get操作是ConcurrentHashMap的另一个核心操作，以下是其简化版实现：
+
+```java
+public V get(Object key) {
+    Segment<K,V> s;
+    HashEntry<K,V>[] tab;
+    int h = hash(key);
+    long u = (((h >>> segmentShift) & segmentMask) << SSHIFT) + SBASE;
+    if ((s = (Segment<K,V>)UNSAFE.getObjectVolatile(segments, u)) != null &&
+        (tab = s.table) != null) {
+        for (HashEntry<K,V> e = (HashEntry<K,V>) UNSAFE.getObjectVolatile
+                 (tab, ((long)(((tab.length - 1) & h)) << TSHIFT) + TBASE);
+             e != null; e = e.next) {
+            K k;
+            if ((k = e.key) == key || (e.hash == h && key.equals(k)))
+                return e.value;
+        }
+    }
+    return null;
+}
+```
+
+**主要特点**
+
+1.  **分段锁**：ConcurrentHashMap将整个哈希表分成多个Segment，每个Segment是一个独立的小哈希表，拥有自己的锁。这样不同的线程可以并发地访问不同的Segment，显著提高并发性能。
+2.  **高效并发**：通过细粒度的锁机制，ConcurrentHashMap在高并发环境下表现出色，避免了全表锁的性能瓶颈。
+3.  **线程安全**：所有的操作都在锁的保护下进行，确保了线程安全性。
+
+小结：
+
+​	JDK 7中的ConcurrentHashMap通过分段锁机制实现高并发性能。每个Segment是一个独立的小哈希表，拥有自己的锁，允许多个线程并发地访问不同的Segment。这种设计在高并发环境下显著提高了性能，同时保证了线程安全性。
+
+
+
+## JDK8中ConcurrentHashMap的实现？
+
+Java 8 对ConcurrentHashMap进行了重新设计，取消了分段锁的机制，改用更细粒度的锁和无锁操作来提高并发性能。以下是主要的改进：
+
+**数据结构**
+
+-   **Node**：基本的链表节点，存储键值对和指向下一个节点的指针。
+-   **TreeNode**：用于红黑树的节点，当链表长度超过一定阈值（默认是8）时，链表会转换为红黑树。
+-   **TreeBin**：红黑树的容器，管理红黑树的操作。
+-   **ForwardingNode**：在扩容过程中用于指示节点已经被移动。
+
+**主要操作**
+
+-   **put 操作**：通过 CAS 操作和细粒度的锁来实现高效的并发插入和更新。
+-   **get 操作**：使用无锁的方式进行查找，性能更高。
+-   **扩容**：通过逐步迁移节点和协作扩容机制，提高扩容效率。
+
+**细粒度的并发控制**
+
+Java 8 中的ConcurrentHashMap采用了更细粒度的并发控制，主要通过以下方式实现：
+
+-   **CAS 操作**：使用 CAS 操作（Compare-And-Swap）进行无锁插入和更新，减少锁竞争。
+-   **synchronized 块**：在必要时对单个桶（bin）进行加锁，而不是整个段，从而进一步提高并发性。
+-   **红黑树**：当链表长度超过阈值时，转换为红黑树，降低查找时间复杂度，从 O(n) 降低到 O(log n)。
+
+**Java 8 相比 Java 7 的好处**
+
+-   **更高的并发性**：
+
+-   -   Java 7 使用段级别的锁，而 Java 8 使用更细粒度的锁和无锁操作，减少了锁竞争，提高了并发性。
+
+-   **更好的性能**：
+
+-   -   Java 8 中的get操作是无锁的，性能更高。
+    -   put操作使用 CAS 和细粒度的锁，提高了插入和更新的性能。
+
+-   **更高效的扩容**：
+
+-   -   Java 8 通过逐步迁移节点和协作扩容机制，提高了扩容效率，减少了扩容过程中对性能的影响。
+
+-   **更高效的查找**：
+
+-   -   当链表长度超过阈值时，转换为红黑树，降低了查找时间复杂度。
+
+小结：
+
+​	通过对链表的头加锁实现，使用的是cas操作加内部的synchroized。Node数组+链表+红黑树的结构，从而实现了对每一行数据进行加锁，进一步减少并发冲突的概率。Node类成员变量Node的元素val和指针next都标注volatile，目的是在多线程环境下线程A修改结点的val或者新增节点的时候是对线程B可见的。
+
+
+
 ## ConcurrentHashMap在JDK7和8之间的区别？
 
 
