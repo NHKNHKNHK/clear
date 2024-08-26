@@ -207,6 +207,108 @@ SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 
 
 
+## 存储引擎应该如何选择？
+
+选择 MySQL 的存储引擎时，应根据具体应用场景、性能需求、数据完整性要求等因素进行综合考虑。
+
+1.  **事务支持**：InnoDB 支持事务和 ACID 特性，适合需要事务支持的应用；MyISAM 不支持事务，适合对数据完整性要求不高的应用。
+2.  **锁机制**：InnoDB 使用行级锁，适合高并发和频繁写操作；MyISAM 使用表级锁，适合读多写少的场景。
+3.  **外键支持**：InnoDB 支持外键约束，保证数据的一致性和完整性；MyISAM 不支持外键。
+4.  **全文索引**：MyISAM 原生支持全文索引，适合需要全文搜索的应用；InnoDB 从 MySQL 5.6 开始支持全文索引，但性能可能不如 MyISAM。
+5.  **崩溃恢复**：InnoDB 支持自动崩溃恢复，通过重做日志和回滚日志实现快速恢复；MyISAM 只支持基于表的崩溃恢复，恢复过程较慢且不完全。
+6.  **存储空间**：InnoDB 可能占用更多存储空间，但支持更大的表（最大表大小可达 64TB）；MyISAM 存储空间效率较高，数据文件较小，但受文件系统限制（单个表最大可达 256TB）。
+7.  **读写性能**：InnoDB 在高并发和事务密集型场景下性能优越，写操作和并发处理能力强；MyISAM 在读多写少场景下性能优越，查询速度快，占用资源少。
+8.  **数据备份和恢复**：InnoDB 支持热备份和在线备份，适合需要不间断服务的应用；MyISAM 备份和恢复相对简单，但需要停机操作，适合对服务连续性要求不高的应用。
+9.  **其他存储引擎**：Memory 适合需要极高读写性能且数据不持久存储的场景；Archive 适合存储大量历史数据，支持高效的插入操作；NDB 适合需要高可用性和分布式存储的场景。
+
+
+
+
+
+## union和union all区别？
+
+UNION和UNION ALL是 SQL 中用于合并两个或多个结果集的操作符。它们的主要区别在于是否去除重复的行。
+
+-   **UNION**：去除重复行，需要额外的排序操作，性能较UNION ALL略低。
+-   **UNION ALL**：保留所有行，不去重，性能较好。
+
+**UNION**
+
+-   **去除重复行**：UNION操作会自动去除合并结果中的重复行。
+-   **排序操作**：由于UNION需要去除重复行，因此它会在内部执行一个排序操作来识别和删除重复行，这可能会影响性能。
+
+```sql
+SELECT column1, column2 FROM table1
+UNION
+SELECT column1, column2 FROM table2;
+```
+
+**UNION ALL**
+
+-   **保留重复行**：UNION ALL操作不会去除重复行，所有的结果行都会被保留。
+-   **性能较好**：由于UNION ALL不需要进行去重操作，因此通常比UNION性能更好，特别是在处理大数据量时。
+
+```sql
+SELECT column1, column2 FROM table1
+UNION ALL
+SELECT column1, column2 FROM table2;
+```
+
+假设有两个表table1和table2，它们的结构和数据如下：
+
+```
+-- table1
+id | name
+---|------
+1  | Alice
+2  | Bob
+
+-- table2
+id | name
+---|------
+2  | Bob
+3  | Charlie
+```
+
+使用UNION：
+
+```sql
+SELECT id, name FROM table1
+UNION
+SELECT id, name FROM table2;
+```
+
+结果：
+
+```
+id | name
+---|------
+1  | Alice
+2  | Bob
+3  | Charlie
+```
+
+使用UNION ALL：
+
+```sql
+SELECT id, name FROM table1
+UNION ALL
+SELECT id, name FROM table2;
+```
+
+结果：
+
+```
+id | name
+---|------
+1  | Alice
+2  | Bob
+2  | Bob
+3  | Charlie
+```
+
+
+
 ## MySQL中数据排序的实现原理是什么？
 
 
