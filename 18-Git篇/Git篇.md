@@ -29,3 +29,20 @@ Conventional Commits 是一种更为灵活且被广泛采纳的规范，它扩�
 小结：
 
 ​	通过采用 Git Commit 规范，团队可以更容易地维护项目的变更历史，同时也能提升代码审查的效率
+
+**提交的类型**
+
+-   **feat**：新增一个功能（feature）
+    -   建议：在新增功能之前，pull最新远程库的master分支。避免代码合并时候的冲突
+-   **fix**：修复一个Bug
+-   **docs**：文档变更，比如 README，CHANGELOG、CONTIRIBUTE等到
+-   style：代码格式，如修改了空格、格式缩进、逗号等等，不改变代码逻辑
+-   refactor：代码重构
+-   perf：优化相关，比如提示性能、体验
+-   test：增加测试
+-   build：更变项目构建或外部依赖例如scopes:webpack、gulp、npm等
+-   ci：CI配置，脚本文件等更新
+-   chore：改变构建流程、或者增加依赖库、工具等
+-   **revert**：代码回退
+-   config：配置文件修改
+
