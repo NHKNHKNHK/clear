@@ -387,6 +387,89 @@ public class ClassC {
 
 
 
+## Spring AOP在什么场景下会失效？
+
+**首先，Spring AOP是通过动态代理实现的，所以，想要让AOP生效，前提必须是动态代理生效，并且可以调用到代理对象的方法。**
+
+什么情况下会不走代理对象的调用呢？
+
+1、首先就是类内部的调用，比如一些**私有方法调用**，**内部类调用**，以及同一个类中**方法的自调用**等。如：
+
+```js
+//1
+public class MyService {
+    public void doSomething() {
+        doInternal(); // 自调用方法
+    }
+
+    public void doInternal() {
+        System.out.println("Doing internal work...");
+    }
+}
+
+//2
+public class MyService {
+    public void doSomething() {
+        doInternal(); // 自调用私有方法
+    }
+
+    private void doInternal() {
+        System.out.println("Doing internal work...");
+    }
+}
+
+
+//3
+public class OuterClass {
+    private class InnerClass {
+        public void doSomething() {
+            System.out.println("Doing something in inner class...");
+        }
+    }
+
+    public void invokeInnerClassMethod() {
+        InnerClass innerClass = new InnerClass();
+        innerClass.doSomething(); // 调用内部类方法
+    }
+}
+```
+
+以上，都是因为在对象内部直接调用其他方法，就会用原始对象直接调用了，不会调用到代理对象，所以代理会失效。
+
+2、类似的还有一种情况，虽然不是对象的自调用，但是他也是因为没有调用到代理对象，那就是调用**static方法**，因为这类方法是属于这个类的，并不是对象的，所以无法被AOP。
+
+```java
+public class MyService {
+    public static void doSomething() {
+        // static 方法
+    }
+}
+```
+
+3、还有一种方法，也无法被代理，那就是**final方法**，由于AOP是通过创建代理对象来实现的，而无法对final方法进行子类化和覆盖，所以无法拦截这些方法。
+
+```java
+public class MyService {
+    public final void doSomethingFinal() {
+        System.out.println("Doing something final...");
+    }
+}
+```
+
+总结，AOP失效的场景，与声明式事务失效的场景类似，本质就是无法进行对对象进行代理：
+
+1、私有方法调用
+
+2、static静态方法调用（原因：类方法属于类本身，代理机制无法对类方法进行代理或拦截）
+
+3、final方法调用（原因：final修饰的方法无法被重写，，代理机制无法对 final 方法进行拦截或增强）
+
+4、类内部自调用
+
+5、内部类方法调用
+
+
+
 ## 简述Spring拦截链的实现？
 
 
@@ -415,7 +498,7 @@ spring的事物传播行为本质上，事物是由数据库进行管理的，�
 
 在单一的事务当中，整个处理过程相对来说比较简单，首先开启事务，执行完成进行提交，遇到异常进行回滚。
 
-但如果你在spring当中使用了生命式事务，所有的调用过程都是由spring通过AOP生成代理替我们完成，很多初学者可能对此没有什么强烈的感觉。
+但如果你在spring当中使用了声明式事务，所有的调用过程都是由spring通过AOP生成代理替我们完成，很多初学者可能对此没有什么强烈的感觉。
 
 在日常开发中，我们可能会遇到一些特殊情况，比如说方法A和方法B都被声明的事物，但是在A方法当中调用了方法B，此时B方法的事物就被传播到了A方法的事物当中，产生了**传播行为**，这个很好理解。在spring当中，我们的声明式事物通常是在service层。但是一般情况下，我们不建议service层之间的方法互相调用，但是特殊情况一定需要特殊的处理方案，Spring作为一个通用框架，各种各样的特殊情况，它一定需要全盘的去考量。
 
