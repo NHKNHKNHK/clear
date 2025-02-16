@@ -48,9 +48,63 @@ public static void main(String[] args){
 
 ## JDK、JRE、JVM的关系？
 
+- JDK（Java Development Kit）：Java开发工具包，它包含了JRE和一系列Java开发工具。
+- JRE（Java Runtime Environment）：JRE是运行Java应用程序所需的环境，它包含了JVM和Java核心类库。JRE只能用来运行Java应用程序，不能用来开发编译，它是JDK的子集。
+- JVM（Java Virtual Machine）：Java虚拟机。Java程序必须在JVM中。
+​	
+## Java中能不能使用中文当作标识符？
+
+可以，因为Java支持Unicode字符集，而Unicode包括了中文。但是，为了代码的可读性和维护性，通常建议使用英文作为标识符。
+
+```java
+public class 测试 {
+    public static void main(String[] arags) {
+        String 姓名 = "张三";
+        System.out.println("姓名：" + 姓名);
+    }
+}
+```
+
+## 简述Java标识符的命名规则？
+
+- 标识符可以包含字母、数字、下划线（_）和美元符号（$）
+- 标识符不能以数字开头
+- 标识符不能使用关键字、保留字（goto、const、_）、特殊值（true、false、null）
+- 标识符区分大小写
+- 标识符不能包含空格，否则会被识别为是两个标识符
 
 
 ## 为什么在编写Java代码会遇到乱码问题？
+
+## Java中的常量与变量
+
+- 有什么区别？
+  - 常量，final修饰的变量，一旦赋值后，就不能被修改
+  - 变量，可以重新赋值
+- Java中的常量有几种？
+  - 局部变量 + final，一般直接初始化
+  - 实例变量 + final，一般通过构造器初始化
+  - 静态变量 + final，建议大写，一般直接初始化
+```java
+class Test {
+    static final int MAX_COUNT = 10; // 静态常量
+    private final int a = 1; // 实例变量
+    private final int b;
+    private final int c;
+
+    public Test(int b, int c) {
+        this.b = b;
+        this.c = c;
+    }
+
+    public static void main(String[] args) {
+        final int d = 10; // 局部变量
+
+    }
+
+}
+```
+ 
 
 
 
