@@ -51,7 +51,7 @@ public static void main(String[] args){
 - JDK（Java Development Kit）：Java开发工具包，它包含了JRE和一系列Java开发工具。
 - JRE（Java Runtime Environment）：JRE是运行Java应用程序所需的环境，它包含了JVM和Java核心类库。JRE只能用来运行Java应用程序，不能用来开发编译，它是JDK的子集。
 - JVM（Java Virtual Machine）：Java虚拟机。Java程序必须在JVM中。
-​	
+	​	
 ## Java中能不能使用中文当作标识符？
 
 可以，因为Java支持Unicode字符集，而Unicode包括了中文。但是，为了代码的可读性和维护性，通常建议使用英文作为标识符。
@@ -104,7 +104,89 @@ class Test {
 
 }
 ```
- 
+
+
+
+## Java中的基本数据类型有那些？
+Java中的基本数据类型包括8种，分别是：
+
+| 数据类型               | 字节 | 值范围                       | 默认值    | 对应包装类 |
+| ---------------------- | ---- | ---------------------------- | --------- | ---------- |
+| byte                   | 1    | -128 ~ 127                   | 0         | Byte       |
+| short（短整型）        | 2    | -32768 ~ 32767               | 0         | Short      |
+| int                    | 4    | -2^31 ~ 2^31-1               | 0         | Integer    |
+| long                   | 8    | -2^63 ~ 2^63-1               | 0         | Long       |
+| double（单精度浮点型） | 4    |                              | 0.0F      | Double     |
+| float（双精度浮点型）  | 8    |                              | 0.0D      | Float      |
+| char                   | 2    | 0 ~ 65535，采用Unicode字符集 | \`\u0000` | Character  |
+| boolean                | 1bit | true 与 false                | false     | Boolean    |
+
+>   问：boolean类型的字节宽度是多少？
+>
+>   答：boolean类型的变量用于存储真（true）或假（false）的值。JVM规范中并没有规定boolean类型的具体位数，这取决于JVM的实现。通常情况下，为了考虑效率，boolean很可能会被实现为8位（1字节），但这不是固定的，也可能占用更少或更多位。
+
+
+
+## 如何理解自动类型提升？
+
+自动类型提升是指当我们在**计算时**，将`取值范围小的类型`自动提升为`取值范围大的类型`。自动类型提升规则如图所示：
+
+![1739699406807](./assets/数据类型自动提升.png)
+
+（1）当把存储范围**小**的值（字面量、变量值、表达式计算的结果值）赋值给存储范围**大**的变量时
+
+（2）当存储范围小的数据类型与存储范围大的数据类型一起**混合**运算时，会按照大的类型运算
+
+（3）当**btye、short、char**数据类型进行**算术**或**位**运算时，按照**int**类型处理
+
+>   问：自动类型提升就一定是安全的吗？
+>
+>   答：不是，也可能存在精度丢失
+
+```java
+int i = 'A'; // char自动升级为int
+double j = 19; // int自动升级为double
+System.out.println(i); // 65
+System.out.println(i); // 19.0
+
+int a = 1;
+char b = 'A';
+long c = 1L;
+flaot d = 1.0F;
+System.out.println(a + b + c + d); // 升级为float  68.0
+```
+
+
+
+## 如何理解强制类型转换？
+
+强制类型转换是指，将`取值范围大的类型`强制转换为`取值范围小的类型`。或有时候也可以将`取值范围小的类型`强制提升为`取值范围大的类型`
+
+![1739699406807](D:/video/workspace/easy-interview/01-Java%E5%9F%BA%E7%A1%80/assets/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%87%AA%E5%8A%A8%E6%8F%90%E5%8D%87.png)
+
+（1）当把存储范围**大**的值（字面量、变量值、表达式计算的结果值）赋值给存储范围**小**的变量时，需要强制转换，提示：有风险，可能会损失精度
+
+```java
+int i = 200;
+byet b = (byte)i; // 溢出
+
+double a = 1.2;
+int j = (int)a; // 损失精度
+```
+
+（2）当某个值想要提升数据类型时，也可以使用强制类型转换
+
+```java
+int x = 1;
+int y = 2;
+double z = (double)x/y;
+```
+
+
+
+## Java中有哪些访问修饰符？
+
+
 
 
 
@@ -113,16 +195,6 @@ class Test {
 
 
 ## 什么是Java中的网络编程？
-
-
-
-## Java中的基本数据类型有那些？
-
-
-
-## Java中有哪些访问修饰符？
-
-
 
 
 
