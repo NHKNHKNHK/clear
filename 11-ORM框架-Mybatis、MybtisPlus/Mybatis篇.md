@@ -35,15 +35,15 @@
 
 **#{}（预编译方式）**
 
--   安全性：#{} 采用了预编译（PreparedStatement）的方式，有效防止了 SQL 注入。因为 MyBatis 会将 #{} 中的内容当作参数处理，而不是直接拼接到 SQL 语句中。
+-   安全性：#{} 采用了**预编译**（PreparedStatement）的方式，有效防止了 SQL 注入。因为 MyBatis 会将 #{} 中的内容当作参数处理，而不是直接拼接到 SQL 语句中。
 -   处理方式：MyBatis 会为 #{} 中的内容生成一个参数占位符 ?，并使用 PreparedStatement 的 setXXX() 方法来设置参数值。因此，你不需要担心数据类型或引号问题。
 -   例子：SELECT * FROM users WHERE id = #{userId}，这条 SQL 语句在 MyBatis 中处理时，会将其转换为类似 SELECT * FROM users WHERE id = ? 的形式，并通过 PreparedStatement 的 setInt() 或其他相关方法来设置 userId 的值。
 
 **${}（字符串拼接方式）**
 
--   安全性：${} 是直接字符串拼接（Statement）的方式，所以存在 SQL 注入的风险。如果参数来自用户输入或其他不可信的来源，那么使用 ${} 是非常危险的。
+-   安全性：\${} 是**直接字符串拼接**（Statement）的方式，所以存在 SQL 注入的风险。如果参数来自用户输入或其他不可信的来源，那么使用 ${} 是非常危险的。
 -   处理方式：MyBatis 会直接将 ${} 中的内容替换到 SQL 语句中。这意味着你需要自己处理数据类型、引号等问题。
--   用途：虽然 ${} 存在安全风险，但在某些场景下它是必要的。例如，当你要动态地构建表名或列名时，就必须使用 ${}。
+-   用途：虽然 \${} 存在安全风险，但在某些场景下它是必要的。例如，当你要动态地构建表名或列名时，就必须使用 ${}。
 -   例子：SELECT * FROM ${tableName}，这里的 tableName 是一个变量，MyBatis 会直接将其替换到 SQL 语句中。因此，如果你不能保证 tableName 的来源是可信的，那么这条 SQL 语句就存在 SQL 注入的风险。
 
 在大多数情况下，你应该优先使用 #{}，因为它更安全、更方便，有效的防止 SQL 注入。
@@ -53,6 +53,52 @@
 
 
 ## **如何避免 sql 注入？**
+
+sql 注入是一个非常难搞的问题。如果不加以防范就会对我们的系统造成危险。mybatis 避免 sql 注入的方式，有几层。首先就是 myabtis 采取了**预编译的 sql 语句**，预编译的 sql 语句是参数化查询，不是直接拼接，这种就会导致攻击者的输入并不会当作 sql 执行，这是一种防御机制。另一种就是我们在开发的过程中，要保证在拼接的时候，使用**#占位符**。#不会直接拼接，可以安全的传递，然而如果使用\$就会导致直接拼接，这样会造成 sql 注入问题，不过有些需求确实是动态的 sql 处理，要动态传入表名，动态传入字段等等。这种情况也就只能使用$进行了
+
+本题关键点：预编译、#占位符
+
+**使用预编译的SQL语句**
+
+MyBatis 通过预编译的 SQL 语句来执行查询和更新操作。预编译的 SQL 语句使用参数化查询，不是直接拼接到 SQL 语句中。这样可以让攻击者的输入不会被当作 SQL 代码执行
+
+**使用#{}占位符**
+
+MyBatis 提供了#{}占位符，用于安全地传递参数。与之相对的是\${}，后者会直接将参数值嵌入到 SQL 语句中，容易导致 SQL 注入，因此应尽量避免使用${}。#{id}是一个占位符，MyBatis 会将其替换为一个安全的参数，而不是直接拼接到 SQL 字符串中
+
+安全的使用方式：
+
+```xml
+<select id="selectUserByName" parameterType="string" resultType="com.example.model.User">
+  SELECT * FROM users WHERE username = #{username}
+</select>
+```
+
+不安全的使用方式：
+
+```xml
+<select id="selectUserByName" parameterType="string" resultType="com.example.model.User">
+  SELECT * FROM users WHERE username = '${username}'
+</select>
+```
+
+**使用SQL构建工具**
+
+MyBatis 提供了 SQL 构建工具（如SqlBuilder），可以帮助构建安全的 SQL 查询，现实很少用，本质也是#占位符
+
+```java
+import org.apache.ibatis.jdbc.SQL;
+
+public String buildSelectUserById(final int id) {
+    return new SQL() {{
+        SELECT("*");
+        FROM("users");
+        WHERE("user_id = #{id}");
+    }}.toString();
+}
+```
+
+
 
 
 
@@ -145,11 +191,288 @@ public interface UserMapper {
 
 
 
-## Mybaits执行原理？
-
-
-
 ## MyBatis的Xml映射文件中，都有哪些常见标签？
+
+常见的有 mapper，select，resultmap，if，sql 等等标签，像 mapper 标签是 xml 中的根部，有了它才能够和接口进行映射。select，insert 这些定义了这个 sql 行为到底是查询还是插入。当我们把查询出的数据要映射到实体的时候，可以封装一个 map，这样我们不用每个字段都写 as，只需要用 resultmap，就可以自动帮我们进行属性映射。当想要判断一些条件来决定是否拼接 sql 的时候，可以使用 if。最后就是公共的 sql，比如 select 后面的一堆属性，可以放在 sql 标签内。以上。
+
+主要还是考察你在用 mybatis 的时候一个复杂程度，是否很多标签都用过，可以考察出你的熟练度。
+
+**\<mapper>**
+
+-   定义一个映射文件的根元素，包含所有的映射配置。
+
+-   **常用属性**：
+    -   namespace，指定与之关联的 Mapper 接口的全限定名
+
+```xml
+<mapper namespace="com.example.mapper.UserMapper">
+  <!-- SQL 语句和其他配置 -->
+</mapper>
+```
+
+**\<select>**
+
+-   定义一个查询语句。
+
+-   **常用属性**：
+    -   id：唯一标识该 SQL 语句的 ID。
+    -   parameterType：指定输入参数的类型（可选）。
+    -   resultType：指定返回结果的类型（常用）。
+    -   resultMap：指定自定义的结果映射（可选）
+
+```xml
+<select id="selectUser" parameterType="int" resultType="com.example.model.User">
+  SELECT * FROM users WHERE id = #{id}
+</select>
+```
+
+**\<insert>**
+
+-   定义一个插入语句。
+
+-   **常用属性**：
+    -   id：唯一标识该 SQL 语句的 ID。
+    -   parameterType：指定输入参数的类型（常用）。
+    -   useGeneratedKeys和keyProperty：用于获取自动生成的主键值
+
+```xml
+<insert id="insertUser" parameterType="com.example.model.User" useGeneratedKeys="true" keyProperty="id">
+  INSERT INTO users (username, password) VALUES (#{username}, #{password})
+</insert>
+```
+
+**\<update> \<delete>**
+
+-   定义一个更新/删除语句。
+
+-   **常用属性**：
+    -   id：唯一标识该 SQL 语句的 ID。
+    -   parameterType：指定输入参数的类型（常用）
+
+```xml
+<update id="updateUser" parameterType="com.example.model.User">
+  UPDATE users SET username = #{username}, password = #{password} WHERE id = #{id}
+</update>
+```
+
+```xml
+<delete id="deleteUser" parameterType="int">
+  DELETE FROM users WHERE id = #{id}
+</delete>
+```
+
+**\<resultMap>**
+
+-   定义复杂的结果集映射，适用于复杂的对象结构。
+
+-   **常用子标签**：
+    -   \<id>：标识主键字段。
+    -   \<result>：标识普通字段。
+    -   \<association>：标识对象关联。
+    -   \<collection>：标识集合关联。
+
+```xml
+<resultMap id="userResultMap" type="com.example.model.User">
+  <id property="id" column="id"/>
+  <result property="username" column="username"/>
+  <result property="password" column="password"/>
+</resultMap>
+```
+
+**\<if>**
+
+-   根据条件动态包含 SQL 片段。
+
+-   属性：test，指定条件表达式。
+
+```xml
+<select id="findUsers" resultType="com.example.model.User">
+  SELECT * FROM users
+  WHERE 1=1
+  <if test="username != null">
+    AND username = #{username}
+  </if>
+  <if test="password != null">
+    AND password = #{password}
+  </if>
+</select>
+```
+
+**\<choose>,\<when>,\<otherwise>**
+
+-   类似于 switch-case 语句，根据条件选择执行不同的 SQL 片段。
+
+-   **属性**：test，指定条件表达式（用于\<when>标签）
+
+```xml
+<select id="findUsers" resultType="com.example.model.User">
+  SELECT * FROM users
+  WHERE 1=1
+  <choose>
+    <when test="username != null">
+      AND username = #{username}
+    </when>
+    <when test="password != null">
+      AND password = #{password}
+    </when>
+    <otherwise>
+      AND status = 'active'
+    </otherwise>
+  </choose>
+</select>
+```
+
+**\<trim>,\<where>,\<set>**
+
+-   用于生成动态 SQL 片段，自动处理 SQL 语句中的多余字符（如逗号、AND、OR 等）。
+
+-   **属性**：
+    -   \<trim>：prefix、suffix、prefixOverrides、suffixOverrides。
+    -   \<where>：自动添加 WHERE 关键字。
+    -   \<set>：自动添加 SET 关键字并处理逗号
+
+```xml
+<!-- 使用 <where> -->
+<select id="findUsers" resultType="com.example.model.User">
+  SELECT * FROM users
+  <where>
+    <if test="username != null">
+      username = #{username}
+    </if>
+    <if test="password != null">
+      AND password = #{password}
+    </if>
+  </where>
+</select>
+
+<!-- 使用 <set> -->
+<update id="updateUser" parameterType="com.example.model.User">
+  UPDATE users
+  <set>
+    <if test="username != null">
+      username = #{username},
+    </if>
+    <if test="password != null">
+      password = #{password}
+    </if>
+  </set>
+  WHERE id = #{id}
+</update>
+```
+
+**\<foreach>**
+
+-   用于遍历集合生成动态 SQL 语句，常用于 IN 子句等。
+
+-   **属性**：item、index、collection、open、close、separator
+
+```xml
+<select id="findUsersByIds" resultType="com.example.model.User">
+  SELECT * FROM users WHERE id IN
+  <foreach item="id" collection="list" open="(" separator="," close=")">
+    #{id}
+  </foreach>
+</select>
+```
+
+ **\<sql>**
+
+-   定义可重用的 SQL 片段。
+
+-   **属性**：id，唯一标识该 SQL 片段
+
+```xml
+<sql id="userColumns">
+  id, username, password
+</sql>
+
+<select id="selectUser" resultType="com.example.model.User">
+  SELECT <include refid="userColumns"/> FROM users WHERE id = #{id}
+</select>
+```
+
+**\<include>**
+
+-   引入\<sql>标签定义的 SQL 片段。
+
+-   **属性**：refid，引用\<sql>标签的 ID
+
+```xml
+<select id="selectUser" resultType="com.example.model.User">
+  SELECT <include refid="userColumns"/> FROM users WHERE id = #{id}
+</select>
+```
+
+
+
+## 当实体类中的属性名和表中的字段名不一样 ，怎么办？
+
+实际使用中，经常会出现比如实体类里面叫 userName，但是数据库字段是 user_name 这种情况。我们要使用 resultmap 来进行使用。**resultmap** 里面可以定义出一套**数据库字段和属性的对应关系**，然后 mybtais 会帮助我们自动的进行映射。这是常见的方式。另一种就是可以手动把**字段不断的 as 重新命名映射**。假设是接口的形式，可以使用 **@Results 配合 @Result** 来进行配合实现一波映射
+
+本题关键点：resultmap 映射，as 处理，接口@result 注解
+
+**使用\<resultMap>标签进行映射**
+
+假设有一个数据库表users，字段如下：
+
+```sql
+CREATE TABLE users (
+  user_id INT PRIMARY KEY,
+  user_name VARCHAR(50),
+  user_password VARCHAR(50)
+);
+```
+
+对应的实体类User如下：
+
+```java
+public class User {
+    private int id;
+    private String username;
+    private String password;
+
+    // Getters and setters
+}
+```
+
+由于数据库表的字段名和实体类的属性名不一致，我们可以在 MyBatis 的 XML 映射文件中定义一个\<resultMap>来进行映射。
+
+xml映射文件：
+
+```xml
+<mapper namespace="com.example.mapper.UserMapper">
+
+  <!-- 定义 resultMap -->
+  <resultMap id="userResultMap" type="com.example.model.User">
+    <id property="id" column="user_id"/>
+    <result property="username" column="user_name"/>
+    <result property="password" column="user_password"/>
+  </resultMap>
+
+  <!-- 使用 resultMap 的查询语句 -->
+  <select id="selectUser" parameterType="int" resultMap="userResultMap">
+    SELECT * FROM users WHERE user_id = #{id}
+  </select>
+
+</mapper>
+```
+
+**使用注解进行映射**
+
+```java
+import org.apache.ibatis.annotations.*;
+
+public interface UserMapper {
+
+    @Results(id = "userResultMap", value = {
+        @Result(property = "id", column = "user_id", id = true),
+        @Result(property = "username", column = "user_name"),
+        @Result(property = "password", column = "user_password")
+    })
+    @Select("SELECT * FROM users WHERE user_id = #{id}")
+    User selectUser(int id);
+}
+```
 
 
 
@@ -159,11 +482,13 @@ public interface UserMapper {
 
 ## Mybatis的Xml映射文件中，不同的Xml映射文件，id是否可以重复？
 
-
+## Mybaits执行原理？
 
 
 
 ## 模糊查询like语句该怎么写?
+
+like 在 xml 中，可以直接在 xml 内部使用 concat 去拼接%来实现，也可以在外面拼接好之后，传递进来。其实本质的目的就是在要模糊查询的字段上，增加上%
 
 -   方案一：使用 XML 映射文件进行模糊查询
 
@@ -247,7 +572,7 @@ public interface UserMapper {
 
 
 
-## 当实体类中的属性名和表中的字段名不一样 ，怎么办？
+## 
 
 
 
@@ -258,6 +583,8 @@ public interface UserMapper {
 
 
 ## Mybatis是如何将sql执行结果封装为目标对象？都有哪些映射形式？
+
+
 
 
 
