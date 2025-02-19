@@ -8,11 +8,40 @@
 
 ## Java中有哪些集合类？概述Java集合体系？
 
+
+
+
+
+## Collection和Collections的区别？
+
+Collection是一个单列集合的顶层接口
+
+Collections是集合类的一个工具类，包含了对集合元素进行排序和线程安全等各种操作方法
+
+
+
+## List、Set、Map之间的区别是什么？
+
+|            | List     | Set                           | Map                           |
+| ---------- | -------- | ----------------------------- | ----------------------------- |
+| 单列/双列  | 单列集合 | 单列集合                      | 双列集合，存储键值对          |
+| 索引       | 支持     |                               | x                             |
+| 重复       | 重复     | x                             | key不重复，value可重复        |
+| 存取一致性 | 一致     | LinkedHashSet一致，其余不一致 | LinkedHashMap一致，其余不一致 |
+
+
+
+## 为什么 Map接口不继承Collection接口？
+
+Map继承Collection没有意义。Collection代表的是一组独立元素的集合，操作的是单个元素。而Map代表的是一组key-value键值对形式的集合，操作的是键值对，而不是“一组对象”的概念。分开两个不同的集合，语义上更加清晰。
+
+
+
 ## Arrays.asList() 方法把数组转换成集合
 
 **说明：**
 
-​	使用Arrays.asList() 方法把数组转换成集合后，该集合不能添加、删除元素
+​	使用Arrays.asList() 方法把数组转换成集合后，**该集合不能添加、删除元素**
 
 **原因：**
 
@@ -305,6 +334,21 @@ Student{username='赵六', age=15}
 
 
 
+## Iterable接口与Iterator接口
+
+-   Collection从JDK1.5开始继承了Iterable接口；Map并没有继承Iterable接口
+
+-   JDK1.5引入了`java.lang.Iterable`接口，包含抽象方法：Iterator<T> iterator();。任何实现了 `Iterable` 接口的类都可以直接用在增强型 `for` 循环中。
+-   foreach循环是一种语法糖
+    -   对于数组，编译后转化为普通for循环遍历元素
+    -   对于集合，编译后使用Iterator迭代器遍历元素
+-   JDK1.2引入`java.util.Iterator<E>`迭代器，用于代替Enumeration迭代器
+-   Iterator迭代器包含2个抽象方法用于遍历元素
+    -   boolean hasNext(): 如果迭代器中仍有更多元素，则返回true。
+    -   E next(): 返回迭代器中的下一个元素。
+
+
+
 ## Enumeration和Iterator接口的区别？
 
 Enumeration和Iterator是 Java 中用于遍历集合的两个接口。虽然它们有相似的功能，但它们有不同的设计和使用方式。下面详细介绍它们的区别：
@@ -409,7 +453,7 @@ public class IteratorExample {
 
 尽管Enumeration和Iterator都用于遍历集合，但Iterator是更现代和灵活的选择，适用于所有集合类，并提供了在遍历过程中安全地移除元素的功能。
 
-## 什么是fail-fast机制？
+## 什么是fail-fast机制（快速失败）？
 
 在Java集合框架中，fail-fast是一种机制，用于检测在遍历集合时的结构性修改，并立即抛出异常以防止不一致状态。fail-fast迭代器在检测到集合在迭代过程中被修改后，会抛出`ConcurrentModificationException`异常。
 
@@ -487,7 +531,38 @@ fail-fast机制是 Java 集合框架的一项特性，用于在**遍历集合时
 
 
 
-## 什么是fail-safe机制？
+## 什么是fail-safe机制（副本机制）？
+
+
+
+
+
+## fail-fast和fail-safe有什么区别？
+
+fail-fast 和 fail-safe 是两种不同的处理集合（如列表、集合等）在**多线程**或**迭代**过程中发生修改时的策略。它们的区别如下：
+
+**fail-fast**（快速失败）
+
+- 定义：当检测到集合在**迭代过程中被修改**（除了通过迭代器自身的 remove() 或 add() 方法），立即**抛出** `ConcurrentModificationException` 异常。
+- 检测机制：fail-fast集合在迭代器中维护一个**expectedModCount**变量，记录集合的修改次数。
+- 检查：每次调用迭代器的next()或remove()方法时，都会检查 expectedModCount 是否与集合的 modCount 相等。不相等则抛出异常。
+- 特点：
+  - 尽早发现问题，避免潜在的不一致状态。
+  - 适用于单线程环境或严格控制的多线程环境。
+- 示例：ArrayList、LinkedList、HashSet、HashMap 等集合类的迭代器是 fail-fast 的。
+
+**fail-safe**（副本机制）
+
+- 定义：通过创建集合的副本进行迭代，因此即使原集合在**迭代过程中被修改**，也不会影响迭代过程，**也不会抛出异常。**
+- 副本机制：fail-safe集合在迭代时，遍历的是**副本**
+- 独立性：遍历操作和修改操作是独立的，遍历操作不会受到修改操作的影响。
+- 特点：
+  - 不会抛出 ConcurrentModificationException。
+  - 可能导致读取到旧数据或新数据，具体取决于实现方式。
+  - 适用于多线程环境，但可能会有性能开销，因为需要复制集合。
+- 示例：CopyOnWriteArrayList、ConcurrentHashMap 的键/值集合视图是 fail-safe 的。
+
+总结来说，fail-fast 旨在尽早发现问题并抛出异常，而 fail-safe 则通过复制数据来避免异常，确保迭代的安全性
 
 
 
@@ -509,7 +584,7 @@ ArrayList 是 List 接口的主要实现类。线程不安全，内部是通过*
 
 优点：它允许对元素进行快速随机访问。
 
-缺点：每个元素之间不能有间隔，当数组大小不足时，会触发扩容操作（开销较大）
+缺点：每个元素之间不能有间隔，当数组大小不足时，会触发**扩容**操作（开销较大）
 
 从 ArrayList 的中间位置插入或者删除元素时，需要对数组进行复制、移动、代价比较高。
 
@@ -517,13 +592,13 @@ ArrayList 是 List 接口的主要实现类。线程不安全，内部是通过*
 
 本质上，ArrayList 是对象引用的一个**”变长”数组** 
 
-ArrayList扩容公式：newCapacity = oldCapacity + (oldCapacity >> 1)，这实际上是将原容量增加50%（即乘以1.5）
+ArrayList扩容公式：`newCapacity = oldCapacity + (oldCapacity >> 1)`，这实际上是将原容量增加50%（即乘以1.5）
 
 ```java
 private void grow(int minCapacity) {
    	// 。。。
     int newCapacity = oldCapacity + (oldCapacity >> 1);  // 新数组的容量
- 	// 。。
+ 	// 。。    
     elementData = Arrays.copyOf(elementData, newCapacity);  // 将旧数组中的数据进行copy
 }
 ```
@@ -573,8 +648,34 @@ Vector 的特点包括：
     -   ArrayList 默认扩容为原来的 1.5 倍
     -   Vector 默认扩容增加为原来的 2 倍。
 -   **数组的初始化容量不同**
-    -   如果在构建 ArrayList 与 Vector 的集合对象时，没有显式指定初始化容量，那么 Vector 的内部数组的初始容量默认为 10，而 ArrayList 在 JDK 6.0 及之前的版本也是 10，JDK8.0 之后的版本 ArrayList 初始化为长度为 0 的空数组，之后在添加第一个元素时，再创建长度为 10 的数组。
+    -   如果在构建 ArrayList 与 Vector 的集合对象时，没有显式指定初始化容量，那么 Vector 的内部数组的初始**容量默认为 10**，而 ArrayList 在 JDK 6.0 及之前的版本也是 **10**，JDK8.0 之后的版本 ArrayList 初始化为长度为 **0** 的空数组，之后在添加第一个元素时，再创建长度为 10 的数组。
     -   原因： 用的时候，再创建数组，避免浪费。因为很多方法的返回值是 ArrayList 类型，需要返回一个 ArrayList 的对象，例如：后期从数据库查询对象的方法，返回值很多就是 ArrayList。有可能你要查询的数据不存在，要么返回null，要么返回一个没有元素的 ArrayList 对象。 
+
+|                          | Vector           | ArrayList                               |
+| ------------------------ | ---------------- | --------------------------------------- |
+| 版本                     | JDK1.0（最古老） | JDK1.2                                  |
+| 线程安全                 | 安全             | 不安全                                  |
+| 默认初始容量             | 10               | 0，首次添加元素后默认容量10（JDK8开始） |
+| 是否支持手动指定初始容量 | 支持             | 支持                                    |
+| 扩容                     | 2倍              | 1.5倍                                   |
+| 是否支持手动指定增量     | 支持             | 不支持                                  |
+
+补充说明
+
+-   Vector无参构造器创建Vector对象时，直接创建长度为10的数组；ArrayList无参构造器创建ArrayList对象时，数组先初始化为`DEFAULTCAPACITY_EMPTY_ELEMENTDATA`，首次add元素时才会创建长度为10的数组；
+-   Vector扩容频率低，空间利用率低；ArrayList扩容频率高，空间利用率更高；
+
+>   相关面试题
+>
+>   问：什么是Vector？它是List接口的实现类，是古老的动态数组
+>
+>   问：ArrayList默认大小是多少，是如何扩容的？
+>
+>   问：ArrayList是线程安全的吗？不是
+>
+>   问：ArrayList为什么不是线程安全的？ArrayList没有内置的同步机制来确保多线程环境下的操作安全。这意味着在多线程环境下使用ArrayList时，需要外部手动添加同步机制，如使用synchronized关键字或使用Collections.synchronizedList方法。
+>
+>   问：ArrayList初始化1万条数据，怎么优化？在new的使用指定初始化容量，避免频繁的扩容操作。
 
 
 
@@ -749,24 +850,46 @@ ArrayList的添加与删除操作慢，主要是因为其内部实现基于数�
 
 **添加元素**
 
-1.  **尾部添加**：
+**尾部添加**：
 
--   -   当在ArrayList的尾部添加元素时，如果当前数组的容量还未达到最大值，只需要将新元素添加到数组的末尾即可，此时时间复杂度为**O(1)**。
-    -   但是，当数组容量已满时，会触发**扩容**操作。扩容操作通常会将数组的容量增加到当前容量的1.5倍或2倍，并将原数组中的所有元素复制到新的更大的数组中。这一过程的时间复杂度为**O(n)**，其中n为当前数组中的元素数量。
+-   当在ArrayList的尾部添加元素时，如果当前数组的容量还未达到最大值，只需要将新元素添加到数组的末尾即可，此时时间复杂度为**O(1)**。
+-   但是，当数组容量已满时，会触发**扩容**操作。扩容操作通常会将数组的容量增加到当前容量的1.5倍或2倍，并将原数组中的所有元素复制到新的更大的数组中。这一过程的时间复杂度为**O(n)**，其中n为当前数组中的元素数量。
 
-1.  **指定位置插入**：
+**指定位置插入**：
 
--   -   当在ArrayList的指定位置（非尾部）插入元素时，需要将目标位置之后的所有元素向后移动一个位置，然后将新元素插入到指定位置。这个过程涉及到移动元素的操作，时间复杂度为**O(n)**，在最坏情况下，如头部插入，需要移动所有的元素。
+-   当在ArrayList的指定位置（非尾部）插入元素时，需要将目标位置之后的所有元素向后移动一个位置，然后将新元素插入到指定位置。这个过程涉及到移动元素的操作，时间复杂度为**O(n)**，在最坏情况下，如头部插入，需要移动所有的元素。
+
+```java
+public void add(int index, E element) {
+  	
+    // 移动元素
+    System.arraycopy(elementData, index, elementData, index + 1,
+                     size - index);
+    elementData[index] = element; // 插入
+    size++;
+}
+```
 
 **删除元素**
 
-1.  **尾部删除**：
+**尾部删除**：
 
--   -   当删除的元素位于列表末尾时，只需要将末尾元素移除即可，时间复杂度为**O(1)**。
+-   当删除的元素位于列表末尾时，只需要将末尾元素移除即可，时间复杂度为**O(1)**。
 
-1.  **指定位置删除**：
+**指定位置删除**：
 
--   -   当在ArrayList的指定位置（非尾部）删除元素时，需要将删除点之后的所有元素向前移动一个位置，以填补被删除元素的位置。这个过程同样涉及到移动元素的操作，时间复杂度为**O(n)**，在最坏情况下，如头部删除，需要移动除了被删除元素之外的所有元素。
+-   当在ArrayList的指定位置（非尾部）删除元素时，需要将删除点之后的所有元素向前移动一个位置，以填补被删除元素的位置。这个过程同样涉及到移动元素的操作，时间复杂度为**O(n)**，在最坏情况下，如头部删除，需要移动除了被删除元素之外的所有元素。
+
+```java
+public E remove(int index) {
+  
+    // 移动元素
+        System.arraycopy(elementData, index+1, elementData, index,
+                         numMoved);
+    elementData[--size] = null; // clear to let GC do its work
+
+}
+```
 
 
 
@@ -854,11 +977,394 @@ List<String> list = new CopyOnWriteArrayList<>();List<String> list = new CopyOnW
 
 
 
+## ArrayList和LinkedList有什么区别？
+
+|                      | ArrayList              | LinkedList                                                   |
+| -------------------- | ---------------------- | ------------------------------------------------------------ |
+| 底层结构             | 数组                   | 双向链表                                                     |
+| 与数据结构相关的接口 | List\<E>, RandomAccess | List\<E>,Deque\<E>                                           |
+| 容量限制             | 受数组的最大长度限制   | 受限于可用内存                                               |
+| 查询时间复杂度       | O(1)，O(n)             | O(n)                                                         |
+| 是否需要扩容         | 需要                   | 不需要                                                       |
+| 是否需要移动元素     | 需要                   | 不需要                                                       |
+| 占用内存             | 少，元素连续存储       | 多，每个节点除了存储元素本身外，还需要存储两个额外的引用（前驱和后继节点） |
+| 效率对比             | 理论上，查询快，增删慢 | 理论上，查询慢，增删快                                       |
+
+补充说明：
+
+​	理论上数组结构的增删慢，链表结构的增删快，但现在内存拷贝技术性能提高之后，ArrayList的整体性能反而优于LinkedList，因为LinkedList内部需要创建节点对象，这是一个耗时的过程。
 
 
 
+## LinkedList 真的比 ArrayList 添加元素快吗?
 
-## Java中List有哪些常见实现类？
+性能的比较需要根据具体的操作和数据分布来分析
+
+-   尾部插入
+    -   **ArrayList**：在尾部插入元素时，当数据量较小时，由于ArrayList需要频繁扩容，可能会稍显慢一些。但当数据量较大时，ArrayList的扩容策略（通常是当前容量的1.5倍）可以一次提供很多空间，减少了扩容的次数，从而在尾部插入效率上可能超过LinkedList。
+    -   **ArrayList**：在尾部插入元素时，当数据量较小时，由于ArrayList需要频繁扩容，可能会稍显慢一些。但当数据量较大时，ArrayList的扩容策略（通常是当前容量的1.5倍）可以一次提供很多空间，减少了扩容的次数，从而在尾部插入效率上可能超过LinkedList。
+-   首部插入
+    -   **ArrayList**：在首部插入元素时，由于需要将原数组所有元素向后移动一个位置（通过System.arraycopy方法），时间复杂度为 O(n)，效率相对较低。
+    -   **LinkedList**：在首部插入元素时，只需要调整首尾节点的指针，时间复杂度为O(1)，因此效率较高。
+
+-   中间插入
+    -   **ArrayList**：在中间插入元素时，同样需要将原数组的元素向后移动以腾出位置，时间复杂度为O(n)，其中n为数组长度。但插入位置越往后，需要复制后移的数据越少，效率相对会高一些。
+    -   **LinkedList**：在中间插入元素时，需要遍历链表找到插入位置，然后从两端向中间搜索，index越往中间遍历越久，因此效率相对较低。但在数据量较小时，LinkedList的性能可能会超过ArrayList，因为ArrayList在数据量小时需要频繁扩容。
+
+注意事项
+
+**内存消耗**：LinkedList的每个节点都需要额外的空间来存储指针信息，因此在内存消耗上可能会比ArrayList稍大。
+
+**线程安全**：ArrayList和LinkedList都不是线程安全的。如果需要在多线程环境下使用，需要考虑额外的同步措施。
+
+综上所述，LinkedList和ArrayList在添加元素时的性能优劣取决于具体的操作和数据分布。在尾部插入大量数据时，ArrayList可能更优；在首部插入数据时，LinkedList更优；而在中间插入数据时，需要根据数据量的大小和插入位置来具体分析
+
+
+
+## 哪些集合支持对元素的随机访问？
+
+只有实现了`RandomAccess`接口的集合支持对元素随机访问。(随机访问意味着可以通过索引直接访问集合中的元素，而不需要遍历集合)
+
+`RandomAccess`接口的常见实现类有：
+
+-   `ArrayList`：线程不安全。它的迭代器是快速失败的（fail-fast）
+-   `Vector`：线程安全，每次访问都需要加锁，因此在并发环境下性能较差。它的迭代器是快速失败的（fail-fast）
+-   `CopyOnWriteArrayList`：线程安全，它的迭代器是副本机制（fail-safe）。它在读操作频繁而写操作较少的情况下性能较好，因为读操作不加锁。但是在写操作频繁的情况下，频繁的数组复制会导致较大的开销。迭代器是弱一致性的（weakly consistent），可以在遍历过程中允许其他线程修改集合，不会抛出异常，但可能会看不到部分更新的结果。
+-   **不支持随机访问的集合**：
+    -   `LinkedList`：基于双向链表实现，不支持高效的随机访问
+    -   `HashMap`、`HashSet`：基于哈希表，所以不支持基于索引的随机访问
+
+
+
+## List和Array之间如何互相转换？
+
+-   List -> Array 可以通过集合的toArray方法完成
+-   Array -> List 可以通过Arrays.asList方法或Collections.addAll方法完成
+    -   注意：Arrays.asList方法得到的ArrayList是一个内部类，并非`java.util`包下的ArrayList
+
+```java
+String arr = {"hello", "world"};
+List<String> list = Arrays.asList(arr); // 此时得到的集合不能增删等操作，是一个只读集合
+List<String> lists = new ArrayList<>(list); 
+
+
+String arr = {"hello", "world"};
+ArrayList<String> lists = new ArrayList<>();
+Collections.addAll(lists, arr);
+```
+
+
+
+## 栈和队列有什么区别？
+
+栈：先进后出（FILO：First In Last Out）。队列：先进先出（FIFO：First In First Out）。
+
+栈和队列只是逻辑结构，其物理结构可以是数组，也可以是链表。
+
+核心类库中的栈结构有`Stack`和`LinkedList`。Stack就是顺序栈，它是Vector的子类。LinkedList是链式栈。
+
+| 操作         | 方法    |
+| ------------ | ------- |
+| 入栈         | push(e) |
+| 出栈         | pop()   |
+| 查看栈顶元素 | peek()  |
+
+
+
+**Queue**除了基本的`Collection`操作外，**队列**还提供其他的插入、提取和检查操作。每个方法都存在两种形式：一种是抛出异常（操作失败时），另一种返回特殊值（null或false，具体取决于操作）。Queue实现通常不允许插入元素，尽管某些实现并不禁止插入。即使在允许null的实现中，也不应该将null插入到中，因为null也用作方法的一个特殊返回值，表明队列不包含元素，此时不好区分。
+
+|      | 抛出异常  | 返回特殊值 |
+| ---- | --------- | ---------- |
+| 插入 | add(e)    | offer(e)   |
+| 移除 | remove()  | poll()     |
+| 检查 | element() | peek()     |
+
+**Deque**，即“doule ended queue”（**双端队列**），通常读作“deck”。此接口定义在双端队列两端访问元素的方法。提供插入、移除和检查元素的方法。每个方法都存在两种形式：一种是抛出异常（操作失败时），另一种返回特殊值（null或false，具体取决于操作）。Deque接口的实现类有`ArrayDeque`和`LinkedList`，它们一个底层是使用数组实现的，一个是使用双向链表实现的。
+
+|      | 第一个元素（头部） |               | 最后一个元素（尾部） |              |
+| ---- | ------------------ | ------------- | -------------------- | ------------ |
+|      | 抛出异常           | 特殊值        | 抛出异常             | 特殊值       |
+| 插入 | addFirst(e)        | offerFirst(e) | addLast(e)           | offerLast(e) |
+| 移除 | removeFirst()      | pollFirst()   | removeLast()         | pollLast()   |
+| 检查 | getFirst()         | peekFirst()   | getLast()            | peekLast()   |
+
+
+
+## 什么是阻塞队列？
+
+阻塞队列（Blocking Queue）是一种特殊的队列，它在以下两种情况下会自动阻塞当前线程：
+
+1.  **当队列为空时**，从队列中获取元素的操作将被阻塞，直到队列中有可用的元素。
+2.  **当队列已满时**，向队列中插入元素的操作将被阻塞，直到队列中有空闲的空间。
+
+阻塞队列通常用于多线程环境中的生产者-消费者模式，确保生产者和消费者之间的同步和协调。Java 提供了 `java.util.concurrent.BlockingQueue` 接口及其多个实现类来支持这种行为。
+
+**主要特点**
+
+-   **线程安全**：所有操作都是线程安全的，内部使用锁机制或其他同步手段来保证并发访问的安全性。
+-   **阻塞特性**：提供阻塞方法，如 `take()` 和 `put()`，这些方法会在队列为空或满时阻塞调用线程，直到条件满足。
+-   **超时机制**：部分方法支持超时参数，允许在指定时间内等待，如果条件未满足则抛出异常或返回特定值。
+
+常见实现类
+
+**ArrayBlockingQueue**
+
+-   **特点**：基于数组的有界阻塞队列，容量固定。
+-   **适用场景**：适合需要固定大小的队列，且希望在队列满时阻塞生产者，在队列空时阻塞消费者。
+-   **性能**：由于是基于数组实现，访问速度较快。
+
+```java
+BlockingQueue<String> queue = new ArrayBlockingQueue<>(10);
+```
+
+**LinkedBlockingQueue**
+
+-   **特点**：基于链表的可选有界阻塞队列，默认无界（容量为 `Integer.MAX_VALUE`）。
+-   **适用场景**：适合需要动态调整大小的队列，且希望在队列满时阻塞生产者，在队列空时阻塞消费者。
+-   **性能**：基于链表实现，插入和删除操作的时间复杂度为 O(1)。
+
+```java
+BlockingQueue<String> queue = new LinkedBlockingQueue<>();
+```
+
+**SynchronousQueue**
+
+-   **特点**：不存储元素的阻塞队列，每个插入操作必须等待另一个线程的移除操作，反之亦然。
+-   **适用场景**：适合直接传递数据的场景，例如生产者和消费者之间直接交换数据。
+-   **性能**：非常轻量级，但不适合存储大量数据
+
+```java
+BlockingQueue<String> queue = new SynchronousQueue<>();
+```
+
+**PriorityBlockingQueue**
+
+-   **特点**：基于优先级堆的无界阻塞队列，元素按自然顺序或自定义比较器排序。
+-   **适用场景**：适合需要按优先级处理任务的场景。
+-   **性能**：插入和删除操作的时间复杂度为 O(log n)。
+
+```java
+BlockingQueue<String> queue = new PriorityBlockingQueue<>();
+```
+
+**DelayQueue**
+
+-   **特点**：元素只有在其延迟期满后才能被取出的无界阻塞队列。
+-   **适用场景**：适合定时任务调度，例如任务在指定时间后执行。
+-   **性能**：插入和删除操作的时间复杂度为 O(log n)。
+
+```java
+BlockingQueue<DelayedTask> queue = new DelayQueue<>();
+```
+
+**常用方法**
+
+`BlockingQueue` 接口提供了多种方法来操作队列，包括阻塞、非阻塞和带超时的方法：
+
+-   **阻塞方法**：
+    -   `put(E e)`：将元素插入队列，如果队列已满，则阻塞直到有空间。
+    -   `take()`：从队列中移除并返回头部元素，如果队列为空，则阻塞直到有元素。
+-   **非阻塞方法**：
+    -   `offer(E e)`：尝试将元素插入队列，如果成功返回 `true`，否则返回 `false`。
+    -   `poll()`：尝试从队列中移除并返回头部元素，如果队列为空则返回 `null`。
+-   **带超时的方法**：
+    -   `offer(E e, long timeout, TimeUnit unit)`：尝试在指定时间内将元素插入队列，如果成功返回 `true`，否则返回 `false`。
+    -   `poll(long timeout, TimeUnit unit)`：尝试在指定时间内从队列中移除并返回头部元素，如果成功返回元素，否则返回 `null`。
+
+```java
+import java.util.concurrent.*;
+
+public class BlockingQueueExample {
+    public static void main(String[] args) throws InterruptedException {
+        // 创建一个容量为 5 的阻塞队列
+        BlockingQueue<String> queue = new ArrayBlockingQueue<>(5);
+
+        // 生产者线程
+        Thread producer = new Thread(() -> {
+            try {
+                for (int i = 0; i < 10; i++) {
+                    String message = "Message " + i;
+                    System.out.println("Producing: " + message);
+                    queue.put(message); // 如果队列满了，会阻塞
+                    Thread.sleep(100);
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        // 消费者线程
+        Thread consumer = new Thread(() -> {
+            try {
+                while (true) {
+                    String message = queue.take(); // 如果队列为空，会阻塞
+                    System.out.println("Consuming: " + message);
+                    Thread.sleep(200);
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        producer.start();
+        consumer.start();
+
+        // 等待一段时间后中断消费者线程
+        Thread.sleep(3000);
+        consumer.interrupt();
+    }
+}
+```
+
+
+
+## foreach于普通for循环的区别？
+
+作用于使用场景
+
+-   普通for循环，可以用于所有需要重复执行某些语句的场景。也可以用于遍历数组于支持索引访问的List集合。
+-   增强for循环，只能用于遍历数组与Collection集合
+
+使用区别
+
+-   如果使用普通for遍历数组，需要指定下标值，可以修改数组的元素
+-   如果使用增强for遍历数组，不需要指定下标，但无法修改数组的元素
+-   另外，增强for循环只是一种语法糖
+    -   增强for循环遍历数组时，编译器仍然会将对应代码转化为普通for循环
+    -   增强for循环遍历Collection集合时，编译器会将对应代码转化为Iterator迭代器遍历集合的代码
+
+
+
+## foreach和迭代器有什么关系？
+
+增强for循环只是一种语法糖
+
+-   增强for循环遍历数组时，编译器仍然会将对应代码转化为普通for循环
+-   增强for循环遍历Collection集合时，编译器会将对应代码转化为Iterator迭代器遍历集合的代码
+
+>   问：Java中的语法糖是什么？
+>
+>   答：在Java中，语法糖（Syntactic Sugar）是指编译器提供的某些语法特性，这些特性使得代码更加简介、易读，但底层实现仍然是相同的。语法糖并不会改变程序的行为，只是让程序员编写代码更加方法。
+
+
+
+## List遍历有那几种遍历方式？
+
+-   普通for循环
+
+```java
+List<String> list = Arrays.asList("A", "B", "C", "D");
+for (int i = 0; i < list.size(); i++) {
+    System.out.println(list.get(i));
+}
+```
+
+-   foreach
+
+```java
+List<String> list = Arrays.asList("A", "B", "C", "D");
+for (String item : list) {
+    System.out.println(item);
+}
+```
+
+-   Iterator迭代器
+
+```java
+List<String> list = Arrays.asList("A", "B", "C", "D");
+Iterator<String> iterator = list.iterator();
+while (iterator.hasNext()) {
+    System.out.println(iterator.next());
+}
+```
+
+-    ListIterator
+
+```java
+List<String> list = Arrays.asList("A", "B", "C", "D");
+ListIterator<String> listIterator = list.listIterator();
+while (listIterator.hasNext()) {
+    System.out.println(listIterator.next());
+}
+```
+
+-   Java 8 Stream API
+
+```java
+List<String> list = Arrays.asList("A", "B", "C", "D");
+list.stream().forEach(System.out::println);
+```
+
+
+
+## 编程实现删除List集合中的元素，有几种方式？
+
+-   **使用迭代器（Iterator）删除**
+
+```java
+List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+Iterator<String> iterator = list.iterator();
+while (iterator.hasNext()) {
+    String item = iterator.next();
+    if (someCondition(item)) { // 根据条件删除元素
+        iterator.remove();	// 调用的是迭代器的remove，如果使用集合的remove方法会抛出ConcurrentModificationException
+    }
+}
+```
+
+-   **使用foreach**
+
+注意：不建议直接在增强型for循环中使用`remove`方法，因为这会导致 `ConcurrentModificationException` 异常。可以先收集要删除的元素，再批量删除。
+
+```java
+List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+List<String> toRemove = new ArrayList<>();
+for (String item : list) {
+    if (someCondition(item)) { // 根据条件添加到待删除列表
+        toRemove.add(item);
+    }
+}
+list.removeAll(toRemove);
+```
+
+-   **使用普通 for 循环从后往前删除**
+
+```java
+List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+for (int i = list.size() - 1; i >= 0; i--) {
+    if (someCondition(list.get(i))) { // 根据条件删除元素
+        list.remove(i);
+    }
+}
+```
+
+-   **使用 Java 8 Stream API 过滤**
+
+```java
+List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+list = list.stream()
+           .filter(item -> !someCondition(item)) // 根据条件过滤
+           .collect(Collectors.toList());
+```
+
+-   **使用 removeIf 方法（Java 8+）**
+
+```java
+List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+list.removeIf(item -> someCondition(item)); // 根据条件删除
+```
+
+**总结**
+
+-   删除Collection集合中元素的正确操作：
+    -   如果目标明确，用集合中的remove(Object)或removeAll(Collection)
+    -   如果目标不明确
+        -   Java8之后，推荐使用集合对象.removeIf(条件)
+        -   Java8之前，只能在Iterator迭代器遍历集合过程中进行条件判断，调用迭代器的remove()方法
+-   **切记不要**进行如下操作
+    -   在Iterator迭代器遍历过程中，调用集合的remove方法
+    -   在foreach循环中，调用集合的remove方法
+    -   类似的像add、replaceAll等方法都不可以
 
 
 
@@ -1127,6 +1633,16 @@ public class ConcurrentHashSetExample {
 
 
 
+## 几种Set集合的区别？
+
+|             | HashSet            | LinkedHashSet             | TreeSet         |
+| ----------- | ------------------ | ------------------------- | --------------- |
+| 底层集合    | HashMap            | LinkedHashMap             | TreeMap         |
+| 数据结构    | 数组+单链表+红黑树 | 数组+单链表+红黑树+双链表 | 红黑树          |
+| 顺序特点    | 无序               | 插入顺序                  | 按k元素大小顺序 |
+| key支持null | 支持               | 支持                      | 不支持          |
+| 线程安全    | 不安全             | 不安全                    | 不安全          |
+
 
 
 # Map
@@ -1366,6 +1882,33 @@ Properties类的**特点**如下：
 -   键值对存储：Properties类用于存储键值对形式的配置信息，其中**键和值都是字符串类型**。
 -   加载和保存属性文件：Properties类提供了 load() 和 store() 方法，用于从属性文件中加载配置信息和将配置信息保存到属性文件中。
 -   默认值：**Properties类可以设置默认值**，当获取某个键对应的值时，如果该键不存在，则返回默认值。
+
+
+
+## Hashtable 与 HashMap的区别？
+
+|                    | Hashtable        | HashMap                    |
+| ------------------ | ---------------- | -------------------------- |
+| 引入时间           | JDK1.0（最古老） | JDK1.2                     |
+| 线程安全           | 安全             | 不安全                     |
+| key和value支持null | 不支持           | 支持一个null键和多个null值 |
+
+
+
+## 几种Map有什么区别？
+
+所以Map都是存储键值对的，key不可重复，不可修改，value可以重复，可以修改。
+
+|             | hashtable   | HashMap            | LinkedHashMap             | TreeMap       |
+| ----------- | ----------- | ------------------ | ------------------------- | ------------- |
+| 数据结构    | 数组+单链表 | 数组+单链表+红黑树 | 数组+单链表+红黑树+双链表 | 红黑树        |
+| 顺序特点    | 无序        | 无序               | 插入顺序                  | 按key大小顺序 |
+| key支持null | 不支持      | 支持               | 支持                      | 不支持        |
+| 线程安全    | 安全        | 不安全             | 不安全                    | 不安全        |
+
+
+
+
 
 ## 什么是IdentityHashMap？
 
@@ -3158,3 +3701,24 @@ public class LRUCache<K, V> extends LinkedHashMap<K, V> {
 }
 ```
 
+
+
+## 常用的并发集合有哪些？
+
+Java并发包`java.util.concurrent`提供了多种线程安全的集合类，这些集合类在多线程环境中提供了高效的并发访问。例如：ConcurrentHashMap、CopyOnWriteArrayList、ThreadLocal等
+
+>   问：常用的线程安全的集合有哪些？
+>
+>   答：java.util包：Vector、Stack、Hashtable、Properties等
+>
+>   ​		java.util.concurrent包：CopyOnWriteArrayList、ConcurrentHashMap等
+>
+>   问：CopyOnWrite*并发集合有哪些优缺点？应用常见是什么？
+>
+>   答：
+>
+>   ​	 优点：所有的写操作（如添加、删除）都会创建一个新的数组副本，然后将引用指向新的数组，从而避免了数据竞争。读操作和写操作之间不会产生冲突，确保了线程安全。
+>
+>   ​	缺点：每次写操作都会创建一个新的数组副本，这会导致较大的内存开销，特别是在集合较大时。如果写操作频繁，可能会导致频繁的垃圾回收，影响性能。读操作看到都是写操作开始前的数据，因此可能会有数据延迟的问题。
+>
+>   ​	应用场景：适用于读操作远多于写操作的场景，例如日志记录、配置管理等。在这些场景中，读操作的性能至关重要，而写操作较少，可以容忍一定的延迟。
