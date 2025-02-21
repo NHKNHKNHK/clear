@@ -477,13 +477,210 @@ hashCode方法必须遵循：
 
 ## 什么是泛型？泛型有什么用？
 
-
-
-## 泛型擦除？
+ 在Java中，泛型（Generics）是提供类型安全的机制，它允许在定义类、接口和方法是使用**类型参数**。通过使用泛型，可以**重用**相同的代码来处理不同类型的对象，同时保持**类型的安全性**，避免了运行时类型错误。
 
 
 
-## Java中泛型的上下界限定符？
+## 集合使用泛型有什么优点？
+
+-   强制集合只容纳指定类型的对象，避免了运行时出现`ClassCastExceotion`类型转换异常，把元素类型的检查从运行时提前到了编译时。
+-   代码更整洁，使用时不需要instanceof判断和显式转换。
+-   优化了JVM运行时环境，因为它不会产生类型检查的字节码指令，类型检查在编译时就完成了。
+
+
+
+## Java中泛型的T、R、K、V、E是什么？
+
+在Java中，泛型使用类型参数来表示不确定的类型。常见的类型参数有以下几个，它们通常代表特定的含义，但这些只是**约定俗成**的命名习惯，并不是强制性的。
+
+| 字母 | 含义                    | 应用场景                                                     | 示例                                                |
+| ---- | ----------------------- | ------------------------------------------------------------ | --------------------------------------------------- |
+| T    | 表示任意类型Type        | 常用于表示泛型类或泛型方法中的某个类型                       | `Comparable<T>`，表示T类型的比较器接口              |
+| R    | 表示返回（Return）类型  | 常用于泛型方法中，表示方法的返回值类型                       | 函数式接口`Function<T,R>`<br>抽象方法`R apply(T t)` |
+| K    | 表示键（Key）类型       | 常用于表示键值对中的键类型，尤其是在与`Map`相关的类或接口中  | `Map<K,V>`，表示一个键值对                          |
+| V    | 表示值（Value）类型     | 常用于表示键值对中的值类型，尤其是在与`Map`相关的类或接口中  | `Map<K,V>`，表示一个键值对                          |
+| E    | 表示元素（Element）类型 | 常用于表示集合中的元素类型，尤其是在与`List`、`Set`等集合相关的类或接口中 | `List<E>`，表示一个可以存储任意类型元素的列表       |
+
+
+
+## 泛型中的<? extends T>和<? super T>有什么区别？
+
+在Java泛型中，`<? extends T>`和`<? super T>`是两种通配符限制，用于更灵活的处理泛型类型。它们分别表示上界通配符和下界通配符。
+
+**上界通配符`<? extends T>`**
+
+-   含义：表示未知类型，但该类型是`T`或者`T`的子类型。
+-   用途：主要用于**读取数据**，让编译器知道该类型是`T`或者`T`的子类型。所以可以从该类型中安全的读取T类型的数据，但不能写入（除了`null`）
+
+示例：假设有一个方法需要从一个列表在读取`Number`类型的数据：
+
+```java
+public void readNumbers(List<? extends Number> list) {
+    for (Number number : list) {
+        // 可以安全的读取数据
+        System.out.println(number); 
+    }
+    
+    // 不能写入数据，除非写入null
+    // list.add(1); // 编译报错
+    list.add(null);
+}
+```
+
+在这个例子中，`List<? extends Number>`可以接受`List<Number>`、`List<Integer>`、`List<Double>`等类型，但不能向列表中添加新的元素（除了null），因为编译器无法确定具体的类型。
+
+
+
+**下界通配符`<? super T>`**
+
+-   含义：表示未知类型，但该类型是`T`或者`T`的父类型。
+-   用途：主要用于**写入数据**，让编译器知道该类型是`T`或者`T`的父类型。所以可以安全地向该类型中写入数据，但不能读取（除非读取为`Object`类型）
+
+示例：假设有一个方法需要向一个列表在写入`Integer`类型的数据：
+
+```java
+public void writeInteger(List<? extends Integer> list) { 
+	// 可以安全的写入数据     注意：只能写入Integer或其子类型数据
+    list.add(1); 
+    
+    // 不能读取数据，除非读取为Object类型
+    // Integer number = list.get(1); // 编译报错
+    Object number = list.get(1);
+}
+```
+
+在这个例子中，`List<? super Integer>`可以接受`List<Integer>`、`List<Number>`、`List<Object>`等类型，可以向列表中添加`Integer`类型及其子类型的数据，但不能从列表中读取数据（除非读取为Object类型）
+
+**生产者与消费者的记忆法则**
+
+为了更好地记住 `<? extends T>` 和 `<? super T>` 的使用场景，可以使用以下记忆法则：
+
+-   **PECS**：**P**roducer **E**xtends, **C**onsumer **S**uper
+
+    -   **生产者（Producer）** 使用 `<? extends T>`：当你需要从集合中读取数据时。
+
+    -   ```java
+        // 集合工具类Collections
+        public static <T extends Object & Comparable<? super T>> T max(Collection<? extends T> coll) 
+        ```
+
+    -   **消费者（Consumer）** 使用 `<? super T>`：当你需要向集合中写入数据时。
+
+    -   ```java
+        // 集合工具类Collections
+        public static <T> boolean addAll(Collection<? super T> c, T... elements)
+        public static <T> void copy(List<? super T> dest, List<? extends T> src)    
+        public static <T> void fill(List<? super T> list, T obj)
+        ```
+
+**总结**
+
+| 通配符          | 含义           | 特点                     | 使用场景             |
+| :-------------- | :------------- | :----------------------- | :------------------- |
+| `<? extends T>` | 未知类型的上界 | 协变，只能读取，不能写入 | 作为生产者，读取数据 |
+| `<? super T>`   | 未知类型的下界 | 逆变，只能写入，不能读取 | 作为消费者，写入数据 |
+
+通过合理使用 `<? extends T>` 和 `<? super T>`，你可以编写更加灵活和安全的泛型代码，同时确保类型安全性和代码的可维护性
+
+
+
+## 泛型的实现原理是什么？
+
+
+
+
+
+## 泛型擦除？会带来什么问题？ 
+
+泛型擦除是Java编译器在编译泛型代码时的一种机制。它的目的是确保泛型能够与Java的旧版本（即不支持泛型的版本）兼容。
+
+在Java中，泛型信息只存在于源代码和编译时。在运行时，所有的泛型类型信息都会被擦除。这意味着在运行时，所有的泛型类型都被替换为它们的上限类型（如果没有显式指定上限，则默认为Object）
+
+
+
+考虑一个简单的泛型类：
+
+```java
+public class Box<T> {
+    private T value;
+
+    public void setValue(T value) {
+        this.value = value;
+    }
+
+    public T getValue() {
+        return value;
+    }
+}
+```
+
+在编译时，泛型类型T会被擦除，并替换为它的上限类型。在这个例子中，因为没有指定上限类型，T会被替换为Object。编译后的代码大致如下：
+
+```java
+public class Box {
+    private Object value;
+
+    public void setValue(Object value) {
+        this.value = value;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+}
+```
+
+**类型擦除的影响**
+
+-   **运行时类型检查**：由于泛型类型信息在运行时被擦除，无法在运行时获取泛型类型的信息。例如，不能使用instanceof操作符检查泛型类型。
+
+```java
+Box<String> stringBox = new Box<>();
+if (stringBox instanceof Box<String>) { // 编译错误
+    // ...
+}
+```
+
+-   **泛型数组**：不能创建泛型类型的数组，因为在运行时无法确定泛型类型
+
+```java
+List<String>[] stringLists = new List<String>[10]; // 编译错误
+```
+
+-   **类型安全**：在编译时进行类型检查，确保类型安全。然而，由于类型擦除，在某些情况下仍可能出现类型转换异常。
+
+```java
+List<String> stringList = new ArrayList<>();
+List rawList = stringList; // 允许，但不安全
+rawList.add(123); // 编译时不报错，但运行时可能导致问题
+String str = stringList.get(0); // 运行时抛出ClassCastException
+```
+
+**使用限制**
+
+-   **静态上下文中使用泛型**：不能在静态字段或静态方法中使用类型参数，因为类型参数是在实例化时才指定的，而静态成员与具体实例无关
+
+```java
+public class GenericClass<T> {
+    private static T value; // 编译错误
+    
+    public static T staticMethod(T param) { // 编译错误
+        return param;
+    }
+}
+```
+
+-   **泛型实例化**：不能直接实例化泛型类型，因为在运行时泛型类型信息已经被擦除
+
+```java
+public class GenericClass<T> {
+    public void createInstance() {
+        T obj = new T(); // 编译错误
+    }
+}
+```
+
+
 
 
 
