@@ -1756,6 +1756,141 @@ public ResponseEntity<String> getUser(@PathVariable Long id) {
 
 ## 如何在 Spring MVC 中实现跨域资源共享（CORS）？
 
+在 Spring MVC 中实现跨域资源共享（CORS，Cross-Origin Resource Sharing）可以通过多种方式来配置。以下是几种常见的方法：
+
+-   使用`@CrossOrigin`注解
+
+`@CrossOrigin` 是 Spring Framework 提供的一个注解，用于在控制器方法或整个控制器上指定允许的跨域请求。
+
+这是最简单的方法之一，适用于细粒度的跨域控制，可以应用于类或方法级别。
+
+```java
+// 方法级别
+
+@RestController
+public class MyController {
+
+    @GetMapping("/api/data")
+    @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
+    public List<Data> getData() {
+        // 返回数据
+    }
+}
+```
+
+`@CrossOrigin` 注解指定了来自 `http://localhost:3000` 的跨域请求是被允许的，并且设置了预检请求的缓存时间为 3600 秒（1 小时）。
+
+```java
+// 类级别
+
+@RestController
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
+public class MyController {
+
+    @GetMapping("/api/data")
+    public List<Data> getData() {
+        // 返回数据
+    }
+}
+```
+
+所有在 `MyController` 中的方法都将允许来自 `http://localhost:3000` 的跨域请求。
+
+-   **配置全局 CORS 支持**
+
+如果你需要在全局范围内配置 CORS 策略，可以实现 `WebMvcConfigurer` 接口并重写 `addCorsMappings` 方法
+
+```java
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**") // 指定允许跨域访问的路径
+            .allowedOrigins("http://localhost:3000") // 允许的源
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 允许的HTTP方法
+            .allowedHeaders("*") // 允许的请求头
+            .allowCredentials(true) // 是否允许发送Cookie
+            .maxAge(3600); // 预检请求的有效期（秒）
+    }
+}
+```
+
+创建一个 `CorsConfig` 类，实现了 `WebMvcConfigurer` 接口，并在 `addCorsMappings` 方法中添加了一个全局的 CORS 配置，允许来自 `http://localhost:3000` 的跨域请求。
+
+-   **使用过滤器（Filter）**
+
+如果需要更灵活的跨域配置，或者使用的是较旧版本的Spring框架，可以通过自定义过滤器来实现CORS支持。
+
+```java
+@Component
+public class CorsFilter implements Filter {
+
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+            throws IOException, ServletException {
+        HttpServletResponse response = (HttpServletResponse) res;
+        HttpServletRequest request = (HttpServletRequest) req;
+
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            chain.doFilter(req, res);
+        }
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) {}
+
+    @Override
+    public void destroy() {}
+}
+```
+
+-   **使用 Spring Security 配置 CORS**
+
+如果你的应用程序使用了 Spring Security，可以通过配置 `SecurityConfig` 来启用 CORS 支持。
+
+```java
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and()
+            .csrf().disable(); // 如果不需要CSRF保护，可以禁用它
+
+        // 其他安全配置...
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "X-Requested-With"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+}
+```
+
+**总结**
+
+-   **@CrossOrigin 注解**：适合简单的、细粒度的跨域配置。
+-   **全局配置**：通过 `WebMvcConfigurer` 实现，适用于整个应用程序级别的跨域设置。
+-   **过滤器**：提供更灵活的配置选项，适用于复杂场景。
+-   **Spring Security 配置**：当使用 Spring Security 时，确保 CORS 和安全配置一致。
+
+选择合适的方式取决于你的具体需求和应用架构。通常情况下，推荐优先使用 `@CrossOrigin` 或**全局配置**，因为它们更加简洁且易于维护。
+
 
 
 ## 如何在 Spring MVC 中使用模板引擎（如 Thymeleaf）？
