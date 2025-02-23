@@ -2,6 +2,48 @@
 
 ## Spring MVC 与 Spring Boot 有什么区别？
 
+**SpringMVC**
+
+SpringMVC是一个基于模型-视图-控制器（MVC）设计模式的 Web 应用程序框架。它提供了一种灵活的方式来构建 Web 应用程序，主要关注于处理 HTTP 请求和生成响应。Spring MVC 的核心是 DispatcherServlet，它负责将请求路由到相应的控制器，并将控制器返回的视图转换为适当的响应格式。
+
+特点：
+
+-   提供了一个清晰的分层结构，明确区分了模型、视图和控制器的职责。
+
+-   支持多种视图技术，包括 JSP、FreeMarker、Velocity 和 Thymeleaf 等。
+
+-   允许使用注解来简化控制器的编写，例如 @Controller、@RequestMapping 和 @RequestParam 等。
+
+-   可以与其他 Spring Framework 组件无缝集成，例如 Spring Security 和 Spring Data。
+
+**SpringBoot**
+
+Spring Boot 是一个开箱即用的框架，旨在简化新 Spring 基于应用程序的初始搭建和开发。它提供了一系列的默认配置和自动化机制，帮助开发者更快速地创建生产级别的 Spring 应用程序。Spring Boot 不仅包含了 Spring MVC，还包括了许多其他的 Spring Framework 组件和第三方库。
+
+特点：
+
+-   内置了一个 Tomcat 服务器，可以轻松地启动和运行应用程序。
+
+-   通过 starter 依赖项简化了配置和依赖管理，例如 spring-boot-starter-web。
+
+-   提供了许多自动化配置和约定优于配置的特性，使得开发者可以专注于业务逻辑而不是基础设施。
+
+-   支持多种开发工具和 IDE，例如 Spring Initializr 和 Spring Tool Suite。
+
+-   可以生成可执行的 JAR 文件，方便部署和运行
+
+**区别**
+
+-   **范围不同**：Spring MVC 是一个专门的 Web 框架，而 Spring Boot 是一个更广泛的应用程序框架，涵盖了多个领域，包括 Web、数据访问、安全性等。
+
+-   **配置方式不同**：Spring MVC 需要手动配置许多组件和依赖项，而 Spring Boot 提供了默认配置和自动化机制，减少了配置工作。
+
+-   **项目结构不同**：Spring Boot 项目通常有一个更简单的结构，所有的组件和依赖项都集中在一起。
+
+-   **目标不同**：Spring MVC 主要关注于构建 Web 应用程序的核心功能，而 Spring Boot 旨在简化整个应用程序的开发和部署过程
+
+Spring MVC 是一个专注于 Web 开发的框架，而 Spring Boot 是一个更全面的框架，旨在简化整个应用程序的开发和部署
+
 
 
 ## 说说你对SpringMVC的理解？
@@ -1956,13 +1998,46 @@ public class MyController {
 使用 Thymeleaf 的语法，`th:text` 属性将显示传入的 `message` 变量的值。
 
 
-  
-
-
-
-
 
 ## 如何在 Spring MVC 中配置静态资源？
+
+在 Spring MVC 中，配置**静态资源**可以让应用程序直接提供静态文件（如 HTML、CSS、JavaScript、图片等），而**不必通过控制器来处理这些请求**。
+
+**1、将静态资源放置在正确的位置**
+
+首先，需要将静态资源文件放置在 Spring MVC 可以访问的目录下。通常，这些文件会被放置在 `src/main/resources/static` 或 `src/main/webapp` 目录中
+
+**2、在 Spring MVC 配置中启用静态资源处理**
+
+-   在 Spring MVC 的配置文件中（例如 `spring-mvc.xml`），添加以下配置来启用静态资源处理：
+
+```xml
+<mvc:resources mapping="/resources/**" location="/resources/" />
+```
+
+这段代码告诉 Spring MVC，将所有以 `/resources/` 开头的请求映射到 `src/main/resources/static` 目录下的文件。
+
+-   在Spring Boot，可以在 `application.properties` 或 `application.yml` 文件中添加以下配置：
+
+```xml
+spring.mvc.static-path-pattern=/resources/**
+```
+
+这将启用同样的静态资源处理功能。
+
+**3、访问静态资源**
+
+现在可以通过在浏览器中输入 `http://localhost:8080/resources/your-static-file.html` 来访问静态资源文件。其中，`your-static-file.html` 是你放置在 `src/main/resources/static` 目录下的实际文件名
+
+**4、自定义静态资源路径**
+
+如果你想使用自定义的路径来访问静态资源，可以在配置中修改 `mapping` 和 `location` 属性。例如：
+
+```xml
+<mvc:resources mapping="/my-resources/**" location="/my-resources/" />
+```
+
+这将使得所有以 `/my-resources/` 开头的请求都被映射到 `src/main/resources/static/my-resources` 目录下的文件
 
 
 
