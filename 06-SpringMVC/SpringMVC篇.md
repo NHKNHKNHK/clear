@@ -1770,11 +1770,96 @@ public ResponseEntity<String> getUser(@PathVariable Long id) {
 
 
 
+## @RequestBody和@ResponseBody注解的作用？
+
+`@RequestBody` 和 `@ResponseBody` 是 Spring MVC 中用于处理 HTTP 请求和响应体的注解
+
+**@RequestBody**
+
+-   **作用**：用于将 HTTP 请求体中的内容绑定到方法参数上，通常与 POST、PUT 等请求一起使用。
+-   工作原理
+    -   Spring 使用消息转换器（HttpMessageConverter）**将请求体的内容（如 JSON 或 XML）转换为 Java 对象。**
+    -   常见的消息转换器包括 `MappingJackson2HttpMessageConverter`（用于 JSON）、`MappingJackson2XmlHttpMessageConverter`（用于 XML）等。
+
+```java
+@PostMapping("/users")
+public User createUser(@RequestBody User user) {
+    // 将请求体中的 JSON/XML 数据自动转换为 User 对象
+    return userService.save(user);
+}
+```
+
+注意事项
+
+-   请求体必须符合指定的格式（如 JSON 或 XML），否则会抛出 `HttpMessageNotReadableException`。
+-   需要确保配置了适当的消息转换器以支持所需的数据格式。
+
+**@ResponseBody**
+
+-   **作用**：用于将方法返回值直接写入 HTTP 响应体中，通常与 GET、POST 等请求一起使用。
+-   工作原理
+    -   Spring 使用消息转换器**将返回的 Java 对象转换为指定格式（如 JSON 或 XML）**，然后将其作为响应体发送给客户端。
+
+```java
+@GetMapping("/users/{id}")
+@ResponseBody
+public User getUser(@PathVariable Long id) {
+    // 返回的 User 对象将被自动转换为 JSON/XML 并写入响应体
+    return userService.findById(id);
+}
+```
+
+注意事项
+
+-   如果返回的是复杂对象或集合，确保对象结构适合序列化为 JSON 或 XML。
+-   可以通过 `produces` 属性指定响应的内容类型（如 `application/json` 或 `application/xml`）
+
+
+
 ## @RestController
 
+`@RestController` 是 用于标记一个类作为 RESTful 控制器。这个注解实际上是 `@Controller` 和 `@ResponseBody` 注解的组合。
+
+如果一个控制器的所有方法都需要返回响应体，则可以使用 `@RestController` 注解替代每个方法上的 `@ResponseBody`。
+
+**`@Controller` 注解**
+
+`@Controller` 是 Spring MVC 中的一个基本注解，用于标记一个类作为控制器。控制器负责处理 HTTP 请求，并将结果返回给客户端。通常，控制器中的方法会返回一个视图名或一个 View 对象，用于渲染 HTML 页面。
+
+**`@ResponseBody` 注解**
+
+`@ResponseBody` 是另一个重要的注解，用于标记方法的返回值将被写入到 HTTP 响应体中，而不是用来选择一个视图进行渲染。如果一个方法没有使用 `@ResponseBody` 注解，则其返回值通常会被解释为视图名。
+
+**`@RestController` 注解**
+
+`@RestController` 注解是这两个注解的结合体。它不仅标记了一个类作为控制器，还指示了该控制器的所有方法都应该将其返回值写入到 HTTP 响应体中，而不是用来选择一个视图进行渲染。这意味着，使用 `@RestController` 注解的控制器非常适合用于构建 RESTful API
+
+```java
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        // 自动应用 @ResponseBody
+        return userService.findById(id);
+    }
+
+    @PostMapping
+    public User createUser(@RequestBody User user) {
+        // 自动应用 @RequestBody 和 @ResponseBody
+        return userService.save(user);
+    }
+}
+```
+
+`UserController` 被标记为一个 RESTful 控制器。`getUser()` 、`createUser`方法都返回一个 `User` 对象，Spring MVC 会自动将其序列化为 JSON 或 XML 等格式，并写入到 HTTP 响应体中。
+
+**总结**
+
+`@RestController` 注解使得开发者可以更方便地构建 RESTful API，简化了代码并提高了开发效率。
 
 
-## @RequestBody和@ResponseBody注解的作用？
 
 
 
