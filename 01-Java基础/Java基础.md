@@ -2256,21 +2256,236 @@ public class Utf8ToGbkConverter {
 
 ## Java序列化是什么？
 
+Java 序列化（Serialization）是将对象的状态转换为字节流的过程，以便将其保存到文件、内存或通过网络传输。反序列化（Deserialization）则是将字节流恢复为对象的过程。序列化和反序列化是 Java 中实现对象持久化和远程通信的重要机制。
+
+**主要用途**
+
+-   **对象持久化**：将对象状态保存到磁盘，以便稍后可以恢复。
+
+-   **网络传输**：通过网络发送对象时，需要将其转换为字节流进行传输。
+
+-   **分布式系统**：在分布式系统中，对象可以在不同的 JVM 之间传递。
+
+**实现序列化的步骤**
+
+要使一个类的对象可序列化，该类必须实现 `java.io.Serializable` 接口。Serializable 是一个**标记接口**，它不包含任何方法，只是用来标识该类的对象可以被序列化。
+
+如果不实现此接口的类将不会使任何状态序列化或反序列化，会抛出 `NotSerializableException` 。 
+
+-   如果对象的某个属性也是引用数据类型，那么如果该属性也要序列化的话，也要实现`Serializable` 接口 
+-   该类的所有属性必须是可序列化的。如果有一个属性不需要可序列化的，则该属性必须注明是**瞬态的**，使用 `transient `关键字修饰。 
+-   静态（**static**）变量的值不会序列化。因为静态变量的值不属于某个对象
+
+```java
+import java.io.Serializable;
+
+public class Person implements Serializable {
+    private static final long serialVersionUID = 1L; // 建议显式指定版本号
+
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{name='" + name + "', age=" + age + "}";
+    }
+}
+```
+
+**序列化对象**
+
+使用 `ObjectOutputStream` 将对象写入文件或输出流。
+
+```java
+import java.io.*;
+
+public class SerializeExample {
+    public static void main(String[] args) {
+        Person person = new Person("Alice", 30);
+        String filePath = "person.ser";
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+            oos.writeObject(person);
+            System.out.println("Object serialized and saved to " + filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+**反序列化对象**
+
+使用 `ObjectInputStream` 从文件或输入流读取对象。
+
+```java
+import java.io.*;
+
+public class DeserializeExample {
+    public static void main(String[] args) {
+        String filePath = "person.ser";
+        Person person = null;
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+            person = (Person) ois.readObject();
+            System.out.println("Object deserialized: " + person);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+
+
+**反序列化失败问题**
+
+**问题1：**
+
+对于 JVM 可以反序列化对象，它必须是能够找到 class 文件的类。如果找不到该类的 class 文件，则抛出一个 `ClassNotFoundException` 异常
+
+**问题2：**
+
+当 JVM 反序列化对象时，能找到 class 文件，但是 class 文件在序列化对象之后发生了修改，那么反序列化操作也会失败，抛出一个 `InvalidClassException`异常。发生这个异常的原因如下： 
+
+-   该类的序列版本号与从流中读取的类描述符的版本号不匹配 
+-   该类包含未知数据类型 
+
+**解决方法：**
+
+`Serializable` 接口给需要序列化的类，提供了一个序列版本号： `serialVersionUID` 。凡是实现 Serializable 接口的类都应该有一个表示序列化版本标识符的静态变量： 
+
+```JAVA
+static final long serialVersionUID = 234242343243L;  // 它的值由程序员随意指定即可
+```
+
+-   serialVersionUID 用来表明类的不同版本间的兼容性。简单来说，Java 的序列化机制是通过在运行时判断类的 serialVersionUID 来验证版本一致性的。在进行反序列化时，JVM 会把传来的字节流中的 serialVersionUID 与本地相应实体类的 serialVersionUID 进行比较，如果相同就认为是一致的，可以进行反序列化，否则就会出现序列化版本不一致的异常(InvalidCastException)。 
+
+-   如果类没有显示定义这个静态常量，它的值是 Java 运行时环境根据类的内部细节（包括类名、接口名、成员方法和属性等）自动生成的。若类的实例变量做了修改，serialVersionUID 可能发生变化。因此，建议显式声明。 
+
+-   如果声明了 serialVersionUID，即使在序列化完成之后修改了类导致类重新编译，则原来的数据也能正常反序列化，只是新增的字段值是默认值而已。
+
+
+
 
 
 ## 序列化ID（seriaVersionUID）的作用是什么？
+
+在Java中，`serialVersionUID`是一个`private static final long`修饰的长整型变量，用于唯一标识一个可序列化的类。它的主要作用是在序列化和反序列化过程中确保类的版本一致性。当类的结构发生变化时（如添加、删除或修改字段），**serialVersionUID可以帮助确保旧版本的序列化数据能够与新版本的类兼容**。
+
+>   相关面试题
+>
+>   问： 序列化ID（seriaVersionUID）的格式是怎么样的？
+>
+>   答：`private static final long seriaVersionUID = 值;`
+>
+>   
+>
+>   问：序列化ID（seriaVersionUID）一定要显式声明吗？
+>
+>   答：如果**没有显式声明**， Java 运行时环境根据类的内部细节（包括类名、接口名、成员方法和属性等）自动生成seriaVersionUID。自动生成的seriaVersionUID是基于类的结构计算出来的哈希值。如果**类的结构发生变化**（如添加、删除或修改字段），**生成的seriaVersionUID也会发生变化**。如果序列化数据的seriaVersionUID与类的seriaVersionUID不匹配，Java运行时环境会抛出`InvalidCastException`。
+>
+>   所有，如果声明了 serialVersionUID，即使在序列化完成之后修改了类导致类重新编译，则原来的数据也能正常反序列化，只是新增的字段值是默认值而已。
+>
+>   
+>
+>   问：序列化ID（seriaVersionUID）一定是唯一的吗？
+>
+>   答：**序列化ID（seriaVersionUID）并不一定需要是全局唯一的**，但它必须在**同一个类的不同版本直接保持一致**，以确保序列化和反序列化过程的兼容性。不同类之间的序列化ID（seriaVersionUID）可以相同，因为序列化ID（seriaVersionUID）是**类级别的标识符，而不是全局唯一的标识符**。
+>
+>   
+>
+>   问：同一个类的不同对象可以有不同的序列化ID（seriaVersionUID）吗？
+>
+>   答：不可以。序列化ID（seriaVersionUID）是一个静态的、最终的长整型变量（`static final long`），它属于类级别，而不是实例级别。这意味着序列化ID（seriaVersionUID）是在整个类的所有对象之间共享的，同一类的所有对象都具有相同的序列化ID（seriaVersionUID）。
+>
+>   
+>
+>   问：序列化ID（seriaVersionUID）可以修改吗？什么情况下可以修改？
+>
+>   答：序列化ID（seriaVersionUID）是一个静态的、最终的长整型变量（`static final long`），不能在运行时修改，但在开发过程中，你可以根据需要修改其值。当你对类的结构进行了重大修改，如添加、删除或修改字段，这些修改可能会影响序列化数据的兼容性。在这种情况下，修改序列化ID（seriaVersionUID）可以确保旧版本的序列化数据无法被新版本的类反序列化，从而避免潜在的数据损坏或错误。 
 
 
 
 ## 静态变量能不能被序列化？
 
+在Java中，静态变量（static 变量）不会被序列化。
+
+这是因为序列化的目的主要是为了保存和恢复对象的状态，而**静态变量属于类级别，而不是某个对象**。
+
+因此，序列化机制不会保存静态变量的值。
+
+>   番外：正常情况下，不会也不应该序列化静态变量，但是你非要这么做的话，只能通过writeObject方法手动定义序列化规则。
+>
+>   ```java
+>   // 在序列化和反序列化过程中需要特殊处理的类必须次啊用具有这些精准签名的特殊方法
+>   private void readObject(java.io.ObjectInputStream s)
+>           throws java.io.IOException, ClassNotFoundException 
+>           
+>   private void writeObject(java.io.ObjectOutputStream s)
+>           throws java.io.IOException
+>   ```
+>
+>   比如说：ArrayList类就手动定制了序列化与反序列化的规则
+
 
 
 ## transient关键字有什么作用？
 
+在Java中，`transient`关键字用于标记类的成员变量，使其在序列化的过程中被忽略。
+
+`transient`关键字的主要用途：
+
+-   **排除敏感数据**：某些数据可能是敏感的，如密码、密钥等，这些数据不应该被序列化并存储在文件或传输在网络中。
+
+-   **优化序列化性能**：某些数据量较大的字段，例如大对象、大数组等，如果不需要在序列化过程中保存，可以使用该关键字来排除这些字段，从而减少序列化数据的大小，提高性能。减少不必要的数据序列化可以节省磁盘空间和网络带宽。
+-   **动态计算的字段**：某些字段可能是在运行时动态计算的，这些字段的值可以在需要时重新计算，不需要保存在序列化数据中。
 
 
 
+## ArrayList集合中的elementData数组为什么要加transient修饰？
+
+elementData数组中可能有很多`null`值，通常情况下`size` < `elementData.length`，因此序列化时，只需要序列化size个对象即可，而不是整个数组。
+
+因此ArrayList类中手动实现了`writeObject`和`readObject`方法定制了特殊的序列化过程。
+
+
+
+## 序列化一个对象时，有哪些需要注意的？
+
+在进行序列化和反序列化时，需要注意以下几个方面：
+
+-   如果一个类的对象需要序列化，该类**必须实现`Serializable`接口**
+-   建议**显式定义`serialVersionUID`**，以避免因编译器自动生成的serialVersionUID不一致而导致的问题。
+-   明确哪些变量不序列化：`static`和`transient`标识的变量不会被序列化。
+-   尽量避免复杂的对象图，或者使用`transient`关键字来排除不必要的引用。如果对象图中有循环引用（即对象A引用对象B，对象B又引用对象A），序列化机制会自动处理这种情况，但可能会导致性能问题。
+-   如果需要对序列化和反序列化过程进行更细粒度的控制，可以在类中实现 writeObject 和 readObject方法
+
+
+
+## Java有哪两种序列化方式？
+
+-   实现`Serializable`接口。该接口不包含任何抽象方法。如果需要更细粒度的控制，可以在类中手动实现 writeObject 和 readObject方法
+-   实现`Externalizable`接口。该接口包含writeExternal 和 readExternal 方法
+
+
+
+## 序列化中@Serial注解的作用？（JDK16）
+
+在Java16及以上版本中，引入了一个新注解`@Serial`，用于在序列化相关的代码中提供更好的文档化和维护性。`@Serial`注解主要用于标记哪些与序列化相关的特殊方法和字段。使得这些方法和字段在代码审查和维护时更加清晰。
+
+具体来说，`@Serial`注解可以用于以下几种情况：
+
+-   标记SerialVersionUID字段
+-   标记  writeObject 和 readObject方法
+-   标记 readResolve 和 writeReplace方法
+
+>   个人理解：`@Serial`注解就类似于`        @Override`注解，后者是用于标记哪些方法是重写的方法
 
 
 
