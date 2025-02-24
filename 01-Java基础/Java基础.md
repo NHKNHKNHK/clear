@@ -276,7 +276,7 @@ s1 += 1;
 
 
 
-## Java中的I/O流是什么？
+## 
 
 
 
@@ -1956,6 +1956,323 @@ if (a == b) {
     -   在 JDK 6 及之前版本中，字符串常量池位于永久代（PermGen），而在 JDK 7 及之后版本中，字符串常量池被移到了堆内存中。这意味着在不同版本的 JDK 中，`intern()` 的行为和性能可能有所不同。
 3.  **自动 intern**：
     -   字符串字面量（如 `"hello"`）在编译时会自动被放入字符串常量池，因此不需要显式调用 `intern()`。
+
+
+
+## Java中的I/O流是什么？
+
+ava 中的 I/O 流（Input/Output Streams）是用于处理输入和输出操作的抽象概念。它们提供了读取和写入数据的功能，可以与文件、网络连接、内存缓冲区等进行交互。
+
+Java 的 I/O 流主要分为两大类：**字节流（Byte Streams）和字符流（Character Streams）。**
+
+此外，还有专门用于对象序列化的**对象流**。
+
+**字节流（Byte Streams）**
+
+-   定义：处理原始的二进制数据，以字节为单位进行读写。
+-   常用类
+    -   `InputStream `和 `OutputStream` 是所有字节流的顶级抽象类。
+    -   `FileInputStream` 和 `FileOutputStream`：用于文件的读写。
+    -   `ByteArrayInputStream` 和 `ByteArrayOutputStream`：用于内存中的字节数组读写
+    -   `BufferedInputStream` 和 `BufferedOutputStream`：带缓冲功能的字节流，提高读写效率
+    -   `DataInputStream` 和 `DataOutputStream`：支持基本数据类型的读写。
+
+**字符流（Character Streams）**
+
+-   定义：处理字符数据，以字符为单位进行读写，通常用于文本文件的处理。
+
+-   常用类
+    -   `Reader` 和 `Writer` 是所有字符流的顶级抽象类。
+    -   `FileReader` 和 `FileWriter`：用于文件的字符读写。
+    -   `StringReader` 和 `StringWriter`：用于字符串的读写。
+    -   `BufferedReader` 和 `BufferedWriter`：带缓冲功能的字符流，提高读写效率。
+    -   `PrintWriter`：提供格式化输出功能。
+
+**对象流（Object Streams）**
+
+-   定义：用于序列化和反序列化 Java 对象，将对象保存到文件或从文件中恢复对象。
+
+-   常用类
+    -   `ObjectInputStream` 和 `ObjectOutputStream`：用于对象的序列化和反序列化
+
+
+
+## IO中的输入流和输出流有什么区别？
+
+在 Java 的 I/O 流中，输入流（InputStream/Reader）和输出流（OutputStream/Writer）有明确的区别，主要体现在它们的**功能**和**数据流向**。
+
+**数据流向**
+
+-   输入流：从外部源读取数据到程序内部。
+
+-   输出流：从程序内部写入数据到外部目标。
+
+**操作类型**
+
+-   输入流：用于读取数据。
+
+-   输出流：用于写入数据。
+
+**使用场景**
+
+-   输入流：当你需要从文件、网络或其他资源读取数据时使用。
+
+-   输出流：当你需要将数据保存到文件、发送到网络或其他目标时使用。
+
+**异常处理**
+
+-   输入流：通常会抛出 IOException，例如文件不存在或读取错误。
+
+-   输出流：也会抛出 IOException，例如磁盘空间不足或写入错误。
+
+**关闭流**
+
+-   输入流 和 输出流 都需要在使用完毕后关闭以释放资源。推荐使用 try-with-resources 语法来自动管理资源。
+
+
+
+## 字节流和字符流的区别？
+
+字节流（Byte Streams）和字符流（Character Streams）是 Java I/O 系统中的两种主要流类型，它们在处理数据的方式上有显著的区别
+
+**字节流（Byte Streams）**
+
+-   定义：处理原始的二进制数据，以字节为单位进行读写。
+-   适用场景
+    -   适合处理所有类型的文件，包括但不限于文本文件、图片、音频、视频等。
+    -   当需要直接处理二进制数据时使用。
+-   顶级抽象类
+    -   `InputStream`：用于输入操作。
+    -   `OutputStream`：用于输出操作
+
+-   常用子类
+    -   输入：
+        -   `FileInputStream`：从文件读取字节。
+        -   `BufferedInputStream`：带缓冲功能的字节输入流。
+        -   `DataInputStream`：支持基本数据类型的读取。
+    -   输出：
+        -   `FileOutputStream`：向文件写入字节。
+        -   `BufferedOutputStream`：带缓冲功能的字节输出流。
+        -   `DataOutputStream`：支持基本数据类型的写入
+
+```java
+import java.io.*;
+
+public class ByteStreamExample {
+    public static void main(String[] args) {
+        try (FileOutputStream fos = new FileOutputStream("example.bin");
+             BufferedOutputStream bos = new BufferedOutputStream(fos)) {
+
+            String data = "Hello, World!";
+            byte[] bytes = data.getBytes();
+            bos.write(bytes);
+            System.out.println("Data written to file.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+**字符流（Character Streams）**
+
+-   定义
+    -   处理字符数据，以字符为单位进行读写，通常用于文本文件的处理。
+    -   **自动处理字符编码转换**，使得处理文本更加方便。
+-   适用场景
+    -   适合处理**纯文本**文件，如 .txt、.csv、.xml 等。
+    -   当需要处理字符数据并且希望自动处理字符编码时使用。
+
+-   顶级抽象类
+    -   `Reader`：用于输入操作。
+    -   `Writer`：用于输出操作。
+
+-   常用子类
+
+    -   输入：
+        -   `FileReader`：从文件读取字符。
+        -   `BufferedReader`：带缓冲功能的字符输入流。
+        -   `StringReader`：从字符串读取字符。
+
+    -   输出：
+        -   `FileWriter`：向文件写入字符。
+        -   `BufferedWriter`：带缓冲功能的字符输出流。
+        -   `PrintWriter`：提供格式化输出功能。
+
+```java
+import java.io.*;
+
+public class CharacterStreamExample {
+    public static void main(String[] args) {
+        try (FileWriter fw = new FileWriter("example.txt");
+             BufferedWriter bw = new BufferedWriter(fw)) {
+
+            String data = "Hello, World!";
+            bw.write(data);
+            System.out.println("Data written to file.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+**关键区别**
+
+-   数据单位
+    -   字节流：以**字节**（8位）为单位处理数据。
+    -   字符流：以**字符**（通常是16位的Unicode字符）为单位处理数据。
+
+-   编码处理
+    -   字节流：不处理字符编码，直接处理二进制数据。
+    -   字符流：**自动处理字符编码转换**，简化了文本处理。
+
+-   适用范围
+
+    -   字节流：适用于所有类型的文件，特别是二进制文件。
+
+    -   字符流：主要用于处理纯文本文件，更适合文本处理。
+
+-   性能
+    -   字节流：通常比字符流更高效，因为不需要额外的编码转换。
+    -   字符流：由于涉及编码转换，可能会稍微慢一些，但在处理文本时更加方便。
+
+-   灵活性
+    -   字节流：更灵活，可以处理任何类型的文件。
+    -   字符流：专门针对文本文件，提供了更高级的功能，如自动编码转换和格式化输出。
+
+
+
+## 缓冲区和缓存的区别？
+
+缓冲区和缓存是两个常见的概念，虽然它们都用于临时存储数据，但它们的用途和工作场景不同。以下是它们的主要区别：
+
+-   在数据从一个地方传输到另一个地方的过程中，缓冲区可以暂时存储数据，以减少频繁的IO操作，提高效率。缓冲区中的数据通常是临时的，一旦数据被处理完毕，缓冲区的内容就会被清理或覆盖。缓冲区通常有固定的大小，超出缓冲区大小的数据需要分批处理。数据通常按照先进先出（FIFO）的方式处理。
+-   缓存是一种高速存储区域，用于存储经常访问的数据，以减少访问低速存储设备的次数，提高数据访问速度。缓存中的数据可以长时间保存，直到被显式清除或替换。缓存的内容通常是动态变化的，根据数据的访问频率和重要性进行更新。缓存通常有特定的替换策略，如LRU（最近最少使用）、LFU（最不经常使用）等，以决定哪些数据应该保留在缓存中。
+
+
+
+## 字节流怎么转化为字符流？
+
+在Java中，字节流和字符流之间可以通过一些适配器类进行转换。具体来说，可以使用`InputStreamReader`和`OutputStreamWriter`来实现字节流和字符流之间的转换。
+
+>   本题是关键：因为早期字符流不能手动处理字符编码，所有如果数据的编码与运行环境不一致，需要使用字节流转化为字符流以达到手动处理编码的目的
+
+**字节输入流转字符输入流**
+
+-   使用 `InputStreamReader`：将 InputStream 转换为 Reader。
+
+-   指定字符编码（可选）：可以指定字符编码（如 UTF-8），如果不指定，默认使用平台默认编码。
+
+```java
+import java.io.*;
+
+public class ByteToCharInputStreamExample {
+    public static void main(String[] args) {
+        try (FileInputStream fis = new FileInputStream("example.bin");
+             InputStreamReader isr = new InputStreamReader(fis, "UTF-8"); // 指定字符编码
+             BufferedReader br = new BufferedReader(isr)) {
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+**字节输出流转字符输出流**
+
+-   使用 `OutputStreamWriter`：将 OutputStream 转换为 Writer。
+
+-   指定字符编码（可选）：可以指定字符编码（如 UTF-8），如果不指定，默认使用平台默认编码。
+
+```java
+import java.io.*;
+
+public class ByteToCharOutputStreamExample {
+    public static void main(String[] args) {
+        try (FileOutputStream fos = new FileOutputStream("example.txt");
+             OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8"); // 指定字符编码
+             BufferedWriter bw = new BufferedWriter(osw)) {
+
+            String data = "Hello, World!";
+            bw.write(data);
+            System.out.println("Data written to file.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+
+
+## 读写文本文件时如何处理字符编码？
+
+ `FileReader`和`FileWriter`在读写文本文件时，可以直接指定文件的字符编码。
+
+注意！！！在**JDK11**中才可以直接指定字符编码
+
+```java
+import java.io.*;
+
+public class Utf8ToGbkConverter {
+    public static void main(String[] args) {
+        String inputFilePath = "input_utf8.txt";  // 输入文件路径（UTF-8 编码）
+        String outputFilePath = "output_gbk.txt"; // 输出文件路径（GBK 编码）
+
+        try (
+            // 从UTF8的文件中读取内容
+            FileReader fr = new FileReader(inputFilePath, Charset.forName("UTF-8"));
+            
+            // 写内容到GBK的文件中
+            FileWriter fw = new FileWriter(outputFilePath, Charset.forName("GBK"));
+        
+        ) {
+
+            int len;
+            char[] data = new char[10];
+            while ((len = fr.read()) != -1) {
+                fw.wrire(data, 0, len);
+            }
+            System.out.println("Conversion from UTF-8 to GBK completed successfully.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+
+
+## Java序列化是什么？
+
+
+
+## 序列化ID（seriaVersionUID）的作用是什么？
+
+
+
+## 静态变量能不能被序列化？
+
+
+
+## transient关键字有什么作用？
+
+
+
+
+
+
 
 # 番外
 
