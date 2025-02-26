@@ -367,6 +367,194 @@ public class ClassC {
 
 
 
+## BeanFactory 和 ApplicationContext的区别？
+
+**口语化表达**
+
+BeanFactory 和 ApplicationContext 都是用于管理和获取Bean的容器接口。
+
+BeanFactory功能相对简单。提供了Bean的创建、获取和管理功能。默认采用延迟初始化，只有在第一次访问Bean时才会创建该Bean。因为功能较为基础，BeanFactory通常用于资源受限的环境中，比如移动设备或嵌入式设备。
+
+ApplicationContext是BeanFactory的子接口，提供了更丰富的功能和更多的企业级特性。默认会在启动时创建并初始化所有单例Bean，支持自动装配Bean，可以根据配置自动注入依赖对象。有多种实现，如ClassPathXmlApplicationContext、FileSystemXmlApplicationContext、AnnotationConfigApplicationContext等。
+
+
+
+**BeanFactory** 
+
+BeanFactory是Spring框架的核心接口之一，负责管理和配置应用程序中的Bean。它提供了基本的Bean容器功能，但功能相对简单。
+
+-   **基本功能**：BeanFactory提供了Bean的创建、获取和管理功能。它是Spring IoC容器的最基本接口。
+
+-   **延迟加载**：BeanFactory默认采用延迟初始化（lazy loading），即只有在第一次访问Bean时才会创建该Bean。这有助于提升启动性能
+
+-   **轻量级**：因为功能较为基础，BeanFactory通常用于资源受限的环境中，比如移动设备或嵌入式设备
+
+**ApplicationContext**
+
+ApplicationContext默认会在启动时创建并初始化所有单例Bean（除非显式配置为延迟初始化）。这有助于在应用启动时尽早发现配置问题。
+
+-   **增强功能**：ApplicationContext是BeanFactory的子接口，提供了更丰富的功能和更多的**企业级特性**。
+    -   不仅提供了BeanFactory的所有功能，还提供了更多高级特性，如事件发布、国际化、AOP、自动Bean装配等。
+
+-   **自动刷新**：支持自动刷新配置文件，例如当使用 XML 配置文件时，可以在不重启应用的情况下更新配置。
+
+-   **事件传播**：支持发布/订阅事件机制，允许组件之间进行解耦通信。
+
+-   **国际化支持**：内置对国际化（i18n）的支持，可以轻松实现多语言应用。
+
+**AOP 支持**：支持面向切面编程（AOP），可以方便地添加横切关注点（如日志、事务管理等）。
+
+-   **资源访问**：简化了对各种资源（如文件、URL 等）的访问。
+
+-   **依赖注入**：支持更复杂的依赖注入方式，如构造器注入、Setter 注入、字段注入等
+
+-   **自动装配**：ApplicationContext支持自动装配Bean，可以根据配置自动注入依赖对象。
+
+
+
+**启动时间和内存占用**
+
+-   **BeanFactory**
+    -   启动快：由于其轻量级特性，启动速度较快，占用的内存也较少。
+    -   适合简单场景：适用于简单的应用程序或嵌入式系统。
+
+-   **ApplicationContext**
+
+    -   启动慢：因为加载了更多的功能模块，启动时间相对较长，内存占用也较大。
+
+    -   适合复杂场景：适用于大型企业级应用，能够更好地处理复杂的业务需求。
+
+**Bean 生命周期管理**
+
+-   **BeanFactory**
+    -   **手动管理**：需要显式调用 `getBean()` 方法来获取 Bean 实例，并且 Bean 的生命周期管理相对简单。
+
+-   **ApplicationContext**
+    -   **自动管理**：不仅支持 `getBean()` 方法，还可以自动管理 Bean 的生命周期，包括初始化后回调（`InitializingBean` 接口）、销毁前回调（`DisposableBean` 接口）等。
+
+**具体实现类**
+
+-   **BeanFactory**
+    -   常见实现类：`DefaultListableBeanFactory`、`XmlBeanFactory`（已废弃，推荐使用 `GenericApplicationContext`）
+
+-   **ApplicationContext**
+    -   常见实现类：
+        -   `ClassPathXmlApplicationContext`：从类路径下的 XML 文件加载配置。
+        -   `FileSystemXmlApplicationContext`：从文件系统中的 XML 文件加载配置。
+        -   `AnnotationConfigApplicationContext`：基于注解配置的上下文。
+        -   `WebApplicationContext`：用于 Web 应用程序，通常由 ContextLoaderListener 初始化。
+
+
+
+| 特性           | BeanFactory                                                  | ApplicationContext                                           |
+| -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 功能丰富度     | 基本功能（Bean的创建、获取和管理功能）                       | 增强功能（事件、国际化、AOP 等）                             |
+| 启动时间和内存 | 启动快，内存占用少                                           | 启动慢，内存占用大                                           |
+| Bean 生命周期  | 手动管理（显式调用 `getBean()` 方法）                        | 自动管理                                                     |
+| 适用场景       | 资源受限环境、简单应用                                       | 大型企业级应用、复杂业务需求                                 |
+| 实现类         | `DefaultListableBeanFactory`、<br/>`XmlBeanFactory`（已废弃，推荐使用 `GenericApplicationContext`） | `ClassPathXmlApplicationContext`、<br/>`AnnotationConfigApplicationContext` |
+
+**选择建议**
+
+-   如果你只需要基本的 IoC 容器功能，并且希望保持轻量级和快速启动，可以选择 BeanFactory。
+-   如果你需要更多高级特性（如事件传播、国际化、AOP 等），并且不介意稍微增加启动时间和内存占用，那么 ApplicationContext 是更好的选择。
+
+
+
+## BeanFactory 和 FactoryBean 的区别？
+
+BeanFactory是一个工厂，也就是一个容器，是用来管理和生成Bean的；
+
+FactoryBean是一个bean，但它是一个特殊的bean，所以也是由BeanFactory所管理的，不过FactoryBean不是一个普通的Bean，他会表现出工厂模式的样子，是一个能产生或者修饰对象生成的工厂Bean，里面的`getObject()`就是用来获取FactoryBean产生的对象。所以在BeanFactory中使用 "&" 来得到FactoryBean本身，用来区分通过容器获取FactoryBean产生的对象还是获取FactoryBean本身。
+
+**BeanFactory**
+
+-   定义：BeanFactory 是 Spring 中最基本的 IoC 容器接口，用于管理 Bean 的生命周期和依赖注入。
+-   作用：它负责根据配置（如 XML、注解或 Java 配置类）创建和管理 Bean 实例，并提供获取这些 Bean 的方法（如 getBean()）。
+
+-   适用场景：适用于需要基本的 IoC 容器功能的应用程序，特别是资源受限的环境（如 Applet 或移动设备）。它提供了轻量级的 Bean 管理功能。
+-   接口主要方法
+    -   `Object getBean(String name)`：根据名称获取 Bean 实例。
+    -   `Object getBean(String name, Class<T> requiredType)`：根据名称和类型获取 Bean 实例。
+    -   `boolean containsBean(String name)`：检查容器中是否存在指定名称的 Bean。
+    -   `String[] getBeanDefinitionNames()`：获取所有已注册的 Bean 名称。
+-   BeanFactory
+    可以通过 XML 配置文件、注解或 Java 配置类来配置和管理 Bean。
+    FactoryBean
+    通常在 XML 配置文件或 Java 配置类中声明为普通的 Bean，Spring 容器会自动识别并调用其 getObject() 方法来创建实际的 Bean。
+
+**FactoryBean**
+
+-   定义：FactoryBean 是一个特殊的接口，允许开发者自定义 Bean 的创建逻辑。它不是容器本身，而是一个由容器管理的 Bean，通过实现特定的方法来生成其他对象。
+-   作用：主要用于在容器中创建复杂的对象或需要特殊初始化逻辑的对象。它可以通过 `getObject()` 方法返回最终的 Bean 实例。
+-   适用场景：当你需要更灵活地控制 Bean 的创建过程时使用。例如，创建第三方库的对象、处理复杂初始化逻辑、或者需要在运行时动态决定返回哪个对象。
+-   接口的方法
+    -   `Object getObject()`：返回由 FactoryBean 创建的对象实例。
+    -   `Class<?> getObjectType()`：返回 getObject() 方法返回的对象类型。
+    -   `boolean isSingleton()`：指示 FactoryBean 创建的对象是否为单例。
+
+
+
+使用 BeanFactory
+
+```java
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class BeanFactoryExample {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        MyService myService = (MyService) context.getBean("myService");
+        myService.doSomething();
+    }
+}
+```
+
+使用 FactoryBean
+
+```java
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyServiceFactoryBean implements FactoryBean<MyService> {
+
+    @Override
+    public MyService getObject() throws Exception {
+        // 自定义创建逻辑
+        return new MyServiceImpl();
+    }
+
+    @Override
+    public Class<?> getObjectType() {
+        return MyService.class;
+    }
+
+    @Override
+    public boolean isSingleton() {
+        return true; // 返回的对象是单例
+    }
+}
+```
+
+总结表格
+
+| 特性     | BeanFactory                  | FactoryBean                                 |
+| -------- | ---------------------------- | ------------------------------------------- |
+| 定义     | 基本的 IoC 容器接口          | 允许自定义 Bean 创建逻辑的接口              |
+| 作用     | 管理 Bean 生命周期和依赖注入 | 创建复杂的对象或需要特殊初始化逻辑的对象    |
+| 适用场景 | 资源受限环境、简单应用       | 需要灵活控制 Bean 创建过程的场景            |
+| 主要方法 | getBean()、containsBean() 等 | getObject()、getObjectType()、isSingleton() |
+| 配置方式 | XML、注解、Java 配置类       | 在 XML 或 Java 配置类中声明为普通 Bean      |
+
+**总结**
+
+-   如果你需要更灵活地控制 Bean 的创建过程，特别是当 Bean 的创建逻辑较为复杂时，可以选择实现 `FactoryBean` 接口
+
+
+
+
+
 ## Spring Bean一共有几种作用域？
 
 
@@ -1897,98 +2085,7 @@ public class TestBService {
 
 
 
-## BeanFactory 和 ApplicationContext的区别？
 
-**口语化表达**
-
-BeanFactory 和 ApplicationContext 都是用于管理和获取Bean的容器接口。
-
-BeanFactory功能相对简单。提供了Bean的创建、获取和管理功能。默认采用延迟初始化，只有在第一次访问Bean时才会创建该Bean。因为功能较为基础，BeanFactory通常用于资源受限的环境中，比如移动设备或嵌入式设备。
-
-ApplicationContext是BeanFactory的子接口，提供了更丰富的功能和更多的企业级特性。默认会在启动时创建并初始化所有单例Bean，支持自动装配Bean，可以根据配置自动注入依赖对象。有多种实现，如ClassPathXmlApplicationContext、FileSystemXmlApplicationContext、AnnotationConfigApplicationContext等。
-
-
-
-**BeanFactory** 
-
-BeanFactory是Spring框架的核心接口之一，负责管理和配置应用程序中的Bean。它提供了基本的Bean容器功能，但功能相对简单。
-
--    **基本功能**：BeanFactory提供了Bean的创建、获取和管理功能。它是Spring IoC容器的最基本接口。
-
--   **延迟加载**：BeanFactory默认采用延迟初始化（lazy loading），即只有在第一次访问Bean时才会创建该Bean。这有助于提升启动性能
-
--   **轻量级**：因为功能较为基础，BeanFactory通常用于资源受限的环境中，比如移动设备或嵌入式设备
-
-**ApplicationContext**
-
-ApplicationContext默认会在启动时创建并初始化所有单例Bean（除非显式配置为延迟初始化）。这有助于在应用启动时尽早发现配置问题。
-
--   **增强功能**：ApplicationContext是BeanFactory的子接口，提供了更丰富的功能和更多的**企业级特性**。
-    -   不仅提供了BeanFactory的所有功能，还提供了更多高级特性，如事件发布、国际化、AOP、自动Bean装配等。
-
--   **自动刷新**：支持自动刷新配置文件，例如当使用 XML 配置文件时，可以在不重启应用的情况下更新配置。
-
--   **事件传播**：支持发布/订阅事件机制，允许组件之间进行解耦通信。
-
--   **国际化支持**：内置对国际化（i18n）的支持，可以轻松实现多语言应用。
-
-**AOP 支持**：支持面向切面编程（AOP），可以方便地添加横切关注点（如日志、事务管理等）。
-
--   **资源访问**：简化了对各种资源（如文件、URL 等）的访问。
-
--   **依赖注入**：支持更复杂的依赖注入方式，如构造器注入、Setter 注入、字段注入等
-
--   **自动装配**：ApplicationContext支持自动装配Bean，可以根据配置自动注入依赖对象。
-
-
-
-**启动时间和内存占用**
-
--   **BeanFactory**
-    -   启动快：由于其轻量级特性，启动速度较快，占用的内存也较少。
-    -   适合简单场景：适用于简单的应用程序或嵌入式系统。
-
--   **ApplicationContext**
-
-    -   启动慢：因为加载了更多的功能模块，启动时间相对较长，内存占用也较大。
-
-    -   适合复杂场景：适用于大型企业级应用，能够更好地处理复杂的业务需求。
-
-**Bean 生命周期管理**
-
--   **BeanFactory**
-    -   **手动管理**：需要显式调用 `getBean()` 方法来获取 Bean 实例，并且 Bean 的生命周期管理相对简单。
-
--   **ApplicationContext**
-    -   **自动管理**：不仅支持 `getBean()` 方法，还可以自动管理 Bean 的生命周期，包括初始化后回调（`InitializingBean` 接口）、销毁前回调（`DisposableBean` 接口）等。
-
-**具体实现类**
-
--   **BeanFactory**
-    -   常见实现类：`DefaultListableBeanFactory`、`XmlBeanFactory`（已废弃，推荐使用 `GenericApplicationContext`）
-
--   **ApplicationContext**
-    -   常见实现类：
-        -   `ClassPathXmlApplicationContext`：从类路径下的 XML 文件加载配置。
-        -   `FileSystemXmlApplicationContext`：从文件系统中的 XML 文件加载配置。
-        -   `AnnotationConfigApplicationContext`：基于注解配置的上下文。
-        -   `WebApplicationContext`：用于 Web 应用程序，通常由 ContextLoaderListener 初始化。
-
-
-
-| 特性           | BeanFactory                                                  | ApplicationContext                                           |
-| -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 功能丰富度     | 基本功能（Bean的创建、获取和管理功能）                       | 增强功能（事件、国际化、AOP 等）                             |
-| 启动时间和内存 | 启动快，内存占用少                                           | 启动慢，内存占用大                                           |
-| Bean 生命周期  | 手动管理（显式调用 `getBean()` 方法）                        | 自动管理                                                     |
-| 适用场景       | 资源受限环境、简单应用                                       | 大型企业级应用、复杂业务需求                                 |
-| 实现类         | `DefaultListableBeanFactory`、<br/>`XmlBeanFactory`（已废弃，推荐使用 `GenericApplicationContext`） | `ClassPathXmlApplicationContext`、<br/>`AnnotationConfigApplicationContext` |
-
-**选择建议**
-
--   如果你只需要基本的 IoC 容器功能，并且希望保持轻量级和快速启动，可以选择 BeanFactory。
--   如果你需要更多高级特性（如事件传播、国际化、AOP 等），并且不介意稍微增加启动时间和内存占用，那么 ApplicationContext 是更好的选择。
-    
 
 
 
