@@ -492,9 +492,31 @@ finalize 方法允许对象在被垃圾回收之前执行一些清理工作。�
 
 # OOP
 
+## Java三大特性是什么？
+
+## **什么是封装？**
+
+## 什么是继承？
+
+## **什么是多态？**
+
 ## 什么是Java的封装特性？
 
+## **重载和重写的区别？**
 
+## **构造器是否可被重写？**
+
+
+
+## 父类的静态方法能否被子类重写?
+
+静态方法即被static所修饰的成员方法。被static修饰的方法或属性只于类本身有关，被类的所有对象所共享。
+
+静态方法是通过类名调用的，而不是通过实例调用的，所以它们不能表现出多态性。
+
+因此父类的静态方法**不能**被子类重写（override）。
+
+不过，子类可以定义一个与父类静态方法同名的方法，这种情况称为方法隐藏（method hiding），而不是方法重写。
 
 
 
@@ -503,6 +525,10 @@ finalize 方法允许对象在被垃圾回收之前执行一些清理工作。�
 
 
 ## Java为什么不支持多继承？
+
+
+
+## **深拷贝和浅拷贝的区别是什么?**
 
 
 
@@ -563,22 +589,6 @@ finalize 方法允许对象在被垃圾回收之前执行一些清理工作。�
 
 
 
-
-
-
-## 方法重写与方法重载的区别？
-
-
-
-## 父类的静态方法能否被子类重写?
-
-静态方法即被static所修饰的成员方法。被static修饰的方法或属性只于类本身有关，被类的所有对象所共享。
-
-静态方法是通过类名调用的，而不是通过实例调用的，所以它们不能表现出多态性。
-
-因此父类的静态方法**不能**被子类重写（override）。
-
-不过，子类可以定义一个与父类静态方法同名的方法，这种情况称为方法隐藏（method hiding），而不是方法重写。
 
 
 
@@ -2692,6 +2702,89 @@ elementData数组中可能有很多`null`值，通常情况下`size` < `elementD
 -   标记 readResolve 和 writeReplace方法
 
 >   个人理解：`@Serial`注解就类似于`        @Override`注解，后者是用于标记哪些方法是重写的方法
+
+
+
+## Java序列化中如果有些字段不想进行序列化如何处理？
+
+两种方案：
+
+-   使用transient关键字来标记这些字段
+-   自定义序列化方法
+
+**使用transient关键字**
+
+如果有些字段不想进行序列化，可以使用transient关键字来标记这些字段。被标记为transient的字段在序列化过程中会被忽略，不会被写入到序列化流中。
+
+**自定义序列化方法**
+
+除了使用transient关键字，还可以通过手动实现`writeObject`和`readObject`方法定制了特殊的序列化过程
+
+```java
+import java.io.*;
+
+class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    
+    private String username;
+    private transient String password; // 不想序列化的字段
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.defaultWriteObject(); // 序列化非transient字段
+        oos.writeObject(encryptPassword(password)); // 自定义序列化password
+    }
+
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        ois.defaultReadObject(); // 反序列化非transient字段
+        this.password = decryptPassword((String) ois.readObject()); // 自定义反序列化password
+    }
+
+    private String encryptPassword(String password) {
+        // 简单加密示例（实际使用中请使用更安全的加密方法）
+        return "encrypted_" + password;
+    }
+
+    private String decryptPassword(String encryptedPassword) {
+        // 简单解密示例（实际使用中请使用更安全的解密方法）
+        return encryptedPassword.replace("encrypted_", "");
+    }
+
+    @Override
+    public String toString() {
+        return "User{username='" + username + "', password='" + password + "'}";
+    }
+}
+
+public class CustomSerializationExample {
+    public static void main(String[] args) {
+        User user = new User("john_doe", "secret_password");
+
+        // 序列化
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("user.ser"))) {
+            oos.writeObject(user);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 反序列化
+        User deserializedUser = null;
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("user.ser"))) {
+            deserializedUser = (User) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // 打印反序列化后的对象
+        System.out.println(deserializedUser);
+    }
+}
+```
 
 
 
