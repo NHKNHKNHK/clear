@@ -494,6 +494,10 @@ finalize 方法允许对象在被垃圾回收之前执行一些清理工作。�
 
 ## Java三大特性是什么？
 
+
+
+
+
 ## **什么是封装？**
 
 ## 什么是继承？
@@ -529,10 +533,6 @@ finalize 方法允许对象在被垃圾回收之前执行一些清理工作。�
 
 
 ## **深拷贝和浅拷贝的区别是什么?**
-
-
-
-## Java中的序列化与反序列化？
 
 
 
@@ -576,19 +576,313 @@ finalize 方法允许对象在被垃圾回收之前执行一些清理工作。�
 
 
 
-## 简述Java中Exception异常体系？
+## 简述Java异常的体系结构？
+
+Java 的异常体系是基于类层次结构的，所有的异常和错误都继承自 `Throwable `类。Throwable 类有两个主要的子类：`Error` 和 `Exception`。
+
+`Throwable`类
+
+-   定义：所有异常和错误的超类（基类）
+
+-   作用：表示程序中发生的一些严重问题，这些问题是程序本身无法处理的
+
+`Throwable`类有两个主要的子类：
+
+-   `Error`类： 表示严重的系统级错误或资源耗尽等问题    表示严重的错误，通常是由于系统级问题导致的，例如`OutOfMemoryError`、`StackOverflowError`等。`Error`通常是不可恢复的，程序无法处理它们
+    -   特点：通常是由 JVM 抛出，表示程序无法继续执行
+    -   程序员通常不需要捕获或处理 Error，因为它们通常是不可恢复的。
+    -   常见类型：`OutOfMemoryError`、`StackOverflowError`、`NoClassDefFoundError`等
+-   `Exception` 类：表示程序运行时可以被捕获和处理的异常。
+    -   特点：可以通过 try-catch 块捕获并处理或通过 throws 声明
+    -   分为编译时异常（Checked Exceptions）和运行时异常（Unchecked Exceptions）。
+        -   编译时异常（Checked Exceptions）
+            -   定义：必须在编译时处理的异常。
+            -   特点：编译器强制要求程序员处理这些异常。
+            -   如果方法中抛出了编译时异常，调用者必须通过 try-catch 捕获异常或通过 throws 声明该方法可能抛出此异常。
+            -   常见类型：`IOException`、`SQLException`、`ClassNotFoundException`
+        -   运行时异常（Unchecked Exceptions）
+            -   定义：不必在编译时处理的异常。
+            -   特点：编译器不要求必须捕获或声明这些异常，但可以选择性地处理。通常由程序逻辑错误引起。
+            -   常见类型：`NullPointerException`、`ArrayIndexOutOfBoundsException`、`IllegalArgumentException`、`ArithmeticException` 、`ClassCastException`
+
+异常体系图
+
+```java
+java.lang.Throwable:异常体系的根父类
+	|---java.lang.Error:错误。Java虚拟机无法解决的严重问题。如JVM系统内部错误，资源耗尽等严重情况
+							一般不编写针对性代码进行处理
+		|----StackOverflowError、OutOfMemroyError
+	
+	// 常见异常
+	|---java.lang.Exception:异常。我们可以编写针对性代码进行处理。
+		|----编译时异常：（受检异常、checked异常）在执行javac.exe命令时，出现的异常
+			|----ClassNotFoundException
+			|----FileNotFoundException
+			|----IOException
+			|---- ParseException（解析异常）
+		|----运行时异常：（非受检异常、unchecked异常）在执行java.exe命令时，出现的异常
+			|----ArrayIndexOutOfBoundsException（数组索引越界）
+			|----NullPointerException（空指针异常）
+			|----ClassCastException（类型转换异常）
+			|----NumberFormatException（数字格式化异常）
+			|----InputMismatchException
+			|----ArithmeticException（算数异常）
+			|----IllegalArgumentException（参数错误，比如方法入参类型错误）
+```
 
 
 
-## Java中的Exception和Error的区别？
+## 常见的Error？
+
+最常见的就是 `VirtualMachineError`，它有两个经典的子类：`StackOverflowError`、`OutOfMemoryError`
+
+```java
+public class ErrorTest {
+
+    @Test
+    public void testStackOverError() {
+        recursion();  // StackOverflowError（栈内存溢出）
+    }
+
+    // 没有出口的递归
+    public void recursion() {
+        recursion();
+    }
+
+    
+    @Test
+    public void testOutOfMemoryError01() {
+        // OutOfMemoryError
+        // 方式一  
+        int[] arr = new int[Integer.MAX_VALUE];
+    }
+
+    @Test
+    public void testOutOfMemoryError02() {
+        // 方式一
+        StringBuilder s = new StringBuilder();
+        while (true) {
+            s.append("hello");
+        }
+    }
+}
+```
 
 
 
 ## Java运行时异常和编译时异常的区别是什么？
 
+>   首先明确
+>
+>   ​	运行时异常 == 非受检异常 
+>
+>   ​	非运行异常 == 受检异常 == 编译时异常
+
+在 Java 中，异常分为两大类：受检异常（Checked Exceptions） 和 非受检异常（Unchecked Exceptions）
+-   **受检异常（Checked Exception）**：这些异常在**编译时必须被捕获或声明抛出，否则编译器会报错**。例如`IOException`、`SQLException`等。
+-   **非受检异常（Unchecked Exception）**：这些异常不需要在编译时捕获或声明抛出，编译器不会强制要求处理它们。通常是由于编程错误导致的，例如`NullPointerException`、`ArrayIndexOutOfBoundsException`等。
+
+**受检异常（Checked Exception）**
+
+受检异常是指那些在**编译阶段**就必须处理的异常。编译器会强制要求程序员处理这些异常，否则代码无法通过编译。
+
+特点
+
+-   必须处理：如果方法中抛出了编译时异常，调用者**必须通过 try-catch 块捕获异常或通过 throws 关键字声明**该方法可能抛出此异常。
+-   常见类型：`IOException`、`SQLException`、`ClassNotFoundException` 、`FileNotFoundException`等。
+
+**非受检异常（Unchecked Exception）**
+
+非受检异常是指那些在**运行时**才发生的异常，编译器不会强制要求程序员处理这些异常。它们**通常是由于程序中的逻辑错误引起的**。
+
+特点
+
+-   无需处理：编译器不要求必须捕获或声明这些异常，但可以选择性地处理。
+
+-   常见类型：`NullPointerException`、`ArrayIndexOutOfBoundsException`、`IllegalArgumentException`、`ArithmeticException` 、`ClassCastException`等。
+-   继承自 RuntimeException：所有运行时异常都是 RuntimeException 类及其子类的实例。
+
+| 特性       | 受检异常（Checked Exceptions）                    | 非受检异常（Unchecked Exceptions）                           |
+| ---------- | ------------------------------------------------- | ------------------------------------------------------------ |
+| 别名       | 编译时异常、非运行时异常                          | 运行时异常                                                   |
+| 定义       | 必须在编译时处理的异常                            | 运行时才发生的异常                                           |
+| 编译器要求 | 必须捕获或声明                                    | 不需要捕获或声明                                             |
+| 常见类型   | IOException, SQLException, ClassNotFoundException | NullPointerException, ArrayIndexOutOfBoundsException, IllegalArgumentException |
+| 继承自     | Exception 类及其子类                              | RuntimeException 类及其子类                                  |
+| 使用场景   | 外部环境导致的异常，如文件读写、网络连接等        | 程序逻辑错误，如空指针、数组越界、类转换异常等               |
+| 处理方式   | 使用 try-catch 或 throws                          | 可以选择性地使用 try-catch                                   |
 
 
 
+## 常见的编译时异常（非运行时异常）Checked Exceptions？
+
+编译时异常（受检异常）是指那些在**编译阶段**就必须处理的异常。编译器会强制要求程序员处理这些异常，否则代码无法通过编译。
+
+调用者**必须通过 try-catch 块捕获异常或通过 throws 关键字声明**该方法可能抛出此异常。
+
+常见类型：`IOException`、`SQLException`、`ClassNotFoundException` 、`FileNotFoundException`等。
+
+`ParseException`
+
+```java
+public static void main(String[] args) throws ParseException {
+    String data = " 2020-04-10 14:25:25";
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    Date d = simpleDateFormat.parse(data);  // 抛出编译时异常
+    System.out.println(d);
+}
+```
+
+`InterruptedException`
+
+```java
+@Test
+public void test1() {
+    try {
+        Thread.sleep(1000);  // InterruptedException
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+}
+```
+
+`ClassNotFoundException`
+
+```java
+@Test
+public void test2() {
+    try {
+        Class.forName("java.lang.String");  // ClassNotFoundException
+    } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+    }
+}
+```
+
+`FileNotFoundException`
+
+```java
+@Test
+    public void test3() {
+        try {
+            // FileNotFoundException
+            FileInputStream fis = new FileInputStream("hello.txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+```
+
+`SQLException`
+
+```java
+@Test
+public void test4() {
+    try {
+        DriverManager.getConnection("...");  // SQLException
+    } catch (SQLException throwables) {
+        throwables.printStackTrace();
+    }
+}
+```
+
+`IOException`
+
+```java
+@Test
+public void test5() {
+    try {
+        FileInputStream fis = new FileInputStream("hello.txt");  // FileNotFoundException
+        fis.read();  // IOException
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+```
+
+
+
+## 常见的运行时异常（非受检异常）UnChecked Exceptions？
+
+非受检异常是指那些在**运行时**才发生的异常，编译器不会强制要求程序员处理这些异常。它们**通常是由于程序中的逻辑错误引起的**。
+
+特点
+
+-   无需处理：编译器不要求必须捕获或声明这些异常，但可以选择性地处理。
+
+-   常见类型：`NullPointerException`、`ArrayIndexOutOfBoundsException`、`IllegalArgumentException`、`ArithmeticException` 、`ClassCastException`等。
+
+`ArrayIndexOutOfBoundsException`
+
+```java
+    @Test
+    public void test1() {
+        int[] arr = {1, 2, 3};
+        System.out.println(arr[3]);  // ArrayIndexOutOfBoundsException 数组角标越界异常
+        // 在开发中，数组的越界异常是不能出现的，一旦出现了，就必须要修改我们编写的代码
+    }
+```
+
+`NullPointerException`
+
+```java
+@Test
+public void test2() {
+    String srt = null;
+    System.out.println(srt.equals("hello"));  // NullPointerException 空指针异常
+}
+```
+
+`ClassCastException`
+
+```java
+@Test
+public void test3() {
+    Object n = 15;
+    String str = (String) n;  // ClassCastException
+}
+```
+
+`NumberFormatException`
+
+```java
+@Test
+public void test4() {
+    String s = "12ab";
+    Integer.parseInt(s);  // NumberFormatException
+}
+```
+
+`InputMismatchException`
+
+```java
+@Test
+public void test5() {
+    Scanner sc = new Scanner(System.in);
+    System.out.print("请输入一个整数:");
+    int n = sc.nextInt();// 我们输入一个非整数，让程序报错 InputMismatchException
+    sc.close();
+}
+```
+
+`ArithmeticException`算术异常
+
+```java
+@Test
+public void test6() {
+    System.out.println(10 / 0);  // ArithmeticException
+}
+```
+
+
+
+## throw和throws的区别？
+
+-   throws使用于方法声明（方法签名）处，指明将产生的异常向上一层抛出（抛给方法调用者）。
+-   trhow使用于方法内部，后面紧跟着的是异常类对象，表示手动抛出指定的异常类对象。
+    -   例如：`throw new Exception("输入的id非法");`
+-   throws是用来处理异常对象的
+-   throw是用来产生异常对象的
 
 
 
