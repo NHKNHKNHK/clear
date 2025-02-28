@@ -965,6 +965,71 @@ public ThreadPoolExecutor(int corePoolSize,
 
 
 
+## 为什么启动线程不直接调用run()，而调用start()？
+
+想要启动多线程，**必须调用`start()`方法**。
+
+**一个线程对象只能调用一次start()方法**启动线程，如果重复调用会抛出`IllegalThreadStateException`异常
+
+**start()方法**
+
+start()方法的作用是**启动一个新线程**，并且使该线程进入**就绪状态**，等待操作系统的线程调度器来调度它执行。
+
+当你调用start()方法时，Java虚拟机会创建一个新的执行线程。在这个新的线程中，Java虚拟机会自动调用run()方法。
+
+调用start()方法后，原来的线程和新创建的线程可以并发执行
+
+**run()方法**
+
+run()方法包含了线程执行的代码，是你需要在新线程中执行的任务。
+
+如果直接调用run()方法，run()方法会在当前线程中执行，而不会启动一个新线程。（失去了创建线程的意义）
+
+直接调用run()方法不会创建新的线程，所有代码在调用run()方法的线程中顺序执行
+
+
+
+**为什么不能直接调用run()方法**
+
+1.  **启动新线程**：start()方法负责启动一个新线程，而直接调用run()只是普通的方法调用，不会启动新线程。
+2.  **并发执行**：通过start()方法启动的新线程可以与原来的线程并发执行，而直接调用run()方法则是在当前线程中顺序执行。
+3.  **线程状态管理**：start()方法会使线程进入就绪状态，等待操作系统调度，而直接调用run()方法不会改变线程的状态管理
+
+
+
+-   如果自己手动调用run()方法，那么就只是普通方法，不会启动新线程。
+-   run()方法由JVM调用，什么时候调用，执行的过程控制都由操作系统的CPU调度决定。
+-   我们创建线程的目的是为了更充分地利用CPU资源，如果直接调用run()方法，就失去了创建线程的意义
+-   start()方法是Java线程中约定的内置方法，能够确保代码在新的线程上下文中执行
+-   start()方法包含了除创建新线程的特殊代码逻辑。run()方法是我们自己写的代码，显然没有这个能力
+-   想要启动多线程，**必须调用start方法**。
+-   **一个线程对象只能调用一次start()方法**启动线程，如果重复调用了，则将抛出以上的异常`IllegalThreadStateException`。
+
+
+
+## 两次调用start方法会怎么样？
+
+第一次调用start方法时，线程可能处于终止或其他非NEW状态，再次调用start()方法会让正在运行的线程重新运行一遍。
+
+不管是从线程安全的角度来看 ，还是从线程本身的执行逻辑来看 ，他都是不合理的。因此为了避免这种问题的出现，Java中会先判断线程的运行状态。
+
+可调用如下方法确定当前线程的状态
+
+```java
+public State getState()		// 得到线程的当前状态 	
+    						// NEW,RUNNABLE,BLOCKED,WAITING,TIMED_WAITING,TERMINATED;
+```
+
+
+
+>   注意：
+>
+>   ​	程序只能对新建状态（NEW）的线程调用 start()，并且只能调用一次，如果对非新建状态的线程，如已启动的线程或已死亡的线程调用 start()都会报错 `IllegalThreadStateException` 异常。
+
+这个问题的**关键点**在于：
+
+​	只能对新建状态（NEW）的线程调用 start()
+
 
 
 ## **Java多线程的生命周期是什么**
@@ -1057,6 +1122,192 @@ public class ThreadGroupExample {
 
 ## 线程的状态有哪几种？
 
+**jdk1.5之前的五种状态**
+
+线程的生命周期有五种状态：新建（New）、就绪（Runnable）、运行 （Running）、阻塞（Blocked）、死亡（Dead）。CPU 需要在多条线程之间切换，于是线程状态会多次在运行、阻塞、就绪之间切换**。**
+
+```java
+								(这是一种临时状态)
+				    |------------阻塞<---------------|
+	   sleep()时间到 |							      | sleep()
+       join线程结束	 |							     | join()
+	   获得同步锁	 |								| 等待同步锁							
+notify()\notifyAll()|								| wait()							
+	   resume()		v								| suspend()      
+		                   获得cpu执行权              |                    (线程的最终状态)
+新建 =============> 就绪 <=========================> 运行 ====================>死亡
+      start() 			失去cpu执行权（时间片用完）			    run()正常结束
+						   yield()							出现未处理的Error\Exception
+						   						            stop()                      
+```
+
+**新建（New）**
+
+当一个 Thread 类或其子类的对象被声明并创建时，新生的线程对象处于新建状态。此时它和其他 Java 对象一样，仅仅由 JVM 为其分配了内存，并初始化了实例变量的值。此时的线程对象并没有任何线程的动态特征，程序也不会执行它的线程体`run()`
+
+**就绪（Runnable）**
+
+但是当线程对象调用了 start()方法之后，就不一样了，线程就从新建状态转为就绪状态。JVM 会为其创建方法调用栈和程序计数器，当然，处于这个状态中的**线程并没有开始运行**，只是表示**已具备了运行的条件，随时可以被调度**。至于什么时候被调度，取决于 JVM 里线程调度器的调度。
+
+注意：
+
+​	程序只能对新建状态的线程调用 `start()`，并且只能调用一次，如果对非新建状态的线程，如已启动的线程或已死亡的线程调用 `start()`都会报错 `IllegalThreadStateException` 异常。
+
+**运行 （Running）**
+
+如果处于就绪状态的线程获得了CPU资源时，**开始执行 run()方法的线程体代码**，则该线程处于运行状态。如果计算机只有一个 CPU 核心，在任何时刻只有一个线程处于运行状态，如果计算机有多个核心，将会有多个线程并行 
+(Parallel)执行
+
+当然，美好的时光总是短暂的，而且 CPU 讲究雨露均沾。对于**抢占式策略**的系统而言，系统会给每个可执行的线程一个小**时间片**来处理任务，当该时间用完，系统会剥夺该线程所占用的资源，让其回到就绪状态等待下一次被调度。
+
+此时其他线程将获得执行机会，而在选择下一个线程时，系统会**适当考虑线程的优先级**
+
+**阻塞（Blocked）**
+
+当在运行过程中的线程遇到如下情况时，会让出CPU并临时中止自己的执行，进入阻塞状态：
+
+-   线程调用了 **sleep()**方法，主动放弃所占用的 CPU 资源；
+-   线程试图获取一个**同步监视器**，但该同步监视器正被其他线程持有；
+-   线程执行过程中，同步监视器调用了 **wait()**，让它等待某个通知（notify）；
+-   线程执行过程中，同步监视器调用了 **wait(time)**
+-   线程执行过程中，遇到了其他线程对象的加塞（**join**）；
+-   线程被调用 **suspend** 方法被挂起（**已过时，因为容易发生死锁**）；
+
+当前正在执行的线程被阻塞后，其他线程就有机会执行了。针对如上情况，当发生如下情况时会解除阻塞，让该线程重新进入就绪状态，等待线程调度器再次调度它：
+
+-   线程的 sleep()时间到；
+-   线程成功获得了同步监视器；
+-   线程等到了通知(notify)；
+-   线程 wait 的时间到了
+-   加塞的线程结束了；
+-   被挂起的线程又被调用了 **resume** 恢复方法（**已过时，因为容易发生死锁**）；
+
+**死亡（Dead）**
+
+线程会以以下三种方式之一结束，结束后的线程就处于死亡状态：
+
+-   run()方法执行完成，线程正常结束
+-   线程执行过程中抛出了一个未捕获的异常（Exception）或错误（Error）
+-   直接调用该线程的 stop()来结束该线程（已过时）
+
+
+
+>   记忆方式：
+>
+>   ​	JDK5将就绪（Runnable）、运行 （Running）统一为了Runnable（可运行）
+>
+>   ​			将阻塞（Blocked）细分为了Blocked（被阻塞）、Waiting（等待）、Timed Waiting（计时等待）
+
+
+
+**jdk1.5及其之后的6种状态**
+
+在`java.lang.Thread.State` 的枚举类中这样定义了6种状态：
+
+**NEW（新建）**:该线程还没开始执行
+
+**RUNNABLE（可运行）**：一旦调用start方法，线程将处于Runnable状态，一个可运行的线程可能正在运行也可能还未运行，这取决于操作系统给线程提供运行的时间。
+
+-   一旦一个线程开始运行，它不必始终保持运行。（因为操作系统的**时间片轮转机制**，目的是让其他线程获得运行的机会）线程调度的细节依赖于操作系统提供的服务。抢占式调度系统给每一个可运行的线程一个时间片来执行任务。时间片完，操作系统将剥夺线程的运行权
+
+注意：
+
+​	**任何给定时刻，一个可运行的线程可能正在运行也可能没有运行**（这就是为什么将这个状态称为可运行而不是运行）
+
+**BLOCKED（被阻塞）**
+
+当线程处于被阻塞或等待状态时，它暂不活动。他不允许任何代码且消耗最少的资源。
+
+**WAITING（等待）**
+
+**TIMED_WAITING（计时等待）**
+
+**TERMINATED（被终止）**线程被终止有如下两种原因：
+
+-   因为**run方法正常退出**而自然死亡
+-   因为一个没有捕获的**异常终止了run方法**而意外死亡
+
+特点强调，可以调用线程的**stop()方法（已过时）**杀死这个线程，但是该方法会抛出`ThreadDeath`错误对象，由此杀死线程。
+
+```java
+                             TIMED_WAITING（计时等待）
+						 时间到  |     ^ sleep()
+					  interrupt |	  | 带有超时值的Object的wait
+								|     | 带有超时值的Thread的join
+								|     | LockSupport.parkNanos
+								|     | LockSupport.parkUntil
+								|     |
+								|     |        run()\main()正常结束 
+				start()			V	  |        异常结束								
+NEW(新建) ==================> RUNNABLE(可运行) ==================> RUNNABLE(死亡)
+							^ |      ^|--------------------
+                           	| |      |----------------|   |
+                            | |                       |   |
+		     获得监视器锁对象  | | synchornized          |   |
+                            | | Lock                  |	  | 不带有超时值的Object的wait
+                            | |                       |   | 不带有超时值的Thread的join
+							| |   notify()\notifyAll()|   | Condition的await
+                            | |   join的线程结束        |   | LockSupport.park
+                            | |   Condition的signal    |   |
+                            | | LockSupport的unpark等许可|	 |
+                            V |   interrupt          	|   |       
+                     	BLOCKED(锁阻塞）	           	  |   | 
+                                 					     |   |
+                                 					     |   |
+	                                                     |   |
+                                 					     |   V
+													WAITING(无限等待)
+```
+
+在`java.lang.Thread.State` 的枚举类中这样定义：
+
+```java
+public enum State {
+    /**
+         * Thread state for a thread which has not yet started.
+         	线程状态为尚未启动的线程。
+         */
+    NEW,  // NEW（新建）：线程刚被创建，但是并未启动。还没调用 start 方法。
+
+    /**
+         * Thread state for a runnable thread.  A thread in the runnable
+         * state is executing in the Java virtual machine but it may
+         * be waiting for other resources from the operating system
+         * such as processor.
+         	线程状态,用于可运行的线程。可运行的线程
+			状态在Java虚拟机中执行,但可能
+			正在等待操作系统的其他资源
+			如处理器。
+         */
+    RUNNABLE,  // RUNNABLE（可运行）：这里没有区分就绪和运行状态。因为对于 Java 对象来说，只能标记为可运行，至于什么时候运行，不是 JVM 来控制的了，是 OS 来进行调度的，而且时间非常短暂，因此对于 Java 对象的状态来说，无法区分
+
+    // 重点说明，根据 Thread.State 的定义，阻塞状态分为三种：BLOCKED、WAITING、TIMED_WAITING
+    BLOCKED,  // BLOCKED（锁阻塞）：在 API 中的介绍为：一个正在阻塞、等待一个监视器锁（锁对象）的线程处于这一状态。只有获得锁对象的线程才能有执行机会。
+
+    WAITING,  // WAITING（无限等待）：在 API 中介绍为：一个正在无限期等待另一个线程执行一个特别的（唤醒）动作的线程处于这一状态。
+    // 当前线程执行过程中遇到遇到 Object 类的 wait，Thread 类的join，LockSupport 类的 park 方法，并且在调用这些方法时，没有指定时间，那么当前线程会进入 WAITING 状态，直到被唤醒。
+    // 通过 Object 类的 wait 进入 WAITING 状态的要有 Object 的notify/notifyAll 唤醒；
+    // 通过 Condition 的 await 进入 WAITING 状态的要有Condition 的 signal 方法唤醒；
+    // 通过 LockSupport 类的 park 方法进入 WAITING 状态的要有LockSupport类的 unpark 方法唤醒
+    // 通过 Thread 类的 join 进入 WAITING 状态，只有调用join方法的线程对象结束才能让当前线程恢复
+
+    TIMED_WAITING,  // TIMED_WAITING（计时等待）：在 API 中的介绍为：一个正在限时等待另一个线程执行一个（唤醒）动作的线程处于这一状态。
+    // 当前线程执行过程中遇到 Thread 类的 sleep 或 join，Object 类的 wait，LockSupport 类的 park 方法，并且在调用这些方法时，设置了时间，那么当前线程会进入 TIMED_WAITING，直到时间到，或被中断
+
+    /**
+         * Thread state for a terminated thread.
+         * The thread has completed execution.
+         */
+    TERMINATED;  //  Teminated（被终止）：表明此线程已经结束生命周期，终止运行。
+}
+```
+
+  说明：
+
+​	当从 WAITING 或 TIMED_WAITING 恢复到 Runnable 状态时，如果发现当前线程没有得到监视器锁，那么会立刻转入 BLOCKED 状态
+
+
+
 
 
 ## Java的线程优先级是什么？有什么用？
@@ -1129,6 +1380,12 @@ public class ThreadPriorityExample {
 
 
 ## 怎么让3个线程按顺序执行？
+
+使用join方法
+
+使用CountDownLatch
+
+使用CyclicBarrier
 
 
 
@@ -1267,6 +1524,10 @@ public static void main(String[] args) {
 
 
 ## 如何优雅的终止一个线程？
+
+
+
+## 如何判断代码是不是有线程安全问题？
 
 
 
@@ -1896,140 +2157,6 @@ public enum State {
 
 
 
-
-## 为什么启动线程不直接调用run()，而调用start()？
-
-想要启动多线程，**必须调用`start()`方法**。
-
-**一个线程对象只能调用一次start()方法**启动线程，如果重复调用会抛出`IllegalThreadStateException`异常
-
-**start()方法**
-
-start()方法的作用是**启动一个新线程**，并且使该线程进入**就绪状态**，等待操作系统的线程调度器来调度它执行。
-
-当你调用start()方法时，Java虚拟机会创建一个新的执行线程。在这个新的线程中，Java虚拟机会自动调用run()方法。
-
-调用start()方法后，原来的线程和新创建的线程可以并发执行
-
-**run()方法**
-
-run()方法包含了线程执行的代码，是你需要在新线程中执行的任务。
-
-如果直接调用run()方法，run()方法会在当前线程中执行，而不会启动一个新线程。（失去了创建线程的意义）
-
-直接调用run()方法不会创建新的线程，所有代码在调用run()方法的线程中顺序执行
-
-
-
-**为什么不能直接调用run()方法**
-
-1.  **启动新线程**：start()方法负责启动一个新线程，而直接调用run()只是普通的方法调用，不会启动新线程。
-2.  **并发执行**：通过start()方法启动的新线程可以与原来的线程并发执行，而直接调用run()方法则是在当前线程中顺序执行。
-3.  **线程状态管理**：start()方法会使线程进入就绪状态，等待操作系统调度，而直接调用run()方法不会改变线程的状态管理
-
-
-
--   如果自己手动调用run()方法，那么就只是普通方法，不会启动新线程。
--   run()方法由JVM调用，什么时候调用，执行的过程控制都由操作系统的CPU调度决定。
--   我们创建线程的目的是为了更充分地利用CPU资源，如果直接调用run()方法，就失去了创建线程的意义
-
--   start()方法是Java线程中约定的内置方法，能够确保代码在新的线程上下文中执行
-
--   start()方法包含了除创建新线程的特殊代码逻辑。run()方法是我们自己写的代码，显然没有这个能力
-
--   想要启动多线程，**必须调用start方法**。
--   **一个线程对象只能调用一次start()方法**启动线程，如果重复调用了，则将抛出以上的异常`IllegalThreadStateException`。
-
-
-
-## 两次调用start方法会怎么样？
-
-第一次调用start方法时，线程可能处于终止或其他非NEW状态，再次调用start()方法会让正在运行的线程重新运行一遍。
-
-不管是从线程安全的角度来看 ，还是从线程本身的执行逻辑来看 ，他都是不合理的。因此为了避免这种问题的出现，Java中会先判断线程的运行状态。
-
-可调用如下方法确定当前线程的状态
-
-```java
-public State getState()		// 得到线程的当前状态 	
-    						// NEW,RUNNABLE,BLOCKED,WAITING,TIMED_WAITING,TERMINATED;
-```
-
-
-
->   注意：
->
->   ​	程序只能对新建状态（NEW）的线程调用 start()，并且只能调用一次，如果对非新建状态的线程，如已启动的线程或已死亡的线程调用 start()都会报错 `IllegalThreadStateException` 异常。
-
-这个问题的**关键点**在于：
-
-​	只能对新建状态（NEW）的线程调用 start()
-
-
-
-## 为什么不建议使用Executors来创建线程池？
-
-Executors：一个**线程池的工厂类**，通过此类的**静态工厂方法**可以创建多种类型的线程池对象。 
-
-Executors提供了4个常用方法来创建内置的线程池
-
-1、**newFixedThreadPool**
-
-Executors.newFixedThreadPool(int nThreads)：创建一个可重用固定线程数的线程池 
-
-```java
-public static ExecutorService newFixedThreadPool(int nThreads) {
-    return new ThreadPoolExecutor(nThreads, nThreads,
-                                  0L, TimeUnit.MILLISECONDS,
-                                  new LinkedBlockingQueue<Runnable>());
-}
-```
-
-发现创建的队列为LinkedBlockingQueue，是一个无界阻塞队列，如果使用改线程池执行任务，如果任务过多就会不断的添加到队列中，任务越多占用的内存就越多，最终可能耗尽内存，导致OOM
-
-2、**SingleThreadExecutor**
-
-Executors.newSingleThreadExecutor() ：创建一个只有一个线程的线程池 
-
-```java
-public static ExecutorService newSingleThreadExecutor() {
-    return new FinalizableDelegatedExecutorService
-        (new ThreadPoolExecutor(1, 1,
-                                0L, TimeUnit.MILLISECONDS,
-                                new LinkedBlockingQueue<Runnable>()));
-}
-```
-
-发现创建的队列为LinkedBlockingQueue，是一个无界阻塞队列，如果使用改线程池执行任务，如果任务过多就会不断的添加到队列中，任务越多占用的内存就越多，最终可能耗尽内存，导致OOM
-
-3、**CachedThreadPool**
-
-Executors.newCachedThreadPool()：创建一个可根据需要创建新线程的线程池
-
-```java
-public static ExecutorService newCachedThreadPool() {
-    return new ThreadPoolExecutor(0, Integer.MAX_VALUE,
-                                  60L, TimeUnit.SECONDS,
-                                  new SynchronousQueue<Runnable>());
-}
-```
-
-它的特点是线程数不受限制，可以根据需要创建新线程。虽然这对于短时间的任务非常有用，但如果任务执行时间较长或任务量较大，可能会导致大量线程堆积，从而消耗过多系统资源，最终导致OOM
-
-4、**ScheduledThreadPool**
-
-Executors.newScheduledThreadPool(int corePoolSize)：创建一个线程池，它可安排在给定延迟后运行命令或者定期地执行。 
-
-```java
-public ScheduledThreadPoolExecutor(int corePoolSize) {
-    super(corePoolSize, Integer.MAX_VALUE, 0, NANOSECONDS,
-          new DelayedWorkQueue());
-}
-```
-
-**阿里规约**
-
-![1725368123975](assets/1725368123975.png)
 
 
 
