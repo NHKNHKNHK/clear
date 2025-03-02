@@ -1724,7 +1724,7 @@ Java中的线程中断是一种协作机制，用于请求线程停止其所执�
 
 **线程中断的行为**
 
--   **阻塞方法**：某些阻塞方法（如 `Thread.sleep()`、`Object.wait()`、`BlockingQueue.take()` 等）会抛出 `InterruptedException`，并在捕获到中断时清除中断状态。
+-   **阻塞方法**：线程中断时在执行某些阻塞方法（如 `Thread.sleep()`、`Object.wait()`、`BlockingQueue.take()` 等）会抛出 `InterruptedException`，并在捕获到中断时清除中断状态。
 
 -   **非阻塞代码**：对于非阻塞代码，线程需要定期检查中断状态，并根据需要处理中断请求。
 
@@ -1791,7 +1791,7 @@ interrupt方法用于让线程中断，是一种协作机制，用于请求线�
 -   中断状态：调用 **interrupt()** 会将线程的中断状态设置为 **true**。
 
 -   阻塞方法的行为：
-    -   如果线程正在执行某些阻塞方法（如 Thread.sleep()、Object.wait()、BlockingQueue.take() 等），这些方法会抛出 InterruptedException 并清除中断状态。
+    -   如果线程在执行阻塞方法时（如 Thread.sleep()、Object.wait()、BlockingQueue.take() 等）中被中断，这些方法会抛出 InterruptedException 并清除中断状态。
     -   如果线程没有处于阻塞状态，则需要手动检查中断状态并决定如何处理。
 
 ```java
@@ -1863,9 +1863,140 @@ thread.stop(); // 强制终止线程
 
 
 
-
-
 ## 如何优雅的终止一个线程？
+
+在 Java 中，优雅地终止一个线程意味着确保线程能够在合适的时间点安全退出，并且不会导致资源泄漏、数据不一致或其他问题。
+
+**使用 interrupt() 和循环检查中断状态**
+
+这是最常见也是最推荐的方式。通过在循环中定期检查线程的中断状态，线程可以在接收到中断请求时安全退出。
+
+```java
+public class GracefulShutdownExample {
+    public static void main(String[] args) throws InterruptedException {
+        Thread worker = new Thread(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    System.out.println("Working...");
+                    Thread.sleep(500); // 模拟长时间运行的任务
+                } catch (InterruptedException e) {
+                    System.out.println("Thread was interrupted, stopping...");
+                    Thread.currentThread().interrupt(); // 重新设置中断状态
+                    return;
+                }
+            }
+            System.out.println("Thread is stopping gracefully...");
+        });
+
+        worker.start();
+        Thread.sleep(2000); // 主线程等待一段时间后中断工作线程
+        System.out.println("Main thread is interrupting the worker thread...");
+        worker.interrupt();
+
+        // 等待工作线程结束
+        worker.join();
+        System.out.println("Worker thread has finished.");
+    }
+}
+```
+
+关键点
+
+-   while (!Thread.currentThread().isInterrupted())：在循环中定期检查中断状态。
+
+-   捕获 InterruptedException：如果线程在阻塞方法（如 Thread.sleep()）中被中断，会抛出 InterruptedException，此时可以处理中断并退出。
+-   重设中断状态：在捕获 InterruptedException 后，调用 Thread.currentThread().interrupt() 重新设置中断状态，以便其他代码段也能感知到中断请求。
+
+**使用标志位控制线程的生命周期**
+
+除了使用 interrupt()，还可以通过一个共享的标志位来控制线程的生命周期。这种方式适用于需要更复杂的终止逻辑或不适合使用中断的场景。
+
+```java
+public class FlagBasedShutdownExample {
+    private static volatile boolean running = true;
+
+    public static void main(String[] args) throws InterruptedException {
+        Thread worker = new Thread(() -> {
+            while (running) {
+                System.out.println("Working...");
+                try {
+                    Thread.sleep(500); // 模拟长时间运行的任务
+                } catch (InterruptedException e) {
+                    System.out.println("Thread was interrupted, stopping...");
+                    return;
+                }
+            }
+            System.out.println("Thread is stopping gracefully...");
+        });
+
+        worker.start();
+        Thread.sleep(2000); // 主线程等待一段时间后停止工作线程
+        System.out.println("Main thread is stopping the worker thread...");
+        running = false;
+
+        // 等待工作线程结束
+        worker.join();
+        System.out.println("Worker thread has finished.");
+    }
+}
+```
+
+关键点
+
+-   volatile 标志位：使用 volatile 关键字确保标志位的可见性，避免线程缓存导致的问题。
+-   标志位控制：通过外部控制标志位 running 来决定线程是否继续执行。
+
+**使用 ExecutorService 进行线程管理**
+
+现代 Java 编程中，推荐使用 ExecutorService 来管理线程池和任务提交。ExecutorService 提供了更高级的线程管理和优雅终止机制。
+
+```java
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+public class ExecutorServiceShutdownExample {
+    public static void main(String[] args) throws InterruptedException {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // 提交任务
+        executor.submit(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                System.out.println("Working...");
+                try {
+                    Thread.sleep(500); // 模拟长时间运行的任务
+                } catch (InterruptedException e) {
+                    System.out.println("Task was interrupted, stopping...");
+                    return;
+                }
+            }
+        });
+
+        // 等待一段时间后关闭线程池
+        Thread.sleep(2000);
+        System.out.println("Shutting down executor service...");
+
+        // 发送关闭请求
+        executor.shutdown();
+
+        // 等待所有任务完成或超时
+        if (!executor.awaitTermination(1, TimeUnit.SECONDS)) {
+            System.out.println("Tasks did not complete in time, forcing shutdown...");
+            executor.shutdownNow(); // 强制终止未完成的任务
+        }
+
+        System.out.println("Executor service has been shut down.");
+    }
+}
+```
+
+关键点
+
+-   shutdown()：发送关闭请求，不再接受新任务，但允许正在执行的任务完成。
+-   awaitTermination()：等待所有任务完成，或在指定时间内超时。
+-   shutdownNow()：强制终止所有正在执行的任务，并返回未执行的任务列表。
+
+
 
 
 
