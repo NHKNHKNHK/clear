@@ -2192,6 +2192,60 @@ public class DeadlockFreeExample {
 
 ## synchronized同步锁有哪几种方法？
 
+**同步方法：**`synchronized` 关键字直接修饰方法，表示**同一时刻只有一个线程能进入这个方法**，其他线程在外面等着。 
+
+基本格式：
+
+```JAVA
+修饰符 synchronized 返回值类型 method(形参列表){
+	// 可能会产生线程安全问题的代码
+}
+```
+
+
+
+**同步代码块**：它提供了更细粒度的控制，只对特定的代码块进行同步，而不是整个方法。这可以减少锁的竞争，提高程序的性能。
+
+基本格式：
+
+```JAVA
+synchronized(同步锁){
+	// 需要同步操作的代码
+}
+```
+
+
+
+## 如何选择同步锁对象？如何设定同步代码访问？
+
+**同步锁对象可以是任意类型**，但是必须保证竞争”同一个共享资源”的多个线程必须使用同一个“同步锁对象”。 
+
+对于同步方法来说，**同步锁对象**只能是默认的： 
+
+-   **静态方法：当前类的 Class 对象（类名.class）** 
+-   **非静态方法：this** 
+
+对于同步代码块来说，同步锁对象是由程序员手动指定的（很多时候也是指定为 **this 或类名.class**）
+
+
+
+同步代码块不是越大越好，否则会导致性能低下，或者其他线程没有机会。也不是越小越好，否则安全问题无法彻底解决。具体以单次原子性任务代码为准。
+
+
+
+## Java中的synchronized是怎么实现的？（底层原理）
+
+synchronized关键字的实现是基于监视器锁（Monitor）。监视器锁是一个互斥锁，确保同一时间只有一个线程可以持有锁并执行同步代码块或方法。
+
+每个Java对象都有一个对象头，其中包含对象的元数据信息，包括锁信息。对象头中的锁状态可以是无锁状态、偏向锁、轻量级锁和重量级锁。
+
+在Java中，synchronized关键字的锁状态会根据竞争情况动态转换，主要包括以下几种状态：
+
+-   无锁状态：没有线程竞争锁
+-   偏向锁：当一个线程访问同步快时，JVM会将锁偏向该线程，减少锁的开销
+-   轻量级锁：当多个线程竞争锁时，JVM会尝试使用自旋锁，避免线程上下文切换的开销
+-   重量级锁：当自旋锁失败时，JVM会将锁升级为重要级锁，使用操作吸引提供的互斥锁
+
 
 
 ## **wait和notifiy的虚假唤醒的产生原因及如何解决**
@@ -2203,6 +2257,195 @@ public class DeadlockFreeExample {
 
 
 ## 死锁的发生原因？怎么避免？
+
+死锁发生在两个或多个线程互相等待对方释放资源的情况下。当线程A持有资源1并等待资源2，而线程B持有资源2并等待资源1时，就会发生死锁。
+
+一旦出现死锁，整个程序既不会发生异常，也不会给出任何提示，只是所有线程处于阻塞状态，无法继续。 
+
+死锁产生的主要原因：
+
+-   **互斥条件**：资源只能被一个线程占用，如果一个线程已经占用了资源，其他线程就无法访问该资源。
+-   **请求与保持条件**：线程在持有资源的同时又请求其他资源，而这些资源被其他线程占用，导致线程之间相互等待。
+-   **不可剥夺条件**：已经分配给线程的资源不能被其他线程强制性地剥夺，只能由持有资源的线程主动释放。
+-   **循环等待条件**：存在一个资源的循环链，每个线程都在等待下一个线程所持有的资源。
+
+当以上四个条件同时满足时，就可能产生死锁。
+
+死锁破除的解决思路：
+
+-   针对条件 1：互斥条件基本上无法被破坏。因为线程需要通过互斥解决安全问题。 
+-   针对条件 2：可以考虑一次性申请所有所需的资源，这样就不存在等待的问题。 
+-   针对条件 3：占用部分资源的线程在进一步申请其他资源时，如果申请不到，就主动释放掉已经占用的资源。 
+-   针对条件 4：可以将资源改为线性顺序。申请资源时，先申请序号较小的，这样避免循环等待问题。
+
+举例 1
+
+```java
+public class DeadLockTest {
+    public static void main(String[] args) {
+        StringBuilder s1 = new StringBuilder();
+        StringBuilder s2 = new StringBuilder();
+        new Thread() {
+            public void run() {
+                synchronized (s1) {
+                    s1.append("a");
+                    s2.append("1");
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    synchronized (s2) {
+                        s1.append("b");
+                        s2.append("2");
+                        System.out.println(s1);
+                        System.out.println(s2);
+                    }
+                }
+            }
+        }.start();
+        new Thread() {
+            public void run() {
+                synchronized (s2) {
+                    s1.append("c");
+                    s2.append("3");
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    synchronized (s1) {
+                        s1.append("d");
+                        s2.append("4");
+                        System.out.println(s1);
+                        System.out.println(s2);
+                    }
+                }
+            }
+        }.start();
+    }
+}
+```
+
+举例 2：
+
+```java
+class A {
+    public synchronized void foo(B b) {
+        System.out.println("当前线程名: " + Thread.currentThread().get
+                           Name()
+                           + " 进入了 A 实例的 foo 方法"); // ①
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("当前线程名: " + Thread.currentThread().get
+                           Name()
+                           + " 企图调用 B 实例的 last 方法"); // ③
+        b.last();
+    }
+    public synchronized void last() {
+        System.out.println("进入了 A 类的 last 方法内部");
+    }
+}
+class B {
+    public synchronized void bar(A a) {
+        System.out.println("当前线程名: " + Thread.currentThread().get
+                           Name()
+                           + " 进入了 B 实例的 bar 方法"); // ②
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("当前线程名: " + Thread.currentThread().get
+                           Name()
+                           + " 企图调用 A 实例的 last 方法"); // ④
+        a.last();
+    }
+    public synchronized void last() {
+        System.out.println("进入了 B 类的 last 方法内部");
+    }
+}
+public class DeadLock implements Runnable {
+    A a = new A();
+    B b = new B();
+    public void init() {
+        Thread.currentThread().setName("主线程");
+        // 调用 a 对象的 foo 方法
+        a.foo(b);
+        System.out.println("进入了主线程之后");
+    }
+    public void run() {
+        Thread.currentThread().setName("副线程");
+        // 调用 b 对象的 bar 方法
+        b.bar(a);
+        System.out.println("进入了副线程之后");
+    }
+    public static void main(String[] args) {
+        DeadLock dl = new DeadLock();
+        new Thread(dl).start();
+        dl.init();
+    }
+}
+
+```
+
+举例 3：
+
+```java
+public class TestDeadLock {
+    public static void main(String[] args) {
+        Object g = new Object();
+        Object m = new Object();
+        Owner s = new Owner(g,m);
+        Customer c = new Customer(g,m);
+        new Thread(s).start();
+        new Thread(c).start();
+    }
+}
+class Owner implements Runnable{
+    private Object goods;
+    private Object money;
+    public Owner(Object goods, Object money) {
+        super();
+        this.goods = goods;
+        this.money = money;
+    }
+    @Override
+    public void run() {
+        synchronized (goods) {
+            System.out.println("先给钱");
+            synchronized (money) {
+                System.out.println("发货");
+            }
+        }
+    }
+}
+class Customer implements Runnable{
+    private Object goods;
+    private Object money;
+    public Customer(Object goods, Object money) {
+        super();
+        this.goods = goods;
+        this.money = money;
+    }
+    @Override
+    public void run() {
+        synchronized (money) {
+            System.out.println("先发货");
+            synchronized (goods) {
+                System.out.println("再给钱");
+            }
+        }
+    }
+}
+```
+
+
+
+
 
 
 
@@ -2389,8 +2632,6 @@ public class DeadlockFreeExample {
 ## **Semaphore信号量的使用**
 
 
-
-## Java中的synchronized是怎么实现的？（底层实现）
 
 
 
