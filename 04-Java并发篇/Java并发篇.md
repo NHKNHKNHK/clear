@@ -287,9 +287,13 @@ public class Main {
 
 interrupt()方法用于**中断线程**。被中断的线程会抛出`InterruptedException`
 
-`isInterrupted()`
+`Thread.currentThread().isInterrupted()`
 
-isInterrupted()方法用于**检查线程是否被中断**。它返回一个布尔值
+isInterrupted()方法用于**检查线程是否被中断**，但不会重置中断标志。它返回一个布尔值
+
+`Thread.interrupted()`
+
+检查当前线程的中断状态，并重置中断标志为 false。
 
 ```java
 public class Main {
@@ -1594,6 +1598,8 @@ public class Main {
 
 **Thread.sleep**
 
+sleep是Thead类中的静态方法，用于让当前线程睡眠，进入阻塞状态。
+
 -   作用：使当前正在执行的线程暂停执行指定的时间（以毫秒为单位），**让出 CPU** 给其他线程。
 
 -   特点：
@@ -1611,6 +1617,8 @@ try {
 ```
 
 **Object.wait**
+
+wait是Object类中的实例方法，**必须由同步锁对象调用**（这一点是与其他方法最大的不同），用于让当前线程睡眠，进入阻塞状态。
 
 -   作用：使当前线程等待，直到另一个线程调用同一个对象上的 notify() 或 notifyAll() 方法唤醒它。
 -   特点：
@@ -1656,6 +1664,8 @@ public class WaitNotifyExample {
 
 **Thread.yield**
 
+yield是Thead类中的静态方法，用于让当前线程暂停执行，让出CPU，进入就绪状态。
+
 -   作用：提示当前线程**让出 CPU** 占用时间，给其他同优先级的线程以执行的机会。
 -   特点：
     -   不保证当前线程会立即让出 CPU，也不保证其他线程会立即得到执行机会。
@@ -1697,6 +1707,78 @@ public static void main(String[] args) {
 
 
 ## 怎么理解Java中的线程中断？
+
+Java中的线程中断是一种协作机制，用于请求线程停止其所执行的任务。**线程中断并不强制终止线程**，而是通过设置线程的中断标志来通知一个正在运行的线程应该停止当前的任务并进行清理或终止。线程可以选择如何响应这个中断请求，通常是在合适的时机优雅地终止任务。
+
+注意：以下阻塞方法（如Thread.sleep()、Object.wait()、BlockingQueue.take()等）会在检测到中断标志时抛出`InterruptedException`异常
+
+**线程中断的核心概念**
+
+-   **中断状态**：每个线程都有一个中断状态（interrupted status），初始值为 false。当调用 `thread.interrupt()` 方法时，该线程的中断状态被设置为 true。
+
+-   **检查中断状态**：
+    -   `Thread.currentThread().isInterrupted()`：检查当前线程的中断状态，但不会重置中断标志。
+    -   `Thread.interrupted()`：检查当前线程的中断状态，并重置中断标志为 false。
+
+-   **响应中断**：线程可以选择如何响应中断。通常的做法是在适当的地方检查中断状态，并根据需要执行清理操作或终止线程。
+
+**线程中断的行为**
+
+-   **阻塞方法**：某些阻塞方法（如 `Thread.sleep()`、`Object.wait()`、`BlockingQueue.take()` 等）会抛出 `InterruptedException`，并在捕获到中断时清除中断状态。
+
+-   **非阻塞代码**：对于非阻塞代码，线程需要定期检查中断状态，并根据需要处理中断请求。
+
+```java
+public class ThreadInterruptionExample {
+    public static void main(String[] args) throws InterruptedException {
+        // 创建并启动一个新线程
+        Thread worker = new Thread(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                System.out.println("Working...");
+                try {
+                    // 模拟长时间运行的任务
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    // 捕获中断异常并设置中断状态
+                    System.out.println("Thread was interrupted, stopping...");
+                    Thread.currentThread().interrupt(); // 重新设置中断状态
+                    return;
+                }
+            }
+            System.out.println("Thread is stopping gracefully...");
+        });
+
+        worker.start();
+
+        // 主线程等待一段时间后中断工作线程
+        Thread.sleep(2000);
+        System.out.println("Main thread is interrupting the worker thread...");
+        worker.interrupt();
+        
+        // 等待工作线程结束
+        worker.join();
+        System.out.println("Worker thread has finished.");
+    }
+}
+```
+
+在这个例子中，创建了一个worker线程，在其whele循环中不断处理任务，直到检测到线程中断状态为true。
+
+主线程会在2s后通过worker.interrupt()方法设置worker线程的中断状态为true。worker线程内部捕获到`InterruptedException`异常，会重新设置中断状态。
+
+
+
+**线程中断的最佳实践**
+
+-   礼貌中断：不要强制终止线程，而是通过中断机制让线程有机会进行清理和资源释放。
+-   定期检查中断状态：在线程的长时间运行任务中，应定期检查中断状态，以确保能够及时响应中断请求。
+-   处理阻塞方法：对于可能会抛出 InterruptedException 的阻塞方法，务必捕获异常并适当地处理。
+-   重设中断状态：在捕获 InterruptedException 后，可以考虑重新设置中断状态，以便其他代码段也能感知到中断请求。
+-   避免忽略中断：不要简单地忽略中断请求，应该根据业务逻辑合理处理。
+
+
+
+## interrupt和stop有什么区别？
 
 
 
