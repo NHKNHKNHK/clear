@@ -1437,11 +1437,134 @@ public final synchronized void join(long millis)
 
 ## 怎么让3个线程按顺序执行？
 
-使用join方法
+-   使用join方法
 
-使用CountDownLatch
+-   使用CountDownLatch
 
-使用CyclicBarrier
+-   使用CyclicBarrier
+
+**方式一：使用join方法**
+
+原理：
+
+-   `join` 方法可以让当前线程等待另一个线程执行完毕后再继续执行。
+-   通过依次调用线程的 `join` 方法，可以确保线程按顺序执行
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        Thread t1 = new Thread(() -> {
+            System.out.println("Thread 1 is running");
+        });
+        Thread t2 = new Thread(() -> {
+            try {
+                t1.join(); // 等待t1线程执行完毕
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Thread 2 is running");
+        });
+        Thread t3 = new Thread(() -> {
+            try {
+                t2.join(); // 等待t2线程执行完毕
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Thread 3 is running");
+        });
+
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+}
+```
+
+**方式二：使用CountDownLatch**
+
+原理：
+
+-   `CountDownLatch` 是一个同步工具类，允许一个或多个线程等待其他线程完成操作。
+-   初始化时设置计数器值，每个线程完成任务后调用 `countDown` 减少计数器，当计数器为 0 时，等待的线程被唤醒。
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        CountDownLatch latch1 = new CountDownLatch(1);
+        CountDownLatch latch2 = new CountDownLatch(1);
+
+        Thread t1 = new Thread(() -> {
+            System.out.println("Thread 1 is running");
+            latch1.countDown(); // 线程t1执行完毕，计数器减1，通知t2线程开始执行
+        });
+        Thread t2 = new Thread(() -> {
+            try {
+                latch1.await(); // 等待t1线程执行完毕
+                System.out.println("Thread 2 is running");
+                latch2.countDown(); // 线程t2执行完毕，计数器减1，通知t3线程开始执行
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        Thread t3 = new Thread(() -> {
+            try {
+                latch2.await(); // 等待t2线程执行完毕
+                System.out.println("Thread 3 is running");
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+}
+```
+
+**方式三：使用CyclicBarrier**
+
+-   `CyclicBarrier` 是一个同步工具类，允许多个线程在某个屏障点（barrier point）相互等待。
+-   初始化时设置参与线程的数量，所有线程到达屏障点后才能继续执行
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        CyclicBarrier barrier1 = new CyclicBarrier(2);
+        CyclicBarrier barrier2 = new CyclicBarrier(2);
+
+        Thread t1 = new Thread(() -> {
+            System.out.println("Thread 1 is running");
+            try {
+                barrier1.await();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        Thread t2 = new Thread(() -> {
+            try {
+                barrier1.await();
+                System.out.println("Thread 2 is running");
+                barrier2.await();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        Thread t3 = new Thread(() -> {
+            try {
+                barrier2.await();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Thread 3 is running");
+        });
+
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+}
+```
 
 
 
@@ -1471,10 +1594,10 @@ public final synchronized void join(long millis)
 
 **Thread.sleep**
 
--   作用：使当前正在执行的线程暂停执行指定的时间（以毫秒为单位），让出 CPU 给其他线程。
+-   作用：使当前正在执行的线程暂停执行指定的时间（以毫秒为单位），**让出 CPU** 给其他线程。
 
 -   特点：
-    -   不释放锁（即如果当前线程持有某个对象的同步锁，在睡眠期间不会释放该锁）。
+    -   **不释放锁**（即如果当前线程持有某个对象的同步锁，在睡眠期间不会释放该锁）。
     -   必须捕获 InterruptedException 异常，因为当另一个线程中断了正在睡眠的线程时会抛出此异常。
 
 -   适用场景：用于实现定时任务或需要线程暂停一段时间后再继续执行的情况。
@@ -1491,7 +1614,7 @@ try {
 
 -   作用：使当前线程等待，直到另一个线程调用同一个对象上的 notify() 或 notifyAll() 方法唤醒它。
 -   特点：
-    -   必须在同步代码块中调用（即必须获取对象的锁后才能调用 wait 方法），并且会释放锁。
+    -   必须在同步代码块中调用（即必须获取对象的锁后才能调用 wait 方法），并且**会释放锁**。
     -   可以指定等待时间，超时后自动唤醒；如果不指定时间，则一直等待直到被唤醒。
     -   同样需要处理 InterruptedException 异常。
 -   适用场景：通常用于线程间通信，比如生产者-消费者模式。
@@ -1533,7 +1656,7 @@ public class WaitNotifyExample {
 
 **Thread.yield**
 
--   作用：提示当前线程让出 CPU 占用时间，给其他同优先级的线程以执行的机会。
+-   作用：提示当前线程**让出 CPU** 占用时间，给其他同优先级的线程以执行的机会。
 -   特点：
     -   不保证当前线程会立即让出 CPU，也不保证其他线程会立即得到执行机会。
     -   不会抛出异常，也不需要在同步上下文中使用。
@@ -1563,8 +1686,8 @@ public static void main(String[] args) {
 |        | Thread.sleep                                                 | object.wait                                                  | Thread.yield                                                 |
 | ------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | 定义   | Thread.sleep(long millis)是一个静态方法                      | wait()是一个实例方法，属于Object类                           | Thread.yield()是一个静态方法                                 |
-| 作用   | 使当前线程进入休眠状态，暂停执行一段时间（以毫秒为单位）     | 使当前线程等待，直到另一个线程调用该对象的notify()或notifyAll()方法来唤醒它。 | 提示当前线程让出 CPU 占用时间，给其他同优先级的线程以执行的机会。 |
-| 锁状态 | 不释放锁：当前线程在睡眠期间仍然持有它所获取的任何锁         | 释放锁：必须在同步代码块或方法中调用 wait()，并且会立即释放对象的锁。等待被唤醒后重新竞争锁 | 不释放锁：让出 CPU 时不释放任何锁资源。                      |
+| 作用   | 使当前线程进入**休眠**状态，暂停执行一段时间（以毫秒为单位） | **使当前线程等待**，直到另一个线程调用该对象的notify()或notifyAll()方法来唤醒它。 | 提示当前线程**让出 CPU** 占用时间，**给其他同优先级的线程以执行的机会**。 |
+| 锁状态 | **不释放锁**：当前线程在睡眠期间仍然持有它所获取的任何锁     | **释放锁**：必须在同步代码块或方法中调用 wait()，并且会立即释放对象的锁。等待被唤醒后重新竞争锁 | **不释放锁**：让出 CPU 时不释放任何锁资源。                  |
 | 唤醒   | 自动唤醒：指定的时间到了之后自动恢复执行，无需其他线程干预   | 需要显式唤醒：<br/>可以通过调用同一个对象上的 notify() 或 notifyAll() 方法来唤醒等待中的线程。<br/>如果指定了超时时间（如 wait(long timeout)），则超时后也会自动唤醒。<br/>Thr | 无唤醒机制：只是一个提示，线程调度器可能会选择其他线程运行，但没有明确的唤醒机制。 |
 | 异常   | 抛出 InterruptedException：如果在睡眠期间线程被中断，则会抛出此异常。因此，调用 sleep 的代码通常需要捕获并处理这个异常 | 抛出 InterruptedException：同样地，如果在等待期间线程被中断，则会抛出此异常。此外，wait 必须在同步上下文中使用，否则会抛出 IllegalMonitorStateException。 | 不抛出异常：不会抛出任何异常，也不需要特别的异常处理         |
 | 场景   | 定时任务：适用于需要线程暂停一段时间后再继续执行的情况，例如模拟延迟、实现定时器等。<br/>避免忙等待：用于减少不必要的 CPU 占用，比如在轮询机制中引入适当的休眠时间。 | **线程间通信**：适用于生产者-消费者模式、多线程协作等场景，其中一个线程需要等待另一个线程完成某些工作。<br/>**条件变量**：用于实现更复杂的线程同步逻辑，确保某个条件满足时再继续执行。 | 同优先级线程调度：适用于希望多个同优先级的线程能够更加“公平”地获得 CPU 时间的情况，但实际效果依赖于 JVM 和操作系统的线程调度策略。<br/>提示性调度：由于其不可靠性，一般不建议作为主要的线程控制手段，更多是作为一种优化提示。 |
