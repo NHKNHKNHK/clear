@@ -1084,110 +1084,19 @@ public class MyController {
 
 
 
-## @ModelAttribute
-
-`@ModelAttribute` 注解是 Spring MVC 中用于**绑定请求参数到模型对象**的注解。它可以用于方法参数、方法和控制器类中，以便将请求中的数据绑定到模型对象，并将该对象添加到模型中，以便在视图中使用。
-
-**`@ModelAttribute` 的使用场景**
-
--   **方法参数**：用于绑定请求参数到方法参数，并将该参数添加到模型中。
-
--   **方法**：用于在处理请求之前准备模型数据。通常用于在处理请求之前初始化一些公共数据。
-
--   **控制器类**：用于在所有请求处理方法之前初始化模型数据。
-
-**用于方法参数**
-
-当 `@ModelAttribute` 注解用于控制器方法参数时，它会自动将请求参数绑定到该参数对象中，并将该对象添加到模型中
-
-```java
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-
-@Controller
-public class UserController {
-
-    @PostMapping("/register")
-    public String registerUser(@ModelAttribute User user) {
-        // user 对象已经绑定了请求参数
-        // 可以在这里处理业务逻辑
-        return "result";
-    }
-}
-```
-
-在`@ModelAttribute` 注解用于 `User` 对象的参数。这意味着 Spring MVC 会自动将请求参数绑定到 `User` 对象的属性中，并将该对象添加到模型中。
-
-**用于方法**
-
-当 `@ModelAttribute` 注解用于控制器方法时，该方法会在每个处理请求的方法之前执行，用于准备模型数据
-
-```java
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.GetMapping;
-
-@Controller
-public class UserController {
-
-    @ModelAttribute
-    public void addAttributes(Model model) {
-        model.addAttribute("commonAttribute", "This is a common attribute");
-    }
-
-    @GetMapping("/register")
-    public String showForm(Model model) {
-        model.addAttribute("user", new User());
-        return "register";
-    }
-}
-```
-
-`addAttributes` 方法会在 `showForm` 方法之前执行，并将一个公共属性添加到模型中。这样，`commonAttribute` 可以在视图中使用。
-
-**用于控制器类**
-
-当 `@ModelAttribute` 注解用于控制器类时，它会在所有请求处理方法之前执行，用于初始化模型数据。
-
-```java
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-@Controller
-@RequestMapping("/users")
-public class UserController {
-
-    @ModelAttribute
-    public void addCommonAttributes(Model model) {
-        model.addAttribute("appName", "User Management System");
-    }
-
-    @GetMapping("/register")
-    public String showForm(Model model) {
-        model.addAttribute("user", new User());
-        return "register";
-    }
-
-    @PostMapping("/register")
-    public String registerUser(@ModelAttribute User user) {
-        // user 对象已经绑定了请求参数
-        // 可以在这里处理业务逻辑
-        return "result";
-    }
-}
-```
-
-`addCommonAttributes` 方法会在所有请求处理方法之前执行，并将一个公共属性添加到模型中。这样，`appName` 可以在所有视图中使用
-
-
-
 ## @RequestParam
 
-`@RequestParam` 注解是 Spring MVC 中用于**将请求参数绑定到处理方法的参数上**的注解。它可以用于从 URL 查询参数、表单数据或其他请求参数中提取值，并将这些值传递给控制器方法的参数
+`@RequestParam` 注解是 Spring MVC 中用于**将请求参数绑定到处理方法的参数上**的注解。
+
+可以用于从 URL查询参数（query参数）、表单数据或其他请求参数中提取值，并将这些值传递给控制器方法参数上
+
+通常用于处理简单的键值对参数
+
+**特点**
+
+-   从 URL 查询参数（`?key=value`）或表单数据中获取值。
+-   可以设置 `required = false` 来允许参数为空。
+-   支持默认值：`@RequestParam(defaultValue = "zs")`。
 
 **`@RequestParam` 的基本用法**
 
@@ -1210,7 +1119,9 @@ public class UserController {
 }
 ```
 
-`@RequestParam` 注解用于将请求参数 `name` 的值绑定到方法参数 `name` 上。如果请求 URL 是 `/greet?name=John`，那么方法参数 `name` 的值将是 `John`
+`@RequestParam` 注解用于将请求参数 `name` 的值绑定到方法参数 `name` 上。
+
+如果请求 URL 是 `/greet?name=John`，那么方法参数 `name` 的值将是 `John`
 
 -   **指定请求参数名称**
 
@@ -1224,7 +1135,9 @@ public String greetUser(@RequestParam("username") String name) {
 }
 ```
 
-`@RequestParam("username")` 表示将请求参数 `username` 的值绑定到方法参数 `name` 上。如果请求 URL 是 `/greet?username=John`，那么方法参数 `name` 的值将是 `John`。
+`@RequestParam("username")` 表示将请求参数 `username` 的值绑定到方法参数 `name` 上。
+
+如果请求 URL 是 `/greet?username=John`，那么方法参数 `name` 的值将是 `John`。
 
 -   **设置请求参数的默认值**
 
@@ -1269,7 +1182,9 @@ public String getUserInfo(@RequestParam String name, @RequestParam int age) {
 }
 ```
 
-`name` 和 `age` 请求参数将分别绑定到方法参数 `name` 和 `age` 上。如果请求 URL 是 `/user?name=John&age=30`，那么方法参数 `name` 的值将是 `John`，`age` 的值将是 `30`。
+`name` 和 `age` 请求参数将分别绑定到方法参数 `name` 和 `age` 上。
+
+如果请求 URL 是 `/user?name=John&age=30`，那么方法参数 `name` 的值将是 `John`，`age` 的值将是 `30`。
 
 -   **绑定到集合类型**
 
@@ -1287,7 +1202,14 @@ public String getNumbers(@RequestParam List<Integer> nums) {
 
 ## **@PathVariable** 
 
-`@PathVariable` 注解是 Spring MVC 中用于**将 URL 路径中的变量绑定到处理方法的参数上**的注解。它允许你从 URL 路径中提取参数，并将这些参数传递给控制器方法，从而实现更加动态和灵活的 URL 路由。
+`@PathVariable` 注解是 Spring MVC 中用于**将 URL 路径中的变量绑定到处理方法的参数上**的注解。常用于 RESTful 风格的 API。
+
+它允许你从 URL 路径中提取参数，并将这些参数传递给控制器方法，从而实现更加动态和灵活的 URL 路由。
+
+**特点**
+
+-   从 URL 路径中提取值（例如 `/users/{id}` 中的 `{id}`）。
+-   用于构建 RESTful API，清晰表达资源路径。
 
 **`@PathVariable` 的基本用法**
 
@@ -1312,7 +1234,9 @@ public class UserController {
 }
 ```
 
-`@PathVariable` 注解用于将 URL 路径中的 `id` 变量绑定到方法参数 `id` 上。如果请求 URL 是 `/users/123`，那么方法参数 `id` 的值将是 `123`。
+`@PathVariable` 注解用于将 URL 路径中的 `id` 变量绑定到方法参数 `id` 上。
+
+如果请求 URL 是 `/users/123`，那么方法参数 `id` 的值将是 `123`。
 
 -   **指定路径变量名称**
 
@@ -1326,7 +1250,9 @@ public String getUserById(@PathVariable("userId") String id) {
 }
 ```
 
-`@PathVariable("userId")` 表示将 URL 路径中的 `userId` 变量绑定到方法参数 `id` 上。如果请求 URL 是 `/users/123`，那么方法参数 `id` 的值将是 `123`。
+`@PathVariable("userId")` 表示将 URL 路径中的 `userId` 变量绑定到方法参数 `id` 上。
+
+如果请求 URL 是 `/users/123`，那么方法参数 `id` 的值将是 `123`。
 
 **`@PathVariable` 的高级用法**
 
@@ -1342,7 +1268,9 @@ public String getUserOrder(@PathVariable String userId, @PathVariable String ord
 }
 ```
 
-`userId` 和 `orderId` 路径变量将分别绑定到方法参数 `userId` 和 `orderId` 上。如果请求 URL 是 `/users/123/orders/456`，那么方法参数 `userId` 的值将是 `123`，`orderId` 的值将是 `456`。
+`userId` 和 `orderId` 路径变量将分别绑定到方法参数 `userId` 和 `orderId` 上。
+
+如果请求 URL 是 `/users/123/orders/456`，那么方法参数 `userId` 的值将是 `123`，`orderId` 的值将是 `456`。
 
 -   **绑定到特定类型**
 
@@ -1356,7 +1284,181 @@ public String getProductById(@PathVariable int productId) {
 }
 ```
 
-`productId` 路径变量将绑定到方法参数 `productId` 上，并自动转换为 `int` 类型。如果请求 URL 是 `/products/789`，那么方法参数 `productId` 的值将是 `789`。
+`productId` 路径变量将绑定到方法参数 `productId` 上，并自动转换为 `int` 类型。
+
+如果请求 URL 是 `/products/789`，那么方法参数 `productId` 的值将是 `789`。
+
+
+
+## @RequestBody
+
+| 名称 | @RequestBody                                                 |
+| ---- | ------------------------------------------------------------ |
+| 类型 | ==形参注解==                                                 |
+| 位置 | SpringMVC控制器方法形参定义前面                              |
+| 作用 | **将请求中请求体所包含的数据传递给控制器方法参数上**，此注解一个处理器方法只能使用一次 |
+
+
+
+## @RequestBody、@RequestParam、@PathVariable的区别
+
+| 名称 | @RequestBody                                                 |
+| ---- | ------------------------------------------------------------ |
+| 类型 | ==形参注解==                                                 |
+| 位置 | SpringMVC控制器方法形参定义前面                              |
+| 作用 | **将请求中请求体所包含的数据传递给请求参数**，此注解一个处理器方法只能使用一次 |
+
+| 名称     | @RequestParam                                       |
+| -------- | --------------------------------------------------- |
+| 类型     | ==形参注解==                                        |
+| 位置     | SpringMVC控制器方法形参定义前面                     |
+| 作用     | 绑定请求参数与处理器方法形参间的关系                |
+| 相关参数 | required：是否为必传参数   defaultValue：参数默认值 |
+
+| 名称 | @PathVariable                                                |
+| ---- | ------------------------------------------------------------ |
+| 类型 | ==形参注解==                                                 |
+| 位置 | SpringMVC控制器方法形参定义前面                              |
+| 作用 | 绑定路径参数与处理器方法形参间的关系，要求路径参数名与形参名一一对应 |
+
+三个注解之间的区别和应用分别是什么?
+
+区别
+
+-   @RequestParam用于**接收url地址传参（**query参数），**表单传参**【application/x-www-form-urlencoded】
+    -   qeury参数：`/users?search=John`
+-   @RequestBody用于接收**json**数据【application/json】
+-   @PathVariable**用于接收路径参数**，使用{参数名称}描述路径参数
+    -   例如：`/users/1`
+
+应用
+
+-   后期开发中，发送请求参数超过1个时，以json格式为主，@RequestBody应用较广
+-   如果发送非json格式数据，选用@RequestParam接收请求参数
+-   采用RESTful进行开发，当参数数量较少时，例如1个，可以采用@PathVariable接收请求路径变量，通常用于传递id值
+
+
+
+## @ModelAttribute
+
+`@ModelAttribute` 注解是 Spring MVC 中用于**绑定请求参数或表单数据到模型对象（Java对象）**的注解。
+
+它能够自动将请求的多个参数（例如 `name=John&email=john@example.com`）映射到对象的字段中。
+
+它可以用于方法参数、方法和控制器类中，以便将请求中的数据绑定到模型对象，并将该对象添加到模型中，以便在视图中使用。
+
+**适用场景**
+
+-   **表单提交**涉及多个字段的绑定（如用户注册、更新）。
+-   需要一次性绑定复杂数据结构
+
+**`@ModelAttribute` 的使用场景**
+
+-   **方法参数**：用于绑定请求参数或表单数据到方法参数，并将该参数添加到模型中。
+-   **方法**：用于在处理请求之前准备模型数据。通常用于在处理请求之前初始化一些公共数据。
+-   **控制器类**：用于在所有请求处理方法之前初始化模型数据。
+
+**用于方法参数**
+
+当 `@ModelAttribute` 注解用于控制器方法参数时，它会自动将请求参数绑定到该参数对象中，并将该对象添加到模型中
+
+```java
+@Controller
+public class UserController {
+
+    @PostMapping("/register")
+    public String registerUser(@ModelAttribute User user) {
+        // user 对象已经绑定了请求参数
+        // 可以在这里处理业务逻辑
+        return "result";
+    }
+}
+```
+
+在`@ModelAttribute` 注解用于 `User` 对象的参数。这意味着 Spring MVC 会自动将请求参数绑定到 `User` 对象的属性中，并将该对象添加到模型中。
+
+-   **工作原理：**
+    1.  Spring 会从请求参数中获取所有与对象字段名匹配的值。
+    2.  将这些值自动填充到对象的对应字段中。
+    3.  如果对象中有嵌套对象，Spring 也会递
+
+**用于方法**
+
+当 `@ModelAttribute` 注解用于控制器方法时，该方法会在每个处理请求的方法之前执行，用于准备模型数据
+
+```java
+@Controller
+public class UserController {
+
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("commonAttribute", "This is a common attribute");
+    }
+
+    @GetMapping("/register")
+    public String showForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
+    }
+}
+```
+
+`addAttributes` 方法会在 `showForm` 方法之前执行，并将一个公共属性添加到模型中。这样，`commonAttribute` 可以在视图中使用。
+
+**用于控制器类**
+
+当 `@ModelAttribute` 注解用于控制器类时，它会在所有请求处理方法之前执行，用于初始化模型数据。
+
+```java
+@Controller
+@RequestMapping("/users")
+public class UserController {
+
+    @ModelAttribute
+    public void addCommonAttributes(Model model) {
+        model.addAttribute("appName", "User Management System");
+    }
+
+    @GetMapping("/register")
+    public String showForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String registerUser(@ModelAttribute User user) {
+        // user 对象已经绑定了请求参数
+        // 可以在这里处理业务逻辑
+        return "result";
+    }
+}
+```
+
+`addCommonAttributes` 方法会在所有请求处理方法之前执行，并将一个公共属性添加到模型中。这样，`appName` 可以在所有视图中使用
+
+
+
+## @RequestParam 与 @ModelAttribute 的区别？
+
+| 特性             | @RequestParam        | @ModelAttribute        |
+| ---------------- | -------------------- | ---------------------- |
+| 绑定目标         | 单个请求参数         | Java 对象              |
+| 绑定来源         | Query 参数或表单数据 | 表单数据或 Query 参数  |
+| 适用场景         | 可选参数、搜索条件   | 表单提交、复杂对象绑定 |
+| 是否支持嵌套绑定 | 否                   | 是                     |
+| RESTful API 支持 | 不常见               | 不常见                 |
+
+
+
+## @EnableWebMvc
+
+| 名称 | @EnableWebMvc                                             |
+| ---- | --------------------------------------------------------- |
+| 类型 | ==配置类注解==                                            |
+| 位置 | SpringMVC配置类定义上方                                   |
+| 作用 | 开启SpringMVC多项辅助功能（包含开启json数据类型自动转换） |
+
+
 
 
 
