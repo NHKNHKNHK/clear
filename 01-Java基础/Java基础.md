@@ -560,6 +560,117 @@ OOP
 
 ## **深拷贝和浅拷贝的区别是什么?**
 
+深拷贝（Deep Copy）和浅拷贝（Shallow Copy）是对象复制的两种方式，它们在复制对象时的行为有所不同，特别是在处理包含引用类型的对象时
+
+-   浅拷贝
+
+浅拷贝创建一个新对象，然后将原始对象的所有非静态字段复制到该新对象。如果字段是基本数据类型，则直接复制其值；如果是引用数据类型，则复制的是引用地址，这意味着新对象和原对象共享这些引用类型的实例。
+
+-   深拷贝
+
+深拷贝不仅创建一个新的对象，还会递归地复制所有引用类型的字段，确保新对象与其副本之间没有任何共享的引用。
+
+**浅拷贝（Shallow Copy）**
+
+```java
+class Person {
+    String name;
+    int age;
+
+    Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+class Employee implements Cloneable {
+    String position;
+    Person person;
+
+    Employee(String position, Person person) {
+        this.position = position;
+        this.person = person;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone(); // 浅拷贝
+    }
+}
+
+public class ShallowCopyExample {
+    public static void main(String[] args) throws CloneNotSupportedException {
+        Person person = new Person("John", 30);
+        Employee original = new Employee("Manager", person);
+        Employee copy = (Employee) original.clone();
+
+        System.out.println(original.person == copy.person); // true，引用相同
+        copy.person.name = "Jane";
+        System.out.println(original.person.name); // "Jane"，原对象也被修改
+    }
+}
+```
+
+**深拷贝（Deep Copy）**
+
+```java
+class Person implements Cloneable {
+    String name;
+    int age;
+
+    Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+}
+
+class Employee implements Cloneable {
+    String position;
+    Person person;
+
+    Employee(String position, Person person) {
+        this.position = position;
+        this.person = person;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Employee cloned = (Employee) super.clone();
+        cloned.person = (Person) person.clone(); // 深拷贝
+        return cloned;
+    }
+}
+
+public class DeepCopyExample {
+    public static void main(String[] args) throws CloneNotSupportedException {
+        Person person = new Person("John", 30);
+        Employee original = new Employee("Manager", person);
+        Employee copy = (Employee) original.clone();
+
+        System.out.println(original.person == copy.person); // false，引用不同
+        copy.person.name = "Jane";
+        System.out.println(original.person.name); // "John"，原对象未被修改
+    }
+}
+```
+
+
+
+## 为什么要使用深拷贝？
+
+**避免共享引用**
+
+当你复制一个对象时，如果不使用深拷贝，那么复制的实际上是原对象的引用，而不是真正的副本。这意味着对新对象的任何修改都会影响到原对象。深拷贝则能确保复制的对象是真正的副本，与原对象没有引用关系
+
+**线程安全**
+
+在多线程环境中，如果多个线程同时访问很修改同一个对象，可能会导致数据不一致或竟态条件。通过深拷贝创建对象的副本，每个线程都可以在自己的副本上进行操作，从而避免了线程安全问题。
+
 
 
 ## 静态（类）变量和实例变量的区别？
