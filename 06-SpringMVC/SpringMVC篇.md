@@ -1196,7 +1196,11 @@ public String getNumbers(@RequestParam List<Integer> nums) {
 }
 ```
 
-`nums` 请求参数将绑定到方法参数 `nums` 上。如果请求 URL 是 `/numbers?nums=1&nums=2&nums=3`，那么方法参数 `nums` 的值将是 `[1, 2, 3]`。
+`nums` 请求参数将绑定到方法参数 `nums` 上。
+
+如果请求 URL 是 `/numbers?nums=1&nums=2&nums=3`，那么方法参数 `nums` 的值将是 `[1, 2, 3]`。
+
+如果请求 URL 是 `/numbers?nums=1,2,3`，那么方法参数 `nums` 的值将是 `[1, 2, 3]`。
 
 
 
