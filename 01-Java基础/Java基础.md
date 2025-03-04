@@ -562,6 +562,14 @@ OOP
 
 
 
+## 静态（类）变量和实例变量的区别？
+
+
+
+## 静态（类）方法和实例方法的区别？
+
+
+
 ## 什么是Java的迭代器？
 
 
@@ -1686,6 +1694,10 @@ words.stream()
 
 
 
+## 什么是自动装箱和拆箱？
+
+
+
 ## Integer的构造器在Java8后有变动？
 
 ```java
@@ -1698,29 +1710,33 @@ public Integer(int value) {
 
 ## Integer类型的数值比较？
 
+在 Java 中，Integer 是一个包装类（wrapper class），用于将基本数据类型 int 封装为对象。由于 Integer 是引用类型，因此在进行数值比较时需要注意一些细节，尤其是自动装箱（autoboxing）和缓存机制的影响
+
+先看一个例子：
+
 ```java
 Integer a = Integer.valueOf(600);
 Integer b = Integer.valueOf(600);
 int c = 600;
-System.out.println(a == b); // false
-System.out.println(a.equals(b)); // true
-System.out.println(a == c); // true 
+System.out.println(a == b); 			// false
+System.out.println(a.equals(b)); 		// true，因为Integer重写了equals方法
+System.out.println(a == c); 			// true，==运算符，对于基本类型，比较的是值
 
 
 Integer x = Integer.valueOf(99);
 Integer y = Integer.valueOf(99);
-System.out.println(x == y); // true
-System.out.println(x.equals(y)); // true
+System.out.println(x == y); 			// true，因为存在缓存机制
+System.out.println(x.equals(y)); 		// true
 ```
-
-在 Java 中，Integer 是一个包装类（wrapper class），用于将基本数据类型 int 封装为对象。由于 Integer 是引用类型，因此在进行数值比较时需要注意一些细节，尤其是自动装箱（autoboxing）和缓存机制的影响。
 
 **基本数值比较**
 
 1）使用 == 比较 Integer 对象
 
--   == 比较的是引用：当使用 == 比较两个 Integer 对象时，实际上比较的是它们的引用（即内存地址），而不是它们封装的数值。
--   可能导致意外结果：即使两个 Integer 对象封装相同的数值，如果它们是不同的对象实例，== 会返回 false。
+-   == 比较的是引用：当使用 == 比较两个 Integer 对象时
+    -   对于引用类型，== 实际上比较的是它们的引用（即内存地址），而不是它们封装的数值。
+
+例如：即使两个 Integer 对象封装相同的数值，如果它们是不同的对象实例，== 会返回 false。
 
 ```java
 Integer a = new Integer(100);
@@ -1730,8 +1746,8 @@ System.out.println(a == b); // 输出: false
 
 2）使用 .equals() 方法
 
--   .equals() 比较的是值：Integer 类重写了 Object 类的 equals() 方法，确保它比较的是两个 Integer 对象封装的数值，而不是引用。
--   推荐使用：为了确保正确性，应该使用 equals() 方法来比较 Integer 对象的值。
+-   .equals() 比较的是值（前提是需要equals方法被正确的重写）：Integer 类重写了 Object 类的 equals() 方法，确保它比较的是两个 Integer 对象封装的数值，而不是引用。
+-   为了确保正确性，应该使用 equals() 方法来比较 Integer 对象的值。
 
 ```java
 Integer a = new Integer(100);
@@ -1739,14 +1755,20 @@ Integer b = new Integer(100);
 System.out.println(a.equals(b)); // 输出: true
 ```
 
+小结
+
+​	**推荐使用equals方法来比较两个Integer对象**
+
 **自动装箱与缓存机制**
 
-Java 为了优化性能，在 -128 到 127 之间的 Integer 对象会被缓存（通过 Integer.valueOf() 实现）。这意味着在这个范围内的 Integer 对象可能会共享同一个实例，因此使用 == 比较时可能会得到 true 的结果。
+Java 为了优化性能，在 -128 到 127 之间的 Integer 对象会被缓存（通过 Integer.valueOf() 实现）。
+
+这意味着在这个范围内的 Integer 对象可能会共享同一个实例，因此使用 == 比较时可能会得到 true 的结果。
 
 ```java
 Integer x = 100; // 自动装箱
 Integer y = 100; // 自动装箱
-System.out.println(x == y); // 输出: true (因为 100 在缓存范围内)
+System.out.println(x == y); // 输出: true (因为 100 在缓存范围内，所以指向同一个引用)
 
 Integer m = 150; // 自动装箱
 Integer n = 150; // 自动装箱
@@ -1755,23 +1777,11 @@ System.out.println(m == n); // 输出: false (因为 150 不在缓存范围内)
 
 **总结**
 
-为了避免因自动装箱和缓存机制导致的意外行为，始终使用 .equals() 方法 来比较 Integer 对象的值。
+​	为了避免因自动装箱和缓存机制导致的意外行为，==始终使用 .equals() 方法 来比较 Integer 对象的值==。
 
 **阿里规约**
 
 ![1740924091123](assets/整数类型包装类比较.png)
-
-## 什么是自动装箱和拆箱？
-
-
-
-
-
-## 静态（类）变量和实例变量的区别？
-
-
-
-## 静态（类）方法和实例方法的区别？
 
 
 
@@ -1819,7 +1829,7 @@ hashCode方法必须遵循：
 -   当两个对象的 equals() 方法比较返回 true 时，这两个对象的 hashCode() 方法的返回值也应相等。 
 -   对象中用作 equals() 方法比较的 Field，都应该用来计算 hashCode 值。
 
-### 重写 equals()方法的基本原则？
+## 重写 equals()方法的基本原则？
 
 -   重写 equals 方法的时候一般都需要同时复写 hashCode 方法。通常参与计算hashCode 的对象的属性也应该参与到 equals()中进行计算。 
 -   推荐：开发中直接调用 Eclipse/IDEA 里的快捷键自动重写 equals()和 hashCode()方法即可。 
@@ -1836,11 +1846,83 @@ hashCode方法必须遵循：
 
 
 
-## equal与==的区别？
-
-  吧  
-
 ## 为什么重写equals时也需要重写hashCode？
+
+
+
+## equal 与 == 的区别？
+
+-   == 运算符
+    -   基本数据类型：比较两个值是否相等。
+    -   引用类型（对象）：比较两个引用是否指向同一个对象（即内存地址是否相同）。
+
+-   equals() 方法
+    -   **默认**行为：对于所有对象，默认实现是继承自 Object 类的 equals() 方法，它**实际上与 == 相同**，即**比较的是引用**。
+    -   **重写后**的行为：许多类（如 String、Integer 等）重写了 equals() 方法以提供更有意义的比较逻辑。例如，String 的 equals() 比较的是字符串**内容**是否相同，而不是引用。
+
+**注意事项**
+
+-   **自动装箱和缓存**：对于基本类型的包装类（如 Integer），当数值在 -128 到 127 之间时，Java会进行缓存，因此在这个范围内使用 == 比较可能会得到 true，但这不是推荐的做法。
+
+```java
+Integer i1 = 100;
+Integer i2 = 100;
+System.out.println(i1 == i2); // true (因为缓存)
+```
+
+-   **null 检查**：使用 equals() 时需要注意避免 NullPointerException。可以使用 Objects.equals() 来安全地比较可能为 null 的对象。
+
+总结：
+
+​	== 用于比较基本数据类型或引用是否相同，而 equals() 用于比较对象的内容是否相同（前提是该方法被正确重写）
+
+**equal 与 == 的区别**
+
+|          | ==                                                       | equals                                                 |
+| -------- | -------------------------------------------------------- | ------------------------------------------------------ |
+| 比较范围 | 可以比较基本类型、引用类型                               | 只能比较引用类型                                       |
+| 比较规则 | 基本类型：比较数据值<br>引用类型：比较引用值（内存地址） | 默认：与 == 一致<br>重写后：比较内容（具体看实现方法） |
+
+示例
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        String s1 = new String("abc");
+        String s2 = new String("abc");
+        System.out.println(s1 == s2);      // false
+        System.out.println(s1.equals(s2)); // true 因为String类重写了equals
+        Set<String> set1 = new HashSet<>();
+        Collections.addAll(set1, s1, s2); 
+        System.out.println(set1.size());   // 1 因为String重写了hashCode，内容一致hash值也一致
+        System.out.println("===================");
+
+        Person p1 = new Person("abc");
+        Person p2 = new Person("abc");
+        System.out.println(p1 == p2);     // false
+        System.out.println(p1.equals(p2));// false 因为Person类没有重写equals，实际使用的是Object中的equals方法，比较的是引用
+        Set<Person> set2 = new HashSet<>();
+        Collections.addAll(set2, p1, p2);
+        System.out.println(set2.size());  // 2 因为Person类没有重写hashCode，实际使用的是Object中的hashCode方法 
+    }
+}
+
+// ！！！注意，此类没有重写hashCode和equals方法
+class Person {
+    private Integer id;
+    private String personName;
+
+    public Person(String personName) {
+        this.personName = personName;
+    }
+
+    // getter、setter
+} 
+```
+
+
+
+## Java中传值还是传引用？
 
 
 

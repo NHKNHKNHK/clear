@@ -1186,7 +1186,11 @@ MyBatis分页原理主要依赖于数据库的特性和MyBatis提供的API，包
 
 
 
-## 
+## 对于公共字段你是怎么处理的？
+
+-   利用MP提供的能力：实现`MetaObjectHandler`接口
+-   手写Mybatis拦截器实现
+-   AOP+自定义注解，然后在需要填充的方法上使用注解（例如：insert、update等方法）
 
 
 
