@@ -934,7 +934,79 @@ key列显示MySQL实际决定使用的键（索引），必然包含在possible_
 
 ## **什么情况下应不建或少建索引？**
 
-## **mysql常见索引失效的情况?**:star:
+## MySQL常见索引失效的情况?:star:
+
+**使用函数或表达式**
+
+在索引列上使用函数或表达式（如UPPER(column)、column + 1）会导致索引失效
+
+```sql
+SELECT * FROM table WHERE UPPER(column) = 'VALUE';
+```
+
+**隐式类型转换**
+
+当查询条件中的数据类型与索引列的数据类型不匹配时，MySQL 可能会进行隐式类型转换，从而导致索引失效
+
+```sql
+SELECT * FROM table WHERE varchar_column = 123;  -- varchar_column 是字符串类型
+```
+
+**使用OR条件**
+
+如果OR条件中的列没有索引或无法同时使用索引，也会导致索引失效。
+
+```sql
+SELECT * FROM table WHERE column1 = 'value1' OR column2 = 'value2';
+```
+
+**前导模糊查询**
+
+在 LIKE 查询中，如果模式以通配符（如%）开头，索引将失效
+
+```sql
+SELECT * FROM table WHERE column LIKE '%value';
+```
+
+**不等于操作**
+
+使用不等于操作符（如!=或<>）通常会导致索引失效
+
+```sql
+SELECT * FROM table WHERE column != 'value';
+```
+
+**范围条件后再使用等值条件**
+
+复合索引中，如果使用了范围条件（如<、>、BETWEEN），后面的等值条件可能无法使用索引。
+
+```sql
+SELECT * FROM table WHERE column1 > 10 AND column2 = 'value';
+```
+
+**不满足最左前缀原则**
+
+对于复合索引，查询条件必须满足最左前缀原则，否则索引将失效
+
+```sql
+SELECT * FROM table WHERE column2 = 'value';  -- 不能使用索引
+```
+
+**查询条件中包含负向查询**
+
+例如NOT IN、NOT LIKE等负向查询条件会导致索引失效。
+
+```sql
+SELECT * FROM table WHERE column NOT IN ('value1', 'value2');
+```
+
+**数据分布不均匀**
+
+即使有索引，如果数据分布非常不均匀，MySQL 优化器可能会选择全表扫描而不是使用索引。
+
+
+
+
 
 ## 唯一索引比普通索引快吗？
 
@@ -1185,7 +1257,7 @@ id | name
 
 ## MySQL中MVCC是什么？
 
-
+多版本并发控制（MVCC，Multi-Version Concurrency Control）是一种用于管理数据库系统中并发访问的方法。它通过维护数据的多个版本来提高数据库系统的并发性和性能，同时确保数据的一致性和隔离性。可将MVCC看成行级别锁的一种妥协，它在许多情况下避免了使用锁，同时可以提供更小的开销。根据实现的不同，它可以允许非阻塞式读，在写操作进行时只锁定必要的记录。
 
 ## **MVCC解决了什么问题？**
 
