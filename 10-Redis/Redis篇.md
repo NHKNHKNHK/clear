@@ -1592,7 +1592,13 @@ public String getValue(String key) {
 
 **设置合理的缓存过期时间**
 
-缓存过期时间的设置需要根据业务需求和数据的变化频率来确定。对于不经常变化的数据，可以设置较长的过期时间，以减少对数据库的频繁访问。对于经常变化的数据，可以设置较短的过期时间，确保缓存数据的实时性。总之就是尽量打散缓存的过期时间，最好做到均匀的时间分布，减轻系统同一时刻的压力。
+缓存过期时间的设置需要根据业务需求和数据的变化频率来确定。
+
+-   对于不经常变化的数据，可以设置较长的过期时间，以减少对数据库的频繁访问。
+
+-   对于经常变化的数据，可以设置较短的过期时间，确保缓存数据的实时性。
+
+总之就是尽量打散缓存的过期时间，最好做到均匀的时间分布，减轻系统同一时刻的压力。
 
 **使用热点数据预加载**
 
@@ -1664,15 +1670,230 @@ UUID：可以使用JDK自带工具类生成，显示是以16进制字符串形�
     -   单点故障：在单个数据库或读写分离或一主多从的情况下，只有一个主库可以生成，有单点故障的风险。
     -   数据一致性问题：在分布式系统中，可能存在数据一致性的问题。
 
+```java
+@Component
+public class RedisIdWorker {
+    /**
+     * 开始时间戳
+     */
+    private static final long BEGIN_TIMESTAMP = 1640995200L;
+    /**
+     * 序列号的位数
+     */
+    private static final int COUNT_BITS = 32;
+
+    private StringRedisTemplate stringRedisTemplate;
+
+    public RedisIdWorker(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
+
+    public long nextId(String keyPrefix) {
+        // 1.生成时间戳
+        LocalDateTime now = LocalDateTime.now();
+        long nowSecond = now.toEpochSecond(ZoneOffset.UTC);
+        long timestamp = nowSecond - BEGIN_TIMESTAMP;
+
+        // 2.生成序列号
+        // 2.1.获取当前日期，精确到天
+        String date = now.format(DateTimeFormatter.ofPattern("yyyy:MM:dd"));
+        // 2.2.自增长
+        long count = stringRedisTemplate.opsForValue().increment("icr:" + keyPrefix + ":" + date);
+
+        // 3.拼接并返回
+        return timestamp << COUNT_BITS | count;
+    }
+}
+```
+
 
 
 ## Redis的发布订阅功能？
 
 
 
+## 什么是分布式锁？分布式锁的特点？
+
+口语化
+
+在某时刻，只能有一个线程获取到锁，在失去连接或者异常情况，锁也能够释放。
+
+常见的分布式锁有三种：基于mysql实现、基于redis实现、基于zookeeper实现。
+
+mysql本身就带有锁机制，但性能一般，所以使用mysql作为分布式锁比较少见
+
+redis作为分布式锁就非常常见了，主要是利用**setnx**这个方法，如果插入key成功，则表示获得到了锁，插入失败则表示无法获得到锁。业务完成后，通过**del**来释放锁。利用这套逻辑来实现分布式锁。
+
+zookeeper也是企业级开发中较好的一个实现分布式锁的方案，但是一般我们的项目到会使用到redis做缓存，因此使用redis做分布式锁就自然而然了。
+
+
+
+>   分布式锁：满足分布式系统或集群模式下多进程可见并且互斥的锁。
+>
+>   分布式锁的核心思想就是让大家都使用同一把锁，只要大家使用的是同一把锁，那么我们就能锁住线程，不让线程进行，让程序串行执行，这就是分布式锁的核心思路
+
+那么分布式锁他应该满足一些什么样的条件呢？
+
+-   **可见性**：多个线程都能看到相同的结果
+
+ 注意：这个地方说的可见性并不是并发编程中指的内存可见性，只是说**多个进程之间都能感知到变化的意思**
+
+-   **互斥**：互斥是分布式锁的最基本的条件，使得程序串行执行
+-   **容错性**：即使某个持有锁的客户端崩溃或失去连接，锁也能够被其他客户端重新获取
+-   **高可用**：程序不易崩溃，时时刻刻都保证较高的可用性
+-   **高性能**：由于加锁本身就让性能降低，所有对于分布式锁本身需要他就较高的加锁性能和释放锁性能
+-   **安全性**：安全也是程序中必不可少的一环
+
+常见的分布式锁有三种
+
+-   1）Mysql：mysql本身就带有锁机制，但是由于mysql性能本身一般，所以采用分布式锁的情况下，其实使用mysql作为分布式锁比较少见
+-   2）Redis：redis作为分布式锁是非常常见的一种使用方式，现在企业级开发中基本都使用redis或者zookeeper作为分布式锁，利用**setnx**这个方法，如果插入key成功，则表示获得到了锁，如果有人插入成功，其他人插入失败则表示无法获得到锁，利用这套逻辑来实现分布式锁
+-   3）Zookeeper：zookeeper也是企业级开发中较好的一个实现分布式锁的方案
+
+**分布式锁的实现方式**
+
+-   **基于数据库**
+
+使用数据库的SELECT ... FOR UPDATE 语句或类似的行级锁机制来实现分布式锁。优点是实现简单，缺点是性能较低，依赖于数据库的高可用性。高并发情况下也会对数据库造成非常大的压力。
+
+```mysql
+-- 获取锁
+SELECT * FROM locks WHERE resource = 'resource_name' FOR UPDATE;
+
+-- 释放锁
+DELETE FROM locks WHERE resource = 'resource_name';
+```
+
+-   **基于Redis**
+
+Redis 提供了原子操作和高性能的特性，非常适合用来实现分布式锁。通常使用**SETNX**命令来实现
+
+```java
+// 获取锁
+String result = jedis.set("lock_key", "lock_value", "NX", "PX", 30000);
+if ("OK".equals(result)) {
+    // 锁获取成功
+}
+
+// 释放锁
+if (lock_value.equals(jedis.get("lock_key"))) {
+    jedis.del("lock_key");
+}
+```
+
+**基于 Zookeeper**
+
+Zookeeper 提供了分布式协调服务，可以用来实现分布式锁。通过创建临时顺序节点来实现锁机制。
+
+```java
+// 创建一个临时顺序节点
+String path = zookeeper.create("/locks/lock-", null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+
+// 检查是否获取到锁
+List<String> children = zookeeper.getChildren("/locks", false);
+Collections.sort(children);
+if (path.equals("/locks/" + children.get(0))) {
+    // 获取到锁
+}
+```
+
+
+
 ## 如何实现分布式锁？
 
-## **分布式锁的特点？**
+**核心思路**
+
+我们利用redis 的**setnx** 方法，当有多个线程进入时，我们就利用该方法，第一个线程进入时，redis 中就有这个key 了，返回了1，如果结果是1，则表示他抢到了锁，那么他去执行业务，然后再删除锁，退出锁逻辑，没有抢到锁的哥们，等待一定时间后重试即可
+
+
+
+**版本一**
+
+setnx、expire命令二者组合实现一个最简单的锁。setnx成功，则证明抢到锁，然后使用expire设置一个过期时间，防止死锁
+
+```java
+//加锁
+if（redisClient.setnx(lockKey,lockValue)）{
+    //设置过期时间
+    redisClient.expire（lockKey，1000）;
+    try{
+        //业务请求
+        do something  
+    }catch(){
+    
+    }finally{
+       //释放锁
+       redisClient.del(lockKey);
+    }
+}
+```
+
+那么问题来了。setnx 与 expire 不是原子的。假设刚执行完setnx，服务挂了，或重启，总之就是没执行expire，那么就变成死锁了。
+
+**版本二**
+
+针对版本一的原子性问题，很容易想到了lua脚本
+
+将setnx和expire写成lua命令，可以解决这个问题。
+
+那么还有没有基于api的简单方式呢。
+
+set有一个扩展命令。这个命令是原子的。
+
+```
+SET key value [EX seconds][PX milliseconds][NX|XX]
+```
+
+于是可以这样做
+
+```java
+//加锁
+if（redisClient.set(lockKey,lockValue,"NX","EX", 1000)）{
+    try{
+        //业务请求
+        do something  
+    }catch(){
+    
+    }finally{
+       //释放锁
+       redisClient.del(lockKey);
+    }
+}
+```
+
+到这里，同时增加过期时间，防止死锁，此方法可以**保证加锁和增加过期时间具有原子性**
+
+已经解决了加锁问题，那么释放锁是否有问题呢。
+
+如果仅仅的使用lockKey删除，那是不是意味着多个线程的key一样，如果线程A没有执行完，锁过期了。线程B执行，加锁后，结果A执行完，把B的锁释放了。这就是A删错了人。
+
+所以在此基础上要在释放锁在一个文章。增加唯一key标识的校验。
+
+**版本三**
+
+```java
+//加锁
+if（redisClient.set(lockKey,uuid,"NX","EX", 1000)）{
+    try{
+        //业务请求
+        do something  
+    }catch(){
+    
+    }finally{
+       //释放锁
+        if(uuid.equals(redisClient.get(lockKey);){
+             redisClient.del(lockKey);
+        }
+      
+    }
+}
+```
+
+同样的释放锁，不是原子的，也可以使用lua脚本进行解决。
+
+至此，版本三基本已经可以满足大多数场景的使用了。
+
+那么假设。锁释放了，业务还没执行完怎么办。这就轮到了看门狗机制和reddisson框架上场了
 
 
 
