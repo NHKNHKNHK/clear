@@ -1278,41 +1278,17 @@ Redis事务没有回滚机制。如果某个命令执行失败，已经执行的
 
 
 
-## 什么是缓存击穿？（热点key）
-
-产生原因：在同一时间内，大量并发请求访问一个热点key，恰好key此时过期，又因为热点key缓存重建时间比较久，此时所有的请求都打到了数据库
-
-解决方案：
-
--   逻辑过期
-    -   思路：给热点key缓存永不过期，而是设置逻辑过期。每次请求查缓存，查看是否逻辑过期，未过期直接返回；已过期则获取互斥锁，开启独立线程重建缓存。其他线程无需等待，直接返回逻辑过期的数据
-    -   优点：1）线程无需等待，性能较好
-    -   缺点：1）不保证一致性，缓存重建期间可能会拿到脏数据；2）有额外内存消耗，因为除了缓存值，还要缓存逻辑过期时间；3）实现复杂；4）需要缓存预热
--   互斥锁
-    -   思路：给缓存重建的过程加锁，确保重建过程只有一个线程执行，其他线程等待并重试查询
-    -   优点：1）实现简单；2）没有额外内存消耗；3）一致性好
-    -   缺点：1）等待导致性能下降；2）有死锁风险，因此可以给锁设置有效时间
-
-
-
-## 什么是缓存雪崩？
-
-产生原因：在同一时刻内大量缓存的key失效或者是Redis服务宕机，导致大量请求都打到数据库
-
-解决方案：
-
--   给不同的key的TTL添加随机值，让它们不再同时过期
--   部署高可用的redis服务（如哨兵、集群）
--   给缓存业务添加降级限流策略
--   给业务添加多级缓存
-
-
-
-
-
 ## 什么是缓存穿透？
 
-产生原因：客户端请求的数据在缓存与数据库中都不存在，缓存中不存在，就会去查数据库，数据库也不存在，每次请求都会访问数据库，如果这个请求并发量比较大，就会压垮数据库
+**口语化**
+
+缓存穿透的最核心就是当**高并发请求**来的时候，但是 **key 在缓存中不存在**的时候，就会请求数据库，如果**数据库还是没有**的话，就会返回，但是这个时候，由于没有数据，也不会存入到缓存中，下次请求过来还会重复这个操作。如果说这个 key 一直没有数据，就会不断的打到数据库中。这就是缓存穿透。
+
+缓存穿透主要可以通过**缓存空值、布隆过滤器**的方式来进行解决。常用的就是缓存空值，当数据库也查询不到的时候，在缓存中将空值写入，这样后面的请求就会命中缓存，不会造成数据库的大压力。布隆过滤器比较适合一些固定值，来进行初步的过滤，这样可以减少误判率，同时减轻压力
+
+
+
+产生原因：客户端请求的数据在缓存与数据库中都**不存在**，缓存中不存在，就会去查数据库，数据库也不存在，每次请求都会访问数据库，如果这个请求并发量比较大，就会压垮数据库
 
 解决方案：
 
@@ -1325,9 +1301,310 @@ Redis事务没有回滚机制。如果某个命令执行失败，已经执行的
     -   优点：内存占用少
     -   缺点：1）实现复杂；2）存在误判的可能性
 -   其他方案：
-    -   最好数据的基础格式校验
+    -   做好数据的基础格式校验
+    -   增强id的复杂度，避免被猜测id规律
     -   加强用户权限校验
     -   做好热点参数限流
+
+**缓存空对象**
+
+当数据库中查不到数据时，缓存一个空对象（例如一个标记为空或不存在的对象），并给这个空对象设置一个较短的过期时间。这样，下次再查询该数据时，就可以直接从缓存中拿到空对象，从而避免了不必要的数据库查询。
+
+缺点：
+
+-   额外的内存消耗：需要缓存层提供更多的内存空间来缓存这些空对象，当空对象很多时，会浪费更多的内存
+-   短期的数据不一致问题：会导致缓存层和存储层的数据不一致，即使设置了较短的过期时间，也会在这段时间内造成数据不一致问题。比如缓存还是空对象，这个时候数据库已经有值了。这种引入复杂性，当数据库值变化的时候，要清空缓存。
+
+![](./assets/缓存穿透解决方案.png)
+
+```java
+String key = "hotkey";
+String value = redis.get(key);
+if (value == null) {
+    value = database.query(key);
+    if (value == null) {
+        // 缓存空结果，设置短过期时间
+        redis.set(key, "", 60);  // 60秒过期
+    } else {
+        redis.set(key, value, 3600);  // 1小时过期
+    }
+}
+```
+
+**使用布隆过滤器**
+
+布隆过滤器用于检测一个元素是否在集合中。访问缓存和数据库之前，先判断布隆过滤器里面有没有这个 key
+
+>   布隆过滤器其实采用的是哈希思想来解决这个问题，通过一个庞大的二进制数组，走哈希思想去判断当前这个要查询的这个数据是否存在
+>
+>   如果布隆过滤器判断存在，则放行，这个请求会去访问redis，哪怕此时redis中的数据过期了，但是数据库中一定存在这个数据，在数据库中查询出来这个数据后，再将其放入到redis中
+>
+>   假设布隆过滤器判断这个数据不存在，则直接返回
+
+比较适合数据 key 相对固定的场景。可以减少误识别率。
+
+![](./assets/缓存穿透解决方案.png)
+
+```java
+BloomFilter<String> bloomFilter = new BloomFilter<>(expectedInsertions, falsePositiveProbability);
+// 初始化布隆过滤器，插入所有可能存在的键
+for (String key : allPossibleKeys) {
+    bloomFilter.put(key);
+}
+
+// 查询时使用布隆过滤器
+String key = "hotkey";
+if (!bloomFilter.mightContain(key)) {
+    // 布隆过滤器判断不存在，直接返回
+    return null;
+} else {
+    // 布隆过滤器判断可能存在，查询缓存和数据库
+    String value = redis.get(key);
+    if (value == null) {
+        value = database.query(key);
+        redis.set(key, value, 3600);  // 1小时过期
+    }
+    return value;
+}
+```
+
+**缓存预热**
+
+在系统启动时，提前将热门数据加载到缓存中，可以避免因为请求热门数据而导致的缓存穿透问题。需要根据系统的实际情况和业务需求来判断是否需要对缓存进行预热。比如在一些高并发的系统下，提前预热可以大大减少毛刺的产生，以及提高性能和系统稳定。
+
+缓存预热的经典代码:
+
+```java
+@Component
+public abstract class AbstractCache {
+
+    public void initCache(){}
+
+    public <T> T getCache(String key){
+        return null;
+    }
+
+    public void clearCache(){}
+
+    public void reloadCache(){
+        clearCache();
+        initCache();
+    }
+}
+
+@Component
+public class InitCache implements CommandLineRunner {
+
+    @Override
+    public void run(String... args) throws Exception {
+        //我要知道哪些缓存需要进行一个预热
+        ApplicationContext applicationContext = SpringContextUtil.getApplicationContext();
+        Map<String, AbstractCache> beanMap = applicationContext.getBeansOfType(AbstractCache.class);
+        //调用init方法
+        if(beanMap.isEmpty()){
+            return;
+        }
+        for(Map.Entry<String,AbstractCache> entry : beanMap.entrySet()){
+            AbstractCache abstractCache = (AbstractCache) SpringContextUtil.getBean(entry.getValue().getClass());
+            abstractCache.initCache();
+        }
+    }
+}
+
+@Component
+public class CategoryCache extends AbstractCache {
+
+    private static final String CATEGORY_CACHE_KEY = "CATEGORY";
+
+    @Autowired
+    private RedisUtil redisUtil;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Override
+    public void initCache() {
+        //跟数据库做联动了，跟其他的数据来源进行联动
+        redisUtil.set("category","知识");
+    }
+
+    @Override
+    public <T> T getCache(String key) {
+        if(!redisTemplate.hasKey(key).booleanValue()){
+            reloadCache();
+        }
+        return (T) redisTemplate.opsForValue().get(key);
+    }
+
+    @Override
+    public void clearCache() {
+        redisTemplate.delete(CATEGORY_CACHE_KEY);
+    }
+}
+```
+
+
+
+
+
+## 什么是缓存击穿？（热点key）
+
+**口语化**
+
+在高并发情况下，某个**热点key突然失效或者未被缓存**，导致大量请求直接穿透到后端数据库，从而使得数据库负载过高，甚至崩溃的问题。
+
+解决这个问题，一般常见的两种方案，一个是**互斥锁**，在多请求情况下，只有一个请求会去构建缓存，其他的进行等待，这种主要是要考虑好死锁的问题和请求阻塞的问题。另一种就是设置一个**逻辑过期时间**，去进行异步的缓存更新，缓存本身永远不会过期，这样也就避免了击穿的问题。
+
+但是复杂性和逻辑时间的设置就比较考验设计。一般情况下互斥锁方案即可
+
+
+
+产生原因：在同一时间内，大量并发请求访问一个**热点key**，**恰好key此时过期**，又因为热点key缓存重建时间比较久，此时所有的请求都打到了数据库
+
+解决方案：
+
+-   互斥锁
+    -   思路：给缓存重建的过程加锁，确保重建过程只有一个线程执行，其他线程等待并重试查询
+    -   优点：1）实现简单；2）没有额外内存消耗；3）一致性好
+    -   缺点：1）等待导致性能下降；2）有死锁风险，因此可以给锁设置有效时间
+
+-   逻辑过期
+    -   思路：给热点key缓存永不过期，而是设置逻辑过期。每次请求查缓存，查看是否逻辑过期，未过期直接返回；已过期则获取互斥锁，开启独立线程（异步线程）重建缓存。其他线程无需等待，直接返回逻辑过期的数据
+    -   优点：1）线程无需等待，性能较好
+    -   缺点：1）不保证一致性，缓存重建期间可能会拿到脏数据；2）有额外内存消耗，因为除了缓存值，还要缓存逻辑过期时间；3）实现复杂；4）需要缓存预热
+
+**互斥锁**
+
+在缓存失效时，通过加锁机制保证只有一个线程能访问数据库并更新缓存，其他线程等待该线程完成后再读取缓存。
+
+核心重点 ：只有一个线程访问数据库和建立缓存
+
+**实现步骤：**
+
+1.  当缓存失效时，尝试获取一个分布式锁。
+2.  获取锁的线程去数据库查询数据并更新缓存。
+3.  其他未获取锁的线程等待锁释放后，再次尝试读取缓存。
+
+可以采用try Lock方法 + double check来解决这样的问题
+
+```java
+public String getValue(String key) {
+    String value = redis.get(key);
+    if (value == null) {
+        // 尝试获取锁
+        boolean lockAcquired = redis.setnx("lock:" + key, "1");
+        if (lockAcquired) {
+            try {
+                // 双重检查锁，防止重复查询数据库
+                value = redis.get(key);
+                if (value == null) {
+                    value = database.query(key);
+                    redis.set(key, value, 3600);  // 1小时过期
+                }
+            } finally {
+                // 释放锁
+                redis.del("lock:" + key);
+            }
+        } else {
+            // 等待锁释放，再次尝试获取缓存
+            while ((value = redis.get(key)) == null) {
+                try {
+                    Thread.sleep(100);  // 等待100毫秒
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+    }
+    return value;
+}
+```
+
+**注意：**锁的实现要确保高效和可靠，避免死锁和性能瓶颈。可以设置锁的过期时间，防止因异常情况导致锁无法释放
+
+**逻辑过期**
+
+给热点key缓存永不过期，而是设置逻辑过期。每次请求查缓存，查看是否逻辑过期，未过期直接返回；已过期则获取互斥锁，开启独立线程（异步线程）重建缓存。其他线程无需等待，直接返回逻辑过期的数据。
+
+这种方案可以彻底防止请求打到数据库，不过就是造成了代码实现过于复杂，因为你需要尽可能的保持二者的一致。
+
+**实现步骤**：
+
+1.  在缓存中存储数据时，附带一个逻辑过期时间。
+2.  读取缓存时，检查逻辑过期时间是否到达。
+3.  如果逻辑过期时间到达，异步线程去数据库查询新数据并更新缓存，但仍返回旧数据给用户，避免缓存失效时大量请求直接访问数据库。
+
+```java
+class CacheEntry {
+    private String value;
+    private long expireTime;
+
+    public CacheEntry(String value, long expireTime) {
+        this.value = value;
+        this.expireTime = expireTime;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public boolean isExpired() {
+        return System.currentTimeMillis() > expireTime;
+    }
+}
+
+public String getValue(String key) {
+    CacheEntry cacheEntry = redis.get(key);
+    if (cacheEntry == null || cacheEntry.isExpired()) {
+        // 异步更新缓存
+        executorService.submit(() -> {
+            String newValue = database.query(key);
+            redis.set(key, new CacheEntry(newValue, System.currentTimeMillis() + 3600 * 1000));  // 1小时逻辑过期
+        });
+    }
+    return cacheEntry != null ? cacheEntry.getValue() : null;
+}
+```
+
+
+
+
+
+## 什么是缓存雪崩？
+
+**口语化**
+
+缓存雪崩主要是在同一时间，系统大量缓存的key失效或者是Redis服务宕机，这个时候的大量请求都要打到数据库，增加了数据库压力，导致数据库崩溃或者不可用，一般如果产生了雪崩，就是比较严重的后果。
+
+雪崩主要的解决方案，一方面是**设置合理的缓存过期时间，不要让同一时间失效，尽量的分散**。另一个方案就是可以在比如服务刚启动的时候，进行**缓存的预热**，防止刚启动的时候，大量请求打到数据库。另一方面也要提升**缓存架构的高可用**，避免因为缓存服务的问题，导致请求打到数据库
+
+
+
+产生原因：在同一时刻内**大量缓存的key失效或者是Redis服务宕机**，导致大量请求都打到数据库
+
+解决方案：
+
+-   给不同的key的TTL添加随机值，让它们不再同时过期
+-   热点数据预热，防止刚启动的时候，大量请求打到数据库
+-   部署高可用的redis服务（如哨兵、集群）
+-   给缓存业务添加降级限流策略（ngxin或spring cloud gateway）
+-   给业务添加多级缓存（Guava或Caffeine）
+
+**设置合理的缓存过期时间**
+
+缓存过期时间的设置需要根据业务需求和数据的变化频率来确定。对于不经常变化的数据，可以设置较长的过期时间，以减少对数据库的频繁访问。对于经常变化的数据，可以设置较短的过期时间，确保缓存数据的实时性。总之就是尽量打散缓存的过期时间，最好做到均匀的时间分布，减轻系统同一时刻的压力。
+
+**使用热点数据预加载**
+
+预先将热点数据加载到缓存中，并设置较长的过期时间，可以避免在同一时间点大量请求直接访问数据库。可以根据业务需求，在系统启动或低峰期进行预热操作，将热点数据提前加载到缓存中。
+
+热点数据预加载可以提升系统的性能和响应速度，减轻数据库的负载。
+
+**缓存高可用**
+
+缓存做成集群的形式，提高可用性，防止缓存挂掉后，造成的穿透问题。
+
+当缓存服务器发生故障或宕机时，需要有相应的故障转移和降级策略。可以通过监控系统来及时发现缓存故障，并进行自动切换到备份缓存服务器。同时，可以实现降级策略，当缓存失效时，系统可以直接访问数据库，保证系统的可用性。通过缓存故障转移和降级策略，可以保证系统在缓存不可用或故障的情况下仍然可以正常运行，提高系统的稳定性和容错性。
 
 
 
