@@ -1487,7 +1487,7 @@ TRUNCATE TABLE table_name;
 
 ## union和union all区别？
 
-UNION和UNION ALL是 SQL 中用于合并两个或多个结果集的操作符。它们的主要区别在于是否去除重复的行。
+UNION和UNION ALL是 SQL 中用于合并两个或多个结果集的操作符。它们的**主要区别在于是否去除重复的行**。
 
 -   **UNION**：去除重复行，需要额外的排序操作，性能较UNION ALL略低。
 -   **UNION ALL**：保留所有行，不去重，性能较好。
@@ -1506,7 +1506,7 @@ SELECT column1, column2 FROM table2;
 **UNION ALL**
 
 -   **保留重复行**：UNION ALL操作不会去除重复行，所有的结果行都会被保留。
--   **性能较好**：由于UNION ALL不需要进行去重操作，因此通常比UNION性能更好，特别是在处理大数据量时。
+-   **性能较好**：由于UNION ALL不需要进行去重操作，因此**通常比UNION性能更好**，特别是在处理大数据量时。
 
 ```sql
 SELECT column1, column2 FROM table1
