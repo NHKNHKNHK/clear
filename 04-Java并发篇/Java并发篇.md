@@ -2718,6 +2718,70 @@ class Customer implements Runnable{
 
 
 
+## 什么是可重入锁（递归锁）？
+
+可重入锁（Reentrant Lock）是指**同一个线程可以多次获取同一把锁，而不会导致死锁**的情况。也就是说，已经持有锁的线程可以再次获取该锁而不被阻塞。
+
+解释：指在**同一个线程**的外层方法获取锁的时候，再进入该线程的内层方法会**自动获取锁**（前提是锁对象是同一个对象），不会因为之前已经获取过还没释放而阻塞。
+
+例如：有一个 synchronized 修饰的递归调用方法，程序第二次进入被自己阻塞了岂不是天大的笑话，出现了作茧自缚。
+
+**特性**：
+
+-   **可重入性**：同一个线程可以多次获取同一把锁，并且每次获取锁时都需要释放相同次数的锁才能完全释放该锁。
+-   **持有者信息**：可重入锁会记录哪个线程持有锁以及持有锁的次数。
+-   **公平性选择**：可重入锁通常提供公平锁和非公平锁的选择，允许开发者根据需求配置。
+
+**应用场景**：
+
+-   **递归调用**：当一个方法内部调用另一个需要同步的方法时，使用**可重入锁可以避免死锁**。
+-   **复杂的同步逻辑**：在多层嵌套的同步代码中，可重入锁确保同一线程不会因为重复进入同步块而被阻塞。
+
+**Java 中的可重入锁**
+
+-   隐式锁（即synchronized关键字使用的锁 ）默认是可重入锁
+-   显式锁（即Lock）ReentrantLock
+
+示例
+
+```java
+import java.util.concurrent.locks.ReentrantLock;
+
+public class ReentrantLockExample {
+    private final ReentrantLock lock = new ReentrantLock();
+
+    public void method1() {
+        lock.lock();
+        try {
+            // 执行一些操作
+            System.out.println("Method1 acquired the lock.");
+            method2();  // 递归调用 method2
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void method2() {
+        lock.lock();
+        try {
+            // 执行一些操作
+            System.out.println("Method2 acquired the lock.");
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public static void main(String[] args) {
+        ReentrantLockExample example = new ReentrantLockExample();
+        example.method1();
+    }
+}
+```
+
+**总结**
+
+可重入锁允许同一个线程多次获取同一把锁，从而避免了死锁问题，并且提供了更灵活的同步机制。在 Java 中，`ReentrantLock` 是常用的可重入锁实现。
+
 
 
 ## 什么是可重入锁及使用场景？
@@ -2754,7 +2818,9 @@ class Customer implements Runnable{
 
 
 
-## **synchronized是可重入锁吗**
+## synchronized是可重入锁吗？它的重入实现原理？
+
+默认情况下是
 
 
 
