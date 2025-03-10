@@ -2375,7 +2375,7 @@ consume() 方法：当队列空时，消费者调用 wait() 等待；当有数�
 
 ## 死锁的发生原因？怎么避免？
 
-死锁发生在两个或多个线程互相等待对方释放资源的情况下。当线程A持有资源1并等待资源2，而线程B持有资源2并等待资源1时，就会发生死锁。
+死锁发生在两个或多个线程**互相等待**对方释放资源的情况下。当线程A持有资源1并等待资源2，而线程B持有资源2并等待资源1时，就会发生死锁。
 
 一旦出现死锁，整个程序既不会发生异常，也不会给出任何提示，只是所有线程处于阻塞状态，无法继续。 
 
@@ -2398,118 +2398,47 @@ consume() 方法：当队列空时，消费者调用 wait() 等待；当有数�
 举例 1
 
 ```java
-public class DeadLockTest {
+package com.clear.juc.locks;
+
+import java.util.concurrent.TimeUnit;
+
+public class DeadLockDemo {
     public static void main(String[] args) {
         StringBuilder s1 = new StringBuilder();
         StringBuilder s2 = new StringBuilder();
-        new Thread() {
-            public void run() {
-                synchronized (s1) {
-                    s1.append("a");
-                    s2.append("1");
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    synchronized (s2) {
-                        s1.append("b");
-                        s2.append("2");
-                        System.out.println(s1);
-                        System.out.println(s2);
-                    }
-                }
-            }
-        }.start();
-        new Thread() {
-            public void run() {
+
+        new Thread(() -> {
+            synchronized (s1) {
+                s1.append("a");
+                s2.append("1");
+                try { TimeUnit.SECONDS.sleep(1);} catch (InterruptedException e) { e.printStackTrace();}
                 synchronized (s2) {
-                    s1.append("c");
-                    s2.append("3");
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    synchronized (s1) {
-                        s1.append("d");
-                        s2.append("4");
-                        System.out.println(s1);
-                        System.out.println(s2);
-                    }
+                    s1.append("b");
+                    s2.append("2");
+                    System.out.println(s1);
+                    System.out.println(s2);
                 }
             }
-        }.start();
+        }, "t1").start();
+
+        new Thread(() -> {
+            synchronized (s2) {
+                s1.append("c");
+                s2.append("3");
+                try { TimeUnit.SECONDS.sleep(1);} catch (InterruptedException e) { e.printStackTrace();}
+                synchronized (s1) {
+                    s1.append("d");
+                    s2.append("4");
+                    System.out.println(s1);
+                    System.out.println(s2);
+                }
+            }
+        }, "t2").start();
     }
 }
 ```
 
 举例 2：
-
-```java
-class A {
-    public synchronized void foo(B b) {
-        System.out.println("当前线程名: " + Thread.currentThread().get
-                           Name()
-                           + " 进入了 A 实例的 foo 方法"); // ①
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
-        System.out.println("当前线程名: " + Thread.currentThread().get
-                           Name()
-                           + " 企图调用 B 实例的 last 方法"); // ③
-        b.last();
-    }
-    public synchronized void last() {
-        System.out.println("进入了 A 类的 last 方法内部");
-    }
-}
-class B {
-    public synchronized void bar(A a) {
-        System.out.println("当前线程名: " + Thread.currentThread().get
-                           Name()
-                           + " 进入了 B 实例的 bar 方法"); // ②
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
-        System.out.println("当前线程名: " + Thread.currentThread().get
-                           Name()
-                           + " 企图调用 A 实例的 last 方法"); // ④
-        a.last();
-    }
-    public synchronized void last() {
-        System.out.println("进入了 B 类的 last 方法内部");
-    }
-}
-public class DeadLock implements Runnable {
-    A a = new A();
-    B b = new B();
-    public void init() {
-        Thread.currentThread().setName("主线程");
-        // 调用 a 对象的 foo 方法
-        a.foo(b);
-        System.out.println("进入了主线程之后");
-    }
-    public void run() {
-        Thread.currentThread().setName("副线程");
-        // 调用 b 对象的 bar 方法
-        b.bar(a);
-        System.out.println("进入了副线程之后");
-    }
-    public static void main(String[] args) {
-        DeadLock dl = new DeadLock();
-        new Thread(dl).start();
-        dl.init();
-    }
-}
-
-```
-
-举例 3：
 
 ```java
 public class TestDeadLock {
@@ -2561,6 +2490,90 @@ class Customer implements Runnable{
 ```
 
 
+
+## 排除死锁的方式有哪些？
+
+-   通过纯命令的方式
+    -    jps -l   查询出进行编号
+    -   jstack  进程编号
+-   jconsole图形化工具
+
+示例
+
+```java
+package com.clear.juc.locks;
+
+import java.util.concurrent.TimeUnit;
+
+public class DeadLockDemo {
+    public static void main(String[] args) {
+        StringBuilder s1 = new StringBuilder();
+        StringBuilder s2 = new StringBuilder();
+
+        new Thread(() -> {
+            synchronized (s1) {
+                s1.append("a");
+                s2.append("1");
+                try { TimeUnit.SECONDS.sleep(1);} catch (InterruptedException e) { e.printStackTrace();}
+                synchronized (s2) {
+                    s1.append("b");
+                    s2.append("2");
+                    System.out.println(s1);
+                    System.out.println(s2);
+                }
+            }
+        }, "t1").start();
+
+        new Thread(() -> {
+            synchronized (s2) {
+                s1.append("c");
+                s2.append("3");
+                try { TimeUnit.SECONDS.sleep(1);} catch (InterruptedException e) { e.printStackTrace();}
+                synchronized (s1) {
+                    s1.append("d");
+                    s2.append("4");
+                    System.out.println(s1);
+                    System.out.println(s2);
+                }
+            }
+        }, "t2").start();
+    }
+}
+```
+
+运行上面代码会发现终端迟迟没有结果，使用如下命令查看死锁：
+
+```shell
+D:\video\workspace\explore\springboot\juc\src\main\java\com\clear\juc\locks>jps -l
+31888 com.clear.juc.locks.DeadLockDemo
+11188 
+25748 org.jetbrains.idea.maven.server.RemoteMavenServer36
+14888 sun.tools.jps.Jps
+30684 org.jetbrains.jps.cmdline.Launcher
+
+D:\video\workspace\explore\springboot\juc\src\main\java\com\clear\juc\locks>jstack 31888
+2025-03-10 18:24:31
+Full thread dump Java HotSpot(TM) 64-Bit Server VM (25.131-b11 mixed mode):
+
+# 省略1万行 ^v^
+
+Java stack information for the threads listed above:
+===================================================
+"t2":
+        at com.clear.juc.locks.DeadLockDemo.lambda$main$1(DeadLockDemo.java:30)
+        - waiting to lock <0x000000076e2a1258> (a java.lang.StringBuilder)
+        - locked <0x000000076e2a12a0> (a java.lang.StringBuilder)
+        at com.clear.juc.locks.DeadLockDemo$$Lambda$2/1078694789.run(Unknown Source)
+        at java.lang.Thread.run(Thread.java:748)
+"t1":
+        at com.clear.juc.locks.DeadLockDemo.lambda$main$0(DeadLockDemo.java:16)
+        - waiting to lock <0x000000076e2a12a0> (a java.lang.StringBuilder)
+        - locked <0x000000076e2a1258> (a java.lang.StringBuilder)
+        at com.clear.juc.locks.DeadLockDemo$$Lambda$1/990368553.run(Unknown Source)
+        at java.lang.Thread.run(Thread.java:748)
+
+Found 1 deadlock. 
+```
 
 
 
