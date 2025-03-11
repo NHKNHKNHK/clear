@@ -743,7 +743,7 @@ Java 的异常体系是基于类层次结构的，所有的异常和错误都继
         -   编译时异常（Checked Exceptions）
             -   定义：必须在编译时处理的异常。
             -   特点：编译器强制要求程序员处理这些异常。
-            -   如果方法中抛出了编译时异常，调用者必须通过 try-catch 捕获异常或通过 throws 声明该方法可能抛出此异常。
+            -   如果方法中抛出了编译时异常，调用者必须通过 **try-catch 捕获**异常或通过 **throws 声明**该方法可能抛出此异常。
             -   常见类型：`IOException`、`SQLException`、`ClassNotFoundException`
         -   运行时异常（Unchecked Exceptions）
             -   定义：不必在编译时处理的异常。
@@ -774,6 +774,29 @@ java.lang.Throwable:异常体系的根父类
 			|----ArithmeticException（算数异常）
 			|----IllegalArgumentException（参数错误，比如方法入参类型错误）
 ```
+
+
+
+## Java中Exception和Error有什么区别？
+
+`Error` 和 `Exception` 都是`Throwable` 类的子类
+
+在Java中，只有继承了Throwable类的实例，才可以被throws抛出或catch捕获
+
+总的来说，`Error`  通常表示系统级的错误，是不可恢复的，程序无法处理它们 ；`Exception` 表示程序运行时可以被捕获和处理的异常
+
+`Exception` 可以分为 **编译时异常（Checked Exceptions）**和**运行时异常（Unchecked Exceptions）**
+
+-   编译时异常（Checked Exceptions）：必须在编译时**显式处理**的异常，必须通过 **try-catch 捕获**异常或通过 **throws 声明**
+    -   常见类型：`IOException`、`SQLException`、`ClassNotFoundException`
+-   运行时异常（Unchecked Exceptions）：不必在编译时显式处理的异常。
+    -   常见类型：`NullPointerException`、`ArrayIndexOutOfBoundsException`、`IllegalArgumentException`、`ArithmeticException` 、`ClassCastException`
+
+`Error`类： 表示严重的系统级错误或资源耗尽等问题    表示严重的错误，通常是由于系统级问题导致的，例如`OutOfMemoryError`、`StackOverflowError`等。
+
+-   特点：通常是由 JVM 抛出，表示程序无法继续执行
+-   程序员通常不需要捕获或处理 Error，因为它们通常是不可恢复的。
+-   常见类型：`OutOfMemoryError`、`StackOverflowError`、`NoClassDefFoundError`等
 
 
 
@@ -1028,6 +1051,46 @@ public void test6() {
     -   例如：`throw new Exception("输入的id非法");`
 -   throws是用来处理异常对象的
 -   throw是用来产生异常对象的
+
+
+
+## 异常处理时需要注意哪些？
+
+异常处理时需要注意以下六点：
+
+**（1）尽量不要捕获类似于Exception这样的通用异常，而应该捕获特定的异常**
+
+**（2）不要”吞“了异常**
+
+如果我们捕获了异常，却不把异常抛出，也没有写入到日志里，那么会发生什么情况？
+
+线上除了bug莫名其妙的任何的信息，你都不知道哪里出错，出错的原因是什么，这会导致一个简单的bug难以排查。
+
+还有就是如果你的项目中使用了spring的声明式事务，那么事务也不会回滚。
+
+还有些人，喜欢在使用了catch之后用`e.printStackTrace`，在开发中，通常是不推荐这种做法的，一般情况下这样子做没有问题，这个方法输出的是一个标准错误流。
+
+比如在分布式系统中，发生异常但找不到stackTrace。
+
+所以最好是输入到日志中，定义自己公司的格式，将详细的信息输入到日志系统中，适合清晰高效的排查错误。
+
+**（3）不要延迟处理异常**
+
+比如你有一个方法，参数是name，函数内部调了别的好几个方法，其实你的name传递的是null值，但是你没有在进入这个方法或一开始就处理这个情况，而是在你调用了好几个别的方法后爆出了这个空指针。
+
+**（4）只在需要try-catch的地方try-catch，try-catch的范围能小则小**
+
+只在需要try-catch的地方使用，不要滥用，因为try-catch中的代码会影响JVM对代码的优化，例如重排序。
+
+**（5）不要通过异常来控制程序流程**
+
+一些可以使用if/else的条件语句来判断的，例如null值等，就不要使用异常，异常肯定是比一些条件语句低效的，有CPU分支预测的优化等。
+
+而且每次实例化一个异常都会对栈进行快照，相对而言这是一个比较重的操作，如果数量过多开销就不能被忽略了
+
+**（6）不要在finally代码块中处理返回值或直接return**
+
+在finally中处理返回值或直接return会发生很诡异的事情，比如覆盖了try中的return，或者屏蔽了异常
 
 
 
@@ -1806,6 +1869,10 @@ words.stream()
 
 
 ## 什么是自动装箱和拆箱？
+
+
+
+## int和Interger装箱是怎么实现的？
 
 
 
