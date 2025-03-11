@@ -1774,7 +1774,7 @@ Java中的线程中断是一种协作机制，用于请求线程停止其所执�
 
 注意：
 
-​	以下阻塞方法（如Thread.sleep()、Object.wait()、BlockingQueue.take()等）会在检测到中断标志时抛出`InterruptedException`异常
+​	以下阻塞方法（如Thread.sleep()、Object.wait()、BlockingQueue.take()等）会在检测到中断标志时抛出`InterruptedException`异常，并重置中断状态
 
 ​	说人话就是，如果某个线程中使用了这些方法，且这些方法正在运行，此时线程的标志位为true时，就会抛出`InterruptedException`异常
 
@@ -1853,6 +1853,51 @@ public class ThreadInterruptionExample {
 -   **资源清理**：在捕获异常后进行必要的资源清理，比如关闭文件、释放锁等。
 
 -   **退出线程**：如果线程应该响应中断并退出，可以在捕获异常后适当地退出线程。
+
+
+
+## interrupt的标志位是否会回归到原有标记
+
+当一个线程被中断时，其中断状态会被设置为true。然而，当InterruptedException被抛出时，中断状态会被清除，即标志位会被重置为false。如果你不显式地重新设置中断状态，其他代码将无法检测到这个中断。
+
+```java
+class Worker implements Runnable {
+    @Override
+    public void run() {
+        try {
+            // 模拟阻塞操作，如 Thread.sleep 或 wait
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // 捕获 InterruptedException 后，中断状态会被清除
+            System.out.println("Thread was interrupted: " + Thread.currentThread().isInterrupted()); // false
+            // 恢复中断状态
+            Thread.currentThread().interrupt();
+            System.out.println("Thread was interrupted: " + Thread.currentThread().isInterrupted()); // true
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Thread thread = new Thread(new Worker());
+        thread.start();
+        Thread.sleep(1000); // 确保线程已经开始执行
+        thread.interrupt(); // 中断线程
+    }
+}
+```
+
+在这个示例中：
+
+1.  Thread.sleep(2000)模拟一个阻塞操作。
+2.  当线程被中断时，会抛出InterruptedException，此时中断状态会被清除。
+3.  在catch块中，打印中断状态会显示false，因为中断状态已经被清除。
+4.  调用Thread.currentThread().interrupt()恢复中断状态。
+5.  再次打印中断状态，这次会显示true。
+
+
+
+当InterruptedException被抛出时，中断状态会被清除。因此，如果你希望其他代码能够检测到线程曾经被中断，应该在catch块中显式地调用Thread.currentThread().interrupt()来恢复中断状态。这样可以确保线程间的中断通信能够正确进行，保持程序的健壮性和可维护性。
 
 
 
@@ -1938,6 +1983,10 @@ thread.stop(); // 强制终止线程
 -   优雅退出：interrupt() 允许线程在合适的时间点退出，从而避免资源泄漏或数据不一致的问题。
 -   可控性：线程可以决定如何响应中断请求，例如完成当前任务后再退出。
 -   灵活性：可以通过定期检查中断状态来实现更复杂的线程控制逻辑
+
+
+
+## LockSupport类 Park和unPark的使用
 
 
 
@@ -3096,20 +3145,6 @@ ReentrantLock lock = new ReentrantLock(true);   // 公平锁
 
 
 
-## **为什么多线程执行时，需要catch Interrupt异常，catch里面写啥**
-
-
-
-## **interrupt的标志位是否会回归到原有标记**
-
-
-
-
-
-## **Park和unPark的使用**
-
-
-
 ## **ReadWriteLock的整体实现**
 
 
@@ -3625,6 +3660,40 @@ public class CustomThreadPoolExample {
 
 
 ## **线程池的shutDown和shutDownNow的区别**
+
+ExecutorService接口中，shutdown()和shutdownNow()都是用于关闭线程池的方法
+
+**shutdown()**
+
+shutdown()方法会启动线程池的关闭过程。
+
+它会**停止接受新的任务提交**，但会继续执行已经提交的任务（包括正在执行的和已提交但尚未开始执行的任务（即队列中的任务））。
+
+调用shutdown()后，线程池会进入一个**平滑的关闭**过程，等待所有已提交的任务完成后才会完全终止
+
+**shutdownNow()**
+
+shutdownNow()方法会**尝试停止所有正在执行的任务**，并返回一个包含尚未开始执行的任务的列表。
+
+它会立即停止接收新的任务，并试图中断正在执行的任务。
+
+调用shutdownNow()后，线程池**会尽快停止所有正在执行的任务**（即它会尽力的**中断**任务），并返回尚未开始执行的任务列表。
+
+需要注意的是，**无法保证所有正在执行的任务都能被中断**。
+
+| 特性                   | `shutdown()`                   | `shutdownNow()`                                              |
+| :--------------------- | :----------------------------- | :----------------------------------------------------------- |
+| **停止接收新任务**     | 是                             | 是                                                           |
+| **等待现有任务完成**   | 是（包括正在执行和排队的任务） | 否（尝试中断正在执行的任务）                                 |
+| **中断正在执行的任务** | 否                             | 是（通过 `interrupt()` 方法）<br>具体的中断效果取决于任务对中断信号的响应 |
+| **返回未执行任务**     | 否                             | 是（返回尚未开始的任务列表）                                 |
+| **关闭速度**           | 较慢（等待所有任务完成）       | 较快（立即尝试关闭）                                         |
+
+
+
+## 多次调用shutDown或shutDownNow 会怎么样？
+
+调用shutDown或shutDownNow后，再次调用它们不会有额外的效果，也不会抛出异常。
 
 
 
