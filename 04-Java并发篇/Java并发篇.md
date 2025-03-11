@@ -174,7 +174,7 @@ userThread是一个用户线程，它会运行 5 秒钟。daemonThread是一个�
 
 ## 线程的基本方法（Thread类的方法）
 
-`start()`
+### `start()`
 
 start()方法用于启动线程。线程创建以后，并不会自动运行，需要我们**调用start()**，将线程的状态设为**就绪状态**，但不一定马上就被运行，得等到CPU分配时间片以后，才会运行
 
@@ -198,7 +198,7 @@ public class Main {
 
 
 
-`run()`
+### `run()`
 
 run()方法包含线程执行的代码。它是Thread类和Runnable接口的核心方法
 
@@ -220,7 +220,7 @@ public class Main {
 
 
 
-`sleep(long millis)`
+### `sleep(long millis)`
 
 sleep(long millis)方法使当前线程休眠指定的毫秒数。它会抛出`InterruptedException`，因此需要处理该异常。
 
@@ -236,7 +236,7 @@ try {
 
 
 
-`join()`
+### `join()`
 
 join()方法**等待线程终止**。调用该方法的线程会等待被调用线程执行完毕后再继续执行。
 
@@ -265,7 +265,7 @@ public class Main {
 
 
 
-`currentThread()`
+### `currentThread()`
 
 currentThread()方法用于获取当前正在执行的线程（线程对象的引用）
 
@@ -283,17 +283,36 @@ public class Main {
 
 
 
+### `interrupt() isInterrupted() interrupted()`
+
 `interrupt()`
 
-interrupt()方法用于**中断线程**。被中断的线程会抛出`InterruptedException`
+​	interrupt()方法用于**设置线程中断状态为true**。
 
-`Thread.currentThread().isInterrupted()`
+`线程.isInterrupted()`
 
-isInterrupted()方法用于**检查线程是否被中断**，但不会重置中断标志。它返回一个布尔值
+​	isInterrupted()方法用于**检查线程是否被中断**，但不会重置中断标志。它返回一个布尔值
 
 `Thread.interrupted()`
 
-检查当前线程的中断状态，并重置中断标志为 false。
+​	检查当前线程的中断状态，并重置中断标志为 false。
+
+具体来说，当一个线程调用interrupt()方法时：
+
+-   如果一个线程处理正常活动状态，那么会将该线程的中断标志设为为true，仅此而已。被设置中断标志的线程将继续运行，不受影响。
+    -   所以，interrupt()方法并不能真正的中断线程，需要被调用的线程自己进行配合才行
+-   源码叙述：interrupt()方法中断一个不活动的线程不会产生任何影响。
+-   如果线程处于被阻塞状态（例如处于sleep、wait、join等），在别的线程中调用当前线程对象的interrupt()方法，那么线程将立即退出被阻塞状态，并抛出`InterruptedException`异常
+
+**方法区分**
+
+| 方法                                | 描述                                                         |
+| ----------------------------------- | ------------------------------------------------------------ |
+| public void interrupt()             | 实例方法。设置线程的中断状态为true，发起一个协商而不会立即停止线程<br/>// Just to set the interrupt flag |
+| public static boolean interrupted() | 静态方法。判断线程是否被中断并清除当前中断状态。<br>这个方法做了两件事情：<br>    1、返回当前线程的中断状态<br>    2、将当前的中断状态清零并重设为false，清理线程的中断状态 |
+| public boolean isInterrupted()      | 实例方法。判断当前线程是否已被中断                           |
+
+示例：
 
 ```java
 public class Main {
@@ -323,13 +342,13 @@ public class Main {
 
 
 
-`setPriority(int newPriority)`
+### `setPriority(int newPriority)`
 
 setPriority(int newPriority)方法用于**设置线程的优先级**。
 
 优先级范围从Thread.MIN_PRIORITY(1) 到 Thread.MAX_PRIORITY(10)，默认优先级为Thread.NORM_PRIORITY(5)。
 
-`getPriority()`
+### `getPriority()`
 
 getPriority()方法用于获取线程的优先级
 
@@ -347,11 +366,11 @@ public class Main {
 
 
 
-`setName(String name)`
+### `setName(String name)`
 
 setName(String name)方法用于**设置线程的名称**
 
-`getName()`
+### `getName()`
 
 getName()方法用于**获取线程的名称**
 
@@ -369,7 +388,7 @@ public class Main {
 
 
 
-`yield()`
+### `yield()`
 
 yield()方法它使得当前线程从运行状态（Running）进入到就绪状态（Runnable），给其他具有相同优先级的等待线程以执行的机会。
 
@@ -398,7 +417,7 @@ class YieldExample {
 }
 ```
 
-
+### 其他
 
 此外，还有如下这些方法
 
@@ -1706,25 +1725,62 @@ public static void main(String[] args) {
 
 
 
-## 怎么理解Java中的线程中断？
+## 怎么理解Java中的线程中断（interrupt）？
+
+**口语化**
+
+首先，一个线程不应该由其他线程来强制中断或停止，而是**应该由线程自己自行停止**，自己来决定自己的命运。所以，`Thread.stop`、`Thread.suspend`、`Thread.resume`这几个方法都被废弃了。
+
+其次，Java中没有办法立即停止一个线程，然而停止线程是一个非常重要的操作，例如取消一个耗时操作。
+
+因此，Java提供了一种用于停止线程的**协商机制**——中断，也即中断标识协商机制。
+
+
+
+**中断只是一个协作协商机制，Java没有给中断增加任何语法，中断的过程完全需要我们自己手动实现。**
+
+若要中断一个线程，我们需要手动调用线程的interrupt方法，该方法也仅仅是将线程对象的中断标识设为为true
+
+接着你需要手写代码不断地检测当前线程的标识位，如果为true，表示别的线程请求这个线程中断，此时究竟该做什么也需要我们自己手写代码实现。
+
+
+
+每个线程对象都有一个中断标识位，用于表示线程是否被中断；该标识为为true表示中断，为false表示未中断；
+
+通过调用线程对象的interrupt方法可以将该线程的标识为设置为true；可以在别的线程中调用，也可以在自己的线程中调用。
+
+
 
 Java中的线程中断是一种协作机制，用于请求线程停止其所执行的任务。**线程中断并不强制终止线程**，而是通过设置线程的中断标志来通知一个正在运行的线程应该停止当前的任务并进行清理或终止。线程可以选择如何响应这个中断请求，通常是在合适的时机优雅地终止任务。
 
-注意：以下阻塞方法（如Thread.sleep()、Object.wait()、BlockingQueue.take()等）会在检测到中断标志时抛出`InterruptedException`异常
+
 
 **线程中断的核心概念**
 
--   **中断状态**：每个线程都有一个中断状态（interrupted status），初始值为 false。当调用 `thread.interrupt()` 方法时，该线程的中断状态被设置为 true。
-
+-   **中断状态**：每个线程都有一个中断状态（interrupted status），初始值为 false。
+-   当调用 `线程.interrupt()` 方法时，该线程的中断状态被设置为 true。
 -   **检查中断状态**：
-    -   `Thread.currentThread().isInterrupted()`：检查当前线程的中断状态，但不会重置中断标志。
-    -   `Thread.interrupted()`：检查当前线程的中断状态，并重置中断标志为 false。
+    -   `线程.isInterrupted()`：检查当前线程的中断状态，但不会重置中断标志。
+    -   `Thread.interrupted()`：1、检查当前线程的中断状态 2、并重置中断标志为 false
+-   **响应中断**：线程可以选择如何响应中断。通常的做法是在适当的地方检查中断状态，并根据需要执行清理操作或终止线程（手写代码实现）
 
--   **响应中断**：线程可以选择如何响应中断。通常的做法是在适当的地方检查中断状态，并根据需要执行清理操作或终止线程。
+**中断线程三大API**
 
-**线程中断的行为**
+| 方法                                | 描述                                                         |
+| ----------------------------------- | ------------------------------------------------------------ |
+| public void interrupt()             | 实例方法。设置线程的中断状态为true，发起一个协商而不会立即停止线程<br>// Just to set the interrupt flag |
+| public static boolean interrupted() | 静态方法。判断线程是否被中断并清除当前中断状态。<br>这个方法做了两件事情：<br>    1、返回当前线程的中断状态<br>    2、将当前的中断状态清零并重设为false，清理线程的中断状态 |
+| public boolean isInterrupted()      | 实例方法。判断当前线程是否已被中断                           |
 
--   **阻塞方法**：线程中断时在执行某些阻塞方法（如 `Thread.sleep()`、`Object.wait()`、`BlockingQueue.take()` 等）会抛出 `InterruptedException`，并在捕获到中断时清除中断状态。
+注意：
+
+​	以下阻塞方法（如Thread.sleep()、Object.wait()、BlockingQueue.take()等）会在检测到中断标志时抛出`InterruptedException`异常
+
+​	说人话就是，如果某个线程中使用了这些方法，且这些方法正在运行，此时线程的标志位为true时，就会抛出`InterruptedException`异常
+
+**线程中断的行为（即中断标志位为true时）**
+
+-   **阻塞方法**：如果线程正在执行阻塞方法（如 `Thread.sleep()`、`Object.wait()`、`BlockingQueue.take()` 等），此时线程标志位被设置为true，会抛出 `InterruptedException`，并在捕获到中断时清除中断状态。
 
 -   **非阻塞代码**：对于非阻塞代码，线程需要定期检查中断状态，并根据需要处理中断请求。
 
@@ -1775,6 +1831,8 @@ public class ThreadInterruptionExample {
 -   处理阻塞方法：对于可能会抛出 InterruptedException 的阻塞方法，务必捕获异常并适当地处理。
 -   重设中断状态：在捕获 InterruptedException 后，可以考虑重新设置中断状态，以便其他代码段也能感知到中断请求。
 -   避免忽略中断：不要简单地忽略中断请求，应该根据业务逻辑合理处理。
+
+
 
 
 
@@ -2753,7 +2811,7 @@ Found 1 deadlock.
 **Java 中的可重入锁**
 
 -   隐式锁（即synchronized关键字使用的锁 ）默认是可重入锁
--   显式锁（即Lock）ReentrantLock
+-   显式锁（即 Lock）ReentrantLock
 
 示例
 
@@ -2840,6 +2898,17 @@ ReentrantLock lock = new ReentrantLock(true);   // 公平锁
 
 -   `synchronized`：在JDK 6之后进行了大量优化，性能已经接近甚至超过`ReentrantLock`，特别是在争用较少的情况下。
 -   `ReentrantLock`：提供了更灵活的控制，但在某些情况下可能会比`synchronized`稍慢，尤其是在争用激烈的情况下。
+
+>   扩展
+>
+>   synchronized 性能优化
+>
+>   synchronized在JDK1.6之后进行了很多性能优化，主要包括如下：
+>
+>   -   偏向锁：如果一个锁被同一个线程多次获得，JVM会将该锁设置为偏向锁，以减少获取锁的代价
+>   -   轻量级锁：如果没有线程竞争，JVM会将锁设置为轻量级锁，使用CAS操作代替互斥同步
+>   -   锁粗化：JVM会将一些短时间内连续的锁操作合并为一个锁操作，以减少锁操作的开销
+>   -   锁消除：JVM在JIT编译时会检测到一些没有竞争的锁，并将这些锁去掉，以减少同步的开销
 
 **锁的状态查询**
 
