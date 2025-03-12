@@ -3252,7 +3252,164 @@ ReentrantLock lock = new ReentrantLock(true);   // 公平锁
 
 
 
+## 什么是FutureTask？
+
+
+
 ## 什么是Java的CompletableFuture？
+
+`CompletableFuture` 是 Java 8 引入的一个类，位于 `java.util.concurrent` 包中。它是对 `Future` 接口的增强版本，提供了更强大的**异步编程**能力，并支持函数式编程风格。
+
+通过 `CompletableFuture`，可以更方便地处理异步任务的结果、组合多个异步任务以及管理任务之间的依赖关系。
+
+**基本概念**
+
+-   **异步执行**：`CompletableFuture` 支持异步任务的创建和执行。
+-   **链式调用**：可以通过链式调用的方式处理任务结果，避免了回调地狱（Callback Hell）。
+-   **组合任务**：可以将多个异步任务组合在一起，形成复杂的任务流。
+
+**创建异步任务**
+
+CompletableFuture的四大静态方法：（用于创建 异步任务）
+
+-   无返回值
+    -   CompletableFuture\<Void> runAsync(Runnable runnable)
+    -   CompletableFuture\<Void> runAsync(Runnable runnable, Executor executor)
+
+-   有返回值
+
+    -   CompletableFuture\<U> supplyAsync(Supplier\<U> supplier)
+    -   CompletableFuture\<U> supplyAsync(Supplier\<U> supplier, Executor executor)
+
+
+>   executor参数说明：
+>
+>   ​	若没有指明，则使用ForkJoinPool.commonPool()作为线程池执行异步代码
+>
+>   ​	建议给出，达到线程池隔离的目的
+>
+>   如果使用默认线程池commonPool，当main线程结束时，线程池会 立刻 关闭，导致异步任务无法执行
+>
+>   因此
+>   *               1.需要保证main线程在 所有异步任务之后 结束 或者
+>   *               2.使用自定义线程池
+
+​    
+
+>   不建议通过new 创建CompletableFuture
+
+```java
+CompletableFuture<Void> future1 = CompletableFuture.runAsync(() -> {
+    System.out.println("Running async task without result");
+});
+
+CompletableFuture<String> future2 = CompletableFuture.supplyAsync(() -> {
+    return "Hello, CompletableFuture!";
+});
+```
+
+
+
+**处理任务结果**
+
+-   thenApply(Function<? super T, ? extends U> fn)：对任务结果进行转换。
+    -   对计算结果进行处理（计算结果存在依赖关系，这两个线程串行化）
+    -   异常相关：由于存在依赖关系（当前出错，就不会进行下一步操作了），当前步骤有异常的话就会立即叫停
+-   thenAccept(Consumer<? super T> action)：对任务结果进行消费，但不产生新的结果
+    -   对计算结果进行消费（接收任务的处理结果，并消费处理，无返回结果）
+-   thenRun(Runnable action)：在任务完成后执行一个无参数的操作，即不需要使用上一个任务的结果
+
+>   then\*：在上一个异步任务执行完，然后执行本任务
+>   then\*Async：默认会利用ForkJoinPool.commonPool来执行任务
+
+| 方法       | 示例                                                |
+| ---------- | --------------------------------------------------- |
+| thenRun    | 任务A执行完毕执行B，并且B不需要A的结果              |
+| thenAccept | 任务A执行完毕执行B，B需要A的结果，但是任务B无返回值 |
+| thenApply  | 任务A执行完毕执行B，B需要A的结果，同时任务B有返回值 |
+
+示例：
+
+```java
+System.out.println(CompletableFuture.supplyAsync(() -> "result-A")
+                   .thenRun(() -> {
+					}).join()
+); // join 获取的结果为null
+
+System.out.println(CompletableFuture.supplyAsync(() -> "result-A").thenAccept((r) -> {
+    System.out.println(r); // result-A
+}).join()); // join 获取的结果为null，因为thenAccept无返回值
+
+System.out.println(CompletableFuture.supplyAsync(() -> "result-A").thenApply((r) -> {
+    return r + "-result-B";
+}).join());  // join 获取的结果为result-A-result-B
+```
+
+
+
+**异常处理**
+
+-   exceptionally：处理任务中的异常。
+-   handle：无论是否发生异常，都会执行。
+
+```java
+CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+    throw new RuntimeException("Error occurred!");
+}).exceptionally(ex -> {
+    return "Recovered from exception: " + ex.getMessage();
+});
+
+future.thenAccept(System.out::println); // 输出恢复后的结果
+```
+
+
+
+**组合多个任务**
+
+-   thenCombine：合并两个任务的结果。
+-   thenAcceptBoth：对两个任务的结果进行消费。
+-   applyToEither：选择第一个完成的任务的结果（对计算速度进行选用）
+-   thenCompose： 按顺序执行两个并行任务（将任务A的结果作为任务B的输入）
+
+```java
+CompletableFuture<String> future1 = CompletableFuture.supplyAsync(() -> "Hello");
+CompletableFuture<String> future2 = CompletableFuture.supplyAsync(() -> "World");
+
+CompletableFuture<String> combinedFuture = future1.thenCombine(future2, (result1, result2) -> result1 + " " + result2);
+
+combinedFuture.thenAccept(System.out::println); // 输出 "Hello World"
+```
+
+
+
+**等待所有任务完成**
+
+-   allOf：等待所有任务完成。
+-   anyOf：等待任意一个任务完成。
+
+```java
+CompletableFuture<Void> allFutures = CompletableFuture.allOf(
+    CompletableFuture.runAsync(() -> System.out.println("Task 1")),
+    CompletableFuture.runAsync(() -> System.out.println("Task 2")),
+    CompletableFuture.runAsync(() -> System.out.println("Task 3"))
+);
+
+allFutures.join(); // 等待所有任务完成
+```
+
+
+
+**阻塞操作**
+
+-   get()：阻塞等待结果
+-   get(long timeout, TimeUnit unit)   超时等待结果
+-   join()：阻塞等待结果
+-   getNow(T valueIfAbsent)            立即获取结果（不阻塞），如果任务未完成（未获取到结果），则返回valueIfAbsent
+
+```java
+String result = CompletableFuture.supplyAsync(() -> "Result").join();
+System.out.println(result); // 输出 "Result"
+```
 
 
 
