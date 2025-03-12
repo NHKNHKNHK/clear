@@ -1461,10 +1461,29 @@ public final synchronized void join(long millis)
 ## 怎么让3个线程按顺序执行？
 
 -   使用join方法
-
 -   使用CountDownLatch
-
 -   使用CyclicBarrier
+-   单个线程的线程池
+
+>   **Java中如何控制多个线程的执行顺序？**
+>
+>   CompletableFuture，例如thenRun，假设t1、t2、t3任务要按顺序执行，就可以使用thenRun方法
+>
+>   synchronized + wait/notify，通过对象锁和线程间通信机制来控制线程的执行顺序
+>
+>   ReentrantLock + condition
+>
+>   Thread类的join方法，通过调用这个方法，可以使得一个线程等待另一个线程执行完毕后再继续执行
+>
+>   CountDownLatch，使一个或线程等待其他线程完成各自工作后再继续执行
+>
+>   CyclicBarrier，是多个线程互相等待，直到所有线程都到达某个共同点后再继续执行
+>
+>   Semaphore，控制线程的执行顺序，适用于需要限制同时访问资源的线程数量的场景
+>
+>   线程池，单个线程的线程池，按序的将任务提交到线程池即可
+>
+>   
 
 **方式一：使用join方法**
 
@@ -3262,6 +3281,16 @@ ReentrantLock lock = new ReentrantLock(true);   // 公平锁
 
 通过 `CompletableFuture`，可以更方便地处理异步任务的结果、组合多个异步任务以及管理任务之间的依赖关系。
 
+![](assets/CompletableFuture.png)
+
+`CompletableFuture` 同时实现了 `Future` 和 `CompletionStage` 接口
+
+`CompletionStage` 接口描述了一个异步计算的阶段。很多计算可以分成多个阶段或步骤，此时可以通过它将所有步骤组合起来，形成异步计算的流水线。
+
+`CompletionStage` 接口中的方法比较多，`CompletableFuture` 的函数式能力就是这个接口赋予的
+
+
+
 **基本概念**
 
 -   **异步执行**：`CompletableFuture` 支持异步任务的创建和执行。
@@ -3413,11 +3442,150 @@ System.out.println(result); // 输出 "Result"
 
 
 
+**与Future的区别**
+
+`Future`是JDK5引入的接口，提供了基本的异步处理功能，它的一个重要实现类是`FutureTask`，主要用于异步执行任务并获取任务的结果。但它的局限性在于只能通过get()方法阻塞的获取结果，无法链式调用，也缺少异常处理机制。
+
+`Future`的优缺点
+
+-   优点：future+线程池 异步多线程任务配合，显著提高程序的执行效率
+-   缺点：
+    -   get()阻塞
+    -   isDone()轮询，耗费无谓的CPU资源
+
+CompletableFuture是`Future`的增强版，提供了非阻塞的结果处理、任务组合和异常处理，使得异步编程变得更加灵活强大
+
+
+
+## 一个任务需要依赖另外两个任务执行完之后再执行，怎么设计？
+
+这种任务编排场景非常适合通过`CompletableFuture`实现。这里假设要实现 T3 在 T2 和 T1 执行完后执行。
+
+示例：
+
+CompletableFuture.allOf
+
+```java
+// 定义两个异步任务
+CompletableFuture<String> task1 = CompletableFuture.supplyAsync(() -> {
+    System.out.println("Task 1 is running...");
+    return "Result from Task 1";
+});
+
+CompletableFuture<String> task2 = CompletableFuture.supplyAsync(() -> {
+    System.out.println("Task 2 is running...");
+    return "Result from Task 2";
+});
+
+// 等待 task1 和 task2 都完成后执行后续任务
+CompletableFuture<Void> allTasks = CompletableFuture.allOf(task1, task2);
+
+// 后续任务
+allTasks.thenRun(() -> {
+    System.out.println("Both Task 1 and Task 2 are completed.");
+    try {
+        // 获取 task1 和 task2 的结果
+        String result1 = task1.get();
+        String result2 = task2.get();
+        System.out.println("Task 1 Result: " + result1);
+        System.out.println("Task 2 Result: " + result2);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+});
+```
+
+`thenCombine` ：合并两个任务的结果
+
+```java
+// 定义两个异步任务
+CompletableFuture<String> task1 = CompletableFuture.supplyAsync(() -> {
+    System.out.println("Task 1 is running...");
+    return "Hello";
+});
+
+CompletableFuture<String> task2 = CompletableFuture.supplyAsync(() -> {
+    System.out.println("Task 2 is running...");
+    return "World";
+});
+
+// 后续任务依赖 task1 和 task2 的结果
+CompletableFuture<String> combinedTask = task1.thenCombine(task2, (result1, result2) -> {
+    return result1 + " " + result2;
+});
+
+// 输出最终结果
+combinedTask.thenAccept(result -> {
+    System.out.println("Combined Result: " + result); // 输出 "Hello World"
+});
+```
+
+
+
+## 在使用 CompletableFuture 的时候为什么要自定义线程池？
+
+`CompletableFuture` 默认使用全局共享的 `ForkJoinPool.commonPool()` 作为执行器，所有未指定执行器的异步任务都会使用该线程池。这意味着应用程序、多个库或框架（如 Spring、第三方库）若都依赖 `CompletableFuture`，默认情况下它们都会共享同一个线程池。
+
+虽然 `ForkJoinPool` 效率很高，但当同时提交大量任务时，可能会导致资源竞争和线程饥饿，进而影响系统性能。
+
+为避免这些问题，建议为 `CompletableFuture` 提供自定义线程池，带来以下优势：
+
+-   隔离性：为不同任务分配独立的线程池，避免全局线程池资源争夺。
+-   资源控制：根据任务特性调整线程池大小和队列类型，优化性能表现。
+-   异常处理：通过自定义 `ThreadFactory` 更好地处理线程中的异常情况
+
 
 
 ## 什么是Java的ForkJoinPool？
 
+Java的ForkJoinPool是JDK 7引入的一个专门用于并行执行任务的**线程池**，它采用”**分而治之**“算法来解决大规模的并行问题。
 
+核心机制：
+
+​	1、**Fork（分解）**：任务被递归分解为更小的子任务，直到达到不可再分的程序
+
+​	2、**Join（合并）**：子任务执行完毕后，将结果合并，形成最终的解决方案
+
+**工作窃取算法**：ForkJoinPool使用了一种称为工作窃取的调度算法。空闲的工作线程会从其他繁忙线程的工作队列中”窃取“未完成的任务以保持资源高效利用
+
+关键类：
+
+-   `ForkJoinPool`：表示Fork/Join框架中的线程池。
+
+-   `ForkJoinTask`：任务的基础抽象类，子类有：`RecursiveTask`、`Recursivection`，分别用于有返回值和无返回值任务
+
+
+
+**ForkJoinPool与普通线程池的区别**
+
+-   **任务分解与合并**：穿透的线程池一般处理相对独立的任务，而ForkJoinPool则擅长处理可以分解的任务，最终将结果进行合并
+-   **线程调度策略**：ForkJoinPool中的每个工作线程都维护着自己的双端队列，并通过工作窃取来平衡任务，而普通线程池通常由中央队列来管理任务
+
+
+
+**ForkJoinPool与并行流的关系**
+
+Java 8中的并行流（Parallel Streams）底层正是基于ForkJoinPool实现的，通过`paralleStream()`方法，可以轻松的利用ForkJoinPool来实现并行操作，从而提高处理效率。
+
+
+
+## Java中如何控制多个线程的执行顺序？
+
+CompletableFuture，例如thenRun，假设t1、t2、t3任务要按顺序执行，就可以使用thenRun方法
+
+synchronized + wait/notify，通过对象锁和线程间通信机制来控制线程的执行顺序
+
+ReentrantLock + condition
+
+Thread类的join方法，通过调用这个方法，可以使得一个线程等待另一个线程执行完毕后再继续执行
+
+CountDownLatch，使一个或线程等待其他线程完成各自工作后再继续执行
+
+CyclicBarrier，是多个线程互相等待，直到所有线程都到达某个共同点后再继续执行
+
+Semaphore，控制线程的执行顺序，适用于需要限制同时访问资源的线程数量的场景
+
+线程池，单个线程的线程池，按序的将任务提交到线程池即可
 
 
 
