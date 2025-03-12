@@ -980,6 +980,230 @@ public ThreadPoolExecutor(int corePoolSize,
 
 
 
+## BlockingQueue是什么？
+
+BlockingQueue是 Java 中定义在`java.util.concurrent`包下的一个接口，它扩展了`Queue`接口，并添加了阻塞操作。BlockingQueue提供了一种线程安全的机制，用于在多线程环境中处理生产者-消费者问题。
+
+**特点**
+
+-   **线程安全**：所有方法都使用内部锁或其他同步机制来确保线程安全
+-   **阻塞操作**：当队列为空时，从队列中取元素会被阻塞，直到有元素加入；当队列满时，往队列中添加元素会被阻塞，直到有空间可用。
+
+**常用方法：**
+
+-   `put(E e)`：将指定元素插入此队列中，如果该队列已满，则等待空间变得可用。
+-   `take()`：从此队列中获取并移除头部元素，如果此队列为空，则等待元素变得可用。
+-   `offer(E e, long timeout, TimeUnit unit)`：尝试在指定的等待时间内将指定元素插入此队列，如果超时则返回 `false`。
+-   `poll(long timeout, TimeUnit unit)`：尝试在指定的等待时间内从此队列中获取并移除头部元素，如果超时则返回 `null`。
+
+常见的BlockingQueue有实现方式
+
+-   ArrayBlockingQueue：基于数组的有界阻塞队列。
+
+-   LinkedBlockingQueue：基于链表的可选有界阻塞队列。
+
+-   PriorityBlockingQueue：支持优先级排序的无界阻塞队列。
+
+-   DelayQueue：支持延迟元素的无界阻塞队列。只有在延迟期满时才能从中提取元素的无界阻塞队列。
+
+-   SynchronousQueue：不存储元素的阻塞队列，每个插入操作必须等待一个对应的移除操作。
+
+-   LinkedTransferQueue：基于链表的无界阻塞队列，支持传输操作
+
+
+
+使用BlockingQueue实现生产者-消费者模式：
+
+```java
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+public class BlockingQueueExample {
+    public static void main(String[] args) {
+        BlockingQueue<Integer> queue = new LinkedBlockingQueue<>(5);
+
+        // 生产者线程
+        Thread producer = new Thread(() -> {
+            try {
+                for (int i = 0; i < 10; i++) {
+                    System.out.println("Producing: " + i);
+                    queue.put(i); // 如果队列已满，阻塞
+                    Thread.sleep(100); // 模拟生产时间
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        // 消费者线程
+        Thread consumer = new Thread(() -> {
+            try {
+                for (int i = 0; i < 10; i++) {
+                    Integer value = queue.take(); // 如果队列为空，阻塞
+                    System.out.println("Consuming: " + value);
+                    Thread.sleep(150); // 模拟消费时间
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        producer.start();
+        consumer.start();
+    }
+}
+```
+
+**主要方法**
+
+BlockingQueue提供了一些常用的方法，这些方法分为四类：
+
+**抛出异常**：
+
+add(E e)：如果队列已满，抛出IllegalStateException。
+
+remove()：如果队列为空，抛出NoSuchElementException。
+
+element()：如果队列为空，抛出NoSuchElementException。
+
+**返回特殊值**：
+
+offer(E e)：如果队列已满，返回false。
+
+poll()：如果队列为空，返回null。
+
+peek()：如果队列为空，返回null。
+
+**阻塞操作**：
+
+put(E e)：如果队列已满，阻塞直到有空间可插入元素。
+
+take()：如果队列为空，阻塞直到有元素可取。
+
+**超时操作**：
+
+offer(E e, long timeout, TimeUnit unit)：在指定的时间内插入元素，如果队列已满，等待直到超时或插入成功。
+
+poll(long timeout, TimeUnit unit)：在指定的时间内取出元素，如果队列为空，等待直到超时或取出成功。
+
+
+
+## Java中有哪些队列？
+
+**LinkedList**
+
+基于链表实现的双向链表，实现了List、Deque和Queue接口，支持在头部和尾部进行快速插入和删除操作。
+
+**使用场景**：
+
+需要频繁插入和删除元素的场景。
+
+需要双端队列（Deque）功能的场景，如在头部和尾部进行操作。
+
+
+
+**PriorityQueue**
+
+基于优先级堆（Priority Heap）实现的无界队列。元素按照自然顺序或指定的比较器顺序排列。不允许插入null元素。
+
+**使用场景**：
+
+需要按优先级处理元素的场景，如任务调度、事件处理等。
+
+需要动态调整元素顺序的场景。
+
+
+
+**ArrayDeque**
+
+基于数组实现的双端队列（Deque），没有容量限制，可以动态扩展，比LinkedList更高效，尤其是在栈和队列操作方面。
+
+**使用场景**：
+
+需要高效的栈或队列操作的场景。
+
+需要双端队列功能，但不需要线程安全的场景。
+
+
+
+**ConcurrentLinkedQueue**
+
+基于链表实现的无界非阻塞队列。使用无锁算法，提供高效的并发性能。线程安全，适用于高并发环境。
+
+**使用场景**：
+
+高并发环境下的无界队列。
+
+需要高效的非阻塞并发操作的场景
+
+
+
+**LinkedBlockingQueue**
+
+基于链表实现的可选有界阻塞队列，支持阻塞的put和take操作，线程安全，适用于生产者-消费者模式。
+
+**使用场景**：
+
+生产者-消费者模式，特别是在需要限制队列大小的场景。需要线程安全的阻塞队列。
+
+
+
+**ArrayBlockingQueue**
+
+基于数组实现的有界阻塞队列，必须指定容量，支持阻塞的put和take操作。线程安全，适用于生产者-消费者模式。
+
+**使用场景**：
+
+生产者-消费者模式，特别是在需要固定大小的队列时。需要线程安全的有界阻塞队列。
+
+
+
+**DelayQueue**
+
+支持延迟元素的无界阻塞队列，元素只有在其延迟时间到期后才能被取出。线程安全，适用于并发环境。
+
+**使用场景**：
+
+需要延迟处理元素的场景，如任务调度、缓存过期处理等。
+
+定时任务执行场景。
+
+
+
+**LinkedBlockingDeque**
+
+基于链表实现的可选有界阻塞双端队列，支持阻塞的put和take操作。线程安全，适用于生产者-消费者模式。
+
+**使用场景**：生产者-消费者模式，特别是在需要限制队列大小的双端队列场景。需要线程安全的阻塞双端队列。
+
+
+
+
+
+## 阻塞队列原理？
+
+阻塞队列是一种线程安全的队列，它在插入和删除操作上可以阻塞线程，以实现生产者-消费者模式等并发编程需求。阻塞队列的核心原理包括锁机制和条件变量。
+
+基本原理
+
+**锁机制**
+
+阻塞队列使用锁（如ReentrantLock）来确保线程安全。锁保证了同一时间只有一个线程可以执行插入或删除操作，从而避免并发问题
+
+**条件变量**
+
+阻塞队列使用条件变量（Condition）来管理线程的等待和通知。条件变量是与锁关联的，可以在特定条件下阻塞线程并在条件满足时唤醒线程。例如，notEmpty和notFull是常见的条件变量，分别用于表示队列是否为空和是否已满。
+
+**等待和通知机制**
+
+当线程试图执行插入操作而队列已满时，它会在notFull条件变量上等待，直到队列中有空闲空间。
+
+当线程试图执行删除操作而队列为空时，它会在notEmpty条件变量上等待，直到队列中有可用的元素。
+
+当插入或删除操作成功后，相应的条件变量会被通知（唤醒），以便其他等待的线程可以继续执行。
+
+
+
 ## **终止线程的四种方式**
 
 
@@ -3212,10 +3436,6 @@ ReentrantLock lock = new ReentrantLock(true);   // 公平锁
 
 
 ## 你使用过哪些Java并发工具？
-
-
-
-## 你使用过Java中哪些阻塞队列？
 
 
 
