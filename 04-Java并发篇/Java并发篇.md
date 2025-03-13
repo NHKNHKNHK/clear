@@ -970,7 +970,7 @@ public ThreadPoolExecutor(int corePoolSize,
 // threadFactory：线程工厂。用于创建新线程的工厂对象。可以自定义线程的创建逻辑，例如设置线程的名称、优先级等。
 - SynchronousQueue：直接提交队列
 - ArrayBlockingQueue：有界队列，可以指定容量
-- LinkedBlockingQueue：无界队列
+- LinkedBlockingQueue：有界|无界队列
 - PriorityBlockingQueue：优先任务队列，可以根据任务的优先级顺序执行
 - DelayQueue：延迟任务
 
@@ -998,17 +998,27 @@ BlockingQueue是 Java 中定义在`java.util.concurrent`包下的一个接口，
 
 常见的BlockingQueue有实现方式
 
--   ArrayBlockingQueue：基于数组的有界阻塞队列。
+-   **ArrayBlockingQueue**：基于数组的有界阻塞队列。需要在初始化时指定队列大小，队列满时，生产者会被阻塞，队列空时，消费者会被阻塞
 
--   LinkedBlockingQueue：基于链表的可选有界阻塞队列。
+-   **LinkedBlockingQueue**：基于链表的阻塞队列，允许可选的界限（有界或无界）。无界模式下，可以不断添加元素，直到耗尽系统资源。有界模式下类似于ArrayBlockingQueue，但吞吐量通常较高
 
--   PriorityBlockingQueue：支持优先级排序的无界阻塞队列。
+-   **PriorityBlockingQueue**：支持优先级排序的无界阻塞队列。元素按照自然排序或比较器顺序排序。与其他队列不同，此队列不保证元素的FIFO顺序
 
--   DelayQueue：支持延迟元素的无界阻塞队列。只有在延迟期满时才能从中提取元素的无界阻塞队列。
+-   **DelayQueue**：支持延迟元素的无界阻塞队列。只有在延迟期满时才能从中提取元素的无界阻塞队列。常用于任务调度
 
--   SynchronousQueue：不存储元素的阻塞队列，每个插入操作必须等待一个对应的移除操作。
+-   **SynchronousQueue**：不存储元素的阻塞队列，每个插入操作必须等待一个对应的移除操作。反之亦然。常用于在线程直接的直接传递任务，而不是存储任务。
 
--   LinkedTransferQueue：基于链表的无界阻塞队列，支持传输操作
+扩展
+
+-   **LinkedTransferQueue**：基于链表的无界阻塞队列，支持传输操作（即元素入队时判断是否已有消费者在等待，如果有，直接将数据给消费者，这里没有锁操作）
+
+**使用场景**
+
+-   ArrayBlockingQueue 和 LinkedBlockingQueue常用于典型的生产者-消费者场景。
+
+-   PriorityBlockingQueue 更适用于处理带有优先级的任务场景，如任务调度系统
+-   DelayQueue 使用于需要延迟处理的任务，例如：缓存失效处理、定时任务调度等
+-   SynchronousQueue：适合在线程间直接传递数据，而不希望数据存储在队列中。例如：ThreadPoolExecutor的直接交付模式中使用SynchronousQueue来传递任务
 
 
 
@@ -1088,6 +1098,18 @@ poll(long timeout, TimeUnit unit)：在指定的时间内取出元素，如果�
 
 
 
+## ArrayBlockingQueue 与 LinkedBlockingQueue区别
+
+ArrayBlockingQueue 与 LinkedBlockingQueue分别是基于数组和链表的有界阻塞队列，后者也至此无界队列
+
+两者的原理都是基于 ReentrantLock 和 Condition
+
+ArrayBlockingQueue 基于数组，内部实现只用了**一把锁**，可以指定公平或非公平
+
+LinkedBlockingQueue 基于链表，内部实现用了**两把锁**，take一把、put一把，所以入队和出队两个操作是可以并行的，从这里看并发度应该比ArrayBlockingQueue 高
+
+
+
 ## Java中有哪些队列？
 
 **LinkedList**
@@ -1140,7 +1162,7 @@ poll(long timeout, TimeUnit unit)：在指定的时间内取出元素，如果�
 
 **LinkedBlockingQueue**
 
-基于链表实现的可选有界阻塞队列，支持阻塞的put和take操作，线程安全，适用于生产者-消费者模式。
+基于链表实现的可选（有界或无界）阻塞队列，支持阻塞的put和take操作，线程安全，适用于生产者-消费者模式。
 
 **使用场景**：
 
@@ -1978,8 +2000,6 @@ public static void main(String[] args) {
 
 因此，Java提供了一种用于停止线程的**协商机制**——中断，也即中断标识协商机制。
 
-
-
 **中断只是一个协作协商机制，Java没有给中断增加任何语法，中断的过程完全需要我们自己手动实现。**
 
 若要中断一个线程，我们需要手动调用线程的interrupt方法，该方法也仅仅是将线程对象的中断标识设为为true
@@ -2000,8 +2020,7 @@ Java中的线程中断是一种协作机制，用于请求线程停止其所执�
 
 **线程中断的核心概念**
 
--   **中断状态**：每个线程都有一个中断状态（interrupted status），初始值为 false。
--   当调用 `线程.interrupt()` 方法时，该线程的中断状态被设置为 true。
+-   **中断状态**：每个线程都有一个中断状态（interrupted status），初始值为 false。当调用 `线程.interrupt()` 方法时，该线程的中断状态被设置为 true。
 -   **检查中断状态**：
     -   `线程.isInterrupted()`：检查当前线程的中断状态，但不会重置中断标志。
     -   `Thread.interrupted()`：1、检查当前线程的中断状态 2、并重置中断标志为 false
@@ -2023,7 +2042,7 @@ Java中的线程中断是一种协作机制，用于请求线程停止其所执�
 
 **线程中断的行为（即中断标志位为true时）**
 
--   **阻塞方法**：如果线程正在执行阻塞方法（如 `Thread.sleep()`、`Object.wait()`、`BlockingQueue.take()` 等），此时线程标志位被设置为true，会抛出 `InterruptedException`，并在捕获到中断时清除中断状态。
+-   **阻塞方法**：如果线程正在执行阻塞方法（如 `Thread.sleep()`、`Object.wait()`、`BlockingQueue.take()` 等），此时线程标志位被设置为true，会抛出 `InterruptedException`，并在捕获到中断时清除中断状态（即中断状态会被设置为false，因此建议手动重新设置中断状态为true）。
 
 -   **非阻塞代码**：对于非阻塞代码，线程需要定期检查中断状态，并根据需要处理中断请求。
 
@@ -2040,7 +2059,7 @@ public class ThreadInterruptionExample {
                 } catch (InterruptedException e) {
                     // 捕获中断异常并设置中断状态
                     System.out.println("Thread was interrupted, stopping...");
-                    Thread.currentThread().interrupt(); // 重新设置中断状态
+                    Thread.currentThread().interrupt(); // 重新设置中断状态为true
                     return;
                 }
             }
@@ -2063,7 +2082,7 @@ public class ThreadInterruptionExample {
 
 在这个例子中，创建了一个worker线程，在其whele循环中不断处理任务，直到检测到线程中断状态为true。
 
-主线程会在2s后通过worker.interrupt()方法设置worker线程的中断状态为true。worker线程内部捕获到`InterruptedException`异常，会重新设置中断状态。
+主线程会在2s后通过worker.interrupt()方法设置worker线程的中断状态为true。worker线程内部捕获到`InterruptedException`异常，会重新设置中断状态。因此需要在catch语句中设置状态状态为true
 
 
 
@@ -2072,7 +2091,7 @@ public class ThreadInterruptionExample {
 -   礼貌中断：不要强制终止线程，而是通过中断机制让线程有机会进行清理和资源释放。
 -   定期检查中断状态：在线程的长时间运行任务中，应定期检查中断状态，以确保能够及时响应中断请求。
 -   处理阻塞方法：对于可能会抛出 InterruptedException 的阻塞方法，务必捕获异常并适当地处理。
--   重设中断状态：在捕获 InterruptedException 后，可以考虑重新设置中断状态，以便其他代码段也能感知到中断请求。
+-   重设中断状态：**在捕获 InterruptedException 后，可以考虑重新设置中断状态**，以便其他代码段也能感知到中断请求。
 -   避免忽略中断：不要简单地忽略中断请求，应该根据业务逻辑合理处理。
 
 
