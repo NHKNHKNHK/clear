@@ -48,6 +48,8 @@ Spring MVC 是一个专注于 Web 开发的框架，而 Spring Boot 是一个更
 
 ## 说说你对SpringMVC的理解？
 
+![1742022237112](C:\Users\没事我很好\AppData\Roaming\Typora\typora-user-images\1742022237112.png)
+
 
 
 ## 简述SpringMVC核心组件？
@@ -1605,7 +1607,52 @@ public class FileUploadController {
 
 ## SpringMVC中的拦截器是什么？
 
+**口语化**
+
 在 Spring MVC 中，拦截器（Interceptor）是一种用于**对 HTTP 请求进行预处理和后处理的机制**。拦截器可以在请求到达控制器之前、控制器处理请求之后以及视图渲染之前执行特定的逻辑。它们类似于 Servlet 中的过滤器（Filter），但提供了更细粒度的控制和更强大的功能。
+
+
+
+在了解拦截器的概念之前，我们先看一张图:
+
+![img](assets/mvc-interceptor.png)
+
+(1)浏览器发送一个请求会先到Tomcat的web服务器
+
+(2)Tomcat服务器接收到请求以后，会去判断请求的是静态资源还是动态资源
+
+(3)如果是静态资源，会直接到Tomcat的项目部署目录下去直接访问
+
+(4)如果是动态资源，就需要交给项目的后台代码进行处理
+
+(5)在找到具体的方法之前，我们可以去配置过滤器(可以配置多个)，按照顺序进行执行
+
+(6)然后进入到到中央处理器(SpringMVC中的内容)，SpringMVC会根据配置的规则进行拦截
+
+(7)如果满足规则，则进行处理，找到其对应的controller类中的方法进行执行,完成后返回结果
+
+(8)如果不满足规则，则不进行处理
+
+(9)这个时候，如果我们需要在每个Controller方法执行的前后添加业务，具体该如何来实现?
+
+这个就是拦截器要做的事。
+
+-   拦截器（Interceptor）是一种动态拦截方法调用的机制，在SpringMVC中动态拦截控制器方法的执行
+-   作用:
+    -   在指定的方法调用前后执行预先设定的代码
+    -   阻止原始方法的执行
+    -   总结：**拦截器就是用来做增强**
+
+看完以后，大家会发现
+
+-   拦截器和过滤器在作用和执行顺序上也很相似
+
+所以这个时候，就有一个问题需要思考:**拦截器和过滤器之间的区别**是什么?
+
+-   归属不同：**Filter属于Servlet技术，Interceptor属于SpringMVC技术**
+-   拦截内容不同：**Filter对所有访问进行增强，Interceptor仅针对SpringMVC的访问进行增强**
+
+
 
 **拦截器的主要用途**
 
@@ -1631,7 +1678,25 @@ Spring MVC 的拦截器通过实现 `HandlerInterceptor` 接口来定义。这�
 
 ## 如何在 Spring MVC 中配置拦截器？|如何定义一个拦截器？
 
+**口语化**
+
 在 Spring MVC 中配置拦截器有两种常见方式：使用 Java 配置类和使用 XML 配置文件
+
+使用 Java 配置类：
+
+1）就是定义一个类并使用@Component注解修饰，**实现`HandlerInterceptor`接口，重写接口中的三个方法**，分别是preHandle、postHandle、afterCompletion。
+
+2）这三个方法分别在请求处理之前执行、在请求处理之后执行、在整个请求完成之后（包括视图渲染之后）执行。
+
+3）接着在MVC配置类（实现 `WebMvcConfigurer` 接口的类）中，**注册**这个拦截器。
+
+使用 XML 配置文件，这是早期的一种配置方式
+
+1）**创建一个拦截器类**：实现 `HandlerInterceptor` 接口。与Java配置类的方式一致
+
+2）**在 XML 配置文件中注册拦截器**。
+
+
 
 -   **使用 Java 配置类**
 
@@ -1754,6 +1819,20 @@ public class MyInterceptor implements HandlerInterceptor {
 
 
 ## 拦截器和过滤器的区别？
+
+**运行顺序不同**：过滤器是在Servlet容器接受到请求之后，但是在Servlet被调用之前运行的，而拦截器是Servlet被调用之后，但是在请求被发送到Controller之前执行的
+
+![1742055677920](assets/1742055677920.png)
+
+**配置方式不同**：过滤器是在`web.xml`中进行配置的，而拦截器可以通过Spring配置文件中配置或通过`WebMvcConfigurer`的实现类中重写`addInterceptors`方法进行配置
+
+**归属不同**：Filter属于Servlet容器，Interceptor属于SpringMVC
+
+**拦截内容不同**：Filter对所有访问进行增强，Interceptor仅针对SpringMVC的访问进行增强
+
+**操作能力不同**：过滤器只能对request和response进行操作，而拦截器除了可以对request和response进行操作以外，还可以对SpringMVC生态下组件的handler、ModdelAndView、Exception进行操作
+
+**实现原理不同**：过滤器和拦截器底层实现不同。过滤器是基于函数回调的，拦截器是基于Java的反射机制)（动态代理）实现的。一般自定义的过滤器中都会实现一个`doFilter()`方法，这个方法有一个`FilterChain`参数，而实际上它是一个回调接口。
 
 
 

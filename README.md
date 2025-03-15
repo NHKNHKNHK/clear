@@ -41,7 +41,7 @@ Spring中bean的加载流程
 
 Spring有哪些缺点？
 
-SpringMVC的拦截器和过滤器有什么区别？执行顺序？
+
 
 SpringMVC执行流程
 
