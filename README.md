@@ -71,7 +71,6 @@ trycatchflinally都是刚杀？try中有return，执行流程？
 
 线程池原理？
 
-解释CAS？
 
 
 ## mysql
