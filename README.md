@@ -39,8 +39,6 @@ Spring中bean的加载流程
 
 
 
-谈谈你对Spring的理解？
-
 Spring有哪些缺点？
 
 SpringMVC的拦截器和过滤器有什么区别？执行顺序？
@@ -66,8 +64,6 @@ ThreadLocal内存泄漏问题是怎么导致的？
 
 
 
-
-trycatchflinally都是刚杀？try中有return，执行流程？
 
 线程池原理？
 
