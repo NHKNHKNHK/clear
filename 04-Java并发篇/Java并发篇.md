@@ -1910,6 +1910,14 @@ sleep和wait都是可以让线程暂停执行，但他们有明显的区别
 
 
 
+**扩展**——常见错误
+
+-   **误用sleep**：有时候开发者会错误使用sleep进行线程间通信，但是sleep不释放锁，可能会导致其他线程无法进入同步块，造成线程饥饿或死锁
+-   **忽略中断**：sleep可能会抛出`InterruptedException`（即线程中断状态标志位为true时），如果不正确处理中断信号，可能会导致线程提前退出或错误行为。
+    -   原因：当中断状态为true时，sleep会抛出`InterruptedException`，中断状态会被清除为false，因此需要显式的在catch中重新设置中断状态为true
+
+
+
 ## sleep和wait、yield方法有什么区别？
 
 **Thread.sleep**
