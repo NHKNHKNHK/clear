@@ -2348,7 +2348,170 @@ thread.stop(); // 强制终止线程
 
 
 
-## LockSupport类 Park和unPark的使用
+## 什么是LockSupport类？Park和unPark的使用
+
+LockSupport 是用来创建锁和其他同步类的基本线程阻塞原语。
+
+LockSupport 是 Java 并发包 (java.util.concurrent) 中的一个**工具类**，所有的方法都是静态方法，可以让线程在任意位置阻塞，阻塞之后也有对应的唤醒方法。
+
+归根结底，LockSupport 调用的是 Unsafe 中的native 代码
+
+LockSupport 提供 park 和 unpark 方法实现阻塞线程和解除线程阻塞的过程。
+
+LockSupport 和每个使用它的线程都有一个许可（permit）关联
+
+**每个线程**都有一个相关的permit，**permit最多只有一个**，重复调用unpark也不会积累凭证。
+
+
+
+>   **形象的理解**
+>
+>   线程阻塞需要消耗凭证（permit），这个凭证最多只有一个
+>
+>   当调用park方法时
+>
+>   -   如果有凭证，则直接消耗掉这个凭证，然后正常退出
+>   -   如果无凭证，就必须阻塞等待凭证可用
+>
+>   而unpark则相反，它会增加一个凭证，但凭证最多只能有1个，累加无效
+
+
+
+LockSupport 的主要功能和特点：
+
+-   阻塞线程：通过 LockSupport.park() 方法可以让当前线程阻塞。
+
+-   唤醒线程：通过 LockSupport.unpark(Thread thread) 方法可以唤醒指定的线程。 
+
+-   轻量级：相比 Object.wait() 和 Object.notify()，LockSupport 提供了更灵活和细粒度的控制。 
+
+-   **许可证机制**：每个线程都有一个与之关联的“许可证”（permit）。
+    -   当调用`park()`时，如果当前线程已经有许可证，则直接消耗许可证并继续执行；如果没有许可证，则线程会被阻塞，直到获得许可证。
+    -   调用`unpark()`会为线程提供一个许可证（如果有多个未处理的`unpark()`调用，只会消耗一个）。
+
+
+
+示例：
+
+```java
+public static void main(String[] args) {
+    Thread t1 = new Thread(() -> {
+        System.out.println(Thread.currentThread().getName() + "\t ---come in");
+        LockSupport.park();
+        System.out.println(Thread.currentThread().getName() + "\t ---被唤醒");
+    }, "t1");
+    t1.start();
+    
+    try {
+        TimeUnit.SECONDS.sleep(2L);
+    } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+    }
+    
+    new Thread(() -> {
+        LockSupport.unpark(t1);
+        System.out.println(Thread.currentThread().getName() + "\t ---发出通知");
+    }, "t2").start();
+}
+```
+
+
+
+**补充**
+
+>   3种线程等待与唤醒的方法
+
+**1、Object类中的wait与notify方法**
+
+-   wait和notify方法必要要在同步块或方法中使用，否则运行时抛出`IllegalMonitorStateException`
+-   且wait顺序和notify顺序不能弄反
+-   最好是成对出现使用
+    
+
+**2、Condition接口中的await与signal方法**
+
+-   Condition中的线程等待和唤醒，需要先获取锁，否则运行时抛出`IllegalMonitorStateException`
+-   且await顺序和signal顺序不能弄反
+
+-   最好是成对出现使用
+    
+
+**Object和Condition使用的限制条件**
+
+-   线程先要获得并持有锁，必须在锁块（synchronized 或 lock）在调用
+
+-   必须要先等待后唤醒，线程才能够被唤醒，否则线程将一致被阻塞
+    -   （即wait与notify、await与signal方法必须成双成对出现）
+        
+
+**3、LockSupport类中的park与unpark方法**
+
+-   LockSupport是用来创建锁和其他同步类的基本线程阻塞原语
+
+-   LockSupport类使用了一种名为Permit（许可）的概念来做到**阻塞和唤醒线程**的功能，每个线程都有一个Permit（许可）
+
+-   但与 Semaphore 不同的是，**许可的累加上限制是1**
+
+
+
+## LockSupport的park/unpark为什么可以突破wait/notify的原有调用顺序？
+
+因为unpark获取了一个凭证，之后再调用park方法，就可以名正言顺的凭证消费，故而不会阻塞。
+
+可以理解为高速收费站的ETC
+
+
+
+## LockSupport的park/unpark为什么唤醒两次后阻塞两次，但最终结果还是会阻塞线程？
+
+**口语化**
+
+因为凭证的数量最多为1，不会累加。连续调用两次unpark和调用一次unpark的效果一样，只会增加一个凭证。
+
+而调用两次park却需要消耗两个凭证，凭证不够，不能放行。
+
+
+
+**核心原因：许可证机制**
+
+1.  **每个线程有一个许可证**：
+    -   每个线程都有一个与之关联的“许可证”。
+    -   调用 `LockSupport.unpark(Thread thread)` 会为指定线程提供一个许可证。
+    -   调用 `LockSupport.park()` 时，如果当前线程已经有许可证，则直接消耗许可证并继续执行；如果没有许可证，则线程会被阻塞，直到获得许可证。
+2.  **许可证是一次性的**：
+    -   许可证只能被使用一次。当线程调用 `park()` 并成功获取许可证后，许可证会被消耗掉。
+    -   如果多次调用 `unpark()`，只会增加一个许可证（即使多次调用，也只记录一个许可证）。
+3.  **为什么最终还会阻塞？**
+    -   假设你调用了两次 `unpark`，这相当于为线程准备了一个许可证。
+    -   当第一次调用 `park()` 时，线程会消耗这个许可证并继续执行。
+    -   第二次调用 `park()` 时，由于许可证已经被消耗完，线程将再次被阻塞。
+
+```java
+private static void lockSupportParkUnpark() {
+    Thread t1 = new Thread(() -> {
+        System.out.println(Thread.currentThread().getName() + "\t ---come in");
+        LockSupport.park();
+        System.out.println(Thread.currentThread().getName() + "\t ---come in 2");
+        LockSupport.park();
+        System.out.println(Thread.currentThread().getName() + "\t ---被唤醒");
+    }, "t1");
+    t1.start();
+    try {
+        TimeUnit.SECONDS.sleep(2L);
+    } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+    }
+    new Thread(() -> {
+        LockSupport.unpark(t1);
+        LockSupport.unpark(t1);
+        System.out.println(Thread.currentThread().getName() + "\t ---发出通知");
+    }, "t2").start();
+}
+```
+
+在这个例子中，两次调用了unpark，为t1线程颁发许可，但许可不累加，只有1个。最终t1线程调用了两次park，需要两个许可，但t1只有一个许可，最终导致线程阻塞
+
+
 
 
 
