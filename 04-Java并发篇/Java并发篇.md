@@ -1908,23 +1908,190 @@ public class Main {
 
 
 
-## 为什么说线程的上下文切换效率不高
+## 引起CPU进行上下文切换的原因
+
+CPU 上下文切换是指 CPU 从一个进程或线程切换到另一个进程或线程的过程。
+
+上下文切换涉及保存当前进程或线程的状态，并加载即将运行的进程或线程的状态。
+
+上下文切换是多任务操作系统中实现并发的重要机制，但频繁的上下文切换会带来性能开销。
+
+**时间片耗尽**
+
+在抢占式多任务操作系统中，每个进程或线程都被分配一个固定长度的时间片。当时间片耗尽时，操作系统会进行上下文切换，将 CPU 分配给下一个进程或线程。
+
+**阻塞操作**
+
+当一个进程或线程执行阻塞操作（如 I/O 操作、等待锁、等待资源等）时，它会进入阻塞状态，操作系统会进行上下文切换，将 CPU 分配给其他可以运行的进程或线程。
+
+**进程或线程的优先级变化**
+
+操作系统调度程序会根据进程或线程的优先级进行调度。如果一个高优先级的进程或线程进入就绪状态，操作系统可能会进行上下文切换，将 CPU 分配给这个高优先级的进程或线程。
+
+**中断**
+
+硬件中断（如定时器中断、I/O 中断等）也会触发上下文切换。当中断发生时，操作系统会暂停当前进程或线程的执行，处理中断请求，然后可能会切换到另一个进程或线程。
+
+>   补充：Java中中断机制是一种协作机制，这里指的是操作系统层面的中断
+
+**系统调用**
+
+当进程或线程执行系统调用时，可能会引发上下文切换。例如，当进程请求操作系统服务（如文件操作、网络操作等）时，操作系统可能会切换到内核态进行处理，然后再切换回用户态。
+
+**多处理器环境中的负载均衡**
+
+在多处理器或多核系统中，操作系统可能会进行上下文切换以实现负载均衡。操作系统会将进程或线程分配到不同的 CPU 核心，以优化资源利用率和性能。
+
+**线程调度策略**
+
+不同的线程调度策略（如时间片轮转、优先级调度等）会导致上下文切换。例如，在时间片轮转调度策略中，每个线程按顺序获得 CPU 时间片，当时间片用完时，操作系统会进行上下文切换。
+
+**用户态和内核态切换**
+
+当进程或线程从用户态切换到内核态（例如执行系统调用）或从内核态切换回用户态时，也会发生上下文切换。这种切换涉及保存和恢复 CPU 寄存器等状态。
+
+
+
+**上下文切换的开销**
+
+上下文切换虽然是多任务操作系统实现并发的必要机制，但它也带来了性能开销，主要包括：
+
+-   **CPU 寄存器保存和恢复**：需要保存当前进程或线程的 CPU 寄存器状态，并加载下一个进程或线程的 CPU 寄存器状态。
+
+-   **内存管理**：需要切换内存管理单元（MMU）的上下文，例如页表的切换。
+
+-   **缓存失效**：上下文切换可能导致 CPU 缓存失效，从而影响性能。
+
+**优化上下文切换**
+
+-   **减少线程数量**：避免创建过多的线程，合理使用线程池。
+
+-   **减少锁竞争**：使用无锁数据结构或更细粒度的锁，减少线程间的锁竞争。
+
+-   **优化调度策略**：根据应用场景选择合适的调度策略，避免不必要的优先级切换。
+
+-   **使用异步 I/O**：尽量使用异步 I/O 操作，减少阻塞操作引起的上下文切换
 
 
 
 ## **线程什么时候主动放弃CPU**
 
+线程主动放弃 CPU常见的有以下几种方式
+
+1.  调用Thread.yield()方法
+2.  调用Thread.sleep(long millis)方法
+3.  调用Object.wait()方法
+4.  调用Thread.join()方法
+5.  调用LockSupport.park()方法
 
 
-## 引起CPU进行上下文切换的原因
 
+**Thread.yield()**
 
+Thread.yield()是一个静态方法，通知调度器当前线程愿意放弃 CPU 使用权，让其他同优先级或更高优先级的线程有机会运行。它只是一个提示，操作系统可以选择忽略这个提示。
 
+场景
 
+-   **调试和性能优化**：在某些情况下，yield()可以用于调试和性能优化，帮助识别线程调度问题。
 
+-   **避免资源独占**：在某些高优先级的任务中，使用yield()可以避免线程长时间独占 CPU，稍微改善系统响应时间。
 
+**Thread.sleep(long millis)**
 
+Thread.sleep(long millis)使当前线程进入休眠状态，暂停执行指定的毫秒数。休眠期间，线程保持 CPU 使用权，但不执行任何代码。
 
+场景
+
+-   **定时任务**：在需要定时执行任务的场景中，sleep()可以用于实现简单的定时等待。
+-   **模拟延迟**：在测试和模拟场景中，sleep()可以用于模拟网络延迟或其他等待时间。
+
+**Object.wait()**
+
+Object.wait()使当前线程等待（阻塞），直到其他线程调用notify()或notifyAll()方法唤醒它。wait()必须在同步块或同步方法中调用。
+
+场景
+
+-   **线程间通信**：在生产者-消费者模型中，wait()和notify()用于协调生产者和消费者线程之间的工作
+
+```java
+public class WaitNotifyExample {
+    private static final Object lock = new Object();
+
+    public static void main(String[] args) {
+        Thread t1 = new Thread(() -> {
+            synchronized (lock) {
+                try {
+                    System.out.println(Thread.currentThread().getName() + " is waiting");
+                    lock.wait();
+                    System.out.println(Thread.currentThread().getName() + " is resumed");
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }, "Thread-1");
+
+        Thread t2 = new Thread(() -> {
+            synchronized (lock) {
+                System.out.println(Thread.currentThread().getName() + " is notifying");
+                lock.notify();
+            }
+        }, "Thread-2");
+
+        t1.start();
+        try {
+            Thread.sleep(1000); // 确保 t1 先执行
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        t2.start();
+    }
+}
+```
+
+**Thread.join()**
+
+Thread.join()使当前线程等待，直到另一个线程执行完毕。可以指定等待时间，也可以无限期等待。
+
+场景
+
+-   **线程协调**：在需要确保某些线程在其他线程之前完成时，使用join()来协调线程的执行顺序。
+
+**LockSupport.park()**
+
+LockSupport.park()使当前线程阻塞，直到被其他线程通过`LockSupport.unpark(thread)`唤醒。park()不会释放线程持有的锁，但可以响应中断。
+
+>   补充：
+>
+>   调用LockSupport.park()不会阻塞线程的情况，就是调用LockSupport.park()方法进行阻塞之前，其他线程先调用了`LockSupport.unpark(thread)`，为该线程提前颁发了许可凭证
+
+场景
+
+-   **线程控制**：在需要精细控制线程行为的场景中，park()和unpark()提供了更底层和灵活的线程控制机制。
+
+```java
+import java.util.concurrent.locks.LockSupport;
+
+public class LockSupportExample {
+    public static void main(String[] args) {
+        Thread t1 = new Thread(() -> {
+            System.out.println(Thread.currentThread().getName() + " is going to park.");
+            LockSupport.park();
+            System.out.println(Thread.currentThread().getName() + " has been unparked.");
+        }, "Thread-1");
+
+        t1.start();
+
+        try {
+            Thread.sleep(3000); // 让线程运行3秒
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println("Unparking Thread-1.");
+        LockSupport.unpark(t1); // 唤醒线程
+    }
+}
+```
 
 
 
