@@ -3787,6 +3787,37 @@ Happens-before原则为开发者提供了一套明确的规则，用于推断多
 
 ## **ThreadLocal原理**
 
+ThreadLocal的实现依赖于每个线程内部维护的一个ThreadLocalMap对象。
+
+每个线程都有自己的ThreadLocalMap，而ThreadLocalMap中存储了所有ThreadLocal变量及其对应的值
+
+
+
+**主要组成部分**
+
+-   **ThreadLocal 类**：提供了set()、get()、remove()等方法，用于操作线程局部变量。
+
+-   **ThreadLocalMap 类**：是ThreadLocal的内部静态类，用于存储ThreadLocal变量及其值。
+
+-   **Thread 类**：每个线程内部都有一个ThreadLocalMap实例。
+
+**工作机制**
+
+-   **创建ThreadLocal变量**：当创建一个ThreadLocal变量时，实际上并没有分配存储空间。
+
+-   **获取值 (get()方法)**：当调用get()方法时，当前线程会通过自己的ThreadLocalMap获取ThreadLocal变量的值。如果不存在，则调用initialValue()方法获取初始值。
+
+-   **设置值 (set()方法)**：当调用set()方法时，当前线程会通过自己的ThreadLocalMap设置ThreadLocal变量的值。
+
+-   **删除值 (remove()方法)**：当调用remove()方法时，当前线程会通过自己的ThreadLocalMap删除ThreadLocal变量的值。
+
+**使用场景**
+
+-   **数据库连接**：在多线程环境中，每个线程可以使用自己的数据库连接，避免连接共享带来的问题。
+-   **用户会话（上下文传递）**：在 Web 应用中，每个线程可以维护自己的用户会话信息。
+-   **事务管理**：在分布式系统中，每个线程可以维护自己的事务上下文，确保事务的一致性。
+-   **线程安全的工具类**：例如SimpleDateFormat，它不是线程安全的，可以使用ThreadLocal让每个线程都有自己的实例。
+
 
 
 ## ThreadLocal的缺点？
@@ -3810,7 +3841,63 @@ ThreadLocal是可以**基于副本的隔离机制**来保证共享变量修改�
 
 
 
-## **ThreadLocal的内存泄漏问题**？是怎么导致的？
+## **ThreadLocal的内存泄漏问题**？如何避免？
+
+ThreadLocal的内存泄漏问题主要源于ThreadLocalMap中使用的弱引用（WeakReference）机制和线程生命周期管理不当。
+
+**内存泄漏的根本原因**：`ThreadLocalMap` 中的值是强引用，如果线程未结束且未调用 `remove()`，这些值将无法被垃圾回收。
+
+**解决方法**：及时调用 `remove()` 方法清理 `ThreadLocal` 的值，特别是在线程池等场景下要特别注意
+
+
+
+**ThreadLocal 的内部实现**
+
+-   每个线程都有一个 `ThreadLocalMap`，用于存储该线程的 `ThreadLocal` 变量。
+-   `ThreadLocalMap` 的键是 `ThreadLocal` 对象的弱引用（`WeakReference`），而值是线程本地变量的强引用。
+
+**内存泄漏原因**
+
+1）**弱引用的局限性**
+
+-   ThreadLocalMap使用Entry类来存储键值对，其中键是ThreadLocal对象的弱引用（WeakReference<ThreadLocal<?>>），值是实际存储的数据。
+
+-   当 `ThreadLocal` 对象被回收时，`ThreadLocalMap` 中的键会变成 `null`，但值仍然存在（因为值是强引用）。
+-   如果线程没有结束，`ThreadLocalMap` 中的值无法被垃圾回收，从而导致内存泄漏。
+
+2）**线程生命周期**：
+
+在一些长生命周期的线程（如线程池中的线程）中，如果不显式地清除ThreadLocal变量，ThreadLocalMap中的值对象会一直存在，导致内存泄漏。
+
+3）**线程池的特殊场景**
+
+-   在使用线程池（如 `ExecutorService`）时，线程会被复用而不是销毁。
+-   如果某个线程中创建了一个 `ThreadLocal`，但没有显式调用 `remove()` 方法清除其值，那么即使 `ThreadLocal` 对象本身被回收，`ThreadLocalMap` 中的值仍然会占用内存，直到线程结束或手动清理。
+
+
+
+####  **如何避免内存泄漏？**
+
+为了避免 `ThreadLocal` 引发的内存泄漏，可以采取以下措施：
+
+(1) **及时调用 remove() 方法**
+
+-   在使用完 `ThreadLocal` 后，应显式调用 `remove()` 方法清除线程本地变量。
+
+(2) **在 finally 块中清理**
+
+-   将 `remove()` 放在 `finally` 块中，确保无论是否发生异常都能正确清理。
+
+(3) **避免在长生命周期的线程（如：线程池）中滥用 ThreadLocal**
+
+-   线程池中的线程是长期存活的，因此更需要注意 `ThreadLocal` 的清理。
+-   如果必须使用 `ThreadLocal`，建议在任务执行完毕后立即清理。
+
+(4) **自定义 ThreadLocalMap 清理逻辑**
+
+-   如果需要更复杂的清理逻辑，可以继承 `ThreadLocal` 并重写其方法，例如 `initialValue()` 或 `childValue()`。
+
+
 
 
 
