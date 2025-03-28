@@ -2096,6 +2096,255 @@ testA() 无法回滚是因为没有捕获到新线程中 testB()抛出的异常�
 
 
 
+
+
+## Spring 提供的事件发布和监听机制？
+
+>   Spring事件监听的核心机制：**观察者模式**
+
+Spring提供的事件发布机制一般情况下我们很少使用，我们更多的时候都是在使用Spring提供的IOC、AOP等
+
+它的主要作用是实现**业务解耦**，提高可扩展性、可维护性。
+
+它类似于MQ消息队列，提供了一种发布订阅的机制。
+
+Spring的事件监听器主要由三部分组成：事件、监听器、播放器（或者叫事件发布器）。
+
+Spring提供了`ApplicationEventMulticaster`（播放器，可多播或组播）、`ApplicationEvent`、`ApplicationListener`等api，可以轻松实现简单的实现发布订阅功能。
+
+播放器在spring中有默认的实现，我们只需要调用publishEvent方法就可以发布事件了。
+
+>   在refresh方法中就初始化了默认的播放器
+>
+>   ```java
+>   this.initApplicationEventMulticaster();
+>   ```
+>
+>   它初始化的是 `SimpleApplicationEventMulticaster`
+
+适用场景：
+
+​	1）一些初始化操作可以使用，这样可以降低业务耦合。（前提是业务比较简单）
+
+​	2）还有就是想要实现事件监听，但又不想引入MQ这种中间件时使用。例如：下单和扣减库存操作，扣减库存就可以适用spring的事件机制，实现业务解耦。（一般大项目都会用到MQ）
+
+
+
+虽然我们平时用Spring的事件机制不多，但是底层源码倒是用到挺多的，比如springboot、springcloud等都大量使用了spring事件监听来进行扩展和集成。
+
+
+
+**Spring的事件监听的三个组成部分**
+
+-   **事件**（`ApplicationEvent`）：负者对应响应监视器。事件源发生某事件是特定事件监听器被触发的原因。
+-   **监听器**（`ApplicationListener`）：对应于观察者模式中的观察者。监听器监听特定事件，并在内部定义了事件触发后的响应逻辑
+-   **事件发布器**（`ApplicationEventMulticaster`）：对应于观察者模式中的被观察者/主题，负者通知观察者对外提供发布事件和增删事件监听器的接口，维护事件和事件监听器的映射问题，并在事件发生时负责通知相关监听器。
+
+
+
+**一些Spring内置的事件**
+
+1）`ContextRefreshedEvent`：当容器被实例化 或 refreshed时发布，如调用 refresh()方法，此处的实例化是指所有的bean都已经加载，后置处理器都被激活，所有单例bean都已经被实例化，所有的容器对象都已经准备好可以使用了。
+
+如果 ApplicationContext实现类支持热重载，则refersh可以被触发多次（XmlWebApplicationContext支持热刷新，而GenericApplication不支持）
+
+2）`ContextStartedEvent`：当容器启动时发布，即调用start()方法，已启动意味着所有的Lifecycle bean都已经显式的接收到了start信号
+
+3）`ContextStoppedEvent`：当容器停止时发布，即调用stop()方法，即所有的Lifecycle bean都已经显式的接收到了stop信号，stopped的容器可以通过start()方法重启
+
+4）`ContextClosedEvent`：当容器关闭时发布，即调用close()方法，关闭意味着所有的单例bean都已被销毁，关闭的容器不能 restart或 refresh
+
+5）`RequestHandledEvent`：这只有在使用spring的DispatcherServlet时有效，当一个请求被处理完成时发布
+
+
+
+**示例**
+
+```java
+// 自定义事件
+@Getter
+public class PersonChangeEvent extends ApplicationEvent {
+
+    private Person person;
+
+    private String operateType;
+
+    public PersonChangeEvent(Person person, String operateType) {
+        super(person);
+        this.person = person;
+        this.operateType = operateType;
+    }
+}
+
+// 发布事件
+@Service
+public class PersonEventService {
+
+    @Resource
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    public void createPerson(Person person) {
+        applicationEventPublisher.publishEvent(new PersonChangeEvent(person, "create"));
+    }
+}
+
+
+// 监听器的事件方式有两种：一、实现ApplicationListener接口 二、使用@EventListener注解
+@Service
+@Slf4j
+public class PersonEventLister {
+
+    // 监听事件 
+    // TransactionalEventListener 是 EventListener 的子接口
+    @TransactionalEventListener(fallbackExecution = true)
+    public void listenCreateEvent(PersonChangeEvent personChangeEvent) {
+        switch (personChangeEvent.getOperateType()) {
+            case "create":
+                // 这里按需写自己的业务逻辑
+                log.info("执行创建事件：{}", JSON.toJSONString(personChangeEvent.getPerson()));
+                break;
+            default:
+                break;
+        }
+    }
+}
+```
+
+
+
+## Spring事件监听什么情况下会失效？
+
+1、**监听器未被Spring容器管理**
+
+若监听器类未添加`@Component`、`@Service`等注解，或未被组件扫描路径覆盖，则无法注册到Spring容器，导致事件监听失效‌
+
+2、**事件未通过ApplicationContext发布**
+
+手动调用监听方法（onApplicationEvent），而非通过`ApplicationContext.publishEvent()`发布事件，导致事件未被Spring事件机制处理‌
+
+```java
+MyEvent event = new MyEvent();
+myListener.onApplicationEvent(event); // 手动调用监视器类中的方法, 事件未广播
+```
+
+3、**监听器方法定义不符合要求**
+
+‌**方法签名错误**‌：使用`@EventListener`注解的方法，参数列表中未正确声明事件类型参数。
+
+‌**访问权限限制**‌：监听方法为`private`或`final`，导致AOP代理无法拦截调用（部分Spring版本可能不限制）‌
+
+```java
+@EventListener
+public void handleEvent(String event) { ... } // String不是事件类型
+```
+
+4、异步事件未配置执行器
+
+若使用`@Async`标记异步监听器，但未配置`TaskExecutor`，导致异步任务无法执行‌
+
+解决方案：
+
+在配置类添加`@EnableAsync`，定义线程池
+
+```java
+@Bean
+public TaskExecutor taskExecutor() {
+    return new ThreadPoolTaskExecutor();
+}
+```
+
+5、事务边界与事件监听冲突
+
+使用`@TransactionalEventListener`监听事务事件时，若事件发布不在事务上下文中（如未添加`@Transactional`），则监听器不会触发‌
+
+6、**事件类型不匹配**
+
+监听器注册的事件类型是父类，而实际发布的是子类事件，或监听器通过泛型限定事件类型但未正确匹配‌
+
+7、**监听器注册时机问题**
+
+例如
+
+定了一个Clear事件（Clear无任何含义，我的网名）
+
+```java
+@Getter
+public class ClearEvent extends ApplicationEvent {
+
+    private String name;
+
+    public ClearEvent(String name) {
+        super(name);
+        this.name = name;
+    }
+}
+```
+
+定义一个service，用于发布事件
+
+```java
+@Service
+public class ClearService {
+
+    @Resource
+    ApplicationEventPublisher applicationEventPublisher;
+
+    @PostConstruct
+    public void init() {
+        applicationEventPublisher.publishEvent(new ClearEvent("程序员clear"));
+    }
+}
+```
+
+定义一个监听器，注意需要被spring容器所管控
+
+```java
+@Component
+public class ClearEventListener  {
+
+    @EventListener
+    public void onApplicationEvent(ClearEvent clearEvent) {
+        System.out.println("拿到事件执行一些操作");
+    }
+}
+```
+
+以上这种情况下，事件机制会失效。
+
+看完下面这种图片你大概率就懂了
+
+![1743162070858](assets/1743162070858.png)
+
+因为解析事件注解的时机在bean初始化之前，然而在@PostConstruct注解声明的方法中进行了事件发布，而 @EventListener注解声明的监听器方法在此时还没生效，也就是事件监听还没有创建，所以监听器监听不到消息。
+
+因此，**除了通过 @EventListener注解定义监视器外，spring还提供了通过实现ApplicationListener接口定义监听器**
+
+如下，这种方式创建的监听器生效时机就在@PostConstruct注解声明的方法之前了
+
+```java
+@Component
+public class ClearEventListener implements ApplicationListener<ClearEvent> {
+
+    @Override
+    @EventListener
+    public void onApplicationEvent(ClearEvent clearEvent) {
+        System.out.println("拿到事件执行一些操作");
+    }
+}
+```
+
+
+
+
+
+## Spring异步发布事件的核心机制？
+
+**核心机制：多线程     异步的是非阻塞的**
+
+
+
+
+
 ## @PropertySource注解的作用？
 
 
@@ -3239,7 +3488,7 @@ Autowired 主要是类型注入。如果该类型有多个实现，就会按照�
 | :------------------- | :------------------------ | :---------------------------- |
 | **来源**             | Spring                    | Java EE (JSR-250)             |
 | **默认注入方式**     | 按类型 (`byType`)         | 按名称 (`byName`)，其次按类型 |
-| **是否支持名称注入** | 需配合 `@Qualifier`       | 直接支持                      |
+| **是否支持名称注入** | 可以配合 `@Qualifier`     | 直接支持                      |
 | **适用范围**         | Spring Bean               | Spring Bean 和其他资源        |
 | **灵活性**           | 更灵活，支持多种注入方式  | 较简单，优先按名称注入        |
 | **错误处理**         | 可设置 `required = false` | 默认行为更倾向于按名称查找    |
