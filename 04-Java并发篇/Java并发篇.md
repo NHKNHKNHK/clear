@@ -3773,23 +3773,35 @@ Happens-before原则为开发者提供了一套明确的规则，用于推断多
 
 
 
-## 什么是Java中的TransmittableThreadLocal？
+
+
+## Java中为什么需要使用ThreadLocal？ThreadLocal原理
+
+>   引言：
+>
+>   ​	在多线程情况下，操作同一资源为了避免数据错误，会搞一个 synchronized 或者是 lock，那么如果我既不想加锁，又想保证数据安全，要怎么办呢？
+>
+>   这种既要又要的场景——可以使用TreadLocal
 
 
 
-## Java中父子线程如何传递数据？
+>   ThreadLocal源码翻译：
+>
+>   TreadLocal提供线程局部变量。这些变量与正常的变量不同，因为每个线程在访问ThreadLocal实例时（通过get、set方法）**都有自己的、独立初始化的变量副本**。ThreadLocal 实例通常是类中私有静态字段，使用它的目的是希望将状态（例如，用户id或事务id）与线程关联起来。
 
 
 
-## Java中为什么需要使用ThreadLocal？
+**！！！ThreadLocal，不应该理解为本地线程，而应该理解为【线程本地变量】**
 
-
-
-## **ThreadLocal原理**
+ 
 
 ThreadLocal的实现依赖于每个线程内部维护的一个ThreadLocalMap对象。
 
-每个线程都有自己的ThreadLocalMap，而ThreadLocalMap中存储了所有ThreadLocal变量及其对应的值
+每个线程都有自己的ThreadLocalMap，而ThreadLocalMap中存储了所有ThreadLocal变量及其对应的值。
+
+换句话说，就是每个线程都有一个自己专属的本地变量副本，不与其他线程共享。
+
+主要作用：解决了让每个线程绑定自己的值，通过使用get、set方法，获取默认值或将其值更改为当前线程所存的副本的值从而避免了线程安全问题。
 
 
 
@@ -3805,11 +3817,13 @@ ThreadLocal的实现依赖于每个线程内部维护的一个ThreadLocalMap对�
 
 -   **创建ThreadLocal变量**：当创建一个ThreadLocal变量时，实际上并没有分配存储空间。
 
--   **获取值 (get()方法)**：当调用get()方法时，当前线程会通过自己的ThreadLocalMap获取ThreadLocal变量的值。如果不存在，则调用initialValue()方法获取初始值。
+-   **获取值 (get()方法)**：当调用get()方法时，当前线程会通过自己的ThreadLocalMap获取ThreadLocal变量的值。
+    -   如果不存在，则调用initialValue()方法获取初始值。
 
 -   **设置值 (set()方法)**：当调用set()方法时，当前线程会通过自己的ThreadLocalMap设置ThreadLocal变量的值。
 
 -   **删除值 (remove()方法)**：当调用remove()方法时，当前线程会通过自己的ThreadLocalMap删除ThreadLocal变量的值。
+-   初始化值：initialValue、withInitial（静态方法）。推荐使用withInitial进行初始化，因为支持lambda表达式，优雅
 
 **使用场景**
 
@@ -3817,10 +3831,6 @@ ThreadLocal的实现依赖于每个线程内部维护的一个ThreadLocalMap对�
 -   **用户会话（上下文传递）**：在 Web 应用中，每个线程可以维护自己的用户会话信息。
 -   **事务管理**：在分布式系统中，每个线程可以维护自己的事务上下文，确保事务的一致性。
 -   **线程安全的工具类**：例如SimpleDateFormat，它不是线程安全的，可以使用ThreadLocal让每个线程都有自己的实例。
-
-
-
-## ThreadLocal的缺点？
 
 
 
@@ -3841,7 +3851,7 @@ ThreadLocal是可以**基于副本的隔离机制**来保证共享变量修改�
 
 
 
-## **ThreadLocal的内存泄漏问题**？如何避免？
+## **ThreadLocal的内存泄漏问题**？
 
 ThreadLocal的内存泄漏问题主要源于ThreadLocalMap中使用的弱引用（WeakReference）机制和线程生命周期管理不当。
 
@@ -3874,9 +3884,11 @@ ThreadLocal的内存泄漏问题主要源于ThreadLocalMap中使用的弱引用�
 -   在使用线程池（如 `ExecutorService`）时，线程会被复用而不是销毁。
 -   如果某个线程中创建了一个 `ThreadLocal`，但没有显式调用 `remove()` 方法清除其值，那么即使 `ThreadLocal` 对象本身被回收，`ThreadLocalMap` 中的值仍然会占用内存，直到线程结束或手动清理。
 
+**阿里规约**
 
+![1743128373769](assets/1743128373769.png)
 
-####  **如何避免内存泄漏？**
+## 如何避免ThreadLocal的内存泄漏？
 
 为了避免 `ThreadLocal` 引发的内存泄漏，可以采取以下措施：
 
@@ -3897,11 +3909,50 @@ ThreadLocal的内存泄漏问题主要源于ThreadLocalMap中使用的弱引用�
 
 -   如果需要更复杂的清理逻辑，可以继承 `ThreadLocal` 并重写其方法，例如 `initialValue()` 或 `childValue()`。
 
+示例：
 
+```java
+public class ThreadLocalDemo {
 
+    public static void main(String[] args) {
+        MyData myData = new MyData();
+        // 模拟一个银行有3个办理业务的窗口
+        ExecutorService threadPool = Executors.newFixedThreadPool(3);
+        try {
+            // 模拟10个顾客来办理业务，正常情况应该 0 -> 1
+            for (int i = 0; i < 10; i++) {
+                int finalI = i;
+                threadPool.execute(new Thread(() -> {
+                    try {
+                        Integer beforeInt = myData.threadLocalField.get();
+                        myData.add();
+                        Integer afterInt = myData.threadLocalField.get();
+                        System.out.println(Thread.currentThread().getName() 
+                                           + "\t工作窗口\t受理第" +
+                                           finalI + "个顾客业务处理" +
+                                		   "beforeInt:" + beforeInt +
+                                           "\tafterInt:" + afterInt);
+                    } finally {
+                        myData.threadLocalField.remove(); // 显式清理threadlocal变量，避免内存泄露
+                    }
+                }));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            threadPool.shutdown();
+        }
+    }
+}
 
+class MyData {
+    ThreadLocal<Integer> threadLocalField = ThreadLocal.withInitial(() -> 0);
 
-## **如何避免ThreadLocal的内存泄漏？**
+    public void add() {
+        threadLocalField.set(threadLocalField.get() + 1);
+    }
+}
+```
 
 
 
@@ -3913,15 +3964,112 @@ ThreadLocal的内存泄漏问题主要源于ThreadLocalMap中使用的弱引用�
 
 
 
-## **ThreadLocal的用法**
-
-
-
 ## **ThreadLocal慎用的场景**
 
 
 
 ## ThreadLocal最佳实践？
+
+
+
+## Java中父子线程的共享（传递）？
+
+>   **注意**：`ThreadLocal` 并不直接支持父子线程之间的数据共享，因为每个线程都有独立的副本。如果需要共享数据，可以结合其他机制（如共享变量或阻塞队列）。
+
+这里有两个工具类可以实现父子线程数据传递：
+
+-   `InheritableThreadLocal`（JDK自带）
+-   `TransmittableThreadLocal`（alibaba）
+
+**ThreadLocal**：每个线程拥有独立的变量副本，线程之间无法直接共享数据。
+
+**InheritableThreadLocal**：除了为每个线程提供独立的变量副本外，还允许子线程继承父线程的变量值。
+
+>   **注意**：
+>
+>   子线程只能继承父线程的初始值，后续父线程对变量的修改不会影响子线程的值。
+>
+>   这也是Alibaba为什么要自己搞一个`TransmittableThreadLocal`的原因，他解决了线程池复用的问题
+
+**TransmittableThreadLocal**：它扩展了 Java 原生的 `InheritableThreadLocal`，支持在线程池中跨线程传递数据，有效避免了线程池复用导致的数据泄露问题
+
+
+
+| 特性                     | ThreadLocal                | InheritableThreadLocal       | TransmittableThreadLocal           |
+| :----------------------- | :------------------------- | :--------------------------- | :--------------------------------- |
+| **定义**                 | 每个线程拥有独立的变量副本 | 子线程可以继承父线程的变量值 | 支持在线程池和异步调用中传递上下文 |
+| **是否支持父子线程共享** | 否                         | 是（子线程继承父线程的值）   | 是（子线程继承父线程的值）         |
+| **是否支持线程池场景**   | 否，存在内存泄露           | 否，存在内存泄露             | 是                                 |
+| **是否支持异步调用**     | 否                         | 否                           | 是                                 |
+
+
+
+## 什么是Java中的InheritableThreadLocal？
+
+>   InheritableThreadLocal的核心目标是实现父子线程数据传递。父传子
+
+**ThreadLocal**：每个线程拥有独立的变量副本，线程之间无法直接共享数据。
+
+**InheritableThreadLocal**：除了为每个线程提供独立的变量副本外，还允许子线程继承父线程的变量值。
+
+>   **注意**：
+>
+>   子线程只能继承父线程的初始值，后续父线程对变量的修改不会影响子线程的值。
+>
+>   这也是Alibaba为什么要自己搞一个`TransmittableThreadLocal`的原因，他解决了线程池复用的问题
+
+**工作原理**
+
+当一个线程创建子线程时，`InheritableThreadLocal` 会将父线程的变量值复制一份给子线程。具体流程如下：
+
+1.  父线程设置 `InheritableThreadLocal` 的值。
+2.  父线程创建子线程时，子线程会从父线程中复制 `InheritableThreadLocal` 的值。
+3.  子线程可以访问该值，并且对该值的修改不会影响父线程或其他子线程。
+
+ **使用场景**
+
+-   **父子线程间的数据传递**：例如，传递用户身份信息、事务上下文等。
+-   **日志跟踪**：在分布式系统中，通过 `InheritableThreadLocal` 传递请求 ID 或 Trace ID。
+
+**注意事项**
+
+1.  **性能开销**：`InheritableThreadLocal` 的实现比普通 `ThreadLocal` 更复杂，可能会带来一定的性能开销。
+2.  **内存泄漏风险**：如果线程池复用线程，可能导致旧的 `InheritableThreadLocal` 数据未被清理，从而引发内存泄漏。因此，在使用线程池时需特别小心。
+3.  **线程安全**：虽然 `InheritableThreadLocal` 提供了父子线程间的值传递，但仍然需要确保数据的安全性和一致性。
+
+
+
+## 什么是Java中的TransmittableThreadLocal？
+
+`TransmittableThreadLocal` 是阿里巴巴开源的 [TTL（Transmittable ThreadLocal）](https://github.com/alibaba/transmittable-thread-local) 库中的核心类，用于解决线程池场景下 `ThreadLocal` 数据无法传递的问题。
+
+它扩展了 Java 原生的 `InheritableThreadLocal`，支持在线程池中跨线程传递数据
+
+**工作原理**
+
+`TransmittableThreadLocal` 的核心原理是通过拦截线程切换的过程，将父线程的 `ThreadLocal` 值复制到子线程中。具体实现包括以下几个方面：
+
+1.  **包装线程池**：通过 `TtlRunnable` 和 `TtlCallable` 包装线程池的任务，确保任务执行时能够携带父线程的上下文。
+2.  **异步调用支持**：通过 `TtlExecutors` 工具类，将普通的线程池转换为支持上下文传递的线程池。
+3.  **清理机制**：在任务执行完成后，自动清理线程中的上下文数据，避免内存泄漏。
+
+**特点**
+
+-   **支持线程池场景**：即使在线程池中复用线程，也能正确传递 `ThreadLocal` 的值。
+-   **支持异步调用**：在异步任务切换线程时，自动复制父线程的 `ThreadLocal` 值到子线程。
+-   **兼容原生 ThreadLocal**：可以无缝替代原生的 `ThreadLocal` 和 `InheritableThreadLocal`。
+
+ **使用场景**
+
+-   **分布式系统中的上下文传递**：例如，传递 Trace ID、用户身份信息等。
+-   **线程池中的任务上下文**：确保线程池中的任务能够访问正确的上下文数据。
+-   **异步框架中的上下文传递**：在异步调用链中保持上下文一致性。
+
+**注意事项**
+
+1.  **内存泄漏风险**：虽然 TTL 提供了自动清理机制，但仍需确保任务执行完成后及时释放资源。
+2.  **性能影响**：由于需要在线程切换时复制上下文数据，可能会带来一定的性能开销。
+3.  **线程安全**：`TransmittableThreadLocal` 的值在多个线程间传递时，需确保其内容是线程安全的。
 
 
 
