@@ -629,6 +629,46 @@ public class MyServiceFactoryBean implements FactoryBean<MyService> {
 
 
 
+## 什么是BeanDefinition ？ 
+
+`BeanDefinition` 是 Spring 框架中的一个核心接口，用于描述和定义一个 Spring Bean 的元信息
+
+它主要包含了以下内容：
+
+-   **类信息**：Bean 所对应的类。
+-   **作用域**：如单例（singleton）或原型（prototype）等。
+-   **构造函数参数**：如果需要通过构造函数注入依赖。
+-   **属性值**：通过 setter 方法注入的属性值。
+-   **初始化方法** 和 **销毁方法**：定义 Bean 生命周期中的回调方法。
+-   **其他配置**：如是否是抽象 Bean、是否延迟加载等
+
+在 Spring 容器启动时，在解析配置（如 XML、Java 配置类、注解等）后，Spring 会将每个 Bean 的定义信息（如类名、依赖关系、作用域等）注册到 `BeanDefinitionRegistry` 中（实际是存储在beanDefinitionMap）。这是容器内部的一个注册表，用于存储所有 Bean 的定义信息
+
+
+
+## 如何在所有BeanDefinition 注册完以后做扩展？
+
+可以通过实现`BeanFactoryPostProcessor` 接口重写抽象方法，修改Bean的元数据信息
+
+```java
+@Component
+public class CustomBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        // 在这里可以访问所有的 BeanDefinition，并进行扩展或修改
+        String[] beanNames = beanFactory.getBeanDefinitionNames();
+        for (String beanName : beanNames) {
+            BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
+            // 对 BeanDefinition 进行自定义处理
+            System.out.println("Bean Name: " + beanName + ", Class: " + beanDefinition.getBeanClassName());
+        }
+    }
+}
+```
+
+
+
 ## Bean标签的（常用）属性？
 
 bean 是最长使用的标签，如果是使用 xml 形式。最常见的基本属性就是 id，name，class。分别标识唯一的 bean，bean 的别名和实际要注入的类。也可以通过一些属性实现，bean 初始化时候的操作，比如init-method，配置的方法，可以在 bean 初始化的时候，进行执行。bean 还有常见的构造函数注入标签，注入 bean 中的属性。
