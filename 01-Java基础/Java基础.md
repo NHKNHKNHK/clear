@@ -3801,7 +3801,7 @@ if (a == b) {
 
 ## Java中的I/O流是什么？
 
-ava 中的 I/O 流（Input/Output Streams）是用于处理输入和输出操作的抽象概念。它们提供了读取和写入数据的功能，可以与文件、网络连接、内存缓冲区等进行交互。
+java 中的 I/O 流（Input/Output Streams）是用于处理输入和输出操作的抽象概念。它们提供了读取和写入数据的功能，可以与文件、网络连接、内存缓冲区等进行交互。
 
 Java 的 I/O 流主要分为两大类：**字节流（Byte Streams）和字符流（Character Streams）。**
 
@@ -3811,7 +3811,7 @@ Java 的 I/O 流主要分为两大类：**字节流（Byte Streams）和字符�
 
 -   定义：处理原始的二进制数据，以字节为单位进行读写。
 -   常用类
-    -   `InputStream `和 `OutputStream` 是所有字节流的顶级抽象类。
+    -   `InputStream`和 `OutputStream` 是所有字节流的顶级抽象类。
     -   `FileInputStream` 和 `FileOutputStream`：用于文件的读写。
     -   `ByteArrayInputStream` 和 `ByteArrayOutputStream`：用于内存中的字节数组读写
     -   `BufferedInputStream` 和 `BufferedOutputStream`：带缓冲功能的字节流，提高读写效率
@@ -3996,7 +3996,9 @@ public class CharacterStreamExample {
 
 ## 字节流怎么转化为字符流？
 
-在Java中，字节流和字符流之间可以通过一些适配器类进行转换。具体来说，可以使用`InputStreamReader`和`OutputStreamWriter`来实现字节流和字符流之间的转换。
+在Java中，字节流和字符流之间可以通过一些**适配器类**进行转换。具体来说，可以使用 `InputStreamReader` 和 `OutputStreamWriter` 来实现字节流和字符流之间的转换。
+
+这种流还有一种说法就是叫**转换流**
 
 >   本题是关键：因为早期字符流不能手动处理字符编码，所有如果数据的编码与运行环境不一致，需要使用字节流转化为字符流以达到手动处理编码的目的
 
