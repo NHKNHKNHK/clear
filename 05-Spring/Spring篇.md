@@ -1,4 +1,4 @@
-## 谈谈你对Spring的理解？
+谈谈你对Spring的理解？
 
 ‌Spring是一个轻量级的Java EE应用程序框架，由Rod Johnson发起。它旨在简化企业级应用的开发难度和周期，通过提供控制反转（IoC）和面向切面编程（AOP）等核心机制，Spring解决了传统J2EE开发中的许多常见问题‌‌
 
@@ -65,361 +65,6 @@ Spring Boot 是 Spring 的一个“升级版”，它让开发变得更简单。
 
 
 
-
-## 什么是SpringIOC？
-
-
-
-## 解释一下Spring的IOC控制反转？
-
-口语化：
-
-控制反转通过将对象的创建和依赖关系的管理交给Spring IoC容器，极大地提高了代码的模块化和可维护性。IoC的主要实现方式是依赖注入，其中通过构造函数注入、Setter方法注入和字段注入等形式来注入，这样 Spring容器能够自动管理对象的依赖关系，使得应用程序代码更加简洁。
-
->   解题思路：
->
->   ​	主要思路就是聊 ioc 是什么，再说说 di 的形式，最后说一下好处即可
-
-
-
-Spring 的 IOC（Inversion of Control，控制反转）是 Spring 框架的核心特性之一，它通过将对象的创建和依赖关系管理交给框架来实现解耦。以下是关于 Spring IOC 的详细解释：
-
-**什么是控制反转（IoC）**
-
-传统应用程序中，对象自己负责管理和创建其依赖的对象。而在使用控制反转后，对象不再直接创建依赖对象，而是由外部容器（如 Spring 容器）负责创建并注入这些依赖。
-
-**IOC 容器**
-
-Spring IoC容器负责管理应用程序中对象的生命周期和依赖关系。它的主要职责包括：
-
--   **对象的创建**：根据配置文件或注解创建对象。
-
--   **依赖注入**：将对象的依赖注入到相应的对象中。
-
--   **对象的销毁**：在适当的时候销毁对象，释放资源
-
-Spring 提供了两个主要的 IOC 容器：
-
--   BeanFactory：最基本的容器，提供了基本的依赖注入功能。
-
--   ApplicationContext：继承自 BeanFactory，增加了更多企业级功能，如国际化、事件传播、资源加载等。
-
-Spring IoC容器可以通过多种方式进行配置：
-
--   **XML配置**：通过XML文件定义Bean及其依赖关系。
-
-```xml
-<beans>
-    <bean id="repository" class="com.example.Repository"/>
-    <bean id="service" class="com.example.Service">
-        <constructor-arg ref="repository"/>
-    </bean>
-</beans>
-```
-
--   **Java配置**：通过Java类和注解定义Bean及其依赖关系
-
-```java
-@Configuration
-public class AppConfig {
-    @Bean
-    public Repository repository() {
-        return new Repository();
-    }
-
-    @Bean
-    public Service service() {
-        return new Service(repository());
-    }
-}
-```
-
--   **注解配置**：通过注解（如@Component,@Autowired）自动扫描和注入Bean
-
-```java
-@Component
-public class Repository {
-}
-
-@Component // 标识组件
-public class Service {
-    @Autowired // 依赖注入
-    private Repository repository;
-}
-```
-
-**依赖注入（DI）**
-
-**依赖注入是实现控制反转的一种具体方式**，Spring 支持以下几种注入方式：
-
--   构造器注入：通过构造函数传递依赖。
-
--   Setter方法注入（Setter Injection）：通过 Setter 方法传递依赖。
-
--   字段注入：直接在字段上使用 @Autowired 注解注入依赖。
-
-**构造器注入**：通过构造函数传递依赖。
-
-```java
-public class Service {
-    private final Repository repository;
-
-    public Service(Repository repository) {
-        this.repository = repository;
-    }
-}
-```
-
-**Setter方法注入**（Setter Injection）：通过 Setter 方法传递依赖。
-
-```java
-public class Service {
-    private Repository repository;
-
-    public void setRepository(Repository repository) {
-        this.repository = repository;
-    }
-}
-```
-
-字段注入：直接在字段上使用 @Autowired 注解注入依赖。
-
-```java
-public class Service {
-    @Autowired
-    private Repository repository;
-}
-```
-
-**生命周期管理**
-
-Spring 容器不仅负责创建和注入依赖，还管理对象的整个生命周期。可以使用 `@PostConstruct` 和`@PreDestroy `注解定义初始化和销毁方法。
-
-```java
-@Component
-public class MyService {
-    @PostConstruct
-    public void init() {
-        // 初始化逻辑
-    }
-
-    @PreDestroy
-    public void cleanup() {
-        // 清理逻辑
-    }
-}
-```
-
-
-
-## SpringIOC容器初始化过程？
-
-Spring 的 IOC 容器初始化过程是一个复杂但有序的过程，涉及到多个步骤和内部机制。以下是 Spring IOC 容器（特别是 ApplicationContext）的初始化流程：
-1.  **创建容器实例**
-
-首先，通过调用 ApplicationContext 的构造函数或静态方法来创建容器实例。常用的实现类包括 `AnnotationConfigApplicationContext `和 `ClassPathXmlApplicationContext`。
-
-```java
-// 使用注解配置
-AnnotationConfigApplicationContext context = 
-    			new AnnotationConfigApplicationContext(MyConfig.class);
-
-// 使用 XML 配置
-ClassPathXmlApplicationContext context = 
-    			new ClassPathXmlApplicationContext("applicationContext.xml");
-```
-
-2. **加载配置元数据**
-
-容器会根据提供的配置文件或注解加载配置元数据。这一步骤包括解析 XML 文件、注解配置类等。
-
--   XML 配置：解析 XML 文件中的 `<bean> `定义。
--   注解配置：扫描带有 `@Configuration`, `@Component`, `@Service`, `@Repository` 等注解的类，并注册为 Bean。
-
-3.  **注册 BeanDefinition**
-
-在解析配置后，Spring 会将每个 Bean 的定义信息（如类名、依赖关系、作用域等）注册到 `BeanDefinitionRegistry` 中。这是容器内部的一个注册表，用于存储所有 Bean 的定义信息。
-
-4.  **准备 BeanFactoryPostProcessors**
-
-Spring 容器会提前准备并执行 `BeanFactoryPostProcessor`。这类处理器可以在 Bean 实例化之前修改 Bean 定义，例如 PropertyPlaceholderConfigurer 可以解析占位符。
-
-```java
-@Configuration
-public class MyConfig {
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertyConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
-}
-```
-
-6.  **实例化单例 Beans**
-
-对于所有被标记为单例的 Bean，Spring 会在容器启动时预先实例化它们。这个过程包括：
-
--   **实例化**：根据 BeanDefinition 创建 Bean 实例。
--   **属性填充**：通过依赖注入（DI）设置 Bean 的属性值。
--   **Aware 接口回调**：如果 Bean 实现了某些 Aware 接口（如 BeanFactoryAware, ApplicationContextAware），则在此阶段调用相应的回调方法。
-
-6.  **初始化 Bean**
-
-在 Bean 实例化和属性填充完成后，Spring 会调用 Bean 的初始化方法：
-
--   自定义初始化方法：通过 `@PostConstruct` 注解或 **init-method** 属性指定的方法。
--   InitializingBean 接口：如果 Bean 实现了 `InitializingBean` 接口，则调用 afterPro**pertiesSet()** 方法。
-
-```java
-@Component
-public class MyService implements InitializingBean {
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        // 初始化逻辑
-    }
-
-    @PostConstruct
-    public void init() {
-        // 初始化逻辑
-    }
-}
-```
-
-7.  **应用 BeanPostProcessors**
-
-Spring 容器会调用所有已注册的 BeanPostProcessor。这些处理器可以对 Bean 进行进一步的处理，例如 AOP 代理的创建。
-
-```java
-@Component
-public class MyBeanPostProcessor implements BeanPostProcessor {
-    @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        // 在初始化前处理
-        return bean;
-    }
-
-    @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        // 在初始化后处理
-        return bean;
-    }
-}
-```
-
-8.  **完成容器初始化**
-
-当所有单例 Bean 都被成功初始化后，Spring 容器的初始化过程结束。此时，应用程序可以开始使用容器中的 Bean。
-
-9.  **销毁 Bean**
-
-当容器关闭时（例如应用程序关闭），Spring 会调用 Bean 的销毁方法：
-
--   自定义销毁方法：通过 `@PreDestroy` 注解或 **destroy-method** 属性指定的方法。
--   DisposableBean 接口：如果 Bean 实现了 `DisposableBean` 接口，则调用 **destroy()** 方法。
-
-```java
-@Component
-public class MyService implements DisposableBean {
-    @Override
-    public void destroy() throws Exception {
-        // 清理逻辑
-    }
-
-    @PreDestroy
-    public void cleanup() {
-        // 清理逻辑
-    }
-}
-```
-
-
-
-## SpringIOC有什么好处？
-
-Spring 的 IOC 容器通过提供依赖注入、生命周期管理、模块化开发等功能，极大地简化了应用程序的开发和维护工作，提高了代码的灵活性、可测试性和复用性。它不仅适用于小型项目，也能很好地支持大型企业级应用的需求
-
--   **解耦合**
-    -   依赖注入：通过依赖注入（DI），对象不再需要自己创建或查找依赖的对象，而是由 Spring 容器负责创建和注入。这减少了类之间的直接依赖，降低了耦合度。
-    -   接口编程：IOC 鼓励使用接口编程，使得代码更加灵活和可维护。
-
--   **模块化和复用性**
-    -   组件化开发：通过 @Component, @Service, @Repository 等注解，可以将应用程序的不同部分模块化，便于管理和复用。
-    -   AOP 支持：Spring 的 AOP（面向切面编程）功能允许开发者将横切关注点（如日志记录、事务管理等）从业务逻辑中分离出来，提高了代码的复用性和清晰度。
-
--   **生命周期管理**
-    -   自动管理：Spring 容器不仅负责创建和注入依赖，还管理对象的整个生命周期。可以通过 @PostConstruct 和 @PreDestroy 注解定义初始化和销毁方法。
-    -   作用域支持：Spring 支持多种作用域（如单例、原型、会话等），可以根据需求选择合适的 Bean 作用域
--   **简化配置**
-    -   声明式配置：通过 XML 文件、注解或 Java 配置类，Spring 提供了多种方式来声明和管理 Bean，简化了配置过程。
-    -   自动装配：Spring 可以根据类型或名称自动装配依赖，减少了手动配置的工作量。
--   **企业级特性支持**
-    -   事务管理：Spring 提供了强大的声明式事务管理功能，简化了事务处理。
-    -   国际化支持：通过 MessageSource 接口，Spring 支持多语言和国际化。
-    -   事件驱动架构：Spring 提供了事件发布和监听机制，支持事件驱动的应用程序设计。
--   **性能优化**
-    -   懒加载：对于非单例 Bean，Spring 支持懒加载（lazy initialization），只有在真正需要时才实例化 Bean，节省资源。
-    -   缓存支持：Spring 提供了缓存抽象层，可以方便地集成各种缓存解决方案，提升性能
-
--   **提高可测试性**
-    -   Mock 对象：依赖注入使得在单元测试中可以轻松地用 Mock 或 Stub 替换实际的依赖对象，从而更容易进行隔离测试。
-    -   自动化配置：Spring 提供了多种方式来配置 Bean，如 XML、注解和 Java 配置类，这些配置可以在测试环境中灵活调整。
-
-
-
-## Spring中的DI（依赖注入）是什么？
-
-依赖注入（Dependency Injection，简称DI）是Spring框架实现控制反转（IoC）的主要手段。
-
-依赖注入是 Spring 框架的核心特性之一，它是一种设计模式，通过将对象的依赖关系由外部容器（如 Spring 容器）管理并注入到对象中，而不是由对象自己创建或查找这些依赖。这种方式可以显著降低代码的耦合度，提高代码的可测试性和灵活性。
-
-**DI 的核心思想**
-
--   **控制反转（IoC）**：传统应用程序中，对象自己负责管理和创建其依赖的对象。而在使用依赖注入后，对象不再直接创建依赖对象，而是由外部容器负责创建并注入这些依赖。
--   **解耦合**：依赖注入使得类之间的依赖关系更加松散，减少了类之间的直接耦合，提高了代码的可维护性和复用性。
-
-**DI 的实现方式**
-
-Spring框架主要提供了三种依赖注入的方式：
-
-**依赖注入是实现控制反转的一种具体方式**，Spring 支持以下几种注入方式：
-
--   构造器注入：通过构造函数传递依赖。
-
--   Setter方法注入（Setter Injection）：通过 Setter 方法传递依赖。
-
--   字段注入：直接在字段上使用 @Autowired 注解注入依赖。
-
-**构造器注入**：通过构造函数传递依赖。
-
-```java
-public class Service {
-    private final Repository repository;
-
-    public Service(Repository repository) {
-        this.repository = repository;
-    }
-}
-```
-
-**Setter方法注入**（Setter Injection）：通过 Setter 方法传递依赖。
-
-```java
-public class Service {
-    private Repository repository;
-
-    public void setRepository(Repository repository) {
-        this.repository = repository;
-    }
-}
-```
-
-**字段注入**：直接在字段上使用 @Autowired 注解注入依赖。
-
-```java
-public class Service {
-    @Autowired
-    private Repository repository;
-}
-```
 
 
 
@@ -1600,11 +1245,7 @@ public class ClassC {
 
 
 
-## 
 
-
-
-## Spring Bean一共有几种作用域？
 
 
 
@@ -1813,6 +1454,601 @@ public class DemoApplication {
 
 
 
+## Spring在加载过程中bean有几种形态？
+
+
+
+![1743251764476](assets/1743251764476.png)
+
+
+
+
+
+## 什么是SpringIOC？
+
+
+
+## 解释一下Spring的IOC控制反转？
+
+口语化：
+
+控制反转通过将对象的创建和依赖关系的管理交给Spring IoC容器，极大地提高了代码的模块化和可维护性。IoC的主要实现方式是依赖注入，其中通过构造函数注入、Setter方法注入和字段注入等形式来注入，这样 Spring容器能够自动管理对象的依赖关系，使得应用程序代码更加简洁。
+
+>   解题思路：
+>
+>   ​	主要思路就是聊 ioc 是什么，再说说 di 的形式，最后说一下好处即可
+
+
+
+Spring 的 IOC（Inversion of Control，控制反转）是 Spring 框架的核心特性之一，它通过将对象的创建和依赖关系管理交给框架来实现解耦。以下是关于 Spring IOC 的详细解释：
+
+**什么是控制反转（IoC）**
+
+传统应用程序中，对象自己负责管理和创建其依赖的对象。而在使用控制反转后，对象不再直接创建依赖对象，而是由外部容器（如 Spring 容器）负责创建并注入这些依赖。
+
+**IOC 容器**
+
+Spring IoC容器负责管理应用程序中对象的生命周期和依赖关系。它的主要职责包括：
+
+-   **对象的创建**：根据配置文件或注解创建对象。
+-   **依赖注入**：将对象的依赖注入到相应的对象中。
+-   **对象的销毁**：在适当的时候销毁对象，释放资源
+
+Spring 提供了两个主要的 IOC 容器：
+
+-   BeanFactory：最基本的容器，提供了基本的依赖注入功能。
+-   ApplicationContext：继承自 BeanFactory，增加了更多企业级功能，如国际化、事件传播、资源加载等。
+
+Spring IoC容器可以通过多种方式进行配置：
+
+-   **XML配置**：通过XML文件定义Bean及其依赖关系。
+
+```xml
+<beans>
+    <bean id="repository" class="com.example.Repository"/>
+    <bean id="service" class="com.example.Service">
+        <constructor-arg ref="repository"/>
+    </bean>
+</beans>
+```
+
+-   **Java配置**：通过Java类和注解定义Bean及其依赖关系
+
+```java
+@Configuration
+public class AppConfig {
+    @Bean
+    public Repository repository() {
+        return new Repository();
+    }
+
+    @Bean
+    public Service service() {
+        return new Service(repository());
+    }
+}
+```
+
+-   **注解配置**：通过注解（如@Component,@Autowired）自动扫描和注入Bean
+
+```java
+@Component
+public class Repository {
+}
+
+@Component // 标识组件
+public class Service {
+    @Autowired // 依赖注入
+    private Repository repository;
+}
+```
+
+**依赖注入（DI）**
+
+**依赖注入是实现控制反转的一种具体方式**，Spring 支持以下几种注入方式：
+
+-   构造器注入：通过构造函数传递依赖。
+-   Setter方法注入（Setter Injection）：通过 Setter 方法传递依赖。
+-   字段注入：直接在字段上使用 @Autowired 注解注入依赖。
+
+**构造器注入**：通过构造函数传递依赖。
+
+```java
+public class Service {
+    private final Repository repository;
+
+    public Service(Repository repository) {
+        this.repository = repository;
+    }
+}
+```
+
+**Setter方法注入**（Setter Injection）：通过 Setter 方法传递依赖。
+
+```java
+public class Service {
+    private Repository repository;
+
+    public void setRepository(Repository repository) {
+        this.repository = repository;
+    }
+}
+```
+
+字段注入：直接在字段上使用 @Autowired 注解注入依赖。
+
+```java
+public class Service {
+    @Autowired
+    private Repository repository;
+}
+```
+
+**生命周期管理**
+
+Spring 容器不仅负责创建和注入依赖，还管理对象的整个生命周期。可以使用 `@PostConstruct` 和`@PreDestroy `注解定义初始化和销毁方法。
+
+```java
+@Component
+public class MyService {
+    @PostConstruct
+    public void init() {
+        // 初始化逻辑
+    }
+
+    @PreDestroy
+    public void cleanup() {
+        // 清理逻辑
+    }
+}
+```
+
+
+
+## SpringIOC容器初始化过程？
+
+Spring 的 IOC 容器初始化过程是一个复杂但有序的过程，涉及到多个步骤和内部机制。
+
+
+
+>   SpringIOC的加载是从new一个`ApplicationContext` 开始的，而`ApplicationContext` 是一个接口，所以我们常常new的是它的实现类。
+>
+>   IOC容器的加载过程，也可以看作是bean的创建过程，而bean的创建过程有四种形态：概念态、定义态、纯静态、成熟态
+>
+>   概念态：IOC还未加载，此时还没new Spring的上下文容器。只是通过\<bean/> 、@Bean、@Lazy...等等定义了一个个bean
+>
+>   定义态：当我们new Spring的上下文容器时，概念态的bean会注册成为定义态的bean，即BeanDefinition，它存储了bean的元信息。
+>
+>   纯静态：所有的bean都注册未BeanDefinition之后，就会通过反射机制创建bean，早期暴力的bean，此时还没进行属性赋值等操作。
+>
+>   成熟态：此时的bean可以在应用中直接使用
+
+以下是 Spring IOC 容器（特别是 ApplicationContext）的初始化流程：
+
+1.  **创建容器实例**
+
+首先，通过调用 ApplicationContext 的构造函数或静态方法来创建**容器实例**。
+
+常用的实现类包括 `AnnotationConfigApplicationContext `和 `ClassPathXmlApplicationContext`。
+
+```java
+// 使用注解配置
+AnnotationConfigApplicationContext context = 
+    			new AnnotationConfigApplicationContext(MyConfig.class);
+
+// 使用 XML 配置
+ClassPathXmlApplicationContext context = 
+    			new ClassPathXmlApplicationContext("applicationContext.xml");
+```
+
+2.  **加载配置元数据**
+
+容器会根据提供的配置文件或注解加载配置元数据。这一步骤包括解析 XML 文件、注解配置类等。
+
+-   XML 配置：解析 XML 文件中的 `<bean> `定义。
+-   注解配置：扫描带有 `@Configuration`, `@Component`, `@Service`, `@Repository` 等注解的类，并注册为 Bean。
+
+3.  **注册 BeanDefinition**
+
+在解析配置后，Spring 会将每个 Bean 的定义信息（如类名、依赖关系、作用域等）注册到 `BeanDefinitionRegistry` 中。这是容器内部的一个注册表，用于存储所有 Bean 的定义信息。
+
+4.  **准备 BeanFactoryPostProcessors**（bean工厂后置处理器）
+
+Spring 容器会提前准备并执行 `BeanFactoryPostProcessor`。这类处理器可以在 Bean 实例化之前修改 Bean 定义，例如 PropertyPlaceholderConfigurer 可以**解析占位符**。
+
+```java
+@Configuration
+public class MyConfig {
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+}
+```
+
+6.  **实例化单例 Beans**
+
+对于所有被标记为单例的 Bean，Spring 会在容器启动时预先实例化它们。这个过程包括：
+
+-   **实例化**：根据 BeanDefinition 创建 Bean 实例。
+-   **属性填充**：通过依赖注入（DI）设置 Bean 的属性值。
+-   **Aware 接口回调**：如果 Bean 实现了某些 Aware 接口（如 BeanFactoryAware, ApplicationContextAware），则在此阶段调用相应的回调方法。
+
+6.  **初始化 Bean**
+
+在 Bean 实例化和属性填充完成后，Spring 会调用 Bean 的初始化方法：
+
+-   自定义初始化方法：通过 `@PostConstruct` 注解或 **init-method** 属性指定的方法。
+-   InitializingBean 接口：如果 Bean 实现了 `InitializingBean` 接口，则调用 afterPro**pertiesSet()** 方法。
+
+```java
+@Component
+public class MyService implements InitializingBean {
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        // 初始化逻辑
+    }
+
+    @PostConstruct
+    public void init() {
+        // 初始化逻辑
+    }
+}
+```
+
+7.  **应用 BeanPostProcessors**
+
+Spring 容器会调用所有已注册的 BeanPostProcessor。这些处理器可以对 Bean 进行进一步的处理，例如 AOP 代理的创建。
+
+```java
+@Component
+public class MyBeanPostProcessor implements BeanPostProcessor {
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        // 在初始化前处理
+        return bean;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        // 在初始化后处理
+        return bean;
+    }
+}
+```
+
+8.  **完成容器初始化**
+
+当所有单例 Bean 都被成功初始化后，Spring 容器的初始化过程结束。此时，应用程序可以开始使用容器中的 Bean。
+
+9.  **销毁 Bean**
+
+当容器关闭时（例如应用程序关闭），Spring 会调用 Bean 的销毁方法：
+
+-   自定义销毁方法：通过 `@PreDestroy` 注解或 **destroy-method** 属性指定的方法。
+-   DisposableBean 接口：如果 Bean 实现了 `DisposableBean` 接口，则调用 **destroy()** 方法。
+
+```java
+@Component
+public class MyService implements DisposableBean {
+    @Override
+    public void destroy() throws Exception {
+        // 清理逻辑
+    }
+
+    @PreDestroy
+    public void cleanup() {
+        // 清理逻辑
+    }
+}
+```
+
+
+
+## SpringIOC有什么好处？
+
+Spring 的 IOC 容器通过提供依赖注入、生命周期管理、模块化开发等功能，极大地简化了应用程序的开发和维护工作，提高了代码的灵活性、可测试性和复用性。它不仅适用于小型项目，也能很好地支持大型企业级应用的需求
+
+-   **解耦合**
+    -   依赖注入：通过依赖注入（DI），对象不再需要自己创建或查找依赖的对象，而是由 Spring 容器负责创建和注入。这减少了类之间的直接依赖，降低了耦合度。
+    -   接口编程：IOC 鼓励使用接口编程，使得代码更加灵活和可维护。
+-   **模块化和复用性**
+    -   组件化开发：通过 @Component, @Service, @Repository 等注解，可以将应用程序的不同部分模块化，便于管理和复用。
+    -   AOP 支持：Spring 的 AOP（面向切面编程）功能允许开发者将横切关注点（如日志记录、事务管理等）从业务逻辑中分离出来，提高了代码的复用性和清晰度。
+-   **生命周期管理**
+    -   自动管理：Spring 容器不仅负责创建和注入依赖，还管理对象的整个生命周期。可以通过 @PostConstruct 和 @PreDestroy 注解定义初始化和销毁方法。
+    -   作用域支持：Spring 支持多种作用域（如单例、原型、会话等），可以根据需求选择合适的 Bean 作用域
+-   **简化配置**
+    -   声明式配置：通过 XML 文件、注解或 Java 配置类，Spring 提供了多种方式来声明和管理 Bean，简化了配置过程。
+    -   自动装配：Spring 可以根据类型或名称自动装配依赖，减少了手动配置的工作量。
+-   **企业级特性支持**
+    -   事务管理：Spring 提供了强大的声明式事务管理功能，简化了事务处理。
+    -   国际化支持：通过 MessageSource 接口，Spring 支持多语言和国际化。
+    -   事件驱动架构：Spring 提供了事件发布和监听机制，支持事件驱动的应用程序设计。
+-   **性能优化**
+    -   懒加载：对于非单例 Bean，Spring 支持懒加载（lazy initialization），只有在真正需要时才实例化 Bean，节省资源。
+    -   缓存支持：Spring 提供了缓存抽象层，可以方便地集成各种缓存解决方案，提升性能
+-   **提高可测试性**
+    -   Mock 对象：依赖注入使得在单元测试中可以轻松地用 Mock 或 Stub 替换实际的依赖对象，从而更容易进行隔离测试。
+    -   自动化配置：Spring 提供了多种方式来配置 Bean，如 XML、注解和 Java 配置类，这些配置可以在测试环境中灵活调整。
+
+
+
+## Spring中的DI（依赖注入）是什么？
+
+依赖注入（Dependency Injection，简称DI）是Spring框架实现控制反转（IoC）的主要手段。
+
+依赖注入是 Spring 框架的核心特性之一，它是一种设计模式，通过将对象的依赖关系由外部容器（如 Spring 容器）管理并注入到对象中，而不是由对象自己创建或查找这些依赖。这种方式可以显著降低代码的耦合度，提高代码的可测试性和灵活性。
+
+**DI 的核心思想**
+
+-   **控制反转（IoC）**：传统应用程序中，对象自己负责管理和创建其依赖的对象。而在使用依赖注入后，对象不再直接创建依赖对象，而是由外部容器负责创建并注入这些依赖。
+-   **解耦合**：依赖注入使得类之间的依赖关系更加松散，减少了类之间的直接耦合，提高了代码的可维护性和复用性。
+
+**DI 的实现方式**
+
+Spring框架主要提供了三种依赖注入的方式：
+
+**依赖注入是实现控制反转的一种具体方式**，Spring 支持以下几种注入方式：
+
+-   构造器注入：通过构造函数传递依赖。
+-   Setter方法注入（Setter Injection）：通过 Setter 方法传递依赖。
+-   字段注入：直接在字段上使用 @Autowired 注解注入依赖。
+
+**构造器注入**：通过构造函数传递依赖。
+
+```java
+public class Service {
+    private final Repository repository;
+
+    public Service(Repository repository) {
+        this.repository = repository;
+    }
+}
+```
+
+**Setter方法注入**（Setter Injection）：通过 Setter 方法传递依赖。
+
+```java
+public class Service {
+    private Repository repository;
+
+    public void setRepository(Repository repository) {
+        this.repository = repository;
+    }
+}
+```
+
+**字段注入**：直接在字段上使用 @Autowired 注解注入依赖。
+
+```java
+public class Service {
+    @Autowired
+    private Repository repository;
+}
+```
+
+
+
+## SpringIOC有哪些扩展点，在什么时候调用呢？
+
+Spring IOC 容器提供了丰富的扩展点，允许开发者在容器初始化、Bean 创建和管理过程中插入自定义逻辑。以下是 Spring IOC 的主要扩展点及其调用时机：
+
+**BeanFactoryPostProcessor**
+
+-   **描述**：用于修改 Bean 定义（`BeanDefinition`）的扩展点。
+-   调用时机：
+    -   在所有 Bean 实例化之前调用。
+    -   允许开发者动态修改 Bean 的属性或配置。
+-   典型用途：
+    -   修改 Bean 的属性值。
+    -   动态注册新的 Bean 定义。
+
+```java
+@Component
+public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        System.out.println("1. 调用 BeanFactoryPostProcessor 修改 Bean 定义");
+    }
+}
+```
+
+
+
+ **BeanPostProcessor**
+
+-   **描述**：用于在 Bean 初始化前后进行处理的扩展点。
+-   调用时机：
+    -   `postProcessBeforeInitialization(Object bean, String beanName)`：在 Bean 初始化之前调用。
+    -   `postProcessAfterInitialization(Object bean, String beanName)`：在 Bean 初始化之后调用。
+-   典型用途：
+    -   在 Bean 初始化前后执行额外逻辑。
+    -   动态代理 Bean。
+
+```java 
+@Component
+public class MyBeanPostProcessor implements BeanPostProcessor {
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        System.out.println("2. 调用 BeanPostProcessor 在初始化之前");
+        return bean;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        System.out.println("3. 调用 BeanPostProcessor 在初始化之后");
+        return bean;
+    }
+}
+```
+
+**ApplicationContextInitializer**
+
+-   **描述**：用于在 `ApplicationContext` 初始化之前执行逻辑的扩展点。
+-   调用时机：
+    -   在 `ApplicationContext` 加载之前调用。
+-   典型用途：
+    -   修改环境变量。
+    -   动态加载配置文件
+
+```java
+public class MyApplicationContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+    @Override
+    public void initialize(ConfigurableApplicationContext applicationContext) {
+        System.out.println("4. 调用 ApplicationContextInitializer 在上下文初始化之前");
+    }
+}
+```
+
+**SmartLifecycle**
+
+-   **描述**：用于在应用启动和关闭时执行逻辑的扩展点。
+-   调用时机：
+    -   `start()`：在容器启动后调用。
+    -   `stop()`：在容器关闭前调用。
+-   典型用途：
+    -   启动后台任务。
+    -   关闭资源。
+
+```java
+@Component
+public class MySmartLifecycle implements SmartLifecycle {
+    private boolean running = false;
+
+    @Override
+    public void start() {
+        System.out.println("5. 调用 SmartLifecycle 在容器启动后");
+        running = true;
+    }
+
+    @Override
+    public void stop() {
+        System.out.println("6. 调用 SmartLifecycle 在容器关闭前");
+        running = false;
+    }
+
+    @Override
+    public boolean isRunning() {
+        return running;
+    }
+}
+```
+
+ **ApplicationListener**
+
+-   **描述**：用于监听 Spring 应用事件的扩展点。
+-   调用时机：
+    -   当特定事件发生时调用。
+-   典型用途：
+    -   监听应用启动、关闭等事件。
+    -   执行与事件相关的逻辑。
+
+```java
+@Component
+public class MyApplicationListener implements ApplicationListener<ApplicationReadyEvent> {
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        System.out.println("7. 调用 ApplicationListener 在应用启动完成后");
+    }
+}
+```
+
+**FactoryBean**
+
+-   **描述**：用于自定义 Bean 创建逻辑的扩展点。
+-   调用时机：
+    -   在 Bean 实例化时调用。
+-   典型用途：
+    -   创建复杂的对象。
+    -   动态生成 Bean。
+
+```java
+@Component
+public class MyFactoryBean implements FactoryBean<MyObject> {
+    @Override
+    public MyObject getObject() throws Exception {
+        System.out.println("8. 调用 FactoryBean 创建自定义对象");
+        return new MyObject();
+    }
+
+    @Override
+    public Class<?> getObjectType() {
+        return MyObject.class;
+    }
+
+    @Override
+    public boolean isSingleton() {
+        return true;
+    }
+}
+```
+
+
+
+ **BeanDefinitionRegistryPostProcessor**
+
+-   **描述**：类似于 `BeanFactoryPostProcessor`，是其子类，但可以访问 `BeanDefinitionRegistry` 接口。
+-   调用时机：
+    -   在所有 Bean 定义加载之后，但在 Bean 实例化之前调用。
+-   典型用途：
+    -   动态注册新的 Bean 定义。
+    -   修改已有的 Bean 定义
+
+```java
+@Component
+public class MyBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
+    @Override
+    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+        System.out.println("9.  调用 BeanDefinitionRegistryPostProcessor 修改或注册 Bean 定义");
+    }
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        // 可选实现
+    }
+}
+```
+
+**ImportSelector 和 ImportBeanDefinitionRegistrar**
+
+-   描述：
+    -   `ImportSelector`：用于动态选择需要导入的配置类。
+    -   `ImportBeanDefinitionRegistrar`：用于动态注册 Bean 定义。
+-   调用时机：
+    -   在解析 `@Import` 注解时调用。
+-   典型用途：
+    -   动态导入配置类。
+    -   动态注册 Bean。
+
+```java
+public class MyImportSelector implements ImportSelector {
+    @Override
+    public String[] selectImports(AnnotationMetadata importingClassMetadata) {
+        System.out.println("10. 调用 ImportSelector 动态选择配置类");
+        return new String[]{"com.example.MyConfig"};
+    }
+}
+```
+
+
+
+
+
+| 扩展点名称                          | 调用时机                    | 典型用途                 |
+| :---------------------------------- | :-------------------------- | :----------------------- |
+| BeanFactoryPostProcessor            | Bean 实例化之前             | 修改 Bean 定义           |
+| BeanPostProcessor                   | Bean 初始化前后             | 自定义初始化逻辑         |
+| ApplicationContextInitializer       | ApplicationContext 加载之前 | 修改上下文配置           |
+| SmartLifecycle                      | 容器启动/关闭时             | 启动/关闭后台任务        |
+| ApplicationListener                 | 特定事件发生时              | 监听应用事件             |
+| FactoryBean                         | Bean 实例化时               | 自定义对象创建逻辑       |
+| BeanDefinitionRegistryPostProcessor | Bean 定义加载之后           | 动态注册或修改 Bean 定义 |
+| ImportSelector                      | 解析 @Import 注解时         | 动态选择配置类           |
+| ImportBeanDefinitionRegistrar       | 解析 @Import 注解时         | 动态注册 Bean            |
+
+
+
 ## 什么是AOP？
 
 
@@ -1929,151 +2165,6 @@ public class MyService {
 
 
 ## Spring AOP和AspectJ有什么区别？
-
-
-
-## Spring Bean的生命周期？
-
-
-
-## **说说Spring常用的注解**
-
-
-
-## Spring都用到哪些设计模式？
-
-Spring 框架广泛使用了多种设计模式来实现其功能和特性，这些设计模式不仅提高了代码的可维护性和扩展性，还简化了开发人员
-
-单例模式——Bean实例
-
-简单工厂——BeanFactory、ApplicationContext
-
-工厂方法——FactoryBean
-
-代理模式——AOP底层
-
-责任链模式——AOP的方法调用
-
-模板方法模式——Spring几乎所有的外层扩展都采用了这种模式，如JdbcTemplate
-
-适配器模式——Spring MVC的HanderApatper
-
-装饰器模式——BeanWrapper
-
-观察者模式——Spring的事件机制
-
-策略模式——excludeFilters、includeFilters
-
-依赖注入模式——（这不属于经典23种设计模式）
-
-
-
-**单例模式（Singleton Pattern）**
-
--   描述：确保一个类只有一个实例，并提供一个全局访问点。
--   应用：Spring 容器中的 Bean 默认是单例的。每个 Bean 在整个应用程序中只有一个实例，除非显式配置为其他作用域（如原型、会话等）。
-
-**简单工厂（Simple Factory）**
-
-一般情况下，工厂模式分为三种更加细分的类型：简单工厂、工厂方法和抽象工厂。
-
-在 GoF 的《设计模式》一书中，**它将简单工厂模式看作是工厂方法模式的一种特例**，所以工厂模式只被分成了工厂方法和抽象工厂两类。
-
-简单工厂又叫作**静态工厂方法模式**（Static Factory Method Pattern）
-
--   应用：
-    -   BeanFactory 和 ApplicationContext 是 Spring 的核心接口，用于创建和管理 Bean 实例。
-
-```java
-beanFactory.getBean("userService");
-```
-
-**工厂方法（Factory Method）**
-
--   应用：FactoryBean 
-
-FactoryBean 接口允许自定义 Bean 的创建逻辑。FactoryBean提供了三个方法，其中getObject就是一个典型的工厂方法，FactoryBean定制bean的创建过程，我们将FactoryBean（一种特殊的bean）注入容器，由容器统一管理工厂对象，再有工厂对象创建具体的bean
-
-```java
-public interface FactoryBean<T> {
-
-	@Nullable
-	T getObject() throws Exception;
-
-	Class<?> getObjectType();
-
-	default boolean isSingleton() {
-		return true;
-	}
-}
-```
-
-**代理模式（Proxy Pattern）**
-
--   描述：通过代理对象控制对目标对象的访问。
--   应用：
-    -   **AOP**（面向切面编程） 使用代理模式来拦截方法调用并添加额外的行为（如事务管理、日志记录等）。
-    -   CGLIB 和 JDK 动态代理 是 Spring AOP 的两种实现方式。
-
-```java
-@Aspect
-public class LoggingAspect {
-    @Before("execution(* com.example.service.*.*(..))")
-    public void logBeforeMethod(JoinPoint joinPoint) {
-        System.out.println("Executing method: " + joinPoint.getSignature().getName());
-    }
-}
-```
-
-**责任链模式（Chain of Responsibility Pattern）**
-
--   描述：多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合。
--   应用：
-    -   **Interceptor（拦截器）** 和 Filter 链在 Spring MVC 和 Web 应用中用于处理请求前后的各种操作（如权限验证、日志记录等）。
-
-**模板方法模式（Template Method Pattern）**
-
--   描述：定义一个操作中的算法骨架，而将一些步骤延迟到子类中实现。
--   应用：
-    -   **JdbcTemplate、JmsTemplate** 等模板类封装了底层资源的访问细节，提供了统一的操作接口，开发者只需实现具体的业务逻辑。
-
->   补充：Spring 提供了很多 Template 类，比如，RedisTemplate、RestTemplate。尽管都叫作 xxxTemplate，但它们**并非基于模板模式来实现的**，而是**基于回调**来实现的，确切地说应该是同步回调。而**同步回调从应用场景上很像模板模式**，所以，在命名上，这些类使用 Template（模板）这个单词作为后缀
-
-**适配器模式（Adapter Pattern）**
-
--   描述：将一个类的接口转换成客户希望的另一个接口。
--   应用：
-    -   **ViewResolver** 和 **HandlerAdapter** 是 Spring MVC 中的适配器模式应用，用于处理不同类型的视图和请求处理器。
-
-**装饰器模式（Decorator Pattern）**
-
--   描述：动态地给一个对象添加一些额外的职责。
--   应用：
-    -   BeanPostProcessor 和 BeanFactoryPostProcessor 允许在 Bean 创建前后对其进行装饰或修改。
-    -   BeanWrapper
-    -   AOP 切面 可以看作是对目标对象的装饰，添加额外的行为而不改变其原有结构
-
-**观察者模式（Observer Pattern）**——Spring的事件机制
-
--   描述：定义了一种一对多的依赖关系，当一个对象状态改变时，所有依赖于它的对象都会得到通知并自动更新。
--   应用：
-    -   事件驱动模型：Spring 提供了 **ApplicationEvent** 和 **ApplicationListener** 来实现事件发布和监听机制。
-
-**策略模式（Strategy Pattern）**——excludeFilters、includeFilters
-
--   描述：定义一系列算法，把它们一个个封装起来，并且使它们可以互相替换。
--   应用：
-    -   **TransactionManager** 接口定义了事务管理的策略，不同的实现类（如 DataSourceTransactionManager、JtaTransactionManager）提供了不同的事务管理方式。
-    -   **Spring中的Resource接口**：在Spring框架中，`org.springframework.core.io.Resource`接口用于抽象不同类型的资源，例如文件系统资源、类路径资源、URL资源等。Resource接口就像策略模式中的策略接口，而不同类型的资源类（如`ClassPathResource`、`FileSystemResource`等）就像具体策略。客户端可以根据需要选择和使用不同的资源类。
-    -   **Spring中的AOP代理**：在Spring AOP中，代理类的创建使用了策略模式。`org.springframework.aop.framework.ProxyFactory`中的`AopProxy`接口定义了创建代理对象的策略接口，而`JdkDynamicAopProxy`和`CglibAopProxy`这两个类分别为基于JDK动态代理和CGLIB动态代理的具体策略。客户端可以根据需要选择使用哪种代理方式。
-    -   Spring MVC中的`HandlerMapping`接口：在Spring MVC框架中，`HandlerMapping`接口定义了映射请求到处理器的策略接口。Spring MVC提供了多种`HandlerMapping`实现，例如`BeanNameUrlHandlerMapping`、`RequestMappingHandlerMapping`等，分别表示不同的映射策略。客户端可以通过配置选择使用哪种映射策略。
-
-**依赖注入（Dependency Injection, DI）**
-
--   描述：将依赖关系从代码中分离出来，通过外部配置或容器进行管理。
--   应用：
-    -   构造器注入、设值注入 和 接口注入 是 Spring 中常用的依赖注入方式。
-    -   通过依赖注入，Spring 容器可以自动管理和组装对象之间的依赖关系，减少了耦合度。
 
 
 
@@ -3823,6 +3914,145 @@ public class TestBService {
 ## **Spring引入外部配置文件的方式**
 
 
+
+## **说说Spring常用的注解**
+
+
+
+## Spring都用到哪些设计模式？
+
+Spring 框架广泛使用了多种设计模式来实现其功能和特性，这些设计模式不仅提高了代码的可维护性和扩展性，还简化了开发人员
+
+单例模式——Bean实例
+
+简单工厂——BeanFactory、ApplicationContext
+
+工厂方法——FactoryBean
+
+代理模式——AOP底层
+
+责任链模式——AOP的方法调用
+
+模板方法模式——Spring几乎所有的外层扩展都采用了这种模式，如JdbcTemplate
+
+适配器模式——Spring MVC的HanderApatper
+
+装饰器模式——BeanWrapper
+
+观察者模式——Spring的事件机制
+
+策略模式——excludeFilters、includeFilters
+
+依赖注入模式——（这不属于经典23种设计模式）
+
+
+
+**单例模式（Singleton Pattern）**
+
+-   描述：确保一个类只有一个实例，并提供一个全局访问点。
+-   应用：Spring 容器中的 Bean 默认是单例的。每个 Bean 在整个应用程序中只有一个实例，除非显式配置为其他作用域（如原型、会话等）。
+
+**简单工厂（Simple Factory）**
+
+一般情况下，工厂模式分为三种更加细分的类型：简单工厂、工厂方法和抽象工厂。
+
+在 GoF 的《设计模式》一书中，**它将简单工厂模式看作是工厂方法模式的一种特例**，所以工厂模式只被分成了工厂方法和抽象工厂两类。
+
+简单工厂又叫作**静态工厂方法模式**（Static Factory Method Pattern）
+
+-   应用：
+    -   BeanFactory 和 ApplicationContext 是 Spring 的核心接口，用于创建和管理 Bean 实例。
+
+```java
+beanFactory.getBean("userService");
+```
+
+**工厂方法（Factory Method）**
+
+-   应用：FactoryBean 
+
+FactoryBean 接口允许自定义 Bean 的创建逻辑。FactoryBean提供了三个方法，其中getObject就是一个典型的工厂方法，FactoryBean定制bean的创建过程，我们将FactoryBean（一种特殊的bean）注入容器，由容器统一管理工厂对象，再有工厂对象创建具体的bean
+
+```java
+public interface FactoryBean<T> {
+
+	@Nullable
+	T getObject() throws Exception;
+
+	Class<?> getObjectType();
+
+	default boolean isSingleton() {
+		return true;
+	}
+}
+```
+
+**代理模式（Proxy Pattern）**
+
+-   描述：通过代理对象控制对目标对象的访问。
+-   应用：
+    -   **AOP**（面向切面编程） 使用代理模式来拦截方法调用并添加额外的行为（如事务管理、日志记录等）。
+    -   CGLIB 和 JDK 动态代理 是 Spring AOP 的两种实现方式。
+
+```java
+@Aspect
+public class LoggingAspect {
+    @Before("execution(* com.example.service.*.*(..))")
+    public void logBeforeMethod(JoinPoint joinPoint) {
+        System.out.println("Executing method: " + joinPoint.getSignature().getName());
+    }
+}
+```
+
+**责任链模式（Chain of Responsibility Pattern）**
+
+-   描述：多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合。
+-   应用：
+    -   **Interceptor（拦截器）** 和 Filter 链在 Spring MVC 和 Web 应用中用于处理请求前后的各种操作（如权限验证、日志记录等）。
+
+**模板方法模式（Template Method Pattern）**
+
+-   描述：定义一个操作中的算法骨架，而将一些步骤延迟到子类中实现。
+-   应用：
+    -   **JdbcTemplate、JmsTemplate** 等模板类封装了底层资源的访问细节，提供了统一的操作接口，开发者只需实现具体的业务逻辑。
+
+>   补充：Spring 提供了很多 Template 类，比如，RedisTemplate、RestTemplate。尽管都叫作 xxxTemplate，但它们**并非基于模板模式来实现的**，而是**基于回调**来实现的，确切地说应该是同步回调。而**同步回调从应用场景上很像模板模式**，所以，在命名上，这些类使用 Template（模板）这个单词作为后缀
+
+**适配器模式（Adapter Pattern）**
+
+-   描述：将一个类的接口转换成客户希望的另一个接口。
+-   应用：
+    -   **ViewResolver** 和 **HandlerAdapter** 是 Spring MVC 中的适配器模式应用，用于处理不同类型的视图和请求处理器。
+
+**装饰器模式（Decorator Pattern）**
+
+-   描述：动态地给一个对象添加一些额外的职责。
+-   应用：
+    -   BeanPostProcessor 和 BeanFactoryPostProcessor 允许在 Bean 创建前后对其进行装饰或修改。
+    -   BeanWrapper
+    -   AOP 切面 可以看作是对目标对象的装饰，添加额外的行为而不改变其原有结构
+
+**观察者模式（Observer Pattern）**——Spring的事件机制
+
+-   描述：定义了一种一对多的依赖关系，当一个对象状态改变时，所有依赖于它的对象都会得到通知并自动更新。
+-   应用：
+    -   事件驱动模型：Spring 提供了 **ApplicationEvent** 和 **ApplicationListener** 来实现事件发布和监听机制。
+
+**策略模式（Strategy Pattern）**——excludeFilters、includeFilters
+
+-   描述：定义一系列算法，把它们一个个封装起来，并且使它们可以互相替换。
+-   应用：
+    -   **TransactionManager** 接口定义了事务管理的策略，不同的实现类（如 DataSourceTransactionManager、JtaTransactionManager）提供了不同的事务管理方式。
+    -   **Spring中的Resource接口**：在Spring框架中，`org.springframework.core.io.Resource`接口用于抽象不同类型的资源，例如文件系统资源、类路径资源、URL资源等。Resource接口就像策略模式中的策略接口，而不同类型的资源类（如`ClassPathResource`、`FileSystemResource`等）就像具体策略。客户端可以根据需要选择和使用不同的资源类。
+    -   **Spring中的AOP代理**：在Spring AOP中，代理类的创建使用了策略模式。`org.springframework.aop.framework.ProxyFactory`中的`AopProxy`接口定义了创建代理对象的策略接口，而`JdkDynamicAopProxy`和`CglibAopProxy`这两个类分别为基于JDK动态代理和CGLIB动态代理的具体策略。客户端可以根据需要选择使用哪种代理方式。
+    -   Spring MVC中的`HandlerMapping`接口：在Spring MVC框架中，`HandlerMapping`接口定义了映射请求到处理器的策略接口。Spring MVC提供了多种`HandlerMapping`实现，例如`BeanNameUrlHandlerMapping`、`RequestMappingHandlerMapping`等，分别表示不同的映射策略。客户端可以通过配置选择使用哪种映射策略。
+
+**依赖注入（Dependency Injection, DI）**
+
+-   描述：将依赖关系从代码中分离出来，通过外部配置或容器进行管理。
+-   应用：
+    -   构造器注入、设值注入 和 接口注入 是 Spring 中常用的依赖注入方式。
+    -   通过依赖注入，Spring 容器可以自动管理和组装对象之间的依赖关系，减少了耦合度。
 
 
 
