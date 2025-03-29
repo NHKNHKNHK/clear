@@ -861,14 +861,14 @@ factory-method：指定用于创建Bean实例的静态工厂方法
 
 
 
-## Bean的作用范围和生命周期？:star:
+## Bean的作用范围（域）和生命周期？:star:
 
-Bean 的作用范围
+**Bean 的作用范围**
 
-Bean 的作用范围主要有以下几种：
+Bean 的作用范围（域）主要有以下几种：
 
--   singleton：默认的作用域，整个应用中只有一个实例。
--   prototype：每次请求都会创建一个新的实例。
+-   **singleton**：默认的作用域，整个应用中只有一个实例。
+-   **prototype**：每次请求都会创建一个新的实例。
 -   request：每个 HTTP 请求创建一个新的实例（仅限 Web 应用）。
 -   session：每个 HTTP 会话创建一个新的实例（仅限 Web 应用）。
 -   application：每个 ServletContext 创建一个新的实例（仅限 Web 应用）。
@@ -876,16 +876,25 @@ Bean 的作用范围主要有以下几种：
 
 常用的是 **singleton** 和 **prototype**。singleton 是单例的，当 Bean 是无状态的时候，singleton 是最好的选择。如果 Bean 涉及共享数据或有状态信息，singleton 可能不够安全，这时应该使用 prototype 来确保每个请求都有独立的实例。
 
-Bean 的生命周期
+**Bean 的生命周期**
 
-Bean 的生命周期从实例化开始，具体步骤如下：
+Bean 的生命周期是指bean从创建到销毁的过程，总体上分为4大步，**实例化、属性赋值、初始化、销毁**：
 
 -   1、**实例化**：Spring 容器根据配置创建 Bean 实例。
-
+    -   通过反射去推断构造器进行实例化
+    -   实例工厂、静态工厂
 -   2、**属性设置**：为 Bean 设置属性值，包括依赖注入。
+    -   解析自动装配（DI的体现）
+    -   循环依赖（Spring底层已经处理了）
 -   3、**初始化**：调用初始化方法（如果有），例如通过 **init-method** 属性指定的方法，或者实现 **InitializingBean** 接口的 **afterPropertiesSet** 方法。
+    -   调用xxxAware相关接口回调
+    -   调用初始化生命周期回调（三种）
+    -   如果bean实现了AOP，还会创建动态代理
 -   4、**可用**：Bean 已经完全初始化，可以被应用程序使用。
 -   5、**销毁**：当容器关闭时，调用销毁方法（如果有），例如通过 **destroy-method** 属性指定的方法，或者实现 **DisposableBean** 接口的 **destroy** 方法。
+    -   调用初始化生命周期回调
+
+
 
 ### Bean的作用范围（Scope）
 
@@ -894,7 +903,7 @@ Bean 的生命周期从实例化开始，具体步骤如下：
 -   在整个应用程序上下文中，只有一个Bean实例，所有对该Bean的引用都指向同一个实例
 -   这个实例在容器启动时创建，并且在整个上下文生命周期中一直存在。
 -   默认情况下，所有的Spring Beans都是单例的（**默认作用范围**）
--   适用于无状态的Bean。
+-   适用于**无状态**的Bean。
 
 ```xml
 <bean id="myBean" class="com.example.MyBean" scope="singleton"/>
@@ -949,9 +958,11 @@ Bean 的生命周期从实例化开始，具体步骤如下：
 
 ### Bean的生命周期（Lifecycle）
 
-Bean的生命周期是指从Bean的实例被创建开始，直到它被销毁为止的整个过程。Spring允许开发者通过不同的方法来控制这个过程
+Bean的生命周期是指从Bean实例从被创建开始，直到它被销毁为止的整个过程。
 
-![](D:/video/workspace/easy-interview/05-Spring/assets/bean-Lifecycle.png)
+Spring允许开发者通过不同的方法来控制这个过程
+
+![](assets/bean-Lifecycle.png)
 
 
 
@@ -961,26 +972,37 @@ Bean的生命周期是指从Bean的实例被创建开始，直到它被销毁为
 
 >   补充：Bean通过构造器、静态工厂方法或者实例工厂方法被创建出来。
 
-2、**依赖注入（属性设置（Property Population））**
+2、**属性设置|赋值（Property Population）**
 
--   在Bean实例化之后，Spring容器会设置Bean的属性值，即依赖注入。
--   如果Bean有@Autowrited、@Value等注解设置的属性，这一步将进行相关依赖的注入
+-   在Bean实例化之后，Spring容器会设置Bean的属性值
+-   会解析自动装配（DI的体现）。即 如果Bean有@Autowrited、@Value等注解设置的属性，这一步将进行相关依赖的注入
+-   会处理循环依赖问题
+
+3、**初始化（Initialization）**
 
 **调用Aware接口的回调方法**
 
 -   如果Bean实现了`BeanNameAware`、`BeanFactoryAware`、`ApplicationContextAware`等接口，Spring将回调这些接口的方法，把相关信息传递给Bean。
 
+这里列举一下这些Aware接口：
+
+BeanNameAware——invokeAwareMethods
+
+BeanClassLoaderAware——setBeanClassLoader
+
+BeanFactoryAware——setBeanFactory
+
 **BeanPostProcess 前置处理**
 
 -   在依赖注入和Aware回调之后，Spring容器会调用所有`BeanPostProcessor`的postProcessBeforeInitialization（前置处理方法），对Bean进行进一步的处理
 
-3、**初始化（Initialization）**
+Bean实例化并且其属性被设置后，可以调用**初始化方法**进行额外的设置。
 
--   Bean实例化并且其属性被设置后，可以调用初始化方法进行额外的设置。
--   初始化方法（如果有的话就调用）
+-   初始化方法，也叫**生命周期回调**（如果有的话就调用）
     -   可以通过实现`InitializingBean`接口的`afterPropertiesSet()`方法
     -   或者通过`<bean>`标签的`init-method`属性来指定。
     -   再者说通过调用`@PostConstruct`注解指定的方法
+-   如果bean实现了AOP，还会创建动态代理
 
 **BeanPostProcess 后置处理**
 
@@ -993,7 +1015,7 @@ Bean的生命周期是指从Bean的实例被创建开始，直到它被销毁为
 5、**销毁（Destruction）**
 
 -   当Spring容器关闭时
--   初始化方法（如果有的话就调用）
+-   初始化方法，也叫**生命周期回调**（如果有的话就调用）
     -   如果Bean实现了`DisposableBean`接口的`destroy()`方法，则会调用该方法来进行清理工作。
     -   或者通过`<bean>`标签的`destroy-method`属性指定了销毁方法，则会调用该方法来进行清理工作。
     -   再者说通过调用`@PreDestroy`注解指定的方法来进行清理工作。
