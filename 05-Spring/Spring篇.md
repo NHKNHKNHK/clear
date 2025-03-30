@@ -2168,17 +2168,317 @@ public class LogAspect {
 
 ## 什么是动态代理？
 
+**口语化**
+
+动态代理主要是在我们的程序运行时动态生成一种代理类的机制，让我们在不修改原始类的情况下，可以帮助原始类增加一些功能。通常有两种方式，一种是 jdk 的 proxy，一种是 cglib。动态代理在 spring 框架中的应用也非常常见。主要的 aop 机制就是通过动态代理实现。那么动态代理主要的优势就是解耦，减少代码重复，同时增强现有代码
+
+
+
+**动态代理的基本概念**
+
+-   **代理类（Proxy Class）**：一个代理类是一个实现了一个或多个接口的类，它可以在运行时动态生成。代理类的实例可以用来代替原始对象，并在调用方法时执行额外的逻辑。
+
+-   **调用处理器（Invocation Handler）**：调用处理器是一个实现了`InvocationHandler`接口的类，它定义了代理类的方法调用逻辑。每次代理对象的方法被调用时，调用处理器的invoke方法都会被执行。
+
+**动态代理的作用和优势**
+
+**1、 解耦业务逻辑和通用功能**：动态代理允许将通用功能（如日志记录、事务管理、安全性检查等）从业务逻辑中分离出来，从而提高代码的模块化和可维护性。
+
+**2、 灵活性**：动态代理在运行时生成代理类，不需要在编译时确定代理类，因此具有很大的灵活性。
+
+**3、 减少代码重复**：通过动态代理，可以将通用功能集中到一个地方，从而减少代码重复。
+
+**4、 增强现有代码**：动态代理允许在不修改现有代码的情况下增强其功能。
+
+**动态代理的应用场景**
+
+**1、AOP（面向切面编程）**：动态代理是实现 AOP 的核心技术之一，通过动态代理可以在方法执行前后添加横切关注点（如日志记录、事务管理等）。
+
+**2、 远程方法调用（RMI）**：动态代理可以用来实现客户端和服务器之间的远程方法调用。
+
+**3、 装饰器模式**：动态代理可以用来实现装饰器模式，在不修改原始类的情况下增强其功能。
+
+**4、 框架和中间件**：许多框架和中间件（如 Spring、Hibernate 等）都使用动态代理来实现其核心功能。
+
+动态代理通过在运行时生成代理类，提供了一种灵活且强大的方式来增强现有代码的功能，而无需修改原始代码
+
 
 
 ## 动态代理常用的两种方式？
+
+**口语化**
+
+动态常见的两种，一种是 jdk 动态代理，一种是 cglib 动态代理，两者的最主要区别是 jdk 动态代理主要是依赖于接口创建代理对象，cglib 是通过生成子类的方式，不需要接口
+
+两种经常会在一起配合，假设类没有接口的时候，就可以通过 cglib 来弥补不足。
+
+从性能上来看，因为 jdk 使用反射机制，他的性能，相比 cglib 稍有逊色。cglib 会更占用内存一些。
+
+两者都可以满足各种需求，按照有没有接口的原则进行选择
+
+
+
+**JDK 动态代理**
+
+JDK 动态代理是 Java 标准库提供的一种动态代理机制，它依赖于接口来创建代理对象。
+
+JDK 动态代理通过java.lang.reflect.Proxy类和java.lang.reflect.InvocationHandler接口实现。
+
+当你有一个接口并希望为该接口的实现类创建代理时，可以使用 JDK 动态代理。
+
+**CGLIB 动态代理**
+
+CGLIB（Code Generation Library）是一个强大的高性能代码生成库，它通过生成子类的方式来为目标类创建代理对象。
+
+CGLIB 动态代理不需要接口，可以直接代理类。
+
+当你没有接口，只有具体类时，可以使用 CGLIB 动态代理。
+
+
+
+**比较**
+
+**依赖性**：
+
+JDK 动态代理依赖于接口，如果没有接口就无法使用。
+
+CGLIB 动态代理可以直接代理类，不需要接口。
+
+**性能**：
+
+JDK 动态代理由于需要通过反射调用方法，性能可能会有所影响。
+
+CGLIB 动态代理通过生成字节码来创建代理类，性能通常比 JDK 动态代理更高，但生成字节码的过程会稍微多占用一些内存。
+
+**使用场景**：
+
+JDK 动态代理适用于有接口的情况，适用于大多数常见的业务场景。
+
+CGLIB 动态代理适用于没有接口的情况，适用于需要代理大量具体类的场景。
 
 
 
 ## JDK动态代理如何实现？
 
+>   JDK 动态代理主要依赖于java.lang.reflect.Proxy类和java.lang.reflect.InvocationHandler接口来实现。
+
+**口语化**
+
+jdk 的动态代理主要是依赖Proxy 和InvocationHandler 接口。jdk 动态代理要求类必须有接口。在进行实现的时候，首先要定义接口，比如MyService，这个接口就是我们的正常功能的实现。但是希望在不更改MyService 的情况下增加，那么我们需要定义一个实现InvocationHandler 接口的实现类，同时在方法实现上面增加额外的逻辑。最后通过 Proxy 的 newProxyInstance 将二者结合到一起。就实现了动态代理。
 
 
-## **Cglib的Enhancer实现动态代理？**
+
+**实现步骤**
+
+-   1）**定义接口**：定义需要代理的接口。
+
+-   2）**实现接口**：创建接口的实现类。
+
+-   3）**创建调用处理器**：实现InvocationHandler接口，并在invoke方法中定义代理逻辑。
+
+-   4）**创建代理对象**：通过Proxy.newProxyInstance方法创建代理对象。
+
+
+
+示例
+
+假设我们有一个简单的服务接口MyService和它的实现类MyServiceImpl，我们将通过 JDK 动态代理为MyService创建一个代理对象，并在方法调用前后添加日志。
+
+1）定义接口
+
+```java
+public interface MyService {
+    void performTask();
+}
+```
+
+2）实现接口
+
+创建一个被代理类，实现这个接口，并在其中定义实现方法
+
+```java
+public class MyServiceImpl implements MyService {
+    @Override
+    public void performTask() {
+        System.out.println("Performing task");
+    }
+}
+```
+
+3）创建调用处理器
+
+创建一个代理类，实现 `InvocationHandler` 接口，并在其中定义一个被代理类的对象作为属性
+
+```java
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+
+public class LoggingInvocationHandler implements InvocationHandler {
+    
+    private final Object target; // 组合被代理类
+
+    public LoggingInvocationHandler(Object target) {
+        this.target = target;
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        System.out.println("Logging before method execution: " + method.getName());
+        
+        Object result = method.invoke(target, args);
+        
+        System.out.println("Logging after method execution: " + method.getName());
+        return result;
+    }
+}
+```
+
+在代理类中，我们实现了 `InvocationHandler` 接口，并在其中定义了一个被代理类的对象作为属性（组合的方式）。在 `invoke` 方法中，我们可以对被代理对象的方法进行增强，并在方法调用前后输出日志。
+
+4）创建代理对象并使用
+
+在使用代理类时，创建被代理类的对象（目标对象）和代理类的对象，并使用 `Proxy.newProxyInstance` 方法生成代理对象
+
+```java
+import java.lang.reflect.Proxy;
+
+public class MainApp {
+    public static void main(String[] args) {
+        // 创建目标对象
+        MyService myService = new MyServiceImpl();
+
+        // 创建调用处理器（代理类）
+        LoggingInvocationHandler handler = new LoggingInvocationHandler(myService);
+
+        /**
+         * 参数一：loader 被代理类的类加载器
+         * 参数二：代理类需要实现的接口数组
+         * 参数三： invocationHandler
+         */
+        // 创建代理对象
+        MyService proxyInstance = (MyService) Proxy.newProxyInstance(
+                myService.getClass().getClassLoader(),
+                myService.getClass().getInterfaces(),
+                handler
+        );
+
+        // 调用代理对象的方法
+        proxyInstance.performTask();
+    }
+}
+```
+
+
+
+## Cglib的Enhancer类实现动态代理？
+
+>   CGLIB是一种强大的代码生成库，能够在运行时生成代理类。
+>
+>   与 JDK 动态代理不同的是，CGLIB 不需要接口，可以直接代理具体类。CGLIB 通过创建目标类的子类并覆盖其中的方法来实现代理。
+>
+>   基于 CGLIB 的动态代理需要使用 `net.sf.cglib.proxy.Enhancer` 类和 `net.sf.cglib.proxy.MethodInterceptor` 接口
+
+**口语化**
+
+cglib 代理相比 jdk 动态代理不同的就是不需要被代理的类实现接口。
+
+假设我们现在有一个MyService，其中有一个方法是performTask，我们只需要定义一个新的类，实现MethodInterceptor 接口，然后再里面的 intercept 方法实现需要增强的方法。最终通过 cglib 的Enhancer类，先设置父类，父类就是我们要增强的类，再设置 callback 也就是我们要增强的功能。最后使用 create 就生成了 cglib 的一个代理类
+
+
+
+**实现步骤**
+
+-   1）**引入CGLIB依赖**：确保在项目中添加 CGLIB 依赖。
+
+-   2）**创建目标类**：定义需要代理的具体类。
+
+-   **3、 创建方法拦截器**：实现MethodInterceptor接口，并在intercept方法中定义代理逻辑。
+
+-   **4、 创建代理对象**：通过Enhancer类创建代理对象
+
+
+
+示例
+
+假设我们有一个简单的服务类MyService，通过 CGLIB 动态代理为MyService创建一个代理对象，并在方法调用前后添加日志。
+
+1）引入CGLIB依赖
+
+```xml
+<dependency>
+    <groupId>cglib</groupId>
+    <artifactId>cglib</artifactId>
+    <version>3.3.0</version>
+</dependency>
+```
+
+2）创建目标类
+
+创建一个被代理类，定义需要被代理的方法
+
+```java
+public class MyService {
+    public void performTask() {
+        System.out.println("Performing task");
+    }
+}
+```
+
+3）创建方法拦截器
+
+创建一个方法拦截器类，实现 `MethodInterceptor` 接口
+
+```java
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+
+import java.lang.reflect.Method;
+
+public class LoggingMethodInterceptor implements MethodInterceptor {
+    @Override
+    public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+        System.out.println("Logging before method execution: " + method.getName());
+        
+        Object result = proxy.invokeSuper(obj, args);
+        
+        System.out.println("Logging after method execution: " + method.getName());
+        return result;
+    }
+}
+```
+
+在这个代理类中，我们实现了 `MethodInterceptor` 接口。在 `intercept` 方法中，我们可以对被代理对象的方法进行增强，并在方法调用前后输出日志
+
+4）创建代理对象并使用
+
+在使用代理类时，创建被代理类的对象和代理类的对象，并使用 `Enhancer.create` 方法生成代理对象
+
+```java
+import net.sf.cglib.proxy.Enhancer;
+
+public class MainApp {
+    public static void main(String[] args) {
+        // 创建 Enhancer 对象
+        Enhancer enhancer = new Enhancer();
+        
+        // 设置目标类为代理类的父类
+        enhancer.setSuperclass(MyService.class);
+        
+        // 设置方法拦截器
+        enhancer.setCallback(new LoggingMethodInterceptor());
+
+        // 创建代理对象
+        MyService proxyInstance = (MyService) enhancer.create();
+        
+        // 调用代理对象的方法
+        proxyInstance.performTask();
+    }
+}
+```
+
+**总结**
+
+​	在实际应用中，基于 CGLIB 的动态代理可以代理任意类，但是**生成的代理类比较重量级**。**如果被代理类是一个接口，建议使用基于 JDK 的动态代理来实现**，这也是spring的做法；如果被代理类没有实现接口或者需要代理的方法是 final 方法，建议使用基于 CGLIB 的动态代理来实现
 
 
 
