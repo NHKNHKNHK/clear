@@ -3853,7 +3853,8 @@ public class VolatileExample {
 -   **状态标志**：如布尔型标志，用于控制线程的启动和停止。
     -   例如：volatile static boolean flag = false;
 -   DCL双端锁的发布、**单例模式**：在双重检查锁定（Double-Checked Locking）的单例模式中，使用volatile修饰实例变量，确保实例变量的可见性和有序性。
--   开销较低的读写锁策略，例如：
+-   **AtomicReferenceFieldUpdater**，在高并发场景中，想要线程安全的更新某个对象中的某个字段，而又不像锁整个对象，此时可以使用 AtomicReferenceFieldUpdater + volatile修饰字段
+-   **开销较低的读写锁（读远多于写）**策略，例如：
 
 ```java
 /**
