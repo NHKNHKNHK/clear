@@ -86,7 +86,7 @@ Conventional Commits 是一种更为灵活且被广泛采纳的规范，它扩�
 
 例如，要将工作区中的 example.txt 文件添加到暂存区，可以执行以下命令：
 
-```
+```shell
 git add example.txt
 ```
 
@@ -96,7 +96,7 @@ git add example.txt
 
 例如，将暂存区中的更改提交到本地版本库，并添加提交说明：
 
-```
+```shell
 git commit -m "feat: 新增example.txt"
 ```
 
@@ -106,7 +106,7 @@ git commit -m "feat: 新增example.txt"
 
 例如，将本地的 master 分支推送到远程仓库的 master 分支：
 
-```
+```shell
 git push origin master
 ```
 
@@ -114,7 +114,7 @@ git push origin master
 
 使用 git pull 或 git fetch 命令从远程仓库获取更新。
 
-```
+```shell
 git pull origin master
 
 # 或者
@@ -122,3 +122,156 @@ git fetch origin branch-name
 git merge origin/branch-name
 ```
 
+
+
+## git常用命令
+
+**查看分支**
+
+```shell
+# 查看本地分支
+git branch
+# 查看远程分支
+git branch -r
+# 查看所有分支（包括本地和远程） 
+git branch -a
+```
+
+**拉取最新的远程分支信息**
+
+```shell
+git fetch
+```
+
+**切换新分支**，避免直接在 main 或 master 分支上进行开发
+
+例如，切换到远程 vue3 分支（创建并切换到跟踪远程 vue3 分支的本地分支）
+
+```shell
+git checkout -b vue3 origin/vue3
+```
+
+-   其中：
+    -   -b 选项用于创建一个新的本地分支。
+    -   vue3 是新创建的本地分支名称。
+    -   origin/vue3 是远程仓库中的 vue3 分支
+
+**切换分支**
+
+```shell
+git checkout vue3
+```
+
+**删除本地分支** 
+
+>   ！！！注意，删除分支前，需要先切换到其他分支
+
+```shell
+# 删除本地分支
+git branch -d test-branch
+# 强制删除本地分支
+git branch -D test-branch
+# 删除远程分支
+git push <远程仓库名> --delete <远程分支名>
+git push origin --delete remote-test-branch
+```
+
+
+
+## 本地新建的分支关联一个远程分支
+
+### 情况一：新建本地分支时同时关联远程分支
+
+如果你在创建本地分支时就想关联到远程分支，可以使用 git checkout -b 命令结合 --track 选项（在较新版本的 Git 中，-b 命令默认会尝试跟踪远程同名分支）。
+
+假设你要创建一个名为 my-vue3 的本地分支并关联到远程仓库 origin 的 origin/vue3 分支，可使用如下命令：
+
+```shell
+git checkout -b my-vue3 origin/vue3
+```
+
+此命令会创建一个新的本地分支 my-vue3，并且将其设置为跟踪远程仓库 origin 的 origin/vue3 分支。
+
+### 情况二：已存在的本地分支关联远程分支
+
+若本地分支已经创建好了，你可以使用 git branch --set-upstream-to 命令来关联远程分支。
+
+例如，你已经有了一个本地分支 my-vue3，现在要将它关联到远程仓库 origin 的 origin/vue3 分支，可执行以下命令：
+
+```shell
+# 切换到 my-vue3 分支
+git checkout my-vue3
+# 将 my-vue3 分支关联到远程的 vue3 分支
+git branch --set-upstream-to=origin/vue3 my-vue3
+
+# 验证关联
+git branch -vv
+该命令会显示本地分支和对应的远程跟踪分支信息。如果关联成功，my-vue3 分支后面会显示关联的远程分支 origin/vue3 以及最后一次同步的提交信息。
+```
+
+执行该命令后，本地的 my-vue3 分支就会与远程仓库 origin 的 origin/vue3 分支建立关联。之后，你使用 git pull 和 git push 命令时，Git 就会知道与哪个远程分支进行交互。
+
+>   如果执行上述命令后仍然无法关联，你可以尝试先拉取远程分支的最新信息，再进行关联操作
+>   git fetch origin
+>   git branch --set-upstream-to=origin/vue3 my-vue3
+
+### 情况三：推送本地分支到远程并关联
+
+如果你本地新建的分支在远程还不存在，你可以使用 git push 命令将本地分支推送到远程并建立关联。
+
+例如，你有一个本地分支 my-vue3，远程仓库中没有该分支，使用以下命令推送并关联：
+
+```shell
+# 提前存在的一个本地分支（如果不存在则执行命令，创建一个本地分支my-vue3，关联远程分支origin/master）
+git checkout -b my-vue3 master
+
+
+# 推送 my-vue3 分支到远程仓库
+git push -u origin my-vue3
+```
+
+这里的 -u 选项等同于 --set-upstream，它会在推送本地分支到远程的同时，将本地分支与远程分支进行关联。之后，你就可以直接使用 git pull 和 git push 命令，而无需每次都指定远程分支名。
+
+
+
+## git pull与git fetch的区别
+
+git pull 和 git fetch 都是用于从远程仓库获取最新代码的 Git 命令，但它们在功能和使用场景上存在明显的区别
+
+**功能差异**
+
+-   git fetch：该命令的作用是从远程仓库下载所有分支的更新信息，这些更新信息包含了新的提交记录、分支信息等。
+    -   不过，它仅仅是将这些信息下载到本地的版本库，并不会自动将这些更新合并到当前的本地分支。
+    -   也就是说，执行 git fetch 后，你可以查看远程仓库有哪些新的提交，但本地的工作目录和当前分支的状态不会发生改变。
+-   git pull：git pull 实际上是 git fetch 和 git merge 这两个命令的组合。它首先会像 git fetch 一样从远程仓库下载最新的更新信息，然后自动将这些更新合并到当前的本地分支。这意味着执行 git pull 后，本地的工作目录和当前分支会直接更新到与远程分支同步的状态。
+
+**使用场景差异**
+
+-   git fetch：当你想要查看远程仓库有哪些新的提交，但又不想立刻将这些更新合并到本地分支时，适合使用 git fetch。
+    -   例如，你在进行一项重要的开发任务，不想因为合并远程更新而引入潜在的冲突，那么可以先使用 git fetch 查看远程的更新情况，在合适的时候再手动进行合并操作。
+-   git pull：如果你希望本地分支能够快速地与远程分支保持同步，并且确定合并操作不会带来冲突或者你有能力处理可能出现的冲突，那么使用 git pull 会更加方便快捷。
+    -   比如，在日常的开发中，你经常需要获取团队成员最新的提交，就可以直接使用 git pull 命令。
+
+**示例**
+
+使用 git fetch
+
+```shell
+# 从远程仓库获取最新更新信息
+git fetch origin
+# 查看本地分支和远程分支的差异
+git log master..origin/master
+# 手动将远程分支的更新合并到本地分支
+git merge origin/master
+```
+
+使用 git pull
+
+```shell
+# 从远程仓库获取最新更新并合并到当前分支
+git pull origin master
+```
+
+**总结**
+
+git fetch 侧重于获取远程仓库的更新信息，让你有更多的控制权来决定何时以及如何合并这些更新；而 git pull 则更注重快速地将远程更新合并到本地分支，提供了一种更便捷的同步方式。在实际使用中，你可以根据具体的需求和场景选择合适的命令。
