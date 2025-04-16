@@ -5884,11 +5884,13 @@ synchronized关键字的实现是基于监视器锁（Monitor）。监视器锁�
 
 
 
-**基本概念**
+**基本概念**（或者说它能提供的基本能力）
 
 -   **异步执行**：`CompletableFuture` 支持异步任务的创建和执行。
 -   **链式调用**：可以通过链式调用的方式处理任务结果，避免了回调地狱（Callback Hell）。
 -   **组合任务**：可以将多个异步任务组合在一起，形成复杂的任务流。
+
+
 
 **创建异步任务**
 
@@ -5988,10 +5990,10 @@ future.thenAccept(System.out::println); // 输出恢复后的结果
 
 **组合多个任务**
 
--   thenCombine：合并两个任务的结果。
+-   thenCombine：合并两个任务的结果。（两个任务执行完毕后才会触发的回调）
 -   thenAcceptBoth：对两个任务的结果进行消费。
 -   applyToEither：选择第一个完成的任务的结果（对计算速度进行选用）
--   thenCompose： 按顺序执行两个并行任务（将任务A的结果作为任务B的输入）
+-   thenCompose：按顺序执行两个并行任务（将任务A的结果作为任务B的输入，串行执行两个任务）
 
 ```java
 CompletableFuture<String> future1 = CompletableFuture.supplyAsync(() -> "Hello");
