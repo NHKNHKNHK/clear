@@ -259,10 +259,6 @@ server {
 
 常见的负载均衡算法有轮询、加权、ip哈希等，可以在upstream中进行设置
 
-
-
-## 负责均衡策略
-
 | 名称       | 说明             |
 | ---------- | ---------------- |
 | 轮询       | **默认**         |
@@ -322,7 +318,7 @@ upstream模块用于定义后端服务器组，以便在反向代理或负载均
 
 ```shell
 # 配置负载均衡
-upstream targetserver{	#upstream指令可以设定一组服务器
+upstream targetserver {	#upstream指令可以设定一组服务器
     server 192.168.138.101:8080	weight=10;	#weight权重越大，分发概率越大
     server 192.168.138.102:8080	weight=5;
 }
