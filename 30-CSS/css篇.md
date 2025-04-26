@@ -287,3 +287,477 @@ Grid 布局也能方便地实现水平垂直居中
 
 }
 ```
+
+
+
+## 常见的css布局单位有哪些？
+
+https://www.mianshiya.com/bank/1810644318667538433/question/1810655448643178498#heading-0
+
+px（像素）
+
+em（相对于当前元素或其父元素的font-size的倍数）
+
+rem（相对于根元素的font-size的倍数）
+
+%（相对其父元素的百分比）
+
+
+
+
+
+在 CSS 中，常见的布局单位可以分为绝对单位和相对单位，以下为你详细介绍：
+绝对单位
+px（像素）：
+是最常用的绝对单位，代表屏幕上的一个物理像素点。
+特点是固定大小，不会随其他元素或页面设置改变。例如设置 width: 200px; ，元素宽度就是 200 个像素。
+适用于需要精确控制元素尺寸的场景，如绘制固定大小的图标、设置固定宽度的边框等。
+pt（点）：
+主要用于印刷设计，1 点等于 1/72 英寸。
+在屏幕上显示时，其大小会根据屏幕分辨率进行换算。通常在打印样式表中使用，如设置打印文档的字体大小。
+cm（厘米） 和 mm（毫米）：
+是现实世界中的长度度量单位。
+在屏幕上使用时，会根据设备的物理尺寸和分辨率进行转换。不过由于不同设备的显示效果差异，使用场景相对较少，主要用于需要和现实尺寸对应的设计中。
+in（英寸）：
+同样是现实世界的长度单位，1 英寸等于 2.54 厘米。
+在屏幕上使用较少，更多用于印刷和打印相关的设计。
+相对单位
+em：
+相对单位，相对于父元素的字体大小。例如父元素字体大小是 16px，设置子元素 width: 2em; ，则子元素宽度为 32px（16px * 2）。
+常用于设置与字体大小相关的元素尺寸，如按钮内边距、子元素字体大小等，能保证元素在不同字体大小的父元素中保持相对比例。
+rem：
+相对于根元素（<html> 元素）的字体大小。若根元素字体大小为 16px，设置 width: 3rem; ，元素宽度就是 48px（16px * 3）。
+适合用于响应式设计和全局布局，避免了 em 可能出现的级联影响，通过调整根元素字体大小可方便地实现页面整体缩放。
+%（百分比）：
+相对于父元素的尺寸。例如父元素宽度为 500px，子元素设置 width: 50%; ，则子元素宽度为 250px。
+常用于实现响应式布局，使元素大小能根据父元素动态调整，如设置列宽、元素的内边距和外边距等。
+vw 和 vh：
+vw 是相对于视口宽度的单位，1vw 等于视口宽度的 1%。例如视口宽度为 1000px，width: 20vw; 则元素宽度为 200px。
+vh 是相对于视口高度的单位，1vh 等于视口高度的 1%。
+常用于创建与视口大小相关的布局，如全屏背景、自适应的导航栏等。
+vmin 和 vmax：
+vmin 取视口宽度和高度中较小值的百分比，1vmin 是其 1%。
+vmax 取视口宽度和高度中较大值的百分比，1vmax 是其 1%。
+可用于创建在不同视口尺寸下都能保持合适大小的元素，如圆形元素，使其在不同屏幕上都保持圆形。
+ch：
+基于数字 0 的宽度。如果字体中数字 0 的宽度是 10px，设置 width: 5ch; ，元素宽度大约为 50px。
+常用于设置等宽字体元素的宽度，如代码块。
+ex：
+相对于当前字体中小写字母 x 的高度。
+在一些需要根据字体的小写字母高度进行布局的场景中使用，不过使用频率相对较低
+
+
+
+## 说说px、em、rem的区别及其使用场景？
+
+https://www.mianshiya.com/bank/1810644318667538433/question/1810655448727064578
+
+px、em、rem 是三种常见的长度单位
+
+**px（像素）**
+
+-   定义：px 是固定的像素单位，它代表屏幕上的一个物理像素点。无论在何种设备或环境下，1 px 所代表的物理尺寸是固定的。
+-   特点：
+    -   固定性：使用 px 设置的元素大小不会随着其他元素的变化而变化，具有很高的精确性。
+    -   缺乏灵活性：由于其固定性，当需要进行页面整体缩放或响应式设计时，使用 px 可能会导致布局混乱。
+
+**em（相对单位）**
+
+-   定义：em 是一个相对单位，它的值相对于其父元素的字体大小。如果父元素的字体大小是 16 px，那么 1 em 就等于 16 px；如果设置为 2 em，则等于 32 px。
+-   特点：
+    -   相对性：em 的值会随着父元素字体大小的变化而变化，具有一定的灵活性。
+    -   级联影响：由于 em 是相对于父元素的，当元素嵌套层级较深时，可能会出现级联影响，导致元素大小难以控制。
+
+**rem（根元素相对单位）**
+
+-   定义：rem 也是一个相对单位，但它是相对于根元素（即 <html> 元素）的字体大小。如果根元素的字体大小是 16 px，那么 1 rem 就等于 16 px。
+-   特点：
+    -   相对性：rem 的值会随着根元素字体大小的变化而变化，具有良好的灵活性。
+    -   统一控制：由于 rem 只相对于根元素，避免了 em 的级联影响，可以更方便地进行全局布局的调整。
+
+**使用场景**
+px 的使用场景
+
+-   需要精确控制元素大小的场景：例如绘制固定尺寸的图标、设置固定宽度的边框等。
+-   对布局要求不高，不需要进行响应式设计的场景：例如一些简单的静态页面。
+
+em 的使用场景
+
+-   元素大小与父元素字体大小相关的场景：例如设置按钮的内边距、子元素的字体大小等，这样可以保证元素在不同字体大小的父元素中保持相对一致的比例。
+-   需要在局部范围内进行灵活布局的场景：例如在一个特定的模块中，元素的大小需要根据该模块的字体大小进行调整。
+
+rem 的使用场景
+
+-   响应式设计：通过设置根元素的字体大小，可以方便地实现页面整体的缩放，从而适应不同的设备屏幕尺寸。
+-   全局布局：在进行全局布局时，使用 rem 可以避免 em 的级联影响，使布局更加清晰和易于控制
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html {
+            font-size: 16px; /* 设置根元素字体大小 */
+        }
+
+        .px-example {
+            width: 200px;
+            height: 100px;
+            background-color: lightblue;
+        }
+
+        .parent-em {
+            font-size: 20px;
+        }
+
+        .em-example {
+            width: 10em; /* 20px * 10 = 200px */
+            height: 5em; /* 20px * 5 = 100px */
+            background-color: lightgreen;
+        }
+
+        .rem-example {
+            width: 12.5rem; /* 16px * 12.5 = 200px */
+            height: 6.25rem; /* 16px * 6.25 = 100px */
+            background-color: lightcoral;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="px-example">
+        这是使用 px 单位的元素
+    </div>
+    <div class="parent-em">
+        <div class="em-example">
+            这是使用 em 单位的元素
+        </div>
+    </div>
+    <div class="rem-example">
+        这是使用 rem 单位的元素
+    </div>
+</body>
+
+</html> 
+```
+
+## 说说margin和padding的使用场景？
+
+https://www.mianshiya.com/bank/1810644318667538433/question/1810655447464579073#heading-0
+
+## 什么是margin合并、塌陷？
+
+**margin 塌陷问题**
+
+-   第一个子元素的上 margin 会作用在父元素上，最后一个子元素的下 margin 会作用在父元素上
+-   大白话就是第一个子元素的margin-top，最后一个子元素的margin-bottom，被父元素给抢走了
+    演示：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .outer {
+            width: 400px;
+            background-color: gray;
+        }
+
+        .inner1 {
+            width: 100px;
+            height: 100px;
+            background-color: orange;
+            /* 下面这行代码是有问题的:margin塌陷 */
+            margin-top: 50px;
+        }
+
+        .inner2 {
+            width: 100px;
+            height: 100px;
+            background-color: green;
+            /* 下面这行代码是有问题的:margin塌陷 */
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="outer">
+        <div class="inner1">inner1</div>
+        <div class="inner2">inner2</div>
+    </div>
+    <div>我是一段测试的文字</div>
+</body>
+
+</html>
+```
+
+如下：
+
+解决margin塌陷问题，有如下方案：
+
+-   给父元素设置边框
+
+```css
+.outer {
+    width: 400px;
+    background-color: gray;
+    border: 1px solid black;
+}
+```
+
+但是，某些情况下，我们不想为父元素设置边框，因为边框会增加父元素的高度，这样会破坏布局。还会破坏美感
+
+-   给父元素设置内边距
+
+```css
+.outer {
+    width: 400px;
+    background-color: gray;
+    padding: 10px;
+}
+```
+
+**margin合并问题**
+
+-   上面兄弟元素的下外边距和下面兄弟元素的上外边距会合并，取一个最大的值，而不是相加。
+
+如何解决 margin  合并？
+
+无需解决，布局的时候上下的兄弟元素，只给一个设置上下外边距就可以了。
+
+>   需要注意的是，margin合并是css的一个特性，并非bug。
+
+演示：
+
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>margin合并问题</title>
+    <style>
+        .box {
+            width: 200px;
+            height: 200px;
+        }
+
+        .box1 {
+            background-color: deepskyblue;
+            margin-bottom: 110px;
+        }
+
+        .box2 {
+            background-color: orange;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box box1">1</div>
+    <div class="box box2">2</div>
+</body>
+
+</html>
+```
+
+如下：
+
+当然如果某些人非要解决margin合并问题，也不是不可以
+
+## 什么是margin重叠问题？如何解决？
+
+https://www.mianshiya.com/bank/1810644318667538433/question/1810655449649811458
+
+**margin合并问题**
+
+-   上面兄弟元素的下外边距和下面兄弟元素的上外边距会合并，取一个最大的值，而不是相加。
+
+如何解决 margin  合并？
+
+无需解决，布局的时候上下的兄弟元素，只给一个设置上下外边距就可以了。
+
+>   需要注意的是，margin合并是css的一个特性，并非bug。
+
+当然如果某些人非要解决margin合并问题，也不是不可以
+
+有以下方法：
+
+-   使用padding来替代margin
+    -   需要注意的是，元素的背景也在padding区域，如果涉及到背景，则需要额外调整
+-   利用css的flexbox、grid布局等避免块级元素上下相邻
+
+## 为什么需要清除浮动？清除的方式有哪些？
+
+>   什么是浮动？
+>   浮动最初是用来实现文字环绕图片效果的，现在广泛运用于页面布局之一
+
+清除浮动主要是为了避免由于浮动元素脱离文档流而引发的布局问题（如父元素高度塌陷）
+
+当一个元素浮动时，他从文档流中脱离，常常会影响到其父元素和后续兄弟元素的显示效果。
+
+典型的问题就是父元素无法包裹浮动元素的高度等。
+
+浮动的特点：
+
+-   1.浮动后不独占一行、不撑满父容器，由内容撑开
+-   2.浮动后脱离文档流
+-   3.不会margin合并、塌陷
+-   4.不会像行内块一样被当做文本处理（没有行内块的空白问题）
+
+清除浮动的方式有：
+
+-   使用空的清除浮动元素（clearfix hack）
+-   使用伪元素`::after`清除浮动
+-   使用`overflow`属性清除浮动
+-   使用`display: flow-root`清除浮动
+
+解决父元素高度塌陷
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .outer {
+            width: 500px;
+            background-color: gray;
+            border: 1px solid black;
+        }
+
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: skyblue;
+            margin: 10px;
+        }
+
+        .box1,
+        .box2,
+        .box3,
+        .box4 {
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="outer">
+        <div class="box box1">1</div>
+        <div class="box box2">2</div>
+        <div class="box box3">3</div>
+        <div class="box box4">4</div>
+    </div>
+    <div style="background-color: orange;">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint, minus magnam accusamus eum laborum ducimus
+        possimus beatae fugit illum molestias odit et asperiores adipisci sunt dolorem qui autem enim excepturi alias ab
+        unde temporibus. Sapiente labore a magnam commodi itaque architecto quos doloribus voluptates perferendis rem,
+        earum consectetur. Tempora inventore ducimus veritatis voluptatem deleniti rem laboriosam. Officiis, impedit
+        explicabo! Impedit labore ea et vero rerum nihil in cum qui, itaque blanditiis eius nemo est? Tempora explicabo
+        voluptates consectetur officia aperiam eos impedit veritatis necessitatibus quidem deleniti ea, in odit cum ex
+        harum voluptas, quos eveniet quae voluptate aspernatur quod! Nostrum?
+    </div>
+</body>
+
+</html>
+```
+
+第一种解决方案：给父元素指定高度
+
+```css
+.outer{
+  height: 122px;
+}
+```
+
+第二种解决方案：给父元素也指定浮动，但是会带来其他影响
+
+```css
+.outer{
+  float: left;
+}
+```
+
+第三种解决方案：给父元素设置overflow: hidden
+
+```css
+.outer{
+  overflow: hidden;
+}
+```
+
+第四种解决方案：在所有浮动元素最后面，添加一个块级元素，并给该块级元素设置`clear:both`
+
+```html
+ <div class="outer">
+  <div class="box box1">1</div>
+  <div class="box box2">2</div>
+  <div class="box box3">3</div>
+  <div class="box box4">4</div>
+  <div class="mofa"></div>
+</div>
+```
+
+```css
+.mofa {
+    /*
+      left:元素被向下移动以清除左浮动。
+      right:元素被向下移动以清除右浮动。
+      both:元素被向下移动以清除左右浮动
+    */
+    clear: both;
+}
+```
+
+第五种解决方案：给浮动元素的父元素设置一个伪元素，并给该伪元素设置clear: both，原理与方案四相同（推荐这种）
+
+```css
+.outer::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+```
+
+>   这种方式开发中是比较常用的，因此也总结出来一个泛用的clearfix类来解决浮动
+
+```css
+.clearfix::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+```
+
+扩展：使用`display: flow-root`清除浮动
+
+css的`display: flow-root`属性可以创建一个新的块级格式化上下文（BFC），从而清除浮动。
+
+```css
+.outer {
+  display: flow-root;
+}
+```
+
+这种做法是相对比较简单的的处理方式，因为它不影响其他样式
+
+总结：布局中的一个原则：设置浮动的时候，兄弟元素要么全部设置浮动，要么全部不设置浮动。
+
+## 使用clear属性清除浮动原理？
+
+https://www.mianshiya.com/bank/1810644318667538433/question/1810655449456873473
