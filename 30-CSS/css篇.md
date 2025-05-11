@@ -761,3 +761,114 @@ css的`display: flow-root`属性可以创建一个新的块级格式化上下文
 ## 使用clear属性清除浮动原理？
 
 https://www.mianshiya.com/bank/1810644318667538433/question/1810655449456873473
+
+
+
+
+
+## 固定定位的参考点？
+
+CSS固定定位(fixed)的参考点是浏览器窗口的**视口(viewport)**，而不是文档流中的任何元素。无论页面如何滚动，固定定位的元素都会保持在视口的同一位置。
+
+示例：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>固定定位</title>
+    <style>
+        .box {
+            width: 200px;
+            height: 200px;
+            font-size: 20px;
+        }
+
+        .box2 {
+            background-color: green;
+            position: fixed;
+            /* 注意！！！固定定位、绝对定位、浮动等，都会将行盒设置为块盒，因此可以设置宽度和高度 */
+            width: 200px;
+            height: 200px;
+
+            /* 小广告的感觉 */
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="outer">
+        <span class="box box2">哥哥需要视频聊天吗?快点击吧!</span>
+    </div>
+    <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem fuga esse fugiat, quaerat enim sunt suscipit id
+        vitae, unde exercitationem aspernatur modi similique quia nobis voluptatibus ipsum iure autem quasi officiis
+        省略1000行文本....
+    </div>
+
+</body>
+
+</html>
+```
+
+！！！但固定定位元素的祖先的 `transform`、`perspective`、`filter`、`backdrop-filter`属性非`none`时，固定定位**相对于该祖先元素定位**
+
+示例：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>固定定位</title>
+  <!-- 
+    参考点:视口
+    （！！！但固定定位元素的祖先的 transform、perspective、filter、backdrop-filter属性非none时，固定定位相对于该祖先元素定位）
+  -->
+  <style>
+    .box {
+      width: 300px;
+      height: 300px;
+      background-color: skyblue;
+      /* 固定定位，元素水平垂直居中 */
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      
+      /* 注意！！！这里使用了 transform */
+      transform: translate(-50%, -50%);
+    }
+
+    .box .close {
+      width: 50px;
+      height: 50px;
+      background-color: red;
+      border-radius: 50%;
+      /* ！！！固定定位元素的祖先的 transform、perspective、filter、backdrop-filter属性非none时，
+      固定定位相对于该祖先元素定位 */
+      position: fixed;
+      right: 0;
+      top: 0;
+
+      /* 虽然上面这种方式可以让close在其祖先元素的右上角，但是开发中，一般情况下这种效果我们会使用绝对定位来实现 */
+      /* position: absolute;
+      right: 0;
+      top: 0; */
+
+      /* 所以，学习固定定位的特殊参考点（非视口）是为了在开发中，我们使用固定定位完成一些效果时，一直达不到要求时，方便排查问题 */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+    <div class="close"></div>
+  </div>
+</body>
+</html>
+```
+
