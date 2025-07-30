@@ -102,9 +102,9 @@ module.exports = {
 
 **加载器（Loader）**
 
-webpack本身功能比较少，只能处理js、json资源，一旦遇到css等资源就会报错
+webpack本身功能比较少，只能处理js、json资源（这是 webpack 开箱可用的自带能力），一旦遇到css等资源就会报错
 
-加载器（Loader）的作用：处理非 JavaScript 文件（如 CSS、图片、字体等），将其转换为 Webpack 能处理的模块。
+**loader** 让 webpack 能够去处理其他类型的文件，（如 CSS、图片、字体等），将其转换为 Webpack 能处理的模块。
 
 ```js
 module.exports = {
@@ -197,6 +197,10 @@ module.exports = {
 
 https://www.mianshiya.com/bank/1831174878121283585/question/1831172739277271042#heading-1
 
+
+## webpack的loader和plugin有什么区别？
+
+https://juejin.cn/post/7411046020841259043
 
 
 

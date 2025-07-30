@@ -48,3 +48,5 @@ LOG*
 !*/build/*.java
 !*/build/*.html
 !*/build/*.xml
+
+node_modules
