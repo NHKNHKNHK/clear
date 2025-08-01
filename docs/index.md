@@ -26,4 +26,5 @@ features:
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
 ---
 
+<!-- 烟火效果 -->
 <Confetti/>

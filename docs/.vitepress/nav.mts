@@ -1,5 +1,5 @@
 export default [
-  { text: '后端', link: '/01-Java基础/Java基础.md' },
+  { text: '首页', link: '/' },
   {
     text: '后端',  // 该部分的标题（可省略）
     items: [
