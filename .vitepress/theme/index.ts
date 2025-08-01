@@ -22,7 +22,7 @@ export default {
   // 使用注入插槽的包装组件覆盖 Layout
   // Layout: MyLayout,
   Layout: () => {
-    return h(DefaultTheme.Layout, null, {
+    return h(MyLayout, null, {
       // <https://vitepress.dev/guide/extending-default-theme#layout-slots>
       'not-found': () => h(MyLayout),
     })
