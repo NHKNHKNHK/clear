@@ -1,14 +1,16 @@
 <!--.vitepress/theme/MyLayout.vue-->
 <script setup>
-import DefaultTheme from 'vitepress/theme'
+import DefaultTheme from "vitepress/theme";
+import NotFound from "./components/NotFound.vue";
 
-const { Layout } = DefaultTheme
+const { Layout } = DefaultTheme;
 </script>
 
 <template>
   <Layout>
-    <template #aside-outline-before>
-      My custom sidebar top content
+    <!-- 404 -->
+    <template #not-found>
+      <NotFound />
     </template>
   </Layout>
 </template>
