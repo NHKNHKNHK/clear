@@ -19,4 +19,12 @@ onMounted(() => {
 .not-fount-404 {
   overflow-y: hidden;
 }
+
+/* >= 768px */
+@media screen and (min-width: 768px) {
+  .not-fount-404 {
+    width: 80vw;
+    margin: 0 auto;
+  }
+}
 </style>

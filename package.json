@@ -13,5 +13,8 @@
   "license": "ISC",
   "devDependencies": {
     "vitepress": "^1.6.3"
+  },
+  "dependencies": {
+    "canvas-confetti": "^1.9.3"
   }
 }
