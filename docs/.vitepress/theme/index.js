@@ -1,7 +1,7 @@
 // .vitepress/theme/index.js
 import DefaultTheme from 'vitepress/theme'
 import MyLayout from './MyLayout.vue'
-import Confetti from './components/Confetti.vue'
+// import Confetti from './components/Confetti.vue'
 import { onMounted, watch, nextTick } from "vue"
 import { useRoute } from "vitepress"
 import mediumZoom from "medium-zoom"
@@ -17,7 +17,7 @@ export default {
   enhanceApp({ app }) {
     // 注册自定义全局组件
     app.component('MyGlobalComponent' /* ... */)
-    app.component('Confetti', Confetti)
+    // app.component('Confetti', Confetti)
   },
 
   setup() {
