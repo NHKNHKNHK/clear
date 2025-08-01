@@ -77,7 +77,7 @@ export default defineConfig({
       // 版权前显示的信息
       message: 'Released under the MIT License.',
       // 实际的版权文本
-      copyright: `Copyright © 2025-${new Date().getFullYear()} <a href="https://gitee.com/ninghongkang">程序员clear</a>`
+      copyright: `Copyright © 2025-${new Date().getFullYear()} <a href="https://gitee.com/ninghongkang">经典老哥</a>`
     },
     docFooter: {
       prev: '上一篇',
@@ -108,6 +108,7 @@ export default defineConfig({
     }
   },
 
+  srcDir: './docs',
 
   markdown: {
     lineNumbers: true, // 显示代码行号

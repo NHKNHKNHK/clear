@@ -5,17 +5,23 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
   },
+  "keywords": [],
   "author": "程序员clear",
   "license": "ISC",
+  "packageManager": "pnpm@10.7.1",
   "devDependencies": {
+    "sass-embedded": "^1.89.2",
+    "unocss": "^66.3.3",
     "vitepress": "^1.6.3"
   },
   "dependencies": {
+    "@vueuse/core": "^13.6.0",
     "canvas-confetti": "^1.9.3",
-    "medium-zoom": "^1.1.0"
+    "medium-zoom": "^1.1.0",
+    "vue": "^3.5.18"
   }
 }

@@ -1,3 +1,5 @@
+<template></template>
+
 <script setup>
 import confetti from "canvas-confetti";
 import { inBrowser } from "vitepress";
