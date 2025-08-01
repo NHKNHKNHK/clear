@@ -8,10 +8,13 @@ hero:
   tagline: My great project tagline
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Clear的Gitee（给个star吧）
+      link: https://gitee.com/ninghongkang
     - theme: alt
       text: API Examples
+      link: /api-examples
+    - theme: alt
+      text: 面试题库
       link: /api-examples
 
 features:

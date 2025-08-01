@@ -945,7 +945,7 @@ public ScheduledThreadPoolExecutor(int corePoolSize) {
 
 **阿里规约**
 
-![1725368123975](D:/video/workspace/easy-interview/04-Java%E5%B9%B6%E5%8F%91%E7%AF%87/assets/1725368123975.png)
+![1725368123975](./assets/1725368123975.png)
 
 
 

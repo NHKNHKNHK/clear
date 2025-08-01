@@ -48,7 +48,6 @@ Spring MVC 是一个专注于 Web 开发的框架，而 Spring Boot 是一个更
 
 ## 说说你对SpringMVC的理解？
 
-![1742022237112](C:\Users\没事我很好\AppData\Roaming\Typora\typora-user-images\1742022237112.png)
 
 
 

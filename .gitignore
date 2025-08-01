@@ -50,3 +50,5 @@ LOG*
 !*/build/*.xml
 
 node_modules
+
+docs/.vitepress/cache

@@ -245,11 +245,13 @@ public interface Comparator<T> {
         return Collections.reverseOrder(this);
     }
 }
+
 ```
 
 -   思考  
     -   当元素的类型没有实现 java.lang.Comparable 接口而又不方便修改代码 （例如：一些第三方的类，你只有.class 文件，没有源文件） 
     -   如果一个类，实现了 Comparable 接口，也指定了两个对象的比较大小的规则，但是此时此刻我不想按照它预定义的方法比较大小，但是我又不能随意修改，因为会影响其他地方的使用，怎么办？ 
+
 -   JDK 在设计类库之初，也考虑到这种情况，所以又增加了一个 **java.util.Comparator** 接口。强行**对多个对象进行整体排序的比较**。 
     -   重写 compare(Object o1,Object o2)方法，比较 o1 和 o2 的大小：如果方法返回正整数，则表示 o1 大于 o2；如果返回 0，表示相等；返回负整数，表示 o1 小于 o2。 
     -   可以将 Comparator 传递给 sort 方法（如 Collections.sort 或 Arrays.sort），从而允许在排序顺序上实现精确控制。 
@@ -307,27 +309,22 @@ Student{username='赵六', age=15}
 ```
 
 
-
 3、**主要区别**
 
 -   **接口实现位置**：
-
--   -   Comparable：对象类自身实现Comparable接口，定义其**自然排序**顺序。
+    -   Comparable：对象类自身实现Comparable接口，定义其**自然排序**顺序。
     -   Comparator：单独的类或匿名类实现Comparator接口，定义**自定义排序**顺序。
 
--   **方法名称**：
-
--   -   Comparable：实现compareTo方法。
-    -   Comparator：实现compare方法。
+-  **方法名称**：
+    - Comparable：实现compareTo方法。
+    - Comparator：实现compare方法。
 
 -   **排序标准**：
-
--   -   Comparable：只能有一个排序标准（自然顺序）。
-    -   Comparator：可以有多个排序标准，可以根据需要定义不同的Comparator实现。
+    - Comparable：只能有一个排序标准（自然顺序）。
+    - Comparator：可以有多个排序标准，可以根据需要定义不同的Comparator实现。
 
 -   **使用场景**：
-
--   -   Comparable：适用于单一的自然排序顺序，例如字典顺序、数字顺序等。
+    -   Comparable：适用于单一的自然排序顺序，例如字典顺序、数字顺序等。
     -   Comparator：适用于需要多个排序标准的场景，例如按名字排序、按年龄排序等。
 
 通过上述说明和示例代码，你可以清楚地了解Comparable和Comparator的区别及其使用方法
