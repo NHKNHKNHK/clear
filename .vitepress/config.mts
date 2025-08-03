@@ -12,7 +12,8 @@ export default defineConfig({
   // =====================
   lang: 'zh-CN',
   title: "Clear的个人博客",
-  description: "包含前后端的技术栈",
+  description: "经典老哥的成长之路",
+  tagline: '包含前后端的技术栈',
   head: [['link', { rel: 'icon', href: '/favicon.ico' }]], // 页签图标
   // lastUpdated: true, // 显示最后更新时间，会根据 git 提交记录自动生成
 
