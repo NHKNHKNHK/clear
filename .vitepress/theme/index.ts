@@ -9,6 +9,7 @@ import { useRoute } from "vitepress"
 import mediumZoom from "medium-zoom" // 图片放大插件
 import { inBrowser } from "vitepress";
 import { NProgress } from "nprogress-v2/dist/index.js"; // 进度条组件
+import ArticleMetadata from "./components/ArticleMetadata.vue"
 
 import './styles/style.css'
 import './styles/index.scss'
@@ -37,6 +38,7 @@ export default {
     // 注册自定义全局组件
     app.component('MyGlobalComponent' /* ... */)
     // app.component('Confetti', Confetti)
+    app.component('ArticleMetadata', ArticleMetadata)
 
     // 彩虹背景动画样式
     if (typeof window !== 'undefined') {
