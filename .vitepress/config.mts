@@ -150,6 +150,9 @@ export default defineConfig({
           yml: "vscode-icons:file-type-light-yaml",
           yaml: "vscode-icons:file-type-light-yaml",
           php: "vscode-icons:file-type-php",
+          java: "vscode-icons:file-type-java",
+          scala: "vscode-icons:file-type-scala",
+          vue: "vscode-icons:file-type-vue",
         },
       })
     ],

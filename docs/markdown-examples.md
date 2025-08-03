@@ -47,6 +47,20 @@ h1 {
 }
 ```
 
+```java 
+System.out.println("I'm Java");
+```
+
+```scala [demo.scala] 
+System.out.println("I'm Java");
+```
+
+``` vue
+<template>
+  <div>Hello Vue</div>
+</template>
+```
+
 :::
 
 ## Syntax Highlighting
