@@ -1,9 +1,15 @@
 /* 重置 medium-zoom 样式 */
+:root {
+  --medium-zoom-z-index: 100;
+  --medium-zoom-c-bg: var(--vp-c-bg);
+}
+
 .medium-zoom-overlay {
-  z-index: 30;
+  /* override element style set by medium-zoom script */
+  z-index: var(--medium-zoom-z-index);
+  background-color: var(--medium-zoom-c-bg) !important;
 }
 
-.medium-zoom-image {
-  z-index: 9999 !important;
+.medium-zoom-overlay~img {
+  z-index: calc(var(--medium-zoom-z-index) + 1);
 }
-

@@ -12,6 +12,8 @@ import './styles/style.css'
 import './styles/index.scss'
 import './styles/resetMediumZoom.css'
 
+import 'virtual:group-icons.css' //代码组样式
+
 // 彩虹背景动画样式
 let homePageStyle: HTMLStyleElement | undefined
 
@@ -37,7 +39,7 @@ export default {
     if (typeof window !== 'undefined') {
       watch(
         () => router.route.data.relativePath,
-        () => updateHomePageStyle(location.pathname === '/'), // 这里需要注意下自己的首页路径是否为 / 
+        () => updateHomePageStyle(location.pathname === '/docs/'), // 这里需要注意下自己的首页路径是否为 / 
         { immediate: true },
       )
     }
