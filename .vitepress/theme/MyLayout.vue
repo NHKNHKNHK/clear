@@ -67,7 +67,10 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
     <!-- <template #home-hero-info>home-hero-info-可替换title等等三行文字</template> -->
     <!-- <template #home-hero-info-after>home-hero-info-after</template> -->
     <!-- <template #home-hero-actions-after>home-hero-actions-after</template> -->
-    <template #home-hero-image>home-hero-image</template>
+    <template #home-hero-image>
+      <!-- home-hero-image -->
+      <img src="https://unocss.nodejs.cn/logo.svg" alt="logo">
+    </template>
     <!-- <template #home-hero-after>home-hero-after</template> -->
     <!-- <template #home-features-before>home-features-before</template> -->
     <!-- <template #home-features-after>home-features-after</template> -->

@@ -15,7 +15,7 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .not-fount-404 {
   overflow-y: hidden;
 }
@@ -23,8 +23,9 @@ onMounted(() => {
 /* >= 768px */
 @media screen and (min-width: 768px) {
   .not-fount-404 {
-    width: 80vw;
+    width: 70vw;
     margin: 0 auto;
+    padding-top: var(--vp-nav-height);
   }
 }
 </style>
