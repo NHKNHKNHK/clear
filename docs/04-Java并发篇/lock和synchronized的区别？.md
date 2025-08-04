@@ -1,0 +1,1 @@
+# lock和synchronized的区别？

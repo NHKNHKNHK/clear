@@ -1,0 +1,1 @@
+# synchronized的不同作用范围有什么区别

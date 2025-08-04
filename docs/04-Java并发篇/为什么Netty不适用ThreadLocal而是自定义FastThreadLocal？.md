@@ -1,0 +1,1 @@
+# 为什么Netty不适用ThreadLocal而是自定义FastThreadLocal？
