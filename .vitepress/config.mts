@@ -3,7 +3,8 @@ import nav from './nav.mjs'
 import sidebar from './sidebar.mjs'
 // 代码组icon
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
-
+import { getSideBarList } from './utils.mts' // 引入 getSideBarList 方法
+import { setSidebar } from './gen_sidebar.mjs'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -11,9 +12,8 @@ export default defineConfig({
   // 站点级选项
   // =====================
   lang: 'zh-CN',
-  title: "Clear的个人博客",
-  description: "经典老哥的成长之路",
-  tagline: '包含前后端的技术栈',
+  title: "Clear吗？有点意思",
+  description: "包含前后端的技术栈",
   head: [['link', { rel: 'icon', href: '/favicon.ico' }]], // 页签图标
   // lastUpdated: true, // 显示最后更新时间，会根据 git 提交记录自动生成
 
@@ -34,11 +34,18 @@ export default defineConfig({
     // 主题级选项
     // =====================
     // https://vitepress.dev/reference/default-theme-config
-    logo: '/favicon.ico', // logo public下的图片路径
-    siteTitle: false, // 隐藏左上角站点标题
+    // logo: '/favicon.ico', // logo public下的图片路径
+    logo: {
+      light: '/logo.png',
+      dark: '/favicon.ico',
+      alt: 'logo'
+    },
+
+    // siteTitle: false, // 隐藏左上角站点标题
+
     sidebarMenuLabel: '菜单', // 小尺寸屏幕侧边栏顶部菜单名称
     returnToTopLabel: '返回顶部',
-    darkModeSwitchLabel: '外观1',
+    darkModeSwitchLabel: '外观',
     lightModeSwitchTitle: '切换浅色模式',
     darkModeSwitchTitle: '切换暗黑模式',
     outline: {
@@ -55,6 +62,8 @@ export default defineConfig({
     // =====================
     // 侧边栏
     // =====================
+    // 注意：多侧边栏配置时， sidebar 为对象，每个 key 为一个侧边栏的路径，
+    //      key 的值为 /basic/、/basic、basic 都可以，但是建议以 /basic/ 为 key
     sidebar: sidebar,
 
     // 社交链接，将会显示在导航栏右侧

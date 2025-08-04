@@ -1,3 +1,6 @@
+<!-- 
+  首页纸屑特效组件
+-->
 <template></template>
 
 <script setup>

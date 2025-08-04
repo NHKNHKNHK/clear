@@ -14,10 +14,10 @@ const intersections = (arr1, arr2) => {
   return Array.from(new Set(arr1.filter(item => !new Set(arr2).has(item))))
 }
 
-// 把方法直接导出使用
 function getList(params, path1, pathname) {
   const res = []
   for (let file in params) {
+    // 拼接目录路径
     const dir = path.join(path1, params[file])
     // 判断是否是文件夹
     const isDir = isDirectory(dir)
@@ -63,6 +63,9 @@ export const setSidebar = (pathname) => {
   const files = fs.readdirSync(dirPath)
   // 过滤
   const items = intersections(files, WHITE_LIST)
-  console.log(getList(items, dirPath, pathname))
+  console.log(items)
   return getList(items, dirPath, pathname)
 }
+
+
+console.log(setSidebar('02-Java集合篇'))

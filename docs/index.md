@@ -3,9 +3,14 @@
 layout: home
 
 hero:
-  name: "Clear的个人博客"
-  text: "包含前后端的技术栈"
-  tagline: My great project tagline
+  name: "Clear有点意思"
+  text: "经典老哥的成长之路"
+  tagline: 包含前后端的技术栈
+  # 首页右侧logo
+  image: {
+    src: /favicon.ico,
+    alt: logo
+  }
   actions:
     - theme: brand
       text: Clear的Gitee（给个star吧）
@@ -13,13 +18,21 @@ hero:
     - theme: alt
       text: API Examples
       link: /api-examples
+      target: _blank
+      rel: noopener
     - theme: alt
       text: 面试题库
       link: /api-examples
+    - theme: alt
+      text: 支持老哥
+      link: /zhichi
 
 features:
-  - title: Feature A
+  - icon: 🛠️
+    title: Feature A
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+    link: /api-examples
+    linkText: 查看
   - title: Feature B
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
   - title: Feature C
@@ -35,3 +48,20 @@ import HomeUnderline  from '../.vitepress/theme/components/HomeUnderline.vue'
 <Confetti/>
 <!-- 首页文字下划线效果 -->
 <HomeUnderline/>
+
+
+
+## 一些额外的内容
+
+You can get started using VitePress right away using `npx`!
+
+```sh
+npm init
+npx vitepress init
+```
+
+<div>
+  <p style="color: red;">
+    hahah
+  </p>
+</div>

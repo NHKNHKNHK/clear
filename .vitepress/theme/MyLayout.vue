@@ -9,6 +9,7 @@ import { nextTick, provide } from "vue";
 const { Layout } = DefaultTheme;
 const { isDark } = useData();
 
+// https://vitejs.cn/vitepress/guide/extending-default-theme#on-appearance-toggle
 const enableTransitions = () =>
   "startViewTransition" in document &&
   window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
@@ -45,14 +46,55 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
 
 <template>
   <Layout>
-    <!-- 404 -->
+    <!-- 当 layout: 'doc' (默认) 在 frontmatter 中被启用时 -->
+    <!-- <template #doc-top>doc-top-文章最顶部</template> -->
+    <!-- <template #doc-bottom>doc-bottom-文章最底部</template> -->
+    <!-- <template #doc-footer-before>doc-footer-before</template> -->
+    <!-- <template #doc-before>doc-before</template> -->
+    <!-- <template #doc-after>doc-after</template> -->
+    <!-- <template #sidebar-nav-before>sidebar-nav-before</template> -->
+    <!-- <template #sidebar-nav-after>sidebar-nav-after</template> -->
+    <!-- <template #aside-top>sidebar top</template> -->
+    <!-- <template #aside-bottom>sidebar bottom</template> -->
+    <!-- <template #aside-outline-before>aside-outline-before</template> -->
+    <!-- <template #aside-outline-after>aside-outline-after</template> -->
+    <!-- <template #aside-ads-before>aside-ads-before</template> -->
+    <!-- <template #aside-ads-after>aside-ads-after</template> -->
+
+    <!-- 当 layout: 'home' 在 frontmatter 中被启用时 -->
+    <!-- <template #home-hero-before>home-hero-before</template> -->
+    <!-- <template #home-hero-info-before>home-hero-info-before</template> -->
+    <!-- <template #home-hero-info>home-hero-info-可替换title等等三行文字</template> -->
+    <!-- <template #home-hero-info-after>home-hero-info-after</template> -->
+    <!-- <template #home-hero-actions-after>home-hero-actions-after</template> -->
+    <template #home-hero-image>home-hero-image</template>
+    <!-- <template #home-hero-after>home-hero-after</template> -->
+    <!-- <template #home-features-before>home-features-before</template> -->
+    <!-- <template #home-features-after>home-features-after</template> -->
+
+    <!-- 当 layout: 'page' 在 frontmatter 中被启用时 -->
+    <template #page-top>page-top</template>
+    <template #page-bottom>page-bottom</template>
+
+    <!-- 当未找到页面 (404) 时 404 -->
     <template #not-found>
       <NotFound />
     </template>
+
+    <!-- 总是启用 -->
+    <!-- <template #layout-top>layout-top-可以插入广告</template> -->
+    <!-- <template #layout-bottom>layout-bottom</template> -->
+    <!-- <template #nav-bar-title-before>nav-bar-title-before</template> -->
+    <!-- <template #nav-bar-title-after>nav-bar-title-after</template> -->
+    <!-- <template #nav-bar-content-before>nav-bar-content-before</template> -->
+    <!-- <template #nav-bar-content-after>nav-bar-content-after</template> -->
+    <template #nav-screen-content-before>nav-screen-content-before</template>
+    <template #nav-screen-content-after>nav-screen-content-after</template>
   </Layout>
 </template>
 
 <style scoped lang="scss">
+// 关于外观切换
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
@@ -70,9 +112,9 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
 }
 
 /* 恢复原始开关按钮 */
-/* .VPSwitchAppearance {
+.VPSwitchAppearance {
   width: 22px !important;
-} */
+}
 
 .VPSwitchAppearance .check {
   transform: none !important;
@@ -82,5 +124,4 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
 .VPSwitchAppearance .check .icon {
   top: -2px;
 }
-
 </style>
