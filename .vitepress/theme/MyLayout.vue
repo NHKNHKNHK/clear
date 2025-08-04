@@ -5,7 +5,7 @@ import NotFound from "./components/NotFound.vue";
 import { useData } from "vitepress";
 import { nextTick, provide } from "vue";
 
-// 解耦出Layout组件
+// 结构出Layout组件
 const { Layout } = DefaultTheme;
 const { isDark } = useData();
 
