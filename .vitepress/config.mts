@@ -132,6 +132,12 @@ export default defineConfig({
     //   dangerLabel: '危险',
     //   detailsLabel: '详细信息'
     // }
+
+    image: {
+      lazyLoading: true // 懒加载图片，默认禁用
+    },
+
+
     config(md) {
       md.use(groupIconMdPlugin) //代码组图标
       // 将组件插入到文档的h1标题后
