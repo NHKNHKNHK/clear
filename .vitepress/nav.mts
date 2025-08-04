@@ -102,4 +102,10 @@ export default [
       { text: '前端性能优化、场景、bug', link: '/31-前端性能优化、场景、bug/性能优化篇' },
     ]
   },
+  {
+    text: '其他',
+    items: [
+      { text: '参考与鸣谢', link: '/thankYou' }
+    ]
+  }
 ]
