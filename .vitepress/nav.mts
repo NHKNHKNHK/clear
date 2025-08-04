@@ -105,7 +105,8 @@ export default [
   {
     text: '其他',
     items: [
-      { text: '参考与鸣谢', link: '/thankYou' }
+      { text: '参考与鸣谢', link: '/thankYou' },
+      { text: 'VitePress Markdown语法扩展', link: '/markdown-examples' }
     ]
   }
 ]
