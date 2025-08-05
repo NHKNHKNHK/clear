@@ -57,33 +57,8 @@
 //   },
 // ]
 
-import { text } from "stream/consumers";
-import { setSidebar } from "./gen_sidebar.mjs";
-
 
 export default {
-
-  'basic': [
-    {
-      text: '基础篇',
-      items: [
-        { text: '基础篇24', link: '/basic/index' },
-        { text: '基础篇1', link: '/basic/basic1' },
-        { text: '基础篇2', link: '/basic/basic2' }
-      ]
-    },
-  ],
-  'api': [
-    {
-      text: 'API 篇',
-      items: [
-        { text: 'API篇', link: '/api/index' },
-        { text: 'API篇1', link: '/api/api1' },
-        { text: 'API篇2', link: '/api/api2' }
-      ]
-    },
-  ],
-  // { text: 'Java基础', link: '/01-Java基础/Java基础' },
   '/01-Java基础/': [
     {
       text: 'Java基础',

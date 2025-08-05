@@ -21,7 +21,7 @@ MySQL 主要支持四种事务隔离级别，分别是读未提交、读已提�
 -   是四种隔离级别中并发性能最好的，但数据安全性最差。
 -   使用场景：极少使用，因为可能会导致数据不一致的问题。
 
-```mysql
+```sql
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 ```
 
@@ -36,7 +36,7 @@ SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 -   每次查询都会读取最新的已提交数据。
 -   使用场景：适用于大多数应用程序，尤其是那些对数据一致性要求较高但可以容忍不可重复读的情况。
 
-```mysql
+```sql
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
 ```
 
@@ -52,7 +52,7 @@ SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
 -   InnoDB 存储引擎通过多版本并发控制（**MVCC**）来实现这一级别。
 -   使用场景：适用于需要保证数据一致性的场景，例如银行系统、金融交易等。
 
-```mysql 
+```sql 
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 ```
 
@@ -67,13 +67,13 @@ SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 -   但是，这种隔离级别可能会导致大量的锁定，从而降低了系统的并发性能。
 -   使用场景：适用于对数据一致性要求极高的场景，例如在线拍卖系统、库存管理系统等。
 
-```mysql
+```sql
 SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 ```
 
 设置 MySQL 事务隔离级别的示例：
 
-```mysql
+```sql
 -- 设置全局事务隔离级别为可重复读 
 SET GLOBAL TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 -- 设置当前会话的事务隔离级别为读已提交 
@@ -687,7 +687,7 @@ InnoDB使用两种预读算法来提高I/O性能：线性预读（linear read-ah
 
 **创建和删除索引**
 
-```mysql
+```sql
 -- 创建索引
 CREATE INDEX index_name ON table_name (column1, column2, ...);
 -- 查看索引

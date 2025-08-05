@@ -176,7 +176,7 @@ public InternalResourceViewResolver viewResolver() {
 
   视图解析器将视图名称解析为实际的视图对象后，视图对象负责将模型数据渲染为用户界面，通常是 HTML 页面。视图对象可以是 JSP、Thymeleaf 模板、FreeMarker 模板等。
 
-```jsp
+```html
 <!-- hello.jsp -->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
@@ -1972,7 +1972,7 @@ public class MyController {
 
 在 JSP、Thymeleaf 或其他视图技术中，你可以使用 Spring 提供的国际化标签或函数来显示相应语言的文本信息。例如，在 JSP 中，你可以使用 `<spring:message>` 标签：
 
-```jsp
+```xml
 <spring:message code="greeting.message" text="Hello, World!" />
 ```
 

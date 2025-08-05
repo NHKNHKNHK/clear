@@ -54,8 +54,6 @@
 
 export default [
   { text: '首页', link: '/' },
-  { text: 'Guide', link: '/basic' },
-  { text: 'Config', link: '/api' },
   {
     text: '后端',  // 该部分的标题（可省略）
     items: [
@@ -98,15 +96,36 @@ export default [
       { text: 'CSS', link: '/30-CSS/CSS篇' },
       { text: 'JavaScript', link: '/27-JavaScript/JS篇' },
       { text: 'Vue', link: '/25-Vue/Vue篇' },
-      { text: 'React', link: '/25-React/React篇' },
+      { text: 'React', link: '/26-React/React篇' },
+      { text: '小程序', link: '/32-小程序/小程序篇' },
+      { text: 'Node', link: '/28-NodeJS/NodeJS篇' },
+      { text: 'Nginx', link: '/nginx/nginx篇' },
       { text: '前端性能优化、场景、bug', link: '/31-前端性能优化、场景、bug/性能优化篇' },
+    ]
+  },
+  {
+    text: 'BigData',
+    items: [
+      { text: 'Hadoop', link: '/34-Hadoop/Hadoop篇' },
+      { text: 'Spark', link: '/37-Spark/Spark篇' },
+      { text: 'HBase', link: '/35-HBase/HBase篇' },
+      { text: 'Hive', link: '/36-Hive/Hive篇' },
+      { text: 'Flink', link: '/38-Flink/Flink篇' },
+      { text: 'Scala', link: '/39-Scala/Scala篇' },
+      { text: '数据同步', link: '/40-数据同步/数据同步篇' },
     ]
   },
   {
     text: '其他',
     items: [
       { text: '参考与鸣谢', link: '/thankYou' },
-      { text: 'VitePress Markdown语法扩展', link: '/markdown-examples' }
+      { text: 'VitePress Markdown语法扩展', link: '/markdown-examples' },
+      { text: '书籍阅读记录',  
+        items: [
+            { text: '《Java8实战》', link: '/50-Java8实战/01-将函数参数化进行传递' },
+            { text: '《effective java》', link: '/51-啃书-《effective java》/01-考虑使用静态方法代替构造方法' },
+        ],
+      }
     ]
   }
 ]

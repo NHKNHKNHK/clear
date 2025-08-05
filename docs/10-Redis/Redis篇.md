@@ -2114,7 +2114,7 @@ zookeeper也是企业级开发中较好的一个实现分布式锁的方案，�
 
 使用数据库的SELECT ... FOR UPDATE 语句或类似的行级锁机制来实现分布式锁。优点是实现简单，缺点是性能较低，依赖于数据库的高可用性。高并发情况下也会对数据库造成非常大的压力。
 
-```mysql
+```sql
 -- 获取锁
 SELECT * FROM locks WHERE resource = 'resource_name' FOR UPDATE;
 
