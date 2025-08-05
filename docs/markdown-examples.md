@@ -829,7 +829,7 @@ Some getting started stuff.
 npm add -D markdown-it-mathjax3
 ```
 
-```pnpm [pnpm]
+```sh [pnpm]
 pnpm add -D markdown-it-mathjax3
 ```
 :::

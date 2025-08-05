@@ -1,0 +1,1 @@
+# 相比Oracle，MySQL的优势有哪些？

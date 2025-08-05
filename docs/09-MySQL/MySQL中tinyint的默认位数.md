@@ -1,0 +1,1 @@
+# MySQL中tinyint的默认位数

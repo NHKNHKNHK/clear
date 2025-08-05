@@ -1,0 +1,1 @@
+# mysql的除了binlog和redolog，还有其他的什么log吗

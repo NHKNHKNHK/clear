@@ -1,0 +1,1 @@
+# mysql的redolog是什么？

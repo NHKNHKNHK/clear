@@ -1,0 +1,1 @@
+# MySQL中varchar(100)和varchar(10)的区别？

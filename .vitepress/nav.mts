@@ -68,7 +68,7 @@ export default [
       { text: 'SpringBoot', link: '/07-SpringBoot/SpringBoot篇' },
       { text: 'SpringCloud、微服务', link: '/08-SpringCloud、微服务/SpringCloud篇' },
       { text: '分布式', link: '/12-分布式/分布式篇' },
-      { text: 'MySQL', link: '/09-MySQL/MySQL篇' },
+      { text: 'MySQL', link: '/09-MySQL' },
       { text: 'Redis', link: '/10-Redis/Redis篇' },
       { text: 'ORM', link: '/11-ORM框架-Mybatis、MybtisPlus/Mybatis篇' },
       { text: 'Zookeeper', link: '/13-Zookeeper/Zookeeper篇' },

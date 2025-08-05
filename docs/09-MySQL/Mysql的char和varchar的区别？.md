@@ -1,0 +1,1 @@
+# Mysql的char和varchar的区别？

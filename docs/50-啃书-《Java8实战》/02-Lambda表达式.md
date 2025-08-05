@@ -42,7 +42,7 @@ Lambda特点：
 
 说明：
 
-​	**一个Lambda表达式由参数列表、箭头和Lambda体三部分组成**
+**一个Lambda表达式由参数列表、箭头和Lambda体三部分组成**
 
 完整表示：
 
@@ -76,7 +76,7 @@ List<Apple> greenApples = filter(inventory, (Apple 1) -> "green".equals(a.getCol
 
 在这个例子中，我们将Lambda表达式作为第二个参数传递给filter方法，为什么能将Lambda传递给这个参数呢？
 
-因为这个参数需要实现Pridicate<T>接口，而且这是一个函数式接口。
+因为这个参数需要实现`Pridicate<T>`接口，而且这是一个函数式接口。
 
 ## 3.1 函数式接口
 
