@@ -1,0 +1,1 @@
+# 为什么Java中某些新生代和老年代的垃圾收集器不能组合使用？比如ParNew和Parallel-Old

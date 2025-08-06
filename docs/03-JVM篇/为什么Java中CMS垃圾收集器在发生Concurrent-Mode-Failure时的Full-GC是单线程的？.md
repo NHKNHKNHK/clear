@@ -1,0 +1,1 @@
+# 为什么Java中CMS垃圾收集器在发生Concurrent-Mode-Failure时的Full-GC是单线程的？

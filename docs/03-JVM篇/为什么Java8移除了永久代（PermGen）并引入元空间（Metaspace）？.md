@@ -1,0 +1,1 @@
+# 为什么Java8移除了永久代（PermGen）并引入元空间（Metaspace）？

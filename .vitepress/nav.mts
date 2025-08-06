@@ -59,7 +59,7 @@ export default [
     items: [
       { text: 'Java基础', link: '/01-Java基础' },
       { text: 'Java集合', link: '/02-Java集合篇' },
-      { text: 'JVM篇', link: '/03-JVM篇/JVM篇' },
+      { text: 'JVM篇', link: '/03-JVM篇' },
       { text: 'Java并发篇', link: '/04-Java并发篇' },
       { text: 'Spring', link: '/05-Spring' },
       { text: 'SpringMVC', link: '/06-SpringMVC/SpringMVC篇' },
@@ -70,7 +70,7 @@ export default [
       { text: 'Redis', link: '/10-Redis/Redis篇' },
       { text: 'ORM', link: '/11-ORM框架-Mybatis、MybtisPlus/Mybatis篇' },
       { text: 'Zookeeper', link: '/13-Zookeeper/Zookeeper篇' },
-      { text: 'ElasticSearch', link: '/14-ElasticSearch/ElasticSearch篇' },
+      { text: 'ElasticSearch', link: '/14-ElasticSearch' },
       {
         text: '消息队列',
         items: [
