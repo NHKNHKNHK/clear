@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import DefaultTheme from "vitepress/theme";
 import NotFound from "./components/NotFound.vue";
+import AsideTop from "./components/AsideTop.vue";
 import { useData } from "vitepress";
 import { nextTick, provide } from "vue";
 
@@ -54,7 +55,10 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
     <!-- <template #doc-after>doc-after</template> -->
     <!-- <template #sidebar-nav-before>sidebar-nav-before</template> -->
     <!-- <template #sidebar-nav-after>sidebar-nav-after</template> -->
-    <!-- <template #aside-top>sidebar top</template> -->
+    <template #aside-top>
+      <!-- sidebar top -->
+      <AsideTop/>
+    </template>
     <!-- <template #aside-bottom>sidebar bottom</template> -->
     <!-- <template #aside-outline-before>aside-outline-before</template> -->
     <!-- <template #aside-outline-after>aside-outline-after</template> -->
