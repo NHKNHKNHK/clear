@@ -61,7 +61,7 @@ export default [
       { text: 'Java集合', link: '/02-Java集合篇' },
       { text: 'JVM篇', link: '/03-JVM篇/JVM篇' },
       { text: 'Java并发篇', link: '/04-Java并发篇' },
-      { text: 'Spring', link: '/05-Spring/Spring篇' },
+      { text: 'Spring', link: '/05-Spring' },
       { text: 'SpringMVC', link: '/06-SpringMVC/SpringMVC篇' },
       { text: 'SpringBoot', link: '/07-SpringBoot/SpringBoot篇' },
       { text: 'SpringCloud、微服务', link: '/08-SpringCloud、微服务/SpringCloud篇' },
