@@ -1,0 +1,1 @@
+# mybatis的paramtertype为什么可以写简称？

@@ -68,7 +68,7 @@ export default [
       { text: '分布式', link: '/12-分布式/分布式篇' },
       { text: 'MySQL', link: '/09-MySQL' },
       { text: 'Redis', link: '/10-Redis/Redis篇' },
-      { text: 'ORM', link: '/11-ORM框架-Mybatis、MybtisPlus/Mybatis篇' },
+      { text: 'ORM', link: '/11-ORM' },
       { text: 'Zookeeper', link: '/13-Zookeeper/Zookeeper篇' },
       { text: 'ElasticSearch', link: '/14-ElasticSearch' },
       {
