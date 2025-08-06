@@ -48,6 +48,8 @@ export default defineConfig({
     darkModeSwitchLabel: '外观',
     lightModeSwitchTitle: '切换浅色模式',
     darkModeSwitchTitle: '切换暗黑模式',
+
+    // aside 右侧边栏
     outline: {
       label: '本页目录',
       level: 'deep', // 要显示的标题级别，`'deep'` 与 `[2, 6]` 相同，将显示从 `<h2>` 到 `<h6>` 的所有标题

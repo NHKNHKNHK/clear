@@ -191,19 +191,107 @@ export default {
       ]
     },
   ],
-  '/02-Java集合篇': [
+  '/02-Java集合篇/': [
     {
       text: 'Java集合',
+      collapsed: true,
       items: [
+        { text: '导航', link: '/02-Java集合篇/index' },
+        { text: '集合篇', link: '/02-Java集合篇/Java集合篇' },
+        { text: '数组和链表在Java中的区别？', link: '/02-Java集合篇/数组和链表在Java中的区别？' },
+        { text: 'Java中有哪些集合类？概述Java集合体系？', link: '/02-Java集合篇/Java中有哪些集合类？概述Java集合体系？' },
+        { text: 'List、Set、Map之间的区别是什么？', link: '/02-Java集合篇/List、Set、Map之间的区别是什么？' },
+        { text: 'Collection和Collections的区别？', link: '/02-Java集合篇/Collection和Collections的区别？' },
+        { text: '为什么Map接口不继承Collection接口？', link: '/02-Java集合篇/为什么Map接口不继承Collection接口？' },
+        { text: 'Arrays.asList() 方法把数组转换成集合', link: '/02-Java集合篇/Arrays.asList() 方法把数组转换成集合' },
+        { text: 'List和Array之间如何互相转换？', link: '/02-Java集合篇/List和Array之间如何互相转换？' },
+        { text: '集合遍历时remove或add操作注意事项？', link: '/02-Java集合篇/集合遍历时remove或add操作注意事项？' },
         { text: 'Comparable 和 Comparator的区别', link: '/02-Java集合篇/Comparable和Comparator的区别' },
         { text: 'Iterable接口与Iterator接口', link: '/02-Java集合篇/Iterable接口与Iterator接口' },
+        { text: 'Enumeration和Iterator接口的区别？', link: '/02-Java集合篇/Enumeration和Iterator接口的区别？' },
+        { text: '什么是fail-fast机制（快速失败）？', link: '/02-Java集合篇/什么是fail-fast机制（快速失败）？' },
+        { text: '什么是fail-safe机制（副本机制）？', link: '/02-Java集合篇/什么是fail-safe机制（副本机制）？' },
+        { text: 'fail-fast和fail-safe有什么区别？', link: '/02-Java集合篇/fail-fast和fail-safe有什么区别？' },
+        { text: '如何确保函数不能修改集合？', link: '/02-Java集合篇/如何确保函数不能修改集合？' },
+        { text: '哪些集合支持对元素的随机访问？', link: '/02-Java集合篇/哪些集合支持对元素的随机访问？' },
+        { text: 'foreach于普通for循环的区别？', link: '/02-Java集合篇/foreach于普通for循环的区别？' },
+        { text: 'foreach和迭代器有什么关系？', link: '/02-Java集合篇/foreach和迭代器有什么关系？' },
+        { text: 'List遍历有那几种遍历方式？', link: '/02-Java集合篇/List遍历有那几种遍历方式？' },
+        { text: '什么是Java中的Copy-On-Write？', link: '/02-Java集合篇/什么是Java中的Copy-On-Write？' },
+        { text: '常用的并发集合有哪些？', link: '/02-Java集合篇/常用的并发集合有哪些？' },
+        { text: 'CopyOnWriteArrayList和Collections.synchronization有什么区别？分别有什么优缺点？', link: '/02-Java集合篇/CopyOnWriteArrayList和Collections.synchronization有什么区别？分别有什么优缺点？' },
       ]
     },
     {
       text: 'List',
-      item: [
+      collapsed: true,
+      items: [
         { text: '请你介绍以下常见的List实现类', link: '/02-Java集合篇/List/请你介绍以下常见的List实现类' },
-        { text: 'ArrayList', link: '/02-Java集合篇/List/ArrayList 与 Vector 的区别' },
+        { text: 'ArrayList 与 Vector 的区别？', link: '/02-Java集合篇/List/ArrayList 与 Vector 的区别？' },
+        { text: 'ArrayList初始容量是多少？', link: '/02-Java集合篇/List/ArrayList初始容量是多少？' },
+        { text: 'ArrayList是如何扩容的？（扩容机制）', link: '/02-Java集合篇/List/ArrayList是如何扩容的？' },
+        { text: 'ArrayList第二次扩容时容量大小？', link: '/02-Java集合篇/List/ArrayList第二次扩容时容量大小？' },
+        { text: 'ArrayList的添加与删除元素为什么慢？', link: '/02-Java集合篇/List/ArrayList的添加与删除元素为什么慢？' },
+        { text: 'ArrayList是线程安全的吗？', link: '/02-Java集合篇/List/ArrayList是线程安全的吗？' },
+        { text: 'ArrayList如何保证线程安全？', link: '/02-Java集合篇/List/ArrayList如何保证线程安全？' },
+        { text: 'ArrayList可以插入null吗？为什么？', link: '/02-Java集合篇/List/ArrayList可以插入null吗？为什么？' },
+        { text: 'ArrayList和LinkedList有什么区别？', link: '/02-Java集合篇/List/ArrayList和LinkedList有什么区别？' },
+        { text: 'LinkedList 真的比 ArrayList 添加元素快吗？', link: '/02-Java集合篇/List/LinkedList 真的比 ArrayList 添加元素快吗？' },
+        { text: '栈和队列有什么区别？', link: '/02-Java集合篇/List/栈和队列有什么区别？' },
+        { text: '什么是阻塞队列？', link: '/02-Java集合篇/List/什么是阻塞队列？' },
+        { text: '如何手写一个生产者与消费者队列？', link: '/02-Java集合篇/List/如何手写一个生产者与消费者队列？' },
+        { text: '编程实现删除List集合中的元素，有几种方式？', link: '/02-Java集合篇/List/编程实现删除List集合中的元素，有几种方式？' },
+      ]
+    },
+    {
+      text: 'Set',
+      items: [
+        { text: 'Java中Set有哪些常见实现类？', link: '/02-Java集合篇/Set/Java中Set有哪些常见实现类？' },
+        { text: 'HashSet 中添加元素的过程？', link: '/02-Java集合篇/Set/HashSet 中添加元素的过程？' },
+        { text: 'HashSet如何实现线程安全？', link: '/02-Java集合篇/Set/HashSet如何实现线程安全？' },
+        { text: 'HashSet、LinkedHashSet、TreeSet的区别？', link: '/02-Java集合篇/Set/HashSet、LinkedHashSet、TreeSet的区别？' },
+
+
+        { text: 'HashSet和HashMap的区别是什么？', link: '/02-Java集合篇/Set/HashSet和HashMap的区别是什么？' },
+        { text: 'HashSet是如何保证元素唯一性的？', link: '/02-Java集合篇/Set/HashSet是如何保证元素唯一性的？' },
+        { text: '为什么HashSet的add方法是常量时间复杂度？', link: '/02-Java集合篇/Set/为什么HashSet的add方法是常量时间复杂度？' },
+      ]
+    },
+    {
+      text: 'Map',
+      items: [
+        { text: 'Java中Map有哪些常见实现类？', link: '/02-Java集合篇/Map/Java中Map有那些常见实现类？' },
+        { text: 'Hashtable 与 HashMap的区别？', link: '/02-Java集合篇/Map/Hashtable 与 HashMap的区别？' },
+        { text: 'HashMap和Hashtable的区别？', link: '/02-Java集合篇/Map/Hashtable 与 HashMap的区别？' },
+        { text: 'HashMap、LinkedHashMap、TreeMap与Hashtable的区别？', link: '/02-Java集合篇/Map/HashMap、LinkedHashMap、TreeMap与Hashtable的区别？' },
+        { text: '什么是IdentityHashMap？', link: '/02-Java集合篇/Map/什么是IdentityHashMap？' },
+        { text: '什么是WeakHashMap？', link: '/02-Java集合篇/Map/什么是WeakHashMap？' },
+        { text: 'HashMap是怎么计算hashCode的？（HashMap是怎么确定key存储在数组上的索引位置的？）', link: '/02-Java集合篇/Map/HashMap是怎么计算hashCode的？（HashMap是怎么确定key存储在数组上的索引位置的？）' },
+        { text: 'HashMap为什么要使用扰动函数？', link: '/02-Java集合篇/Map/HashMap为什么要使用扰动函数？' },
+        { text: '为什么HashMap扩容时采用2^n倍（2的幂次）？', link: '/02-Java集合篇/Map/为什么HashMap扩容时采用2^n倍（2的幂次）？' },
+        { text: 'HashMap的默认容器到底是多大？', link: '/02-Java集合篇/Map/HashMap的默认容器到底是多大？' },
+        { text: 'HashMap的主要参数都有哪些？', link: '/02-Java集合篇/Map/HashMap的主要参数都有哪些？' },
+        { text: '解决hash碰撞的方法？', link: '/02-Java集合篇/Map/解决hash碰撞的方法？' },
+        { text: '为什么HashMap的默认负载因子是0.75？', link: '/02-Java集合篇/Map/为什么HashMap的默认负载因子是0.75？' },
+        { text: '重新调整HashMap大小存在什么问题吗？', link: '/02-Java集合篇/Map/重新调整HashMap大小存在什么问题吗？' },
+        { text: 'HashMap扩容机制？', link: '/02-Java集合篇/Map/HashMap扩容机制？' },
+        { text: 'JDK1.7中HashMap的实现？', link: '/02-Java集合篇/Map/JDK1.7中HashMap的实现？' },
+        { text: 'JDK1.8中HashMap的实现？', link: '/02-Java集合篇/Map/JDK1.8中HashMap的实现？' },
+        { text: 'JDK8的HashMap的put过程？', link: '/02-Java集合篇/Map/JDK8的HashMap的put过程？' },
+        { text: '为什么String, Integer这样的wrapper类适合作为键？', link: '/02-Java集合篇/Map/为什么String, Integer这样的wrapper类适合作为键？' },
+        { text: '为什么JDK8对HashMap进行了红黑树改动？', link: '/02-Java集合篇/Map/为什么JDK8对HashMap进行了红黑树改动？' },
+        { text: 'JDK8对HashMap进行了哪些改动，除了红黑树？', link: '/02-Java集合篇/Map/JDK8对HashMap进行了哪些改动，除了红黑树？' },
+        { text: '为什么HashMap多线程会进入死循环？', link: '/02-Java集合篇/Map/为什么HashMap多线程会进入死循环？' },
+        { text: '使用HashMap时，有哪些提升性能的技巧？', link: '/02-Java集合篇/Map/使用HashMap时，有哪些提升性能的技巧？' },
+        { text: 'LinkedHashMap是如何保证有序性的？', link: '/02-Java集合篇/Map/LinkedHashMap是如何保证有序性的？' },
+        { text: 'LinkedHashMap为什么能用来做LRUCache？', link: '/02-Java集合篇/Map/LinkedHashMap为什么能用来做LRUCache？' },
+        { text: 'JDK7中ConcurrentHashMap的实现？', link: '/02-Java集合篇/Map/JDK7中ConcurrentHashMap的实现？' },
+        { text: 'JDK8中ConcurrentHashMap的实现？', link: '/02-Java集合篇/Map/JDK8中ConcurrentHashMap的实现？' },
+        { text: 'ConcurrentHashMap在JDK7和8之间的区别？', link: '/02-Java集合篇/Map/ConcurrentHashMap在JDK7和8之间的区别？' },
+        { text: 'ConcurrentHashMap的get方法是否需要加锁？', link: '/02-Java集合篇/Map/ConcurrentHashMap的get方法是否需要加锁？' },
+        { text: '为什么ConcurrentHashMap的k-v都不能为null？', link: '/02-Java集合篇/Map/为什么ConcurrentHashMap的k-v都不能为null？' },
+        { text: 'ConcurrentHashMap底层具体实现你知道吗？实现原理？', link: '/02-Java集合篇/Map/ConcurrentHashMap底层具体实现你知道吗？实现原理？' },
+        { text: '你遇到过ConrrentModificationException异常吗？', link: '/02-Java集合篇/Map/你遇到过ConrrentModificationException异常吗？' },
       ]
     }
   ],
@@ -275,11 +363,11 @@ export default {
         { text: '排除死锁的方式有哪些？', link: '/04-Java并发篇/排除死锁的方式有哪些？' },
         { text: '什么是协程？Java支持协程吗？', link: '/04-Java并发篇/什么是协程？Java支持协程吗？' },
         { text: '什么是Java中的线程同步？', link: '/04-Java并发篇/什么是Java中的线程同步？' },
-        { text: '什么是Java中的ABA问题？', link: '/04-Java并发篇/什么是Java中的ABA问题？' },   
+        { text: '什么是Java中的ABA问题？', link: '/04-Java并发篇/什么是Java中的ABA问题？' },
         { text: 'Java内存模型（JMM）？', link: '/04-Java并发篇/Java内存模型（JMM）？' },
         { text: '线程的安全三大特性', link: '/04-Java并发篇/线程的安全三大特性' },
-    
-    
+
+
         { text: '什么是Java的happens-before规则？（JMM规范）', link: '/04-Java并发篇/什么是Java的happens-before规则？（JMM规范）' },
         { text: 'volatile关键字的作用？', link: '/04-Java并发篇/volatile关键字的作用？' },
         { text: '什么是Java中的指令重排？', link: '/04-Java并发篇/什么是Java中的指令重排？' },
@@ -367,15 +455,15 @@ export default {
         { text: '什么是Java的ForkJoinPool？', link: '/04-Java并发篇/什么是Java的ForkJoinPool？' },
         { text: '乐观锁如果通过数据库实现，并发情况下，数据库如何保证一致', link: '/04-Java并发篇/乐观锁如果通过数据库实现，并发情况下，数据库如何保证一致' },
         { text: '一道题搞懂所有锁', link: '/04-Java并发篇/一道题搞懂所有锁' },
-   
-   
-   
-   
-   
-   
-   
-   
-   
+
+
+
+
+
+
+
+
+
       ]
     }
   ],
@@ -384,11 +472,9 @@ export default {
       text: 'Spring',
       items: [
         { text: '导读', link: '/05-Spring/index' },
-        { text: 'Spring篇', link: '/05-Spring/Spring篇' },
         { text: '谈谈你对Spring的理解？', link: '/05-Spring/谈谈你对Spring的理解？' },
         { text: '看过源码吗？说说Spring由哪些重要的模块组成？', link: '/05-Spring/看过源码吗？说说Spring由哪些重要的模块组成？' },
         { text: 'Spring和SpringMVC的关系？', link: '/05-Spring/Spring和SpringMVC的关系？' },
-        
         { text: '说说Spring启动过程？', link: '/05-Spring/说说Spring启动过程？' },
         { text: 'Spring中的BeanFactory是什么？', link: '/05-Spring/Spring中的BeanFactory是什么？' },
         { text: 'Spring中的FactoryBean是什么？', link: '/05-Spring/Spring中的FactoryBean是什么？' },
@@ -466,7 +552,6 @@ export default {
         { text: '@ExceptionHandler注解的作用？', link: '/05-Spring/@ExceptionHandler注解的作用？' },
         { text: '@ResponseStatus注解的作用？', link: '/05-Spring/@ResponseStatus注解的作用？' },
         { text: '@Validated和@Valid注解的作用？区别？', link: '/05-Spring/@Validated和@Valid注解的作用？区别？' },
-        { text: '', link: '/05-Spring/@Validated和@Valid注解的作用？区别？' },
         { text: '@Scheduled注解的作用？', link: '/05-Spring/@Scheduled注解的作用？' },
         { text: '@Cacheable和@CacheEvict注解的作用？', link: '/05-Spring/@Cacheable和@CacheEvict注解的作用？' },
         { text: '@Conditional及相关注解的作用？', link: '/05-Spring/Conditional及相关注解的作用？' },
@@ -632,6 +717,15 @@ export default {
         { text: 'MySQL的Doublewriter Buffer是什么？有什么用？', link: '/09-MySQL/MySQL的Doublewriter Buffer是什么？有什么用？' },
         { text: 'MySQL的Long Buffer是什么？有什么用？', link: '/09-MySQL/MySQL的Long Buffer是什么？有什么用？' },
 
+      ]
+    }
+  ],
+  '/14-ElasticSearch/': [
+    {
+      text: 'ElasticSearch',
+      items: [
+        { text: 'ES', link: '/14-ElasticSearch/index' },
+        { text: 'ES检索比较快的原因，为什么MySQL不行？', link: '/14-ElasticSearch/ES检索比较快的原因，为什么MySQL不行？' },
       ]
     }
   ],

@@ -1,4 +1,4 @@
-# ArrayList第二次扩容时容量大小？
+# ArrayList第二次扩容时容量大小？:star:
 
 ArrayList扩容规则：
 
