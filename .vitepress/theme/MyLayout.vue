@@ -76,8 +76,8 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
     <!-- <template #home-features-after>home-features-after</template> -->
 
     <!-- 当 layout: 'page' 在 frontmatter 中被启用时 -->
-    <template #page-top>page-top</template>
-    <template #page-bottom>page-bottom</template>
+    <!-- <template #page-top>page-top</template> -->
+    <!-- <template #page-bottom>page-bottom</template> -->
 
     <!-- 当未找到页面 (404) 时 404 -->
     <template #not-found>

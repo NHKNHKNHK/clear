@@ -32,6 +32,12 @@ export default {
     })
   },
 
+  /**
+   * 增强 Vue 应用实例
+   *    app: App // Vue 应用实例
+   *    router: Router // VitePress 路由实例
+   *    siteData: Ref<SiteData> // 站点级元数据
+   */
   enhanceApp({ app, router, siteData }) {
     // 注册自定义全局组件
     app.component('MyGlobalComponent' /* ... */)

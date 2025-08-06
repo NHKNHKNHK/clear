@@ -1,6 +1,10 @@
-# 支持老哥，请老哥喝口水吧
+---
+# 禁用底部的编辑链接
+editLink: false
+---
 
-<!-- ![](./public/wx-pay.jpg) -->
+
+# 支持老哥，请老哥喝口水吧
 
 <script setup> 
 import ZhiChi from '../.vitepress/theme/components/ZhiChi.vue'

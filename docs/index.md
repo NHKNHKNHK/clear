@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "Clear有点意思"
   text: "经典老哥的成长之路"
-  tagline: 包含前后端的技术栈
+  tagline: 前端 · 后端 · 大数据
   # 首页右侧logo
   image: {
     src: /favicon.ico,
@@ -28,7 +28,11 @@ hero:
       link: /zhichi
 
 features:
-  - icon: 🛠️
+  - icon:
+      dark: /dark-java.svg
+      light: /light-java.svg
+      width: 40
+      height: 40
     title: Feature A
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
     link: /api-examples
@@ -48,7 +52,6 @@ import HomeUnderline  from '../.vitepress/theme/components/HomeUnderline.vue'
 <Confetti/>
 <!-- 首页文字下划线效果 -->
 <HomeUnderline/>
-
 
 
 ## 一些额外的内容
