@@ -186,7 +186,54 @@ features:
 
 ---
 
+<style>
+/* 首页hero中文字无法选中 */
+.container>.main  {
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
 
+/* feature中内容居中 */
+.container .item .VPFeature .box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* feature */
+.container .item .VPFeature {
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* 平滑过渡效果 */
+}
+
+.container .item .VPFeature:hover {
+  outline: 1px solid var(--vp-c-brand-1);
+  transform: translateY(-5px); /* 放大效果 */
+
+  /* 底部阴影 */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* /* feature title放大效果 */ */
+.container .item .VPFeature .box .title {
+  transition: transform 0.3s ease;
+}
+
+.container .item .VPFeature:hover .box .title {
+  color: var(--vp-c-brand-1);
+  transform: scale(1.2);
+}
+
+/* feature图片放大效果 */
+.container .item .VPFeature .box .VPImage {
+  transition: transform 0.3s ease;
+}
+
+.container .item .VPFeature:hover .box .VPImage {
+  transform: scale(1.5);
+}
+</style>
 
 <script setup>
 // 在使用的地方显式的导入，使它们可以正确地进行代码拆分，并且仅在显示相关页面时才加载
