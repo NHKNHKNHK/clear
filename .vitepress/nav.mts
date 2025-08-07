@@ -67,7 +67,7 @@ export default [
       { text: 'SpringCloud、微服务', link: '/08-SpringCloud、微服务' },
       { text: '分布式', link: '/12-分布式' },
       { text: 'MySQL', link: '/09-MySQL' },
-      { text: 'Redis', link: '/10-Redis/Redis篇' },
+      { text: 'Redis', link: '/10-Redis' },
       { text: 'ORM', link: '/11-ORM' },
       { text: 'Zookeeper', link: '/13-Zookeeper/Zookeeper篇' },
       { text: 'ElasticSearch', link: '/14-ElasticSearch' },

@@ -162,13 +162,13 @@ public class FunctionalInterfaceDemo {
 
 ## 3.3 @FunctionalInterface注解
 
-**@FunctionalInterface注解**在很多函数式接口的Java API源码中都出现过，简单来说它就是**标记一个接口为函数式接口，如果接口不为函数式接口，编译器将返回一个提示原因的错误。**
+**`@FunctionalInterface`注解**在很多函数式接口的Java API源码中都出现过，简单来说它就是**标记一个接口为函数式接口，如果接口不为函数式接口，编译器将返回一个提示原因的错误。**
 
-我们**可以在一个接口上使用 @FunctionalInterface 注解**，这样做**可以检查它是否是一个函数式接口**。同时 javadoc 也会包含一条声明，说明这个接口是一个函数式接口。
+我们**可以在一个接口上使用 `@FunctionalInterface` 注解**，这样做**可以检查它是否是一个函数式接口**。同时 javadoc 也会包含一条声明，说明这个接口是一个函数式接口。
 
 注意：
 
-​	对于设计接口而言，我们不加入@FunctionalInterface注解也可以，但它是一个好的做法。就像我们在重写一个方法时加上@Override注解一样。
+​	对于设计接口而言，我们不加入`@FunctionalInterface`注解也可以，但它是一个好的做法。就像我们在重写一个方法时加上@Override注解一样。
 
 # 4 把Lambda付诸实践：环绕执行模式
 
@@ -333,7 +333,7 @@ public void test() {
 }
 ```
 
-## 4.3 **Function** 函数型接口
+## 4.3 Function 函数型接口
 
 `java.util.function.Function<T, R>`接口定义了一个叫作apply的方法，它接受一个泛型T的对象，并返回一个泛型R的对象。如下：
 

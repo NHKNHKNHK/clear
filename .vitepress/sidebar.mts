@@ -946,6 +946,78 @@ export default {
       ]
     }
   ],
+  '/10-Redis/': [
+    {
+      text: '基础',
+      items: [
+        { text: 'Redis', link: '/10-Redis/' },
+        { text: 'Redis', link: '/10-Redis/Redis篇' },
+        { text: '什么是Redis？', link: '/10-Redis/什么是Redis？' },
+        { text: 'Redis相比memcached有哪些优势？', link: '/10-Redis/Redis相比memcached有哪些优势？' },
+        { text: 'Redis为什么那么快？', link: '/10-Redis/Redis为什么那么快？' },
+        { text: 'Redis有哪些优点？', link: '/10-Redis/Redis有哪些优点？' },
+        { text: 'Redis常见五大数据类型？', link: '/10-Redis/Redis常见五大数据类型？' },
+        { text: 'Redis的高级数据类型有哪些？', link: '/10-Redis/Redis的高级数据类型有哪些？' },
+        { text: 'Redis的一般使用场景？', link: '/10-Redis/Redis的一般使用场景？' },
+        { text: 'Redis常用类型的应用场景？', link: '/10-Redis/Redis常用类型的应用场景？' },
+        { text: 'Redis是单线程还是多线程？', link: '/10-Redis/Redis是单线程还是多线程？' },
+        { text: 'Redis 为什么单线程还这么快？', link: '/10-Redis/Redis 为什么单线程还这么快？' },
+        { text: 'Redis为什么要设计成单线程？6.0不是变成多线程了吗？', link: '/10-Redis/Redis为什么要设计成单线程？6.0不是变成多线程了吗？' },
+        { text: 'Redis的list类型常见的命令？', link: '/10-Redis/Redis的list类型常见的命令？' },
+        { text: 'Redis的Geo类型？', link: '/10-Redis/Redis的Geo类型？' },
+        { text: 'Redis的Bitmap类型？', link: '/10-Redis/Redis的Bitmap类型？' },
+        { text: 'Redis的HyperLogLog类型？', link: '/10-Redis/Redis的HyperLogLog类型？' },
+        { text: '本地缓存与分布式缓存的区别？', link: '/10-Redis/本地缓存与分布式缓存的区别？' },
+        { text: 'Caffeine的缓存驱逐策略（过期策略）', link: '/10-Redis/Caffeine的缓存驱逐策略（过期策略）' },
+      ]
+    },
+    {
+      text: '持久化',
+      items: [
+        { text: 'Redis持久化', link: '/10-Redis/持久化' },
+      ]
+    },
+    {
+      text: '分布式',
+      items: [
+        { text: 'Redis集群', link: '/10-Redis/集群' },
+        { text: 'Redis的复制延迟有哪些可能的原因？', link: '/10-Redis/Redis的复制延迟有哪些可能的原因？' },
+      ]
+    },
+    {
+      text: '场景',
+      items: [
+        { text: '什么情况下会出现数据库和缓存不一致的问题？', link: '/10-Redis/什么情况下会出现数据库和缓存不一致的问题？' },
+        { text: '如何解决Redis和数据库的一致性问题？', link: '/10-Redis/如何解决Redis和数据库的一致性问题？' },
+        { text: '为什么需要延迟双删，两次删除的原因是什么？', link: '/10-Redis/为什么需要延迟双删，两次删除的原因是什么？' },
+        { text: '有了第二次删除，第一次还有意义吗？', link: '/10-Redis/有了第二次删除，第一次还有意义吗？' },
+        { text: '什么是缓存穿透？', link: '/10-Redis/什么是缓存穿透？' },
+        { text: '什么是缓存击穿？（热点key）', link: '/10-Redis/什么是缓存击穿？（热点key）' },
+        { text: '什么是缓存雪崩？', link: '/10-Redis/什么是缓存雪崩？' },
+        { text: '缓存击穿、雪崩、穿透的区别？', link: '/10-Redis/缓存击穿、雪崩、穿透的区别？' },
+        { text: '如果有大量的key需要设置同一时间过期，一般需要注意什么？', link: '/10-Redis/如果有大量的key需要设置同一时间过期，一般需要注意什么？' },
+        { text: 'Redis生成全局唯一ID', link: '/10-Redis/Redis生成全局唯一IDs' },
+      ]
+    },
+    {
+      text: '进阶',
+      items: [
+        { text: 'RedisKeyValue设计原则有哪些？', link: '/10-Redis/RedisKeyValue设计原则有哪些？' },
+        { text: '为什么EMBSTR的阈值是44？为什么以前是39？', link: '/10-Redis/为什么EMBSTR的阈值是44？为什么以前是39？' },
+        { text: 'Redis可以实现事务吗？', link: '/10-Redis/Redis可以实现事务吗？' },
+        { text: 'Redis 事务三特性？', link: '/10-Redis/Redis 事务三特性？' },
+        { text: 'Redis事务保证原子性吗，支持回滚吗？', link: '/10-Redis/Redis事务保证原子性吗，支持回滚吗？' },
+        { text: 'Redis的事务和关系型数据库有何不同？', link: '/10-Redis/Redis的事务和关系型数据库有何不同？' },
+        { text: 'Redis中如何实现队列和栈的功能？', link: '/10-Redis/Redis中如何实现队列和栈的功能？' },
+        { text: '简述Redis的Ziplist和Quicklist？', link: '/10-Redis/简述Redis的Ziplist和Quicklist？' },
+        { text: '什么是Redis的ListPack？', link: '/10-Redis/什么是Redis的ListPack？' },
+        { text: 'Redis的内存碎片化是什么？如何解决？', link: '/10-Redis/Redis的内存碎片化是什么？如何解决？' },
+        { text: 'Redis字符串的值最大能存多少？', link: '/10-Redis/Redis字符串的值最大能存多少？' },
+        { text: '什么是Redis的ListPack？', link: '/10-Redis/什么是Redis的ListPack？' },
+        { text: '什么是Redis的ListPack？', link: '/10-Redis/什么是Redis的ListPack？' },
+      ]
+    }
+  ],
   '/11-ORM/': [
     {
       text: 'Mybatis',

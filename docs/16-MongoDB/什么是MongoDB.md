@@ -1,6 +1,4 @@
-
-
-## 什么是MongoDB
+# 什么是MongoDB
 
 官方文档：https://www.mongodb.com/docs/v5.0/
 
@@ -39,7 +37,7 @@
 
 而MongoDB可应对“三高”需求
 
-### MongoDB的特点
+## MongoDB的特点
 
 MongoDB主要有如下特点： 
 
@@ -81,7 +79,7 @@ MongoDB支持丰富的查询语言，支持读和写操作(CRUD)，比如数据�
 -   支持事务（在5.x版本目前只支持单条事务，不支持集合式事务）
 -   支持索引、聚合、关联
 
-### 具体的应用场景
+## 具体的应用场景
 
 1）社交场景，使用 MongoDB 存储存储用户信息，以及用户发表的朋友圈信息，通过地理位置索引实现附近的人、地点等功能。 
 
@@ -124,97 +122,5 @@ MongoDB支持丰富的查询语言，支持读和写操作(CRUD)，比如数据�
 ​	应用需要大量的地理位置查询、文本查询 
 
 如果上述有1个符合，可以考虑 MongoDB，2个及以上的符合，选择 MongoDB 绝不会后悔
-
-
-
-## MongoDB体系结构/核心概念
-
-**DataBase**
-
-**mongodb中的库就类似于传统关系型数据库中库的概念，用来通过不同库隔离不同应用数据。**
-
-mongodb中可以建立多个数据库。每一个库都有自己的集合和权限，不同的数据库也放置在不同的文件中。默认的数据库为"test”，数据库存储在启动时指定的data目录中
-
-**Collection**
-
-集合就是 MongoDB 文档组，类似于 RDBMS**（关系数据库管理系统：RelationalDatabase Management System）**中的表的概念。
-
-集合存在于数据库中，一个库中可以创建多个集合。每个集合没有固定的结构，这意味着你在对集合可以插入不同格式和类型的数据，但通常情况下我们插入集合的数据都会有一定的关联性。
-
-**Document**
-
-文档集合中一条条记录，是一组键值（key-value）对（即 BSON）。MongoDB 的文档不需要设置相同的字段，并且相同的字段不需要相同的数据类型，这与关系型数据库有很大的区别，也是 MongoDB非常突出的特点。
-一个简单的文档例子如下：
-
-```json
-{"site":"www.clear.com","name":"nhk"}
-```
-
-
-
-## RDBMS与 MongoDB对比
-
-| SQL术语/概念 | MongoDB术语/概念 | 解释/说明                               |
-| ------------ | ---------------- | --------------------------------------- |
-| database     | database         | 数据库                                  |
-| table        | collection       | 数据库表/集合                           |
-| row          | document         | 数据记录行/文档                         |
-| column       | field            | 数据字段/域                             |
-| index        | index            | 索引                                    |
-| table joins  |                  | 表连接,MongoDB不支持                    |
-|              | 嵌入文档         | MongoDB**通过嵌入式文档来替代多表连接** |
-| primary key  | primary key      | 主键,**MongoDB自动将_id字段设置为主键** |
-
-
-
-## MongoDB数据模型 
-
--   **MongoDB的最小存储单位就是文档(document)对象**。文档(document)对象对应于关系型数据库的行。数据在MongoDB中以BSON（Binary-JSON）文档的格式存储在磁盘上。 
--   BSON（Binary Serialized Document Format）是一种类json的一种二进制形式的存储格式，简称Binary JSON。BSON和JSON一样，支持内嵌的文档对象和数组对象，但是BSON有JSON没有的一些数据类型，如Date和BinData类型。 
--   BSON采用了类似于 C 语言结构体的名称、对表示方法，支持内嵌的文档对象和数组对象，具有轻量性、可遍历性、高效性的三个特点，可以有效描述非结构化数据和结构化数据。这种格式的优点是灵活性高，但它的缺点是空间利用率不是很理想。 
--   Bson中，除了基本的JSON类型：string,integer,boolean,double,null,array和object，mongo还使用了特殊的数据类型。这些类型包括 date,object id,binary data,regular expression 和code。每一个驱动都以特定语言的方式实现了这些类型，查看你的驱动的文档来获取详细信息。 
-
-BSON数据类型参考列表：
-
-| 数据类型      | 描述                                                         | 举例                                                 |
-| ------------- | ------------------------------------------------------------ | ---------------------------------------------------- |
-| 字符串        | UTF-8字符串都可表示为字符串类型的数据                        | {"x" : "foobar"}                                     |
-| 对象id        | 对象id是文档的12字节的唯一 ID                                | {"X" :ObjectId() }                                   |
-| 布尔值        | 真或者假：true或者false                                      | {"x":true}                                           |
-| 数组          | 值的集合或者列表可以表示成数组                               | {"x" ： ["a", "b", "c"]}                             |
-| 32位整数      | 类型**不可用**。JavaScript仅支持64位浮点数，所以32位整数会被自动转换。 | shell是不支持该类型的，shell中默认会转换成64位浮点数 |
-| 64位整数      | **不支持**这个类型。shell会使用一个特殊的内嵌文档来显示64位整数 | shell是不支持该类型的，shell中默认会转换成64位浮点数 |
-| 64位浮点数    | shell中的数字就是这一种类型                                  | {"x"：3.14159，"y"：3}                               |
-| null          | 表示空值或者未定义的对象                                     | {"x":null}                                           |
-| undefined     | 文档中也可以使用未定义类型                                   | {"x":undefined}                                      |
-| 符号          | shell**不支持**，shell会将数据库中的符号类型的数据自动转换成字符串 |                                                      |
-| 正则表达式    | 文档中可以包含正则表达式，采用JavaScript的正则表达式语法     | {"x" ： /foobar/i}                                   |
-| 代码          | 文档中还可以包含JavaScript代码                               | \{"x" ： function() { /* …… */ }\}                     |
-| 二进制数据    | 二进制数据可以由任意字节的串组成，不过shell中无法使用        |                                                      |
-| 最大值/最小值 | BSON包括一个特殊类型，表示可能的最大值。shell中没有这个类型。 |                                                      |
-
-提示： 
-
-​	shell默认使用64位浮点型数值。{“x”：3.14}或{“x”：3}。对于整型值，可以使用NumberInt（4字节符号整数）或NumberLong（8字节符号整数），{“x”:NumberInt(“3”)}{“x”:NumberLong(“3”)} 
-
-例如：
-
-在关系型数据库中
-
-| id   | user_name  | email        | age  | city        |
-| ---- | ---------- | ------------ | ---- | ----------- |
-| 1    | Mark Hanks | mark@abc.com | 25   | Los Angeles |
-
-BSON
-
-```json
-{
-	"_id": ObjectId("5146bb52d8524270060001f3"),
-    "age": 25,
-    "city": "Los Angeles",
-    "email": "mark@abc.com",
-    "user_name": "Mark Hanks"
-}
-```
 
 

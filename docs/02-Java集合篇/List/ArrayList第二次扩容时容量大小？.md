@@ -28,16 +28,16 @@ public class ArrayListDemo {
 
 ArrayList第一次添加元素时，首次进入add方法，可以发现，此时为动态数组容量为0
 
-![1724058604176](assets/ArrayList第一次添加元素之前.png)
+![1724058604176](../assets/ArrayList第一次添加元素之前.png)
 
 ArrayList第一次添加元素时，进入了ensureCapacityInternal方法，会将动态数组容量初始化为10
 
-![1724058423849](assets/ArrayList第一次添加元素时.png)
+![1724058423849](../assets/ArrayList第一次添加元素时.png)
 
 ArrayList第一次扩容时
 
-![1724058089057](assets/ArrayList第一次扩容.png)
+![1724058089057](../assets/ArrayList第一次扩容.png)
 
 ArrayList第二次扩容时
 
-![1724058227556](assets/ArrayList第二次扩容.png)
+![1724058227556](../assets/ArrayList第二次扩容.png)
