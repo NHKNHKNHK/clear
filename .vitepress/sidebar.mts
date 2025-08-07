@@ -724,6 +724,68 @@ export default {
       ]
     }
   ],
+  '/08-SpringCloud、微服务/': [
+    {
+      text: '微服务',
+      items: [
+        { text: '导读', link: '/08-SpringCloud、微服务/' },
+        { text: 'dss', link: '/08-SpringCloud、微服务/SpringCloud篇.md' },
+        { text: '什么是单体应用架构？', link: '/08-SpringCloud、微服务/什么是单体应用架构？' },
+        { text: '什么是垂直应用架构？', link: '/08-SpringCloud、微服务/什么是垂直应用架构？' },
+        { text: '什么是SOA应用架构？', link: '/08-SpringCloud、微服务/什么是SOA应用架构？' },
+        { text: '什么是微服务？你是怎么理解微服务的？', link: '/08-SpringCloud、微服务/什么是微服务？你是怎么理解微服务的？' },
+        { text: '单体应用、SOA、微服务架构有什么区别？', link: '/08-SpringCloud、微服务/单体应用、SOA、微服务架构有什么区别？' },
+        { text: '微服务架构中有哪些核心概念？', link: '/08-SpringCloud、微服务/微服务架构中有哪些核心概念？' },
+        { text: '微服务能解决哪些问题呢？', link: '/08-SpringCloud、微服务/微服务能解决哪些问题呢？' },
+        { text: '微服务带来的挑战？', link: '/08-SpringCloud、微服务/微服务带来的挑战？' },
+        { text: '微服务之间的通信方式？微服务之间如何交互？', link: '/08-SpringCloud、微服务/微服务之间的通信方式？微服务之间如何交互？' },
+        { text: '微服务体系如何传递用户信息？', link: '/08-SpringCloud、微服务/微服务体系如何传递用户信息？' },
+        { text: '分布式和微服务的区别？', link: '/08-SpringCloud、微服务/分布式和微服务的区别？' },
+        { text: '现在流行的微服务框架？', link: '/08-SpringCloud、微服务/现在流行的微服务框架？' },
+        { text: '微服务架构是如何运行的？', link: '/08-SpringCloud、微服务/微服务架构是如何运行的？' },
+      ]
+    },
+    {
+      text: 'SpringCloud',
+      items: [
+        { text: 'SpringCloud是什么？', link: '/08-SpringCloud、微服务/SpringCloud是什么？' },
+        { text: 'SpringCloud的组成（架构）？', link: '/08-SpringCloud、微服务/SpringCloud的组成（架构）？' },
+        { text: 'SpringCloud有哪些核心组件？', link: '/08-SpringCloud、微服务/SpringCloud有哪些核心组件？' },
+        { text: 'SpringCloud Alibaba的组成？', link: '/08-SpringCloud、微服务/SpringCloud Alibaba的组成？' },
+        { text: 'SpringCloud的优缺点？', link: '/08-SpringCloud、微服务/SpringCloud的优缺点？' },
+        { text: 'SpringCloud与SpringBoot之间的区别（关系）？', link: '/08-SpringCloud、微服务/SpringCloud与SpringBoot之间的区别（关系）？' },
+        { text: 'Spring、SpringBoot、SpringCloud之间的关系？', link: '/08-SpringCloud、微服务/Spring、SpringBoot、SpringCloud之间的关系？' },
+        { text: 'SpringCloud版本该如何选择？', link: '/08-SpringCloud、微服务/SpringCloud版本该如何选择？' },
+        { text: '什么是Nacos？', link: '/08-SpringCloud、微服务/什么是Nacos？' },
+        { text: 'Nacos有哪些特性？', link: '/08-SpringCloud、微服务/Nacos有哪些特性？' },
+        { text: 'Nacos两大组件分别是什么？', link: '/08-SpringCloud、微服务/Nacos两大组件分别是什么？' },
+        { text: '什么是配置中心？有哪些常见配置中心？', link: '/08-SpringCloud、微服务/什么是配置中心？有哪些常见配置中心？' },
+        { text: '什么是Nacos配置中心？', link: '/08-SpringCloud、微服务/什么是Nacos配置中心？' },
+        { text: 'Nacos配置中心实现原理？', link: '/08-SpringCloud、微服务/Nacos配置中心实现原理？' },
+        { text: '什么是Nacos的领域模型？', link: '/08-SpringCloud、微服务/什么是Nacos的领域模型？' },
+        { text: '什么是Nacos Server集群？', link: '/08-SpringCloud、微服务/什么是Nacos Server集群？' },
+        { text: 'Nacos Server集群该如何搭建？', link: '/08-SpringCloud、微服务/Nacos Server集群该如何搭建？' },
+        { text: '什么是服务端负载均衡？', link: '/08-SpringCloud、微服务/什么是服务端负载均衡？' },
+        { text: '什么是客户端负载均衡？', link: '/08-SpringCloud、微服务/什么是客户端负载均衡？' },
+        { text: '为什么需要服务注册发现？', link: '/08-SpringCloud、微服务/为什么需要服务注册发现？' },
+        { text: '为什么需要在微服务中使用链路跟踪？SpringCloud可以选择哪些微服务链路跟踪方案？', link: '/08-SpringCloud、微服务/为什么需要在微服务中使用链路跟踪？SpringCloud可以选择哪些微服务链路跟踪方案？' },
+        { text: 'SpringCloud Config是什么', link: '/08-SpringCloud、微服务/SpringCloud Config是什么' },
+        { text: '你们的服务是怎么做日志收集的？', link: '/08-SpringCloud、微服务/你们的服务是怎么做日志收集的？' },
+        { text: '什么情况下需要使用分布式事务，有哪些解决方案？', link: '/08-SpringCloud、微服务/什么情况下需要使用分布式事务，有哪些解决方案？' },
+        { text: '什么是seata？谈谈你的理解？', link: '/08-SpringCloud、微服务/什么是seata？谈谈你的理解？' },
+        { text: 'seata支持哪些模式的分布式事务？', link: '/08-SpringCloud、微服务/seata支持哪些模式的分布式事务？' },
+        { text: 'seata的实现原理？', link: '/08-SpringCloud、微服务/seata的实现原理？' },
+        { text: 'SpringCloud有哪些注册中心？', link: '/08-SpringCloud、微服务/SpringCloud有哪些注册中心？' },
+        { text: 'seata的事务执行流程？', link: '/08-SpringCloud、微服务/seata的事务执行流程？' },
+        { text: 'seata的事务回滚是怎么实现的？', link: '/08-SpringCloud、微服务/seata的事务回滚是怎么实现的？' },
+        { text: '什么Eureka？', link: '/08-SpringCloud、微服务/什么Eureka？' },
+        { text: 'Eureka的实现原理？', link: '/08-SpringCloud、微服务/Eureka的实现原理？' },
+        { text: 'Eureka的自我保护模式是什么？', link: '/08-SpringCloud、微服务/Eureka的自我保护模式是什么？' },
+        { text: 'Eureka的高可用是怎么实现的？', link: '/08-SpringCloud、微服务/Eureka的高可用是怎么实现的？' },
+        { text: 'SpringCloud是如何实现服务注册的？', link: '/08-SpringCloud、微服务/SpringCloud是如何实现服务注册的？' },
+      ]
+    },
+  ],
   '/09-MySQL/': [
     {
       text: 'MySQL',
@@ -936,6 +998,15 @@ export default {
         { text: '请说一下你是如何使用MybaitsPlus的QueryWrapper实现了对MySQl的灵活查询？', link: '/11-ORM/MybatisPlus/请说一下你是如何使用MybaitsPlus的QueryWrapper实现了对MySQl的灵活查询？' },
         { text: 'MybtisPlus的saveBatch？', link: '/11-ORM/MybatisPlus/MybtisPlus的saveBatch？' },
         { text: 'MybatisPlus的乐观锁是如何实现的？', link: '/MybatisPlus/11-ORM/MybatisPlus的乐观锁是如何实现的？' },
+      ]
+    }
+  ],
+  '/12-分布式/': [
+    {
+      text: '分布式',
+      items: [
+        { text: '分布式', link: '/12-分布式/index' },
+        { text: '使用分布式调度框架该考虑哪些问题？', link: '/12-分布式/使用分布式调度框架该考虑哪些问题？' },
       ]
     }
   ],
