@@ -7,4 +7,7 @@
 @use "./vp-code.scss";
 // 代码组样式
 @use "./vp-code-group.scss";
-@use './reset-medium-zoom.scss'
+// 重置medium-zoom样式
+@use './reset-medium-zoom.scss';
+// 重置nprogress样式
+@use './reset-nprogress.scss';

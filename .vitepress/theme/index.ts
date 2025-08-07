@@ -12,10 +12,9 @@ import { NProgress } from "nprogress-v2/dist/index.js"; // 进度条组件
 import ArticleMetadata from "./components/ArticleMetadata.vue"
 
 import './styles/style.css'
-import './styles/index.scss'
-
 import 'virtual:group-icons.css' //代码组样式
 import "nprogress-v2/dist/index.css"; // 进度条样式
+import './styles/index.scss'
 
 // 彩虹背景动画样式
 let homePageStyle: HTMLStyleElement | undefined
