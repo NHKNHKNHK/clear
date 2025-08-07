@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "docs:dev": "vitepress dev",
+    "docs:dev": "vitepress dev --open",
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview"
   },
@@ -23,6 +23,7 @@
     "vitepress-plugin-group-icons": "^1.6.1"
   },
   "dependencies": {
+    "@giscus/vue": "^3.1.1",
     "@vueuse/core": "^13.6.0",
     "canvas-confetti": "^1.9.3",
     "medium-zoom": "^1.1.0",
