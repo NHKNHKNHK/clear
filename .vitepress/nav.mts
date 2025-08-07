@@ -63,7 +63,7 @@ export default [
       { text: 'Java并发篇', link: '/04-Java并发篇' },
       { text: 'Spring', link: '/05-Spring' },
       { text: 'SpringMVC', link: '/06-SpringMVC' },
-      { text: 'SpringBoot', link: '/07-SpringBoot/SpringBoot篇' },
+      { text: 'SpringBoot', link: '/07-SpringBoot' },
       { text: 'SpringCloud、微服务', link: '/08-SpringCloud、微服务/SpringCloud篇' },
       { text: '分布式', link: '/12-分布式/分布式篇' },
       { text: 'MySQL', link: '/09-MySQL' },
