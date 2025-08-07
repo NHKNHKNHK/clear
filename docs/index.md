@@ -6,42 +6,187 @@ hero:
   name: "Clear有点意思"
   text: "经典老哥的成长之路"
   tagline: 前端 · 后端 · 大数据
-  # 首页右侧logo
+  # 首页hero右侧logo
   image: {
     src: /favicon.ico,
     alt: logo
   }
   actions:
-    - theme: brand
-      text: Clear的Gitee（给个star吧）
-      link: https://gitee.com/ninghongkang
-    - theme: alt
-      text: API Examples
-      link: /api-examples
-      target: _blank
-      rel: noopener
-    - theme: alt
-      text: 面试题库
-      link: /api-examples
-    - theme: alt
-      text: 支持老哥
-      link: /zhichi
+    # - theme: brand
+    #   text: Clear的Gitee（给个star吧）
+    #   link: https://gitee.com/ninghongkang
+    # - theme: alt
+    #   text: API Examples
+    #   link: /api-examples
+    #   target: _blank
+    #   rel: noopener
+    # - theme: alt
+    #   text: 面试题库
+    #   link: /api-examples
+    # - theme: alt
+    #   text: 支持老哥
+    #   link: /zhichi
 
 features:
-  - icon:
-      dark: /dark-java.svg
-      light: /light-java.svg
+  - title: Java基础
+    link: /01-java基础/
+    # linkText: 查看
+    icon:
+      dark: /svg/java-dark.svg
+      light: /svg/java-light.svg
       width: 40
       height: 40
-    title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-    link: /api-examples
-    linkText: 查看
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: Java集合
+    link: /02-java集合篇
+    icon:
+      dark: /svg/collection-dark.svg
+      light: /svg/collection-light.svg
+      width: 40
+      height: 40
+  - title: Java并发
+    link: /04-Java并发篇
+    icon:
+      dark: /svg/高并发-dark.svg
+      light: /svg/高并发-light.svg
+      width: 40
+      height: 40
+  - title: JVM
+    link: /03-JVM篇
+    icon:
+      dark: /svg/JVM-dark.svg
+      light: /svg/JVM-light.svg
+      width: 40
+      height: 40
+  - title: Spring
+    link: /05-Spring
+    icon: 
+      dark: /svg/spring-dark.svg
+      light: /svg/spring-light.svg
+      width: 40
+      height: 40
+  - title: SpringMVC
+    link: /06-SpringMVC
+    icon: 
+      dark: /svg/springmvc-dark.svg
+      light: /svg/springmvc-light.svg
+      width: 40
+      height: 40
+  - title: SpringBoot
+    link: /07-SpringBoot
+    icon: 
+      dark: /svg/springboot-dark.svg
+      light: /svg/springboot-light.svg
+      width: 40
+      height: 40
+  - title: SpringCloud
+    link: /08-SpringCloud
+    icon: 
+      dark: /svg/springcloud-dark.svg
+      light: /svg/springcloud-light.svg
+      width: 40
+      height: 40
+  - title: MySQL
+    link: /09-MySQL
+    icon: 
+      dark: /svg/mysql-dark.svg
+      light: /svg/mysql-light.svg
+      width: 40
+      height: 40
+  - title: ORM
+    link: /11-ORM
+    icon: 
+      dark: /svg/mybatis-dark.svg
+      light: /svg/mybatis-light.svg
+      width: 40
+      height: 40
+  - title: Redis
+    link: /10-Redis
+    icon: 
+      dark: /svg/Redis-dark.svg
+      light: /svg/Redis-light.svg
+      width: 40 
+      height: 40
+  - title: 分布式
+    link: /12-分布式
+    icon: 
+      dark: /svg/分布式-dark.svg
+      light: /svg/分布式-light.svg
+      width: 40
+      height: 40
+  - title: Zookeeper
+    link: /13-Zookeeper
+    icon: 
+      dark: /svg/Zookeeper-dark.svg
+      light: /svg/Zookeeper-light.svg
+      width: 40
+      height: 40
+  - title: 消息队列
+    link: /15-消息队列-RocketMQ、Kafka、RabbitMQ
+    icon: 
+      dark: /svg/Kafka-dark.svg
+      light: /svg/Kafka-light.svg
+      width: 40
+      height: 40
+  - title: ElasticSearch
+    link: /14-ElasticSearch
+    icon: 
+      dark: /svg/es-dark.svg
+      light: /svg/es-light.svg
+      width: 40
+      height: 40
+  - title: MongoDB
+    link: /16-MongoDB
+    icon: 
+      dark: /svg/mongodb-dark.svg
+      light: /svg/mongodb-light.svg
+      width: 40
+      height: 40
+  - title: Vue
+    link: /25-Vue
+    icon: 
+      dark: /svg/vue-dark.svg
+      light: /svg/vue-light.svg
+      width: 40
+      height: 40
+  - title: React
+    link: /26-React
+    icon: 
+      dark: /svg/react-dark.svg
+      light: /svg/react-light.svg
+      width: 40
+      height: 40
+  - title: JavaScript
+    link: /27-JavaScript
+    icon: 
+      dark: /svg/js-dark.svg
+      light: /svg/js-light.svg
+      width: 40
+      height: 40
+  - title: CSS
+    link: /30-CSS
+    icon: 
+      dark: /svg/css-dark.svg
+      light: /svg/css-light.svg
+      width: 40
+      height: 40
+  - title: HTML
+    link: /29-HTML
+    icon: 
+      dark: /svg/html-dark.svg
+      light: /svg/html-light.svg
+      width: 40
+      height: 40
+  - title: 敬请期待...
+    link: /06-SpringMVC
+    icon: 
+      dark: /svg/敬请期待-dark.svg
+      light: /svg/敬请期待-light.svg
+      width: 40
+      height: 40
+
 ---
+
+
 
 <script setup>
 // 在使用的地方显式的导入，使它们可以正确地进行代码拆分，并且仅在显示相关页面时才加载
@@ -68,3 +213,21 @@ npx vitepress init
     hahah
   </p>
 </div>
+
+线程池 【参数】
+核心线程数如何设置？
+动态线程池
+
+拒绝策略能不能重写？
+重写线程组的意义在哪？
+
+
+@Component和@Configuration能不能互换
+@Component和@Service能不能互换
+@Bean能不能单独修改
+@Controller和@Component能不能呼唤？ 本质靠的是父子容器
+
+BeanFatory和ApplicationContext的区别 （简单容器和复杂容器）
+BeanDefinition如何修改？
+Bean如何修改？
+
