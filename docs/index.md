@@ -177,7 +177,6 @@ features:
       width: 40
       height: 40
   - title: 敬请期待...
-    link: /06-SpringMVC
     icon: 
       dark: /svg/敬请期待-dark.svg
       light: /svg/敬请期待-light.svg

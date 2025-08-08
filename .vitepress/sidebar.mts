@@ -1258,5 +1258,40 @@ export default {
       ],
     }
   ],
+  '/29-HTML/': [
+    {
+      text: 'HTML',
+      items: [
+        { text: '导读', link: '/29-HTML/' },
+      ],
+    },
+  ],
+  '/28-NodeJS/': [
+    {
+      text: 'NodeJS',
+      items: [
+        { text: '导读', link: '/28-NodeJS/' },
+      ],
+    },
+  ],
+  '/30-CSS/': [
+    {
+      text: 'CSS',
+      items: [
+        { text: '导读', link: '/30-CSS/' },
+        { text: '如何使用css实现一个三角形？', link: '/30-CSS/如何使用css实现一个三角形？' },
+        { text: '常见的css布局单位有哪些？', link: '/30-CSS/常见的css布局单位有哪些？' },
+        { text: '说说px、em、rem的区别及其使用场景？', link: '/30-CSS/说说px、em、rem的区别及其使用场景？' },
+        { text: '如何实现元素的水平垂直居中？', link: '/30-CSS/如何实现元素的水平垂直居中？' },
+        { text: '说说margin和padding的使用场景？', link: '/30-CSS/说说margin和padding的使用场景？' },
+        { text: '什么是margin合并、塌陷？', link: '/30-CSS/什么是margin合并、塌陷？' },
+        { text: '什么是margin重叠问题？如何解决？', link: '/30-CSS/什么是margin重叠问题？如何解决？' },
+        { text: '为什么需要清除浮动？清除的方式有哪些？', link: '/30-CSS/为什么需要清除浮动？清除的方式有哪些？' },
+        { text: '使用clear属性清除浮动原理？', link: '/30-CSS/使用clear属性清除浮动原理？' },
+        { text: '固定定位的参考点？', link: '/30-CSS/固定定位的参考点？' },
+        { text: 'overflow: hidden 、 display: none、visibility: hidden 有什么区别 ？', link: '/30-CSS/overflow hidden 、 display none、visibility hidden 有什么区别 ？' },
+      ],
+    },
+  ],
 
 }

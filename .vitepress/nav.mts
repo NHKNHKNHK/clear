@@ -92,13 +92,13 @@ export default [
     text: '前端',
     items: [
       { text: '前端基础', link: '/24-前端基础/前端基础篇' },
-      { text: 'HTML', link: '/29-HTML/HTML篇' },
-      { text: 'CSS', link: '/30-CSS/CSS篇' },
+      { text: 'HTML', link: '/29-HTML' },
+      { text: 'CSS', link: '/30-CSS' },
       { text: 'JavaScript', link: '/27-JavaScript' },
       { text: 'Vue', link: '/25-Vue' },
       { text: 'React', link: '/26-React' },
       { text: '小程序', link: '/32-小程序/小程序篇' },
-      { text: 'Node', link: '/28-NodeJS/NodeJS篇' },
+      { text: 'NodeJS', link: '/28-NodeJS' },
       { text: 'Nginx', link: '/nginx/nginx篇' },
       { text: '前端性能优化、场景、bug', link: '/31-前端性能优化、场景、bug/性能优化篇' },
     ]
