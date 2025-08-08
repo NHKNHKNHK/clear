@@ -1207,5 +1207,27 @@ export default {
       ]
     },
   ],
+  '/25-Vue/': [
+    {
+      text: 'Vue',
+      items: [
+        { text: '导读', link: '/25-Vue/' },
+        { text: '谈谈你对Vue生命周期的理解？', link: '/25-Vue/谈谈你对Vue生命周期的理解？' },
+        { text: 'vue计算属性的函数名和data中的属性可以同名吗？为什么？', link: '/25-Vue/vue计算属性的函数名和data中的属性可以同名吗？为什么？' },
+        { text: 'v-if和v-show有什么区别？使用场景分别是什么？', link: '/25-Vue/v-if和v-show有什么区别？使用场景分别是什么？' },
+        { text: 'v-if与v-for为什么不建议一起使用？', link: '/25-Vue/v-if与v-for为什么不建议一起使用？' },
+        { text: 'vue有了数据响应式，为什么还需要diff？', link: '/25-Vue/vue有了数据响应式，为什么还需要diff？' },
+        { text: 'vue2响应式原理', link: '/25-Vue/vue2响应式原理' },
+        { text: 'vue3响应式原理', link: '/25-Vue/vue3响应式原理' },
+        { text: '响应式为什么要从 Object.defineProperty 换成 Proxy？', link: '/25-Vue/响应式为什么要从 Object.defineProperty 换成 Proxy？' },
+      ],
+    },
+    {
+      text: 'Vue2',
+      items: [
+        { text: '为什么vue2不能监听数组下标的变化？', link: '/25-Vue/为什么vue2不能监听数组下标的变化？' },
+      ]
+    }
+  ],
 
 }

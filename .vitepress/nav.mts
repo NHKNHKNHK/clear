@@ -95,7 +95,7 @@ export default [
       { text: 'HTML', link: '/29-HTML/HTML篇' },
       { text: 'CSS', link: '/30-CSS/CSS篇' },
       { text: 'JavaScript', link: '/27-JavaScript/JS篇' },
-      { text: 'Vue', link: '/25-Vue/Vue篇' },
+      { text: 'Vue', link: '/25-Vue' },
       { text: 'React', link: '/26-React/React篇' },
       { text: '小程序', link: '/32-小程序/小程序篇' },
       { text: 'Node', link: '/28-NodeJS/NodeJS篇' },
