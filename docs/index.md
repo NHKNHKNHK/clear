@@ -121,7 +121,7 @@ features:
       width: 40
       height: 40
   - title: 消息队列
-    link: /15-消息队列-RocketMQ、Kafka、RabbitMQ
+    link: /15-MQ/common/index
     icon: 
       dark: /svg/Kafka-dark.svg
       light: /svg/Kafka-light.svg
