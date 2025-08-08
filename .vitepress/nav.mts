@@ -79,41 +79,41 @@ export default [
           { text: 'RabbitMQ', link: '/15-MQ/RabbitMQ' },
         ]
       },
+      { text: '问题排除、场景题、性能优化', link: '/17-backend-what' },
       { text: 'MongoDB', link: '/16-MongoDB' },
-      { text: '问题排除、场景题、性能优化', link: '/17-问题排除、场景题、性能优化/问题排除、场景题' },
-      { text: 'Git', link: '/18-Git/Git篇' },
-      { text: 'Linux', link: '/19-Linux/Linux篇' },
-      { text: '操作系统', link: '/20-操作系统/操作系统篇' },
-      { text: '计算机网络', link: '/21-计算机网络/计算机网络篇' },
-      { text: '数据结构', link: '/22-数据结构/数据结构篇' },
+      { text: 'Git', link: '/18-Git' },
+      { text: 'Linux', link: '/19-Linux' },
+      { text: '操作系统', link: '20-operating-system' },
+      { text: '计算机网络', link: '/21-computer-network' },
+      { text: '数据结构', link: '/22-data-structure' },
       { text: '设计模式', link: '/23-设计模式' },
     ]
   },
   {
     text: '前端',
     items: [
-      { text: '前端基础', link: '/24-前端基础/前端基础篇' },
+      { text: '前端基础', link: '/24-前端基础' },
       { text: 'HTML', link: '/29-HTML' },
       { text: 'CSS', link: '/30-CSS' },
       { text: 'JavaScript', link: '/27-JavaScript' },
       { text: 'Vue', link: '/25-Vue' },
       { text: 'React', link: '/26-React' },
-      { text: '小程序', link: '/32-小程序/小程序篇' },
+      { text: '小程序', link: '/32-small-program' },
       { text: 'NodeJS', link: '/28-NodeJS' },
-      { text: 'Nginx', link: '/nginx/nginx篇' },
-      { text: '前端性能优化、场景、bug', link: '/31-前端性能优化、场景、bug/性能优化篇' },
+      { text: 'Nginx', link: '/nginx' },
+      { text: '前端性能优化、场景、bug', link: '/31-front-what' },
     ]
   },
   {
     text: 'BigData',
     items: [
-      { text: 'Hadoop', link: '/34-Hadoop/Hadoop篇' },
-      { text: 'Spark', link: '/37-Spark/Spark篇' },
-      { text: 'HBase', link: '/35-HBase/HBase篇' },
-      { text: 'Hive', link: '/36-Hive/Hive篇' },
-      { text: 'Flink', link: '/38-Flink/Flink篇' },
-      { text: 'Scala', link: '/39-Scala/Scala篇' },
-      { text: '数据同步', link: '/40-数据同步/数据同步篇' },
+      { text: 'Hadoop', link: '/34-Hadoop/什么是Hadoop' },
+      { text: 'Spark', link: '/37-Spark' },
+      { text: 'HBase', link: '/35-HBase' },
+      { text: 'Hive', link: '/36-Hive' },
+      { text: 'Flink', link: '/38-Flink' },
+      { text: 'Scala', link: '/39-Scala' },
+      { text: '数据同步', link: '/40-data-sync' },
     ]
   },
   {
@@ -121,10 +121,12 @@ export default [
     items: [
       { text: '参考与鸣谢', link: '/thankYou' },
       { text: 'VitePress Markdown语法扩展', link: '/markdown-examples' },
+      { text: 'Docker', link: '/Docker' },
+      { text: 'Python', link: '/Python' },
       { text: '书籍阅读记录',  
         items: [
-            { text: '《Java8实战》', link: '/50-Java8实战/01-将函数参数化进行传递' },
-            { text: '《effective java》', link: '/51-啃书-《effective java》/01-考虑使用静态方法代替构造方法' },
+          { text: '《Java8实战》', link: '/50-啃书-《Java8实战》/01-将函数参数化进行传递' },
+          { text: '《effective java》', link: '/51-啃书-《effective java》/01-考虑使用静态方法代替构造方法' },
         ],
       }
     ]

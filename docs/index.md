@@ -29,7 +29,7 @@ hero:
 
 features:
   - title: Java基础
-    link: /01-java基础/
+    link: /01-Java基础/
     # linkText: 查看
     icon:
       dark: /svg/java-dark.svg
@@ -37,7 +37,7 @@ features:
       width: 40
       height: 40
   - title: Java集合
-    link: /02-java集合篇
+    link: /02-Java集合篇
     icon:
       dark: /svg/collection-dark.svg
       light: /svg/collection-light.svg

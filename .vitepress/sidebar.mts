@@ -93,6 +93,7 @@ export default {
         { text: '什么是封装', link: '/01-Java基础/什么是封装' },
         { text: '什么是继承', link: '/01-Java基础/什么是继承' },
         { text: '什么是多态', link: '/01-Java基础/什么是多态' },
+        { text: '什么是多态', link: '/01-Java基础/什么是多态' },
         { text: '重载和重写的区别', link: '/01-Java基础/重载和重写的区别' },
         { text: 'Java的运算符可以重载吗', link: '/01-Java基础/Java的运算符可以重载吗' },
         { text: '构造器是否可被重写', link: '/01-Java基础/构造器是否可被重写' },
@@ -1272,7 +1273,90 @@ export default {
       ]
     },
   ],
-  '/23-设计模式': [
+  '/17-backend-what/': [
+    {
+      text: '常识题',
+      collapsed: false,
+      items: [
+        { text: '导读', link: '/17-backend-what/index' },
+        { text: 'QPS、TPS、RT、吞吐量这些高并发性能指标？', link: '/17-backend-what/basic/QPS、TPS、RT、吞吐量这些高并发性能指标？' },
+      ]
+    },
+    {
+      text: '问题排除',
+      collapsed: false,
+      items: [
+        { text: 'CPU飙高系统反应慢怎么排查？', link: '/17-backend-what/问题排除/CPU飙高系统反应慢怎么排查？' },
+      ]
+    },
+    {
+      text: '场景题',
+      collapsed: false,
+      items: [
+        { text: '如何避免超预期的高并发压力压垮系统？', link: '/17-backend-what/场景题/如何避免超预期的高并发压力压垮系统？' },
+      ]
+    },
+    {
+      text: '性能优化',
+      collapsed: false,
+      items: [
+        { text: '性能优化', link: '/17-backend-what/性能优化/' },
+      ]
+    },
+
+  ],
+  '/18-Git/': [
+    {
+      text: 'Git',
+      items: [
+        { text: '导读', link: '/18-Git/' },
+        { text: 'git commit规范', link: '/18-Git/git commit规范' },
+      ]
+    },
+  ],
+  '/19-Linux/': [
+    {
+      text: 'Linux',
+      items: [
+        { text: '导读', link: '/19-Linux/' },
+      ]
+    },
+  ],
+  '/20-operating-system/': [
+    {
+      text: '操作系统',
+      items: [
+        { text: '导读', link: '/20-operating-system/' },
+      ]
+
+    },
+  ],
+  '/21-computer-network/': [
+    {
+      text: '计算机网络',
+      items: [
+        { text: '导读', link: '/21-computer-network/' },
+      ]
+    },
+  ],
+
+  '/22-data-structure/': [
+    {
+      text: '数据结构',
+      items: [
+        { text: '导读', link: '/22-data-structure/' },
+      ]
+    },
+    {
+      text: '常见算法题',
+      items: [
+        { text: '常见算法题', link: '/22-data-structure/' },
+      ]
+    },
+  ],
+
+
+  '/23-设计模式/': [
     {
       text: '设计模式',
       items: [
@@ -1280,6 +1364,15 @@ export default {
         { text: '单例模式中的双重检查锁为什么要检查两次？', link: '/23-设计模式/单例模式中的双重检查锁为什么要检查两次？' },
       ]
     }
+
+  ],
+  '/24-前端基础/': [
+    {
+      text: '前端基础',
+      items: [
+        { text: '导读', link: '/2-前端基础/' },
+      ]
+    },
 
   ],
   '/25-Vue/': [
@@ -1367,6 +1460,150 @@ export default {
         { text: 'overflow: hidden 、 display: none、visibility: hidden 有什么区别 ？', link: '/30-CSS/overflow hidden 、 display none、visibility hidden 有什么区别 ？' },
       ],
     },
+  ],
+
+  '/31-front-what/': [
+    {
+      text: '常识题',
+      collapsed: false,
+      items: [
+        { text: '导读', link: '/31-front-what/' },
+      ]
+    },
+    {
+      text: '问题排除',
+      collapsed: false,
+      items: [
+        { text: '更新中', link: '/31-front-what/' },
+      ]
+    },
+    {
+      text: '场景题',
+      collapsed: false,
+      items: [
+        { text: '更新中', link: '/31-front-what/' },
+      ]
+    },
+    {
+      text: '性能优化',
+      collapsed: false,
+      items: [
+        { text: '性能优化', link: '/17-backend-what/性能优化/' },
+      ]
+    },
+  ],
+  '/32-small-program/': [
+    {
+      text: '小程序',
+      items: [
+        { text: '导读', link: '/32-small-program/' },
+      ]
+    }
+  ],
+  '/nginx/': [
+    {
+      text: 'Nginx',
+      items: [
+        { text: '导读', link: '/nginx/' },
+        { text: 'Nginx的常用命令？', link: '/nginx/Nginx的常用命令？' },
+        { text: 'Nginx如何实现跨域访问？', link: '/nginx/Nginx如何实现跨域访问？' },
+      ]
+    }
+  ],
+  '/34-Hadoop/': [
+    {
+      text: 'Hadoop',
+      items: [
+        { text: '什么是Hadoop', link: '/34-Hadoop/什么是Hadoop' },
+        { text: 'Hadoop架构', link: '/34-Hadoop/Hadoop架构' },
+        { text: 'Hadoop常用端口号、配置', link: '/34-Hadoop/Hadoop常用端口号、配置' },
+        { text: 'HDFS文件块大小', link: '/34-Hadoop/HDFS文件块大小' },
+        { text: 'HDFS小文件的危害', link: '/34-Hadoop/HDFS小文件的危害' },
+        { text: 'HDFS小文件怎么解决', link: '/34-Hadoop/HDFS小文件怎么解决' },
+      ]
+    }
+  ],
+
+  '/37-Spark/': [
+    {
+      text: 'Spark',
+      items: [
+        { text: '导读', link: '/37-Spark/' },
+      ]
+    }
+  ],
+  '/36-Hive/': [
+    {
+      text: 'Hive',
+      items: [
+        { text: '导读', link: '/36-Hive/' },
+      ]
+    }
+  ],
+
+  '/38-Flink/': [
+    {
+      text: 'Flink',
+      items: [
+        { text: '导读', link: '/38-Flink/' },
+      ]
+    }
+  ],
+
+  '/39-Scala/': [
+    {
+      text: 'Scala',
+      items: [
+        { text: '导读', link: '/39-Scala/' },
+      ]
+    }
+  ],
+
+  '/40-data-sync/': [
+    {
+      text: '数据同步',
+      items: [
+        { text: '导读', link: '/40-data-sync/' },
+      ]
+    }
+  ],
+
+  '/Docker/': [
+    {
+      text: 'Docker',
+      items: [
+        { text: '导读', link: '/Docker/' },
+      ]
+    }
+  ],
+  '/Python/': [
+    {
+      text: 'Python',
+      items: [
+        { text: '导读', link: '/Python/' },
+      ]
+    }
+  ],
+
+  // ============================
+  '/50-啃书-《Java8实战》/': [
+    {
+      text: '《Java8实战》',
+      items: [
+        { text: '将函数参数化进行传递', link: '/50-啃书-《Java8实战》/01-将函数参数化进行传递' },
+        { text: 'Lambda表达式', link: '/50-啃书-《Java8实战》/02-Lambda表达式' },
+        { text: 'Stream流', link: '/50-啃书-《Java8实战》/03-Stream流' },
+        { text: 'Optional取代null', link: '/50-啃书-《Java8实战》/Optional取代null' },
+      ]
+    }
+  ],
+  '/51-啃书-《effective java》/': [
+    {
+      text: '《effective java》',
+      items: [
+        { text: '考虑使用静态方法代替构造方法', link: '/51-啃书-《effective java》/01-考虑使用静态方法代替构造方法' },
+      ]
+    }
   ],
 
 }

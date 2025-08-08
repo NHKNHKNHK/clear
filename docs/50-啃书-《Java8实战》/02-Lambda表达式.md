@@ -1,4 +1,6 @@
-# 1 引入
+# Lambda表达式
+
+## 1 引入
 
 前面说过的行为参数化传递代码有助于应对不变变化的需求。但是我们前面使用匿名类的方式来表示不同的行为，代码比较繁琐，我们可以引入Lambda表达式来改变这一现状。
 
@@ -8,7 +10,7 @@ Lambda表达式，可以看作匿名功能，简单理解为没有声明方法�
 
 **Lambda表达式还可以与方法引用结合在一起使用，进一步简化代码。**
 
-# 2 Lambda入门
+## 2 Lambda入门
 
 可以把**Lambda表达式理解为表示可传递的匿名函数的一种方式**：它没有名称，但有参数列表、函数体、返回类型，可能还有一个可以抛出去的异常列表。
 
@@ -64,7 +66,7 @@ Comparator<Apple> byWeight = (Apple a1, Apple a2) ->
     	a1.getWeight().compareTo(a2.getWeight());
 ```
 
-# 3 Lambda表达式在哪里以及如何使用
+##  3 Lambda表达式在哪里以及如何使用
 
 我们只能在函数式接口上使用Lambda表达式。
 
@@ -78,7 +80,7 @@ List<Apple> greenApples = filter(inventory, (Apple 1) -> "green".equals(a.getCol
 
 因为这个参数需要实现`Pridicate<T>`接口，而且这是一个函数式接口。
 
-## 3.1 函数式接口
+### 3.1 函数式接口
 
 所谓**函数式接口**，我们可以简单理解为**只有一个抽象方法（Single Abstract Method，简称 SAM）的接口**。
 
@@ -110,7 +112,7 @@ public interface Callable<V> {
 
 ​	**从JDK8开始**，接口中引入了**默认方法**（即在类没有对方法进行实现，其主体为方法提供默认实现的方法）。虽然有很多方法，但是只要接口只定义了一个抽象方法，它就依然是函数式接口。
 
-### 3.1.2 函数式接口错误实例
+#### 3.1.2 函数式接口错误实例
 
 下面是一些函数式接口的错误示例：
 
@@ -127,7 +129,7 @@ public interface Nothing{  // 非函数式接口，没有声明抽象方法
 }
 ```
 
-### 3.1.3 函数式接口的应用
+#### 3.1.3 函数式接口的应用
 
 使用Lambda表达式以内联的形式为函数式接口的抽象方法提供实现。
 
@@ -152,7 +154,7 @@ public class FunctionalInterfaceDemo {
 }
 ```
 
-## 3.2 函数描述符
+### 3.2 函数描述符
 
 函数式接口的抽象方法的签名基本上就是Lambda表达式的签名。我们将这种抽象方法称之为函数描述符。
 
@@ -160,7 +162,7 @@ public class FunctionalInterfaceDemo {
 
 现在，只要知道**Lambda表达式可以被赋给一个变量或传递给一个接受函数式接口作为参数的方法**就好了，当然这个Lambda表达式的签名要和函数式接口的抽象方法一样。
 
-## 3.3 @FunctionalInterface注解
+### 3.3 @FunctionalInterface注解
 
 **`@FunctionalInterface`注解**在很多函数式接口的Java API源码中都出现过，简单来说它就是**标记一个接口为函数式接口，如果接口不为函数式接口，编译器将返回一个提示原因的错误。**
 
@@ -170,7 +172,7 @@ public class FunctionalInterfaceDemo {
 
 ​	对于设计接口而言，我们不加入`@FunctionalInterface`注解也可以，但它是一个好的做法。就像我们在重写一个方法时加上@Override注解一样。
 
-# 4 把Lambda付诸实践：环绕执行模式
+## 4 把Lambda付诸实践：环绕执行模式
 
 下面通过举例来看看在实践中如何**利用Lambda 和 行为参数化 来让代码更为灵活，更为简洁**。
 
@@ -187,7 +189,7 @@ public static String processFile() throws IOException{
 }
 ```
 
-## 4.1 第一步：记得行为参数化
+### 4.1 第一步：记得行为参数化
 
 现在上面这段代码很局限。只能读取文件的第一行。如果我们想要读取文件的前两行，甚至是文件中出现的最多次数的词，怎么办呢？在理想情况下，我们要重用执行设置和清理的代码，并告诉processFile方法对文件执行不同的操作。这就是需要把行为进行参数化。我们需要把一种方法的行为传递给processFile方法，以便利用BufferedReader 执行不同的行为。
 
@@ -200,7 +202,7 @@ String result = processFile((BufferedReader br) ->
 
 
 
-## 4.2 第2步：使用函数式接口来传递行为
+### 4.2 第2步：使用函数式接口来传递行为
 
 前面解释过，**Lambda仅可用于上下文是函数式接口的情况**。我们需要创建一个能匹配BufferedReader -> String，还可以抛出 IOException 异常的接口。
 
@@ -221,7 +223,7 @@ public static String processFile(BufferedReaderProcessor p) throws IOException {
 }
 ```
 
-## 4.3 第3步：执行一个行为
+### 4.3 第3步：执行一个行为
 
 现在，任何一个BufferedReader -> String 形式的Lambda都可以作为参数来传递，因为它们符合BufferedReaderProcessor 接口中定义的process 方法的签名。
 
@@ -239,7 +241,7 @@ public static String processFile(BufferedReaderProcessor p) throws IOException {
 }
 ```
 
-## 4.4 第4步：传递Lambda
+### 4.4 第4步：传递Lambda
 
 现在，我们就可以通过传递不同的Lambda重用processFile方法，并以不同的方式处理文件了。
 
@@ -261,7 +263,7 @@ String twoLine =
 
 
 
-# 4 使用函数式接口
+## 4 使用函数式接口
 
 **函数式接口定义且只定义了一个抽象方法**。函数式接口很有用，因为抽象方法的签名可以描述Lambda表达式的签名。**函数式接口的抽象方法的签名称为函数描述符**。所以为了应用不同的Lambda表达式，我们需要一套能够描述常见函数描述符的函数式接口。 
 
@@ -269,7 +271,7 @@ Java API中已经有了几个函数式接口，比如我们签名使用过的Com
 
 Java 8的库设计师帮我们在`java.util.function`包中引入了几个新的函数式接口。
 
-## 4.1 Predicate 判断型接口
+### 4.1 Predicate 判断型接口
 
 `java.util.function.Predicate<T>`接口定义了一个名叫test的抽象方法，它接受泛型 T对象，并返回一个boolean。如下：
 
@@ -303,7 +305,7 @@ Predicate<String> nonEmptyStringPredicate = (String s) -> !s.isEmpty();
 List<String> nonEmpty = filter(listOfStrings, nonEmptyStringPredicate);
 ```
 
-## 4.2 Consumer 消费型接口
+### 4.2 Consumer 消费型接口
 
 `java.util.function.Consumer<T>`定义了一个名叫accept的抽象方法，它接受泛型T 的对象，没有返回（void），如下：
 
@@ -333,7 +335,7 @@ public void test() {
 }
 ```
 
-## 4.3 Function 函数型接口
+### 4.3 Function 函数型接口
 
 `java.util.function.Function<T, R>`接口定义了一个叫作apply的方法，它接受一个泛型T的对象，并返回一个泛型R的对象。如下：
 
@@ -357,7 +359,7 @@ public static <T, R> List<R> map(List<T> list, Function<T, R> f) {
     return results;
 }
 
-@Test
+// @Test
 public void test2() {
     List<Integer> l = map(Arrays.asList("hello", "world", "java"),
                           // 这里的Lambda表达式是Function接口的apply方法的实现
@@ -366,7 +368,7 @@ public void test2() {
 }
 ```
 
-## 4.4 JDK8之前的函数式接口
+### 4.4 JDK8之前的函数式接口
 
 ```java
 // JDK1.0
@@ -392,32 +394,32 @@ public interface Comparator<T> {
 }
 ```
 
-## 4.5 JDK8 引入的四大核心函数式接口
+### 4.5 JDK8 引入的四大核心函数式接口
 
 | 函数式接口      | 称谓       | 参数类型 | 用途                                                       | 抽象方法          |
 | --------------- | ---------- | -------- | ---------------------------------------------------------- | ----------------- |
-| Consumer\<T>    | 消费型接口 | T        | 对类型为T的对象应用操作                                    | void accept(T t)  |
-| Supplier\<T>    | 供给型接口 | 无       | 返回类型为T的对象                                          | T get();          |
-| Function\<T, R> | 函数型接口 | T        | 对类型为T的对象应用操作，并返回结果。<br>结果是R类型的对象 | R apply(T t)      |
-| Predicate\<T>   | 判断型接口 | T        | 确认类型为T的对象是否满足某约束条件，并返回boolean值       | boolean test(T t) |
+| `Consumer<T> `   | 消费型接口 | T        | 对类型为T的对象应用操作                                    | void accept(T t)  |
+| `Supplier<T>`    | 供给型接口 | 无       | 返回类型为T的对象                                          | T get();          |
+| `Function<T, R>` | 函数型接口 | T        | 对类型为T的对象应用操作，并返回结果。<br>结果是R类型的对象 | R apply(T t)      |
+| `Predicate<T>`   | 判断型接口 | T        | 确认类型为T的对象是否满足某约束条件，并返回boolean值       | boolean test(T t) |
 
-## 4.6 JDK8中引入的所有函数式接口
+### 4.6 JDK8中引入的所有函数式接口
 
-### 类型1：消费型接口
+#### 类型1：消费型接口
 
 消费型接口的抽象方法特点：**有形参，但是返回值类型为void**
 
 | 接口名               | 抽象方法                       | 描述                       |
 | -------------------- | ------------------------------ | -------------------------- |
-| BiConsumer<T, U>     | void accept(T t, U u)          | 接收两个对象用于完成功能   |
-| DoubleConsumer       | void accept(double value)      | 接收一个double值           |
-| IntConsumer          | void accept(int value)         | 接收一个int值              |
-| LongConsumer         | void accept(long value)        | 接收一个long值             |
-| ObjDoubleConsumer<T> | void accept(T t, double value) | 接收一个对象和一个double值 |
-| ObjIntConsumer<T>    | void accept(T t, int value)    | 接收一个对象和一个int值    |
-| ObjLongConsumer<T>   | void accept(T t, long value)   | 接收一个对象和一个long值   |
+| `BiConsumer<T, U>`     | void accept(T t, U u)          | 接收两个对象用于完成功能   |
+| `DoubleConsumer`       | void accept(double value)      | 接收一个double值           |
+| `IntConsumer`          | void accept(int value)         | 接收一个int值              |
+| `LongConsumer`         | void accept(long value)        | 接收一个long值             |
+| `ObjDoubleConsumer<T>` | void accept(T t, double value) | 接收一个对象和一个double值 |
+| `ObjIntConsumer<T>`    | void accept(T t, int value)    | 接收一个对象和一个int值    |
+| `ObjLongConsumer<T>`   | void accept(T t, long value)   | 接收一个对象和一个long值   |
 
-### 类型2：供给型接口
+#### 类型2：供给型接口
 
 供给型接口的抽象方法特点：**无形参，但是有返回值**
 
@@ -428,38 +430,38 @@ public interface Comparator<T> {
 | IntSupplier     | int getAsInt()         | 返回一个 int 值     |
 | LongSupplier    | long getAsLong();      | 返回一个 long 值    |
 
-### 类型3：函数型接口
+#### 类型3：函数型接口
 
 函数型接口的抽象方法特点：**既有参数又有返回值**
 
 | 接口名                  | 抽象方法                                        | 描述                                                 |
 | ----------------------- | ----------------------------------------------- | ---------------------------------------------------- |
-| UnaryOperator           | T apply(T t)                                    | 接收一个T类型对象，返回一个T类型对象结果             |
-| DoubleFunction<R>       | R apply(double value)                           | 接收一个double值，返回一个R类型对象                  |
-| IntFunction<R>          | R apply(int value)                              | 接收一个int值，返回一个R类型对象                     |
-| LongFunction<R>         | R apply(long value)                             | 接收一个long值，返回一个R类型对象                    |
-| ToDoubleFunction<T>     | double applyAsDouble(T value)                   | 接收一个T类型对象，返回一个double                    |
-| ToIntFunction<T>        | int applyAsInt(T value)                         | 接收一个T类型对象，返回一个int                       |
-| ToLongFunction<T>       | long applyAsLong(T value)                       | 接收一个T类型对象，返回一个long                      |
-| DoubleToIntFunction     | int applyAsInt(double value)                    | 接收一个double值，返回一个int结果                    |
-| DoubleToLongFunction    | long applyAsLong(double value)                  | 接收一个double值，返回一个long结果                   |
-| IntToDoubleFunction     | double applyAsDouble(int value)                 | 接收一个int值，返回一个double结果                    |
-| IntToLongFunction       | long applyAsLong(int value)                     | 接收一个int值，返回一个long结果                      |
-| LongToDoubleFunction    | double applyAsDouble(long value)                | 接收一个long值，返回一个double结果                   |
-| LongToIntFunction       | int applyAsInt(long value)                      | 接收一个long值，返回一个int结果                      |
-| DoubleUnaryOperator     | double applyAsDouble(double operand)            | 接收一个double值，返回一个double                     |
-| IntUnaryOperator        | int applyAsInt(int operand)                     | 接收一个int值，返回一个int                           |
-| LongUnaryOperator       | long applyAsLong(long operand)                  | 接收一个long值，返回一个long                         |
-| BiFunction<T,U,R>       | R apply(T t, U u)                               | 接收一个T类型和一个U类型对象， 返回一个R类型对象结果 |
-| BinaryOperator          | T apply(T t, T u)                               | 接收两个T类型对象， 返回一个T类型对象结果            |
-| ToDoubleBiFunction<T,U> | double applyAsDouble(T t, U u)                  | 接收一个T类型和一个U类型对象， 返回一个double        |
-| ToIntBiFunction<T,U>    | int applyAsInt(T t, U u)                        | 接收一个T类型和一个U类型对象， 返回一个int           |
-| ToLongBiFunction<T,U>   | long applyAsLong(T t, U u)                      | 接收一个T类型和一个U类型对象， 返回一个long          |
-| DoubleBinaryOperator    | double applyAsDouble(double left, double right) | 接收两个 double 值，返回一个double值                 |
-| IntBinaryOperator       | int applyAsInt(int left, int right)             | 接收两个 int 值，返回一个int 值                      |
-| LongBinaryOperator      | long applyAsLong(long left, long right)         | 接收两个 long 值，返回一个long值                     |
+| `UnaryOperator`           | T apply(T t)                                    | 接收一个T类型对象，返回一个T类型对象结果             |
+| `DoubleFunction<R>`       | R apply(double value)                           | 接收一个double值，返回一个R类型对象                  |
+| `IntFunction<R>`          | R apply(int value)                              | 接收一个int值，返回一个R类型对象                     |
+| `LongFunction<R>`         | R apply(long value)                             | 接收一个long值，返回一个R类型对象                    |
+| `ToDoubleFunction<T>`     | double applyAsDouble(T value)                   | 接收一个T类型对象，返回一个double                    |
+| `ToIntFunction<T>`        | int applyAsInt(T value)                         | 接收一个T类型对象，返回一个int                       |
+| `ToLongFunction<T>`       | long applyAsLong(T value)                       | 接收一个T类型对象，返回一个long                      |
+| `DoubleToIntFunction`     | int applyAsInt(double value)                    | 接收一个double值，返回一个int结果                    |
+| DoubleToLongFunction`    | long applyAsLong(double value)                  | 接收一个double值，返回一个long结果                   |
+| `IntToDoubleFunction`     | double applyAsDouble(int value)                 | 接收一个int值，返回一个double结果                    |
+| `IntToLongFunction`       | long applyAsLong(int value)                     | 接收一个int值，返回一个long结果                      |
+| `LongToDoubleFunction`    | double applyAsDouble(long value)                | 接收一个long值，返回一个double结果                   |
+| `LongToIntFunction`       | int applyAsInt(long value)                      | 接收一个long值，返回一个int结果                      |
+| `DoubleUnaryOperator`     | double applyAsDouble(double operand)            | 接收一个double值，返回一个double                     |
+| `IntUnaryOperator`        | int applyAsInt(int operand)                     | 接收一个int值，返回一个int                           |
+| `LongUnaryOperator`       | long applyAsLong(long operand)                  | 接收一个long值，返回一个long                         |
+| `BiFunction<T,U,R>`       | R apply(T t, U u)                               | 接收一个T类型和一个U类型对象， 返回一个R类型对象结果 |
+| `BinaryOperator`          | T apply(T t, T u)                               | 接收两个T类型对象， 返回一个T类型对象结果            |
+| `ToDoubleBiFunction<T,U>` | double applyAsDouble(T t, U u)                  | 接收一个T类型和一个U类型对象， 返回一个double        |
+| `ToIntBiFunction<T,U>`    | int applyAsInt(T t, U u)                        | 接收一个T类型和一个U类型对象， 返回一个int           |
+| `ToLongBiFunction<T,U>`   | long applyAsLong(T t, U u)                      | 接收一个T类型和一个U类型对象， 返回一个long          |
+| `DoubleBinaryOperator`    | double applyAsDouble(double left, double right) | 接收两个 double 值，返回一个double值                 |
+| `IntBinaryOperator`       | int applyAsInt(int left, int right)             | 接收两个 int 值，返回一个int 值                      |
+| `LongBinaryOperator`      | long applyAsLong(long left, long right)         | 接收两个 long 值，返回一个long值                     |
 
-### **类型4：判断型接口**
+#### **类型4：判断型接口**
 
 判断型接口的抽象方法特点：**有形参，但是返回值类型是 boolean** 
 
@@ -470,7 +472,7 @@ public interface Comparator<T> {
 | IntPredicate     | boolean test(int value)    | 接收一个 int 值    |
 | LongPredicate    | boolean test(long value)   | 接收一个 long 值   |
 
-## 4.7 异常、Lambda，还有函数式接口的关系
+### 4.7 异常、Lambda，还有函数式接口的关系
 
 请注意，**任何函数式接口都不允许抛出受检异常**（checked exception）。
 
@@ -509,11 +511,11 @@ Function<BufferedReader, String> f = (BufferedReader b) -> {
 }; 
 ```
 
-# 5 类型检查、类型推断、以及限制
+## 5 类型检查、类型推断、以及限制
 
 前面我们说过，**Lambda表达式可以为函数式接口提供实例**。然而，Lambda表达式本身并不包含它在实现哪个函数式接口的信息。为了全面了解Lambda表达式，我们应该知道Lambda的实际类型是什么。
 
-## 5.1 类型检查
+### 5.1 类型检查
 
 **Lambda的类型是从使用Lambda的上下文推断出来的**。上下文（比如，接受它传递的方法的参数，或接受它的值的局部变量）中Lambda表达式需要的类型称为目标类型。
 
@@ -526,15 +528,15 @@ List<Apple> heavierThan150g =
 
 类型检查过程可以分解为如下所示 
 
--   首先，你要找出filter方法的声明——filter(List<Apple> inventory, Predicate<Apple> p)。 
--   第二，要求它是 Predicate<Apple>（目标类型）对象的第二个正式参数。 
--   第三，Predicate<Apple>是一个函数式接口，定义了一个叫作test的抽象方法。 
+-   首先，你要找出filter方法的声明——`filter(List<Apple> inventory, Predicate<Apple> p)`。 
+-   第二，要求它是 `Predicate<Apple>`（目标类型）对象的第二个正式参数。 
+-   第三，`Predicate<Apple>`是一个函数式接口，定义了一个叫作test的抽象方法。 
 -   第四，test方法描述了一个函数描述符，它可以接受一个Apple，并返回一个boolean。 
 -   最后，filter的任何实际参数都必须匹配这个要求。 
 
 这段代码是有效的，因为我们所传递的Lambda表达式也同样接受Apple为参数，并返回一个 boolean。请注意，如果Lambda表达式抛出一个异常，那么抽象方法所声明的throws语句也必须与之匹配。
 
-## 5.2 同样的Lambda，不同的函数式接口
+### 5.2 同样的Lambda，不同的函数式接口
 
 有了目标类型的概念，**同一个Lambda表达式就可以与不同的函数式接口联系起来**，只要它们的抽象方法签名能够兼容。
 
@@ -552,7 +554,7 @@ BiFunction<Apple, Apple, Integer> c3 =
     (Apple a1, Apple a2) -> a1.getWeight().compareTo(a2.getWeight());
 ```
 
-### 菱形运算符 
+#### 菱形运算符 
 
 **Java 7中已经引入了菱形运算符（<>）**，利用泛型推断从上下文推断类型的思想（这一思想甚至可以追溯到更早的泛型方法）。一个类实例表达式可以出现在两个或更多不同的上下文中，并会像下面这样推断出适当的类型参数： 
 
@@ -562,9 +564,9 @@ List<String> listOfStrings = new ArrayList<>();
 List<Integer> listOfIntegers = new ArrayList<>();  
 ```
 
-### 特殊的void兼容规则 
+#### 特殊的void兼容规则
 
-如果一个Lambda的主体是一个语句表达式，它就和一个返回void的函数描述符兼容（当然需要参数列表也兼容）。例如，以下两行都是合法的，尽管List的add方法返回了一个 boolean，而不是Consumer上下文（T -> void）所要求的void
+如果一个Lambda的主体是一个语句表达式，它就和一个返回void的函数描述符兼容（当然需要参数列表也兼容）。例如，以下两行都是合法的，尽管List的add方法返回了一个 boolean，而不是Consumer上下文`T -> void`所要求的void
 
 ```java
 // Predicate返回了一个boolean  
@@ -574,11 +576,21 @@ Predicate<String> p = s -> list.add(s);
 Consumer<String> b = s -> list.add(s);  
 ```
 
-## 5.3 类型推断
+### 5.3 类型推断
 
-Java编译器会从上下文（目标类型）推断出用什么函数式接口来配合Lambda表达式，这意味着它也可以推断出适合Lambda的签名，因为函数描述符可以通过目标类型来得到。 **Lambda 表达式中无需指定类型**，程序依然可以编译，这是因为 **javac 根据程序的上下文，在后台推断出了参数的类型**。Lambda 表达式的类型依赖于上下文环境，是由编译器推断出来的。这就是所谓的类型推断**。 
+Java编译器会从上下文（目标类型）推断出用什么函数式接口来配合 Lambda表达式，这意味着它也可以推断出适合Lambda的签名，因为函数描述符可以通过目标类型来得到。
+
+:::tip
+
+**Lambda 表达式中无需指定类型**，程序依然可以编译，这是因为 `javac` 根据程序的上下文，在后台推断出了参数的类型
+
+Lambda 表达式的类型依赖于上下文环境，是由编译器推断出来的。
+
+这就是所谓的`类型推断`。
 
 换句话说，Java编译器会像下面这样推断Lambda的参数类型
+
+:::
 
 ```java
 // 参数a没有显示类型
@@ -597,22 +609,25 @@ Comparator<Apple> c =
 		 (a1, a2) -> a1.getWeight().compareTo(a2.getWeight());
 ```
 
-## 5.4 使用局部变量
+### 5.4 使用局部变量
 
-我们迄今为止所介绍的所有Lambda表达式都只用到了其主体里面的参数。但**Lambda表达式也允许使用自由变量（不是参数，而是在外层作用域中定义的变量），就像匿名类一样**。 它们被称作**捕获Lambda**。
+我们迄今为止所介绍的所有Lambda表达式都只用到了其主体里面的参数。
+
+但**Lambda表达式也允许使用自由变量（不是参数，而是在外层作用域中定义的变量），就像匿名类一样**
+
+它们被称作`捕获Lambda`。
 
 例如，下面的Lambda捕获了portNumber变量：
 
 ```java
-int portNumber = 1337; 	
+int portNumber = 1337;
 Runnable r = () -> System.out.println(portNumber);
 ```
 
-**对于变量的限制：**
+#### **对于变量的限制：**
 
-​	**Lambda可以没有限制地捕获（也就是在其主体中引用）实例变量和静态变量**。但**局部变量必须显式声明为final，或事实上是final**。
-
-​	换句话说，Lambda表达式只能捕获指派给它们的局部变量一次。（注：捕获实例变量可以被看作捕获最终局部变量this。） 
+- **Lambda可以没有限制地捕获（也就是在其主体中引用）实例变量和静态变量**。但**局部变量必须显式声明为final，或事实上是final**。
+- 换句话说，Lambda表达式只能捕获指派给它们的局部变量一次。（注：捕获实例变量可以被看作捕获最终局部变量this。） 
 
 例如：
 
@@ -623,13 +638,13 @@ Runnable r = () -> System.out.println(portNumber);
 portNumber = 31337;
 ```
 
-**对局部变量的限制 ：**
+#### **对局部变量的限制 ：**
 
 第一，实例变量和局部变量背后的实现有一个关键不同。实例变量都存储在堆中，而局部变量则保存在栈上。如果Lambda可以直接访问局部变量，而且Lambda是在一个线程中使用的，则使用Lambda的线程，可能会在分配该变量的线程将这个变量收回之后，去访问该变量。因此，Java在访问自由局部变量时，实际上是在访问它的副本，而不是访问原始变量。如果局部变量仅仅赋值一次那就没有什么区别了——因此就有了这个限制。 
 
 第二，这一限制不鼓励你使用改变外部变量的典型命令式编程模式（我们会在以后的各章中 解释，这种模式会阻碍很容易做到的并行处理）
 
-**闭包** 
+#### **闭包** 
 
 你可能已经听说过闭包（closure，不要和Clojure编程语言混淆）这个词，你可能会想Lambda是否满足闭包的定义。用科学的说法来说，闭包就是一个函数的实例，且它可以无限制地访问那个函数的非本地变量。例如，闭包可以作为参数传递给另一个函数。它也可以访问和修改其作用域之外的变量。
 
@@ -637,9 +652,10 @@ portNumber = 31337;
 
 
 
-# 6 方法引用
 
-## 6.1方法引用
+## 6 方法引用
+
+### 6.1方法引用
 
 Lambda表达式是可以简化函数式接口的变量或形参赋值的语法。而**方法引用和构造器引用是为了简化Lambda表达式的。**
 
@@ -672,13 +688,13 @@ inventory.sort(Comparing(Apple::getWeight));
 方法引用主要有三类
 
 -   1）指向静态方法的方法引用
-    -   例如：Integer的parseInt方法，写作 Integer::parseInt （类::静态方法）
+    -   例如：Integer的parseInt方法，写作 `Integer::parseInt` （类::静态方法）
 
 -   2）指向任意类型实例方法的方法引用
-    -   例如：String的 length 方法，写作 String::length	(类::实例方法)
+    -   例如：String的 length 方法，写作 `String::length`	(类::实例方法)
 
 -   3）指向现有对象的实例方法的方法引用
-    -   假设我们有一个局部变量expensiveTranscation 用于存放Transaction类型的对象，它支持实例方法getValue，那么你就可以写expensiveTranscription::getValue	(对象::实例方法)
+    -   假设我们有一个局部变量expensiveTranscation 用于存放Transaction类型的对象，它支持实例方法getValue，那么你就可以写`expensiveTranscription::getValue	`(对象::实例方法)
 
 
 
@@ -688,7 +704,7 @@ inventory.sort(Comparing(Apple::getWeight));
 
 格式
 
-```java
+```txt
 类（或对象）:: 方法名      // 两个:之间不能有空格，而且必须英文状态下半角输入
 
 情况一
@@ -701,7 +717,7 @@ inventory.sort(Comparing(Apple::getWeight));
 	类 :: 实例方法
 ```
 
-### 方法引用使用前提
+#### 方法引用使用前提
 
 **要求 1：**
 
@@ -717,13 +733,15 @@ inventory.sort(Comparing(Apple::getWeight));
 -   针对情况 2：函数式接口中的抽象方法a在被重写时使用了某一个类的静态方法b。如果方法a的形参列表、返回值类型与方法 b 的形参列表、返回值类型都相同，则我们可以使用方法 b 实现对方法 a 的重写、替换。 
 -   针对情况 3：函数式接口中的抽象方法 a 在被重写时使用了某一个对象的方法b。如果方法a的返回值类型与方法b的返回值类型相同，同时方法a的形参列表中有n个参数，方法 b 的形参列表有n-1个参数，且方法a的第1个参数作为方法b的调用者，且方法a的后n-1参数与方法 b 的 n-1参数匹配（类型相同或满足多态场景也可以）
 
-例如：t->System.out.println(t) 
+例如：
+```
+t->System.out.println(t) 
 
 ​			() -> Math.random() 都是无参
+```
 
 
-
-### 1 实例方法引用
+#### 1 实例方法引用
 
 基本格式
 
@@ -810,7 +828,7 @@ public class MethodRefTest {
 
 
 
-### 2 静态方法引用
+#### 2 静态方法引用
 
 基本格式
 
@@ -892,7 +910,7 @@ public class MethodRefTest2 {
 }
 ```
 
-### 3 类 :: 实例方法 （难点）
+#### 3 类 :: 实例方法 （难点）
 
 **要求**
 
@@ -1003,7 +1021,7 @@ public class MethodRefTest3 {
 
 
 
-## 6.2 构造器引用
+### 6.2 构造器引用
 
 当 Lambda 表达式是创建一个对象，并且满足 Lambda 表达式形参，正好是给创建这个对象的构造器的实参列表，就可以使用构造器引用
 
@@ -1101,7 +1119,7 @@ public class ConstructorRefTest {
 
 
 
-## 6.3 数组引用
+### 6.3 数组引用
 
 当 Lambda 表达式是创建一个数组对象，并且满足 Lambda 表达式形参，正好是给创建这个数组对象的长度，就可以数组构造引用
 
@@ -1137,7 +1155,7 @@ public class ConstructorRefTest {
 
 
 
-# 7 Lambda和方法引用的结合
+## 7 Lambda和方法引用的结合
 
 下面演示用不同的排序策略给一个Apple列表排序，最终的结果如下：
 
@@ -1145,7 +1163,7 @@ public class ConstructorRefTest {
 inventory.sort(comparing(Apple::getWeight));
 ```
 
-## 7.1 第一步：传递代码
+### 7.1 第一步：传递代码
 
 Java 8 API中的List提供了一个sort方法，方法签名如下：
 
@@ -1166,7 +1184,7 @@ public class AppleComparator implements Comparator<Apple> {
 inventory.sort(new AppleComparator());
 ```
 
-## 7.2 第二步：使用匿名类
+### 7.2 第二步：使用匿名类
 
 匿名类的解决方案：
 
@@ -1179,7 +1197,7 @@ inventory.sort(new Comparator<Apple> {
 });
 ```
 
-## 7.3 第三步：使用Lambda表达式
+### 7.3 第三步：使用Lambda表达式
 
 Lambda表达式简化匿名类书写方式的解决方案：
 
@@ -1194,7 +1212,7 @@ inventory.sort((a1, a2) ->
 );
 ```
 
-## 7.4 第四步：使用方法引用
+### 7.4 第四步：使用方法引用
 
 方法引用（语法糖）简化Lambda表达式书写的解决方案：
 
@@ -1205,7 +1223,7 @@ inventory.sort(comparing(Apple:getWeight));
 
 
 
-# 8 Lambda表达式至简原则
+## 8 Lambda表达式至简原则
 
 -   **参数类型可以不写**（因为编译器可以根据上下文推断出来）
 -   如果只有**一个参数**，参数类型可以省略，**小括号()也可以省略**
