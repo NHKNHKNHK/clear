@@ -69,17 +69,17 @@ export default [
       { text: 'MySQL', link: '/09-MySQL' },
       { text: 'Redis', link: '/10-Redis' },
       { text: 'ORM', link: '/11-ORM' },
-      { text: 'Zookeeper', link: '/13-Zookeeper/Zookeeper篇' },
+      { text: 'Zookeeper', link: '/13-Zookeeper' },
       { text: 'ElasticSearch', link: '/14-ElasticSearch' },
       {
         text: '消息队列',
         items: [
-          { text: 'RocketMQ', link: '/15-消息队列-RocketMQ、Kafka、RabbitMQ/RocketMQ篇' },
-          { text: 'Kafka', link: '/15-消息队列-RocketMQ、Kafka、RabbitMQ/Kafka篇' },
-          { text: 'RabbitMQ', link: '/15-消息队列-RocketMQ、Kafka、RabbitMQ/RabbitMQ篇' },
+          { text: 'RocketMQ', link: '/15-MQ/RocketMQ' },
+          { text: 'Kafka', link: '/15-MQ/Kafka' },
+          { text: 'RabbitMQ', link: '/15-MQ/RabbitMQ' },
         ]
       },
-      { text: 'MongoDB', link: '/16-MongoDB/MongoDB篇' },
+      { text: 'MongoDB', link: '/16-MongoDB' },
       { text: '问题排除、场景题、性能优化', link: '/17-问题排除、场景题、性能优化/问题排除、场景题' },
       { text: 'Git', link: '/18-Git/Git篇' },
       { text: 'Linux', link: '/19-Linux/Linux篇' },

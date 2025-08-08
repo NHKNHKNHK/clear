@@ -1143,7 +1143,17 @@ export default {
       ]
     }
   ],
-
+  '/13-Zookeeper/': [
+    {
+      text: 'Zookeeper',
+      items: [
+        { text: 'Zookeeper', link: '/13-Zookeeper/index' },
+        { text: '谈谈你对Zookeeper的理解？', link: '/13-Zookeeper/谈谈你对Zookeeper的理解？' },
+        { text: 'Zookeeper的Leader选举机制？', link: '/13-Zookeeper/Zookeeper的Leader选举机制？' },
+        { text: 'Zookeeper如何实现分布式锁？', link: '/13-Zookeeper/Zookeeper如何实现分布式锁？' },
+      ]
+    }
+  ],
   '/14-ElasticSearch/': [
     {
       text: 'ElasticSearch',
@@ -1152,6 +1162,50 @@ export default {
         { text: 'ES检索比较快的原因，为什么MySQL不行？', link: '/14-ElasticSearch/ES检索比较快的原因，为什么MySQL不行？' },
       ]
     }
+  ],
+  '/15-MQ/': [
+    {
+      text: '消息队列',
+      items: [
+        { text: '导读', link: '/15-MQ/common/index' },
+        { text: '消息队列消息没有消费成功怎么办？', link: '/15-MQ/common/消息队列消息没有消费成功怎么办？' },
+
+      ]
+    },
+    {
+      text: 'RocketMQ',
+      items: [
+        { text: '如何提升RocketMQ顺序消费性能？', link: '/15-MQ/RocketMQ/' },
+      ]
+
+    },
+    {
+      text: 'Kafka',
+      items: [
+        { text: 'Kafka如何保证消息不丢、重复发了怎么办？', link: '/15-MQ/Kafka/' },
+        { text: 'Kafka为什么会出现重复消费？如何解决？', link: '/15-MQ/Kafka/Kafka为什么会出现重复消费？如何解决？' },
+        { text: 'Kafka消息重复消费的原因', link: '/15-MQ/Kafka/Kafka消息重复消费的原因' },
+        { text: '解决Kafka消息重复消费的方案', link: '/15-MQ/Kafka/解决Kafka消息重复消费的方案' },
+      ],
+    },
+    {
+      text: 'RabbitMQ',
+      items: [
+        { text: '导读', link: '/15-MQ/RabbitMQ/' },
+      ]
+    },
+  ],
+  '/16-MongoDB/': [
+    {
+      text: 'MongoDB',
+      items: [
+        { text: '导读', link: '/16-MongoDB/' },
+        { text: '什么是MongoDB', link: '/16-MongoDB/什么是MongoDB' },
+        { text: 'RDBMS与MongoDB对比', link: '/16-MongoDB/RDBMS与MongoDB对比' },
+        { text: 'MongoDB体系结构（核心概念）', link: '/16-MongoDB/MongoDB体系结构（核心概念）' },
+        { text: 'MongoDB数据模型', link: '/16-MongoDB/MongoDB数据模型' },
+      ]
+    },
   ],
 
 }
