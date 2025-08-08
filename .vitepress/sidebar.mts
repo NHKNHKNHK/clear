@@ -727,6 +727,7 @@ export default {
   '/08-SpringCloud、微服务/': [
     {
       text: '微服务',
+      collapsed: false,
       items: [
         { text: '导读', link: '/08-SpringCloud、微服务/' },
         { text: '什么是单体应用架构？', link: '/08-SpringCloud、微服务/什么是单体应用架构？' },
@@ -746,6 +747,7 @@ export default {
     },
     {
       text: 'SpringCloud',
+      collapsed: false,
       items: [
         { text: 'SpringCloud是什么？', link: '/08-SpringCloud、微服务/SpringCloud是什么？' },
         { text: 'SpringCloud的组成（架构）？', link: '/08-SpringCloud、微服务/SpringCloud的组成（架构）？' },
@@ -1269,6 +1271,16 @@ export default {
         { text: 'MongoDB数据模型', link: '/16-MongoDB/MongoDB数据模型' },
       ]
     },
+  ],
+  '/23-设计模式': [
+    {
+      text: '设计模式',
+      items: [
+        { text: '导读', link: '/23-设计模式/' },
+        { text: '单例模式中的双重检查锁为什么要检查两次？', link: '/23-设计模式/单例模式中的双重检查锁为什么要检查两次？' },
+      ]
+    }
+
   ],
   '/25-Vue/': [
     {
