@@ -672,7 +672,7 @@ export default {
     {
 
     },
-  ], 
+  ],
   '/07-SpringBoot/': [
     {
       text: 'SpringBoot',
@@ -949,11 +949,12 @@ export default {
   '/10-Redis/': [
     {
       text: '基础',
+      collapsed: false,
       items: [
         { text: 'Redis', link: '/10-Redis/' },
-        { text: 'Redis', link: '/10-Redis/Redis篇' },
         { text: '什么是Redis？', link: '/10-Redis/什么是Redis？' },
         { text: 'Redis相比memcached有哪些优势？', link: '/10-Redis/Redis相比memcached有哪些优势？' },
+        { text: 'Redis和memached的区别？', link: '/10-Redis/Redis和memached的区别？' },
         { text: 'Redis为什么那么快？', link: '/10-Redis/Redis为什么那么快？' },
         { text: 'Redis有哪些优点？', link: '/10-Redis/Redis有哪些优点？' },
         { text: 'Redis常见五大数据类型？', link: '/10-Redis/Redis常见五大数据类型？' },
@@ -963,31 +964,57 @@ export default {
         { text: 'Redis是单线程还是多线程？', link: '/10-Redis/Redis是单线程还是多线程？' },
         { text: 'Redis 为什么单线程还这么快？', link: '/10-Redis/Redis 为什么单线程还这么快？' },
         { text: 'Redis为什么要设计成单线程？6.0不是变成多线程了吗？', link: '/10-Redis/Redis为什么要设计成单线程？6.0不是变成多线程了吗？' },
+        { text: 'Redis存在线程安全吗？为什么？', link: '/10-Redis/Redis存在线程安全吗？为什么？' },
         { text: 'Redis的list类型常见的命令？', link: '/10-Redis/Redis的list类型常见的命令？' },
         { text: 'Redis的Geo类型？', link: '/10-Redis/Redis的Geo类型？' },
         { text: 'Redis的Bitmap类型？', link: '/10-Redis/Redis的Bitmap类型？' },
         { text: 'Redis的HyperLogLog类型？', link: '/10-Redis/Redis的HyperLogLog类型？' },
         { text: '本地缓存与分布式缓存的区别？', link: '/10-Redis/本地缓存与分布式缓存的区别？' },
         { text: 'Caffeine的缓存驱逐策略（过期策略）', link: '/10-Redis/Caffeine的缓存驱逐策略（过期策略）' },
+        { text: 'Redis的setnx和setex的区别？', link: '/10-Redis/Redis的setnx和setex的区别？' },
+        { text: 'Redis的内存淘汰策略？', link: '/10-Redis/Redis的内存淘汰策略？' },
+        { text: 'Redis的过期策略？', link: '/10-Redis/Redis的过期策略？' },
+        { text: 'redis key的过期时间和永久有效分别怎么设置？', link: '/10-Redis/redis key的过期时间和永久有效分别怎么设置？' },
+        { text: '删除key的命令会阻塞redis吗？', link: '/10-Redis/删除key的命令会阻塞redis吗？' },
+        { text: 'Redis什么情况下会变慢？', link: '/10-Redis/Redis什么情况下会变慢？' },
+        { text: 'redis常见性能问题和解决方案？', link: '/10-Redis/redis常见性能问题和解决方案？' },
+        { text: 'redis回收进程如何工作的？', link: '/10-Redis/redis回收进程如何工作的？' },
+
       ]
     },
     {
       text: '持久化',
       items: [
-        { text: 'Redis持久化', link: '/10-Redis/持久化' },
+        { text: 'Redis的持久化机制？', link: '/10-Redis/Redis的持久化机制？' },
+        { text: 'rdb的优势与劣势？', link: '/10-Redis/rdb的优势与劣势？' },
+        { text: 'aof的优势和劣势？', link: '/10-Redis/aof的优势和劣势？' },
+        { text: 'RDB和AOF的实现原理？以及优缺点？', link: '/10-Redis/RDB和AOF的实现原理？以及优缺点？' },
+        { text: 'Redis生成rdb的时候，是如何处理正常请求的？', link: '/10-Redis/Redis生成rdb的时候，是如何处理正常请求的？' },
       ]
     },
     {
       text: '分布式',
+      collapsed: false,
       items: [
-        { text: 'Redis集群', link: '/10-Redis/集群' },
+        { text: '怎么保证Redis的高并发高可用', link: '/10-Redis/怎么保证Redis的高并发高可用' },
+        { text: 'Redis的Cluster模式和Sentinel模式的区别是什么？', link: '/10-Redis/Redis的Cluster模式和Sentinel模式的区别是什么？' },
+        { text: 'Redis主从有哪几种常见的拓扑结构？', link: '/10-Redis/Redis主从有哪几种常见的拓扑结构？' },
+        { text: 'redis主从复制的核心原理？', link: '/10-Redis/redis主从复制的核心原理？' },
+        { text: 'redis的同步机制是什么', link: '/10-Redis/redis的同步机制是什么' },
+        { text: 'Redis的从服务器的作用？', link: '/10-Redis/Redis的从服务器的作用？' },
         { text: 'Redis的复制延迟有哪些可能的原因？', link: '/10-Redis/Redis的复制延迟有哪些可能的原因？' },
+        { text: 'Redis集群脑裂？', link: '/10-Redis/Redis集群脑裂？' },
+        { text: 'redis哨兵机制？', link: '/10-Redis/redis哨兵机制？' },
+        { text: '部署三主三从redis集群', link: '/10-Redis/docs/docker中部署三主三从redis集群' },
       ]
     },
     {
       text: '场景',
+      collapsed: true,
       items: [
+        { text: '如果Redis扛不住了怎么办？', link: '/10-Redis/如果Redis扛不住了怎么办？' },
         { text: '什么情况下会出现数据库和缓存不一致的问题？', link: '/10-Redis/什么情况下会出现数据库和缓存不一致的问题？' },
+        { text: 'Redis和MySQL如何保证数据一致性？', link: '/10-Redis/Redis和MySQL如何保证数据一致性？' },
         { text: '如何解决Redis和数据库的一致性问题？', link: '/10-Redis/如何解决Redis和数据库的一致性问题？' },
         { text: '为什么需要延迟双删，两次删除的原因是什么？', link: '/10-Redis/为什么需要延迟双删，两次删除的原因是什么？' },
         { text: '有了第二次删除，第一次还有意义吗？', link: '/10-Redis/有了第二次删除，第一次还有意义吗？' },
@@ -996,11 +1023,35 @@ export default {
         { text: '什么是缓存雪崩？', link: '/10-Redis/什么是缓存雪崩？' },
         { text: '缓存击穿、雪崩、穿透的区别？', link: '/10-Redis/缓存击穿、雪崩、穿透的区别？' },
         { text: '如果有大量的key需要设置同一时间过期，一般需要注意什么？', link: '/10-Redis/如果有大量的key需要设置同一时间过期，一般需要注意什么？' },
+        { text: 'Redis key过期了，为什么内存没释放？', link: '/10-Redis/Redis key过期了，为什么内存没释放？' },
+        { text: 'redis的内存用完了会发生什么？', link: '/10-Redis/redis的内存用完了会发生什么？' },
         { text: 'Redis生成全局唯一ID', link: '/10-Redis/Redis生成全局唯一IDs' },
+        { text: '什么是分布式锁？分布式锁的特点？', link: '/10-Redis/什么是分布式锁？分布式锁的特点？' },
+        { text: '如何实现分布式锁？', link: '/10-Redis/如何实现分布式锁？' },
+        { text: '为什么Redis实现分布式锁不合适？还是有很多公司在用？', link: '/10-Redis/为什么Redis实现分布式锁不合适？还是有很多公司在用？' },
+        { text: 'jedis与redisson对比有什么优缺点？', link: '/10-Redis/jedis与redisson对比有什么优缺点？' },
+        { text: 'Redis实现分布式锁有什么问题吗？', link: '/10-Redis/Redis实现分布式锁有什么问题吗？' },
+        { text: '看门狗机制的原理是什么？', link: '/10-Redis/看门狗机制的原理是什么？' },
+        { text: '分布式锁在未执行完逻辑之前就过期了怎么办？', link: '/10-Redis/分布式锁在未执行完逻辑之前就过期了怎么办？' },
+        { text: '看门狗一直续期，那客户端挂了怎么办？', link: '/10-Redis/看门狗一直续期，那客户端挂了怎么办？' },
+        { text: '看门狗解锁失败，会不会导致一直续期下去？', link: '/10-Redis/看门狗解锁失败，会不会导致一直续期下去？' },
+        { text: 'Redis的red lock？', link: '/10-Redis/Redis的red lock？' },
+        { text: 'redlock的分布式锁是什么？', link: '/10-Redis/redlock的分布式锁是什么？' },
+        { text: 'Redis如何实现延时队列', link: '/10-Redis/Redis如何实现延时队列' },
+        { text: '如何基于Redisson实现一个延迟队列', link: '/10-Redis/如何基于Redisson实现一个延迟队列' },
+        { text: '什么是redis bigKey？如何解决？', link: '/10-Redis/什么是redis bigKey？如何解决？' },
+        { text: '如何解决热点key？', link: '/10-Redis/如何解决热点key？' },
+        { text: '如何快速实现一个布隆过滤器？', link: '/10-Redis/如何快速实现一个布隆过滤器？' },
+        { text: '如何快速实现一个排行榜？', link: '/10-Redis/如何快速实现一个排行榜？' },
+        { text: '如何用Redis统计海量UV？', link: '/10-Redis/如何用Redis统计海量UV？' },
+        { text: '如何使用Redis记录用户连续登录多少天？', link: '/10-Redis/如何使用Redis记录用户连续登录多少天？' },
+        { text: '什么情况下redis哨兵模式会产生数据丢失', link: '/10-Redis/什么情况下redis哨兵模式会产生数据丢失' },
+
       ]
     },
     {
       text: '进阶',
+      collapsed: true,
       items: [
         { text: 'RedisKeyValue设计原则有哪些？', link: '/10-Redis/RedisKeyValue设计原则有哪些？' },
         { text: '为什么EMBSTR的阈值是44？为什么以前是39？', link: '/10-Redis/为什么EMBSTR的阈值是44？为什么以前是39？' },
@@ -1008,13 +1059,23 @@ export default {
         { text: 'Redis 事务三特性？', link: '/10-Redis/Redis 事务三特性？' },
         { text: 'Redis事务保证原子性吗，支持回滚吗？', link: '/10-Redis/Redis事务保证原子性吗，支持回滚吗？' },
         { text: 'Redis的事务和关系型数据库有何不同？', link: '/10-Redis/Redis的事务和关系型数据库有何不同？' },
+        { text: 'Redis的lua脚本？', link: '/10-Redis/Redis的lua脚本？' },
         { text: 'Redis中如何实现队列和栈的功能？', link: '/10-Redis/Redis中如何实现队列和栈的功能？' },
         { text: '简述Redis的Ziplist和Quicklist？', link: '/10-Redis/简述Redis的Ziplist和Quicklist？' },
         { text: '什么是Redis的ListPack？', link: '/10-Redis/什么是Redis的ListPack？' },
         { text: 'Redis的内存碎片化是什么？如何解决？', link: '/10-Redis/Redis的内存碎片化是什么？如何解决？' },
         { text: 'Redis字符串的值最大能存多少？', link: '/10-Redis/Redis字符串的值最大能存多少？' },
+        { text: 'Redis为什么不复用c语言的字符串？', link: '/10-Redis/Redis为什么不复用c语言的字符串？' },
         { text: '什么是Redis的ListPack？', link: '/10-Redis/什么是Redis的ListPack？' },
         { text: '什么是Redis的ListPack？', link: '/10-Redis/什么是Redis的ListPack？' },
+        { text: 'Redis的发布订阅功能？', link: '/10-Redis/Redis的发布订阅功能？' },
+        { text: '什么是redis哈希槽的概念？', link: '/10-Redis/什么是redis哈希槽的概念？' },
+        { text: '使用Redis集群时，通过key如何定位到对应节点？', link: '/10-Redis/使用Redis集群时，通过key如何定位到对应节点？' },
+        { text: '为什么Redis集群的最大槽数是16384个？', link: '/10-Redis/为什么Redis集群的最大槽数是16384个？' },
+        { text: 'Redis中的管道有什么用', link: '/10-Redis/Redis中的管道有什么用' },
+        { text: 'Redis的pipeline？', link: '/10-Redis/Redis的pipeline？' },
+        { text: '原生批处理命令(mset、mget)与Pipeline的区别？', link: '/10-Redis/原生批处理命令(mset、mget)与Pipeline的区别？' },
+        { text: '什么是Redis跳表？', link: '/10-Redis/什么是Redis跳表？' },
       ]
     }
   ],
@@ -1082,7 +1143,7 @@ export default {
       ]
     }
   ],
-  
+
   '/14-ElasticSearch/': [
     {
       text: 'ElasticSearch',

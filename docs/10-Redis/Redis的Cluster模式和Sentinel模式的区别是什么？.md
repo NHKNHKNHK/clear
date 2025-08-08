@@ -1,0 +1,1 @@
+# Redis的Cluster模式和Sentinel模式的区别是什么？

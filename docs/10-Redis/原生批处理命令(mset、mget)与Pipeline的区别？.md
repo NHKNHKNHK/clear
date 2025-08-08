@@ -1,0 +1,1 @@
+# 原生批处理命令(mset、mget)与Pipeline的区别？
