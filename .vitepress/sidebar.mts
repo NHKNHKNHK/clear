@@ -1229,5 +1229,34 @@ export default {
       ]
     }
   ],
+  '/26-React/': [
+    {
+      text: 'React',
+      items: [
+        { text: '导读', link: '/26-React/' },
+      ],
+    }
+  ],
+  '/27-JavaScript/': [
+    {
+      text: 'JavaScript',
+      items: [
+        { text: '导读', link: '/27-JavaScript/' },
+        { text: 'JavaScript中==与===有什么区别？', link: '/27-JavaScript/JavaScript中==与===有什么区别？' },
+        { text: 'JavaScript中for...in和for...of的区别是什么？', link: '/27-JavaScript/JavaScript中for...in和for...of的区别是什么？' },
+        { text: 'JavaScript中splice和slice函数会改变原数组吗？', link: '/27-JavaScript/JavaScript中splice和slice函数会改变原数组吗？' },
+        { text: '为什么需要将es6转换为es5', link: '/27-JavaScript/为什么需要将es6转换为es5' },
+        { text: 'js原型链', link: '/27-JavaScript/js原型链' },
+        { text: '对象原型', link: '/27-JavaScript/对象原型' },
+      ],
+    },
+    {
+      'DOM API': [
+        { text: '不会冒泡的事件有哪些？', link: '/27-JavaScript/不会冒泡的事件有哪些？' },
+        { text: '如何判断网页元素是否达到可视区域？', link: '/27-JavaScript/如何判断网页元素是否达到可视区域？' },
+        { text: 'mouseEnter 和 mouseOver 有什么区别？', link: '/27-JavaScript/mouseEnter 和 mouseOver 有什么区别？' },
+      ],
+    }
+  ],
 
 }
