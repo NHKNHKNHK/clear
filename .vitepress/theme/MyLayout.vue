@@ -3,7 +3,7 @@
 import DefaultTheme from "vitepress/theme";
 import NotFound from "./components/NotFound.vue";
 import AsideTop from "./components/AsideTop.vue";
-import GiscusDiscussions from "./components/GiscusDiscussions.vue";
+import GiscusDiscussionsWrapper from "./components/GiscusDiscussionsWrapper.vue"
 import { useData } from "vitepress";
 import { nextTick, provide } from "vue";
 
@@ -55,7 +55,7 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
     <!-- <template #doc-before>doc-before</template> -->
     <template #doc-after>
       <!-- doc-after -->
-      <GiscusDiscussions />
+      <GiscusDiscussionsWrapper />
     </template>
     <!-- <template #sidebar-nav-before>sidebar-nav-before</template> -->
     <!-- <template #sidebar-nav-after>sidebar-nav-after</template> -->
