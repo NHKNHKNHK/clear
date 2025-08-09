@@ -1,9 +1,12 @@
 import { defineConfig } from 'vitepress'
 import nav from './nav.mjs'
 import sidebar from './sidebar.mjs'
+import UnoCSS from 'unocss/vite'
 // 代码组icon
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
-import { getSideBarList } from './utils.mts' // 引入 getSideBarList 方法
+import AutoImport from "unplugin-auto-import/vite";
+import {ElementPlusResolver} from "unplugin-vue-components/resolvers";
+import Components from "unplugin-vue-components/vite";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -152,6 +155,7 @@ export default defineConfig({
 
   vite: {
     plugins: [
+      UnoCSS(),
       groupIconVitePlugin({  //代码组图标
         // 以下配置的效果是在 代码组中不书写文件名页可以有图标显示
         customIcon: {
@@ -177,8 +181,17 @@ export default defineConfig({
           scala: "vscode-icons:file-type-scala",
           vue: "vscode-icons:file-type-vue",
         },
-      })
+      }),
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+      }),
     ],
+    ssr: {
+      noExternal: ['element-plus']
+    }
   },
 
 

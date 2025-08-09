@@ -62,7 +62,7 @@ export default {
   '/01-Java基础/': [
     {
       text: 'Java基础',
-      // collapsed: true, // 折叠 默认展开，初始页面加载时折叠设置为true
+      collapsed: false, // 折叠 默认展开，初始页面加载时折叠设置为true
       items: [
         { text: 'index', link: '/01-Java基础/' },
         { text: 'i++与++i的区别', link: '/01-Java基础/i++与++i的区别' },
@@ -195,7 +195,7 @@ export default {
   '/02-Java集合篇/': [
     {
       text: 'Java集合',
-      collapsed: true,
+      collapsed: false,
       items: [
         { text: '导航', link: '/02-Java集合篇/index' },
         { text: '集合篇', link: '/02-Java集合篇/Java集合篇' },

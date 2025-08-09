@@ -238,12 +238,31 @@ features:
 // 在使用的地方显式的导入，使它们可以正确地进行代码拆分，并且仅在显示相关页面时才加载
 import Confetti from '../.vitepress/theme/components/Confetti.vue'
 import HomeUnderline  from '../.vitepress/theme/components/HomeUnderline.vue'
+import {
+  Check,
+  Delete,
+  Edit,
+  Message,
+  Search,
+  Star,
+} from '@element-plus/icons-vue'
+import { ElButton } from 'element-plus'
+
+
 </script>
 <!-- 烟火效果 -->
 <Confetti/>
 <!-- 首页文字下划线效果 -->
 <HomeUnderline/>
 
+## 整合ElementPlus
+
+<el-button>Default</el-button>
+<el-button type="primary">Primary</el-button>
+<el-button type="success">Success</el-button>
+<el-button type="info">Info</el-button>
+<el-button type="warning">Warning</el-button>
+<el-button type="danger">Danger</el-button>
 
 ## 一些额外的内容
 
