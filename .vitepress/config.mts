@@ -10,7 +10,7 @@ import Components from "unplugin-vue-components/vite";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  base: 'clear', // 此处与github仓库名匹配
+  // base: 'clear', // 此处与github仓库名匹配
   // =====================
   // 站点级选项
   // =====================
