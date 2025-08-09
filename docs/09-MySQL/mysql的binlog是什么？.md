@@ -1,1 +1,0 @@
-# mysql的binlog是什么？

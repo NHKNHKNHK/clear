@@ -1,1 +1,0 @@
-# 什么是Java中的SPI（service provide interface）机制？

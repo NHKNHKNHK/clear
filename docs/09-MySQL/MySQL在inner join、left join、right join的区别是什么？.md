@@ -1,1 +1,0 @@
-# MySQL在inner join、left join、right join的区别是什么？

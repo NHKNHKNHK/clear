@@ -1,1 +1,0 @@
-# MyISAM Static 和 MyISAM Dynamic 有什么区别？

@@ -1,1 +1,0 @@
-# mysql的blob和text有什么区别

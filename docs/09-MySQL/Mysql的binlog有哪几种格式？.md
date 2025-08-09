@@ -1,1 +1,0 @@
-# Mysql的binlog有哪几种格式？

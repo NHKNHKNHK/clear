@@ -1,1 +1,0 @@
-# 为什么wait和notify必须要在synchronized代码块使用？

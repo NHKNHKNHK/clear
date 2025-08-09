@@ -1,1 +1,0 @@
-# CopyOnWriteArrayList和Collections.synchronization有什么区别？分别有什么优缺点？

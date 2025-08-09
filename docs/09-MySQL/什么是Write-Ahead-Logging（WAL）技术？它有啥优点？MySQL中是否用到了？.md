@@ -1,1 +1,0 @@
-# 什么是Write-Ahead-Logging（WAL）技术？它有啥优点？MySQL中是否用到了？

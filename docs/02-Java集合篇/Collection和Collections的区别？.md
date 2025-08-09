@@ -1,5 +1,0 @@
-# Collection和Collections的区别？
-
-Collection是一个单列集合的顶层接口
-
-Collections是集合类的一个工具类，包含了对集合元素进行排序和线程安全等各种操作方法

@@ -1,1 +1,0 @@
-# 简述Redis的Ziplist和Quicklist？
