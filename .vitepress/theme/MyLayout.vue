@@ -99,8 +99,9 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
     <!-- <template #nav-bar-title-after>nav-bar-title-after</template> -->
     <!-- <template #nav-bar-content-before>nav-bar-content-before</template> -->
     <!-- <template #nav-bar-content-after>nav-bar-content-after</template> -->
-    <template #nav-screen-content-before>nav-screen-content-before</template>
-    <template #nav-screen-content-after>nav-screen-content-after</template>
+    <!-- 窄屏幕右侧菜单插槽   -->
+    <!-- <template #nav-screen-content-before>nav-screen-content-before</template> -->
+    <!-- <template #nav-screen-content-after>nav-screen-content-after</template> -->
   </Layout>
 </template>
 
