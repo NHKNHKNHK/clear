@@ -1507,6 +1507,7 @@ export default {
       text: 'Nginx',
       items: [
         { text: '导读', link: '/nginx/' },
+        { text: '通过 yum 方式安装 Nginx', link: '/nginx/install-nginx' },
         { text: 'Nginx的常用命令？', link: '/nginx/Nginx的常用命令？' },
         { text: 'Nginx如何实现跨域访问？', link: '/nginx/Nginx如何实现跨域访问？' },
       ]
