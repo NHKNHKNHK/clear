@@ -46,8 +46,8 @@ features:
   - title: Java并发
     link: /04-Java并发篇
     icon:
-      dark: /svg/高并发-dark.svg
-      light: /svg/高并发-light.svg
+      dark: /svg/concurrent-dark.svg
+      light: /svg/concurrent-light.svg
       width: 40
       height: 40
   - title: JVM
@@ -109,8 +109,8 @@ features:
   - title: 分布式
     link: /12-分布式
     icon: 
-      dark: /svg/分布式-dark.svg
-      light: /svg/分布式-light.svg
+      dark: /svg/Distributed-dark.svg
+      light: /svg/Distributed-light.svg
       width: 40
       height: 40
   - title: Zookeeper
@@ -178,8 +178,8 @@ features:
       height: 40
   - title: 敬请期待...
     icon: 
-      dark: /svg/敬请期待-dark.svg
-      light: /svg/敬请期待-light.svg
+      dark: /svg/please-await-dark.svg
+      light: /svg/please-await-light.svg
       width: 40
       height: 40
 

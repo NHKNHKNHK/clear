@@ -428,7 +428,7 @@ export default {
         { text: '什么是Java中的ABA问题？', link: '/04-Java并发篇/什么是Java中的ABA问题？' },
         { text: 'Java内存模型（JMM）？', link: '/04-Java并发篇/Java内存模型（JMM）？' },
         { text: '线程的安全三大特性', link: '/04-Java并发篇/线程的安全三大特性' },
-
+        { text: 'JMM规范下，三大特性？ ', link: '/04-Java并发篇/JMM规范下，三大特性？ ' },
         { text: '什么是Java的happens-before规则？（JMM规范）', link: '/04-Java并发篇/什么是Java的happens-before规则？（JMM规范）' },
         { text: 'volatile关键字的作用？', link: '/04-Java并发篇/volatile关键字的作用？' },
         { text: '什么是Java中的指令重排？', link: '/04-Java并发篇/什么是Java中的指令重排？' },
