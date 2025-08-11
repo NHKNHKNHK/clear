@@ -1508,6 +1508,8 @@ export default {
       items: [
         { text: '导读', link: '/nginx/' },
         { text: '通过 yum 方式安装 Nginx', link: '/nginx/install-nginx' },
+        { text: 'Nginx 配置文件解读', link: '/nginx/nginx-config.md' },
+        { text: '单服务器如何部署多个网站？', link: '/nginx/multi-deploy.md' },
         { text: 'Nginx的常用命令？', link: '/nginx/Nginx的常用命令？' },
         { text: 'Nginx如何实现跨域访问？', link: '/nginx/Nginx如何实现跨域访问？' },
       ]
