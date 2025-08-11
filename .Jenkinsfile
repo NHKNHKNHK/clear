@@ -3,24 +3,34 @@
 pipeline {
     agent any
 
+     environment {
+            // Gitee仓库配置
+            GITEE_REPO = 'https://gitee.com/ninghongkang/easy-interview'
+            GITEE_CREDENTIALS_ID = 'your-gitee-credentials-id'
+            BRANCH = 'main'
+
+            // Node.js配置
+            NODE_VERSION = '16'  // 推荐使用Node 16或18
+    }
+
     stages {
         stage('Setup Environment') {
-                steps {
-                    script {
-                        echo "设置Node.js环境 (v${env.NODE_VERSION})"
-                        // 使用nvm或n来管理Node版本
-                        sh '''
-                            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-                            export NVM_DIR="$HOME/.nvm"
-                            [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                            nvm install ${NODE_VERSION}
-                            nvm use ${NODE_VERSION}
-                            node -v
-                            npm -v
-                        '''
-                    }
+            steps {
+                script {
+                    echo "设置Node.js环境 (v${env.NODE_VERSION})"
+                    // 使用nvm或n来管理Node版本
+                    sh '''
+                        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+                        export NVM_DIR="$HOME/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                        nvm install ${NODE_VERSION}
+                        nvm use ${NODE_VERSION}
+                        node -v
+                        npm -v
+                    '''
                 }
             }
+        }
         stage('Checkout') {
                 steps {
                     script {
