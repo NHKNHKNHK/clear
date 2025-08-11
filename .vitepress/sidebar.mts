@@ -225,7 +225,7 @@ export default {
     },
     {
       text: 'List',
-      collapsed: true,
+      collapsed: false,
       items: [
         { text: '请你介绍以下常见的List实现类', link: '/02-Java集合篇/List/请你介绍以下常见的List实现类' },
         { text: 'ArrayList 与 Vector 的区别？', link: '/02-Java集合篇/List/ArrayList 与 Vector 的区别？' },
@@ -246,6 +246,7 @@ export default {
     },
     {
       text: 'Set',
+      collapsed: false,
       items: [
         { text: 'Java中Set有哪些常见实现类？', link: '/02-Java集合篇/Set/Java中Set有哪些常见实现类？' },
         { text: 'HashSet 中添加元素的过程？', link: '/02-Java集合篇/Set/HashSet 中添加元素的过程？' },
@@ -260,6 +261,7 @@ export default {
     },
     {
       text: 'Map',
+      collapsed: false,
       items: [
         { text: 'Java中Map有哪些常见实现类？', link: '/02-Java集合篇/Map/Java中Map有那些常见实现类？' },
         { text: 'Hashtable 与 HashMap的区别？', link: '/02-Java集合篇/Map/Hashtable 与 HashMap的区别？' },

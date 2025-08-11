@@ -292,7 +292,13 @@ npx vitepress init
 @Bean能不能单独修改
 @Controller和@Component能不能呼唤？ 本质靠的是父子容器
 
-BeanFatory和ApplicationContext的区别 （简单容器和复杂容器）
+BeanFactory和ApplicationContext的区别 （简单容器和复杂容器）
 BeanDefinition如何修改？
 Bean如何修改？
 
+
+
+
+sql优化
+
+如何控制同时只有两个线程访问
