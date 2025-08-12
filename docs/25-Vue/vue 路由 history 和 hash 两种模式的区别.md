@@ -1,0 +1,1 @@
+# vue 路由 history 和 hash 两种模式的区别
