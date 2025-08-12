@@ -1039,8 +1039,7 @@ export default {
         { text: 'Redis的Geo类型？', link: '/10-Redis/Redis的Geo类型？' },
         { text: 'Redis的Bitmap类型？', link: '/10-Redis/Redis的Bitmap类型？' },
         { text: 'Redis的HyperLogLog类型？', link: '/10-Redis/Redis的HyperLogLog类型？' },
-        { text: '本地缓存与分布式缓存的区别？', link: '/10-Redis/本地缓存与分布式缓存的区别？' },
-        { text: 'Caffeine的缓存驱逐策略（过期策略）', link: '/10-Redis/Caffeine的缓存驱逐策略（过期策略）' },
+
         { text: 'Redis的setnx和setex的区别？', link: '/10-Redis/Redis的setnx和setex的区别？' },
         { text: 'Redis的内存淘汰策略？', link: '/10-Redis/Redis的内存淘汰策略？' },
         { text: 'Redis的过期策略？', link: '/10-Redis/Redis的过期策略？' },
@@ -1054,6 +1053,7 @@ export default {
     },
     {
       text: '持久化',
+      collapsed: false,
       items: [
         { text: 'Redis的持久化机制？', link: '/10-Redis/Redis的持久化机制？' },
         { text: 'rdb的优势与劣势？', link: '/10-Redis/rdb的优势与劣势？' },
@@ -1061,6 +1061,15 @@ export default {
         { text: 'RDB和AOF的实现原理？以及优缺点？', link: '/10-Redis/RDB和AOF的实现原理？以及优缺点？' },
         { text: 'Redis生成rdb的时候，是如何处理正常请求的？', link: '/10-Redis/Redis生成rdb的时候，是如何处理正常请求的？' },
       ]
+    },
+    {
+      text: '本地缓存',
+      collapsed: false,
+      items: [
+        { text: '本地缓存与分布式缓存的区别？', link: '/10-Redis/本地缓存与分布式缓存的区别？' },
+        { text: '如何实现本地缓存？', link: '/10-Redis/local-cache/如何实现本地缓存？' },
+        { text: 'Caffeine的缓存驱逐策略（过期策略）', link: '/10-Redis/Caffeine的缓存驱逐策略（过期策略）' },
+      ],
     },
     {
       text: '分布式',
@@ -1472,6 +1481,7 @@ export default {
       collapsed: false,
       items: [
         { text: '导读', link: '/31-front-what/' },
+        { text: '如何禁止别人调式前端页面代码？', link: '/31-front-what/如何禁止别人调式前端页面代码？' },
       ]
     },
     {
