@@ -1,0 +1,1 @@
+# @Component和@Configuration能不能互换

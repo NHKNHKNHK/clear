@@ -601,6 +601,7 @@ export default {
         { text: 'Spring中的JPA和Hibernate有什么区别？', link: '/05-Spring/Spring中的JPA和Hibernate有什么区别？' },
         { text: '说说Spring常用的注解', link: '/05-Spring/说说Spring常用的注解' },
         { text: '@Component与@Bean的区别？', link: '/05-Spring/@Component与@Bean的区别？' },
+        { text: '@Component和@Configuration能不能互换', link: '/05-Spring/@Component和@Configuration能不能互换' },
         { text: '@Bean写在配置类与@Bean不写在配置类中的区别', link: '/05-Spring/@Bean写在配置类与@Bean不写在配置类中的区别' },
         { text: '@Autowired和@Resource的区别', link: '/05-Spring/@Autowired和@Resource的区别' },
         { text: '@PropertySource注解的作用？', link: '/05-Spring/@PropertySource注解的作用？' },
