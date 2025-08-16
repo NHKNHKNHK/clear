@@ -1,16 +1,14 @@
-// jenkins流水线
-
 pipeline {
     agent any
 
     environment {
-            // Gitee仓库配置
-            GITEE_REPO = 'https://gitee.com/ninghongkang/easy-interview'
-            GITEE_CREDENTIALS_ID = 'your-gitee-credentials-id'
-            BRANCH = 'master'
+        // Gitee仓库配置
+        GITEE_REPO = 'https://gitee.com/ninghongkang/easy-interview'
+        GITEE_CREDENTIALS_ID = 'your-gitee-credentials-id'
+        BRANCH = 'master'
 
-            // Node.js配置
-            NODE_VERSION = '20'  // 使用系统已有Node.js 20环境
+        // Node.js配置
+        NODE_VERSION = '20'
     }
 
     stages {
@@ -18,25 +16,28 @@ pipeline {
             steps {
                 script {
                     echo "设置Node.js环境 (v${env.NODE_VERSION})"
-                    // 使用nvm或n来管理Node版本
-                    sh '''
+                    // 安装nvm和Node.js
+                    sh '''#!/bin/bash -l
                         # 安装nvm
                         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
                         # 加载nvm环境
                         export NVM_DIR="$HOME/.nvm"
-                        chmod +x "$NVM_DIR/nvm.sh"  # 添加执行权限
-                        [ -s "$NVM_DIR/nvm.sh" ] && ./ "$NVM_DIR/nvm.sh"  # 使用点命令加载nvm，避免权限问题
+                        [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"  # 使用source命令加载nvm
                         # 安装Node.js 20
-                        nvm install 20
+                        nvm install ${NODE_VERSION}
                         # 使用Node.js 20
-                        nvm use 20
-                        # 检查Node.js和npm版本
+                        nvm use ${NODE_VERSION}
+                        # 安装pnpm
+                        npm install -g pnpm
+                        # 检查版本
                         node -v
                         npm -v
+                        pnpm -v
                     '''
                 }
             }
         }
+
         stage('Checkout') {
             steps {
                 script {
@@ -53,37 +54,51 @@ pipeline {
             }
         }
 
-        // 阶段3：安装依赖
         stage('Install Dependencies') {
             steps {
                 script {
                     echo '安装项目依赖...'
-                    sh 'pnpm install'
-                }
-            }
-        }
-        stage('Build') {
-            steps {
-                script {
-                    echo '构建VitePress项目...'
-                    sh 'pnpm run docs:build'  // 使用pnpm执行构建命令
+                    sh '''#!/bin/bash -l
+                        # 确保nvm环境已加载
+                        export NVM_DIR="$HOME/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                        pnpm install
+                    '''
                 }
             }
         }
 
-        // 阶段5：部署
+        stage('Build') {
+            steps {
+                script {
+                    echo '构建VitePress项目...'
+                    sh '''#!/bin/bash -l
+                        # 确保nvm环境已加载
+                        export NVM_DIR="$HOME/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                        pnpm run docs:build
+                    '''
+                }
+            }
+        }
+
         stage('Deploy') {
             steps {
                 script {
                     echo '部署静态文件...'
-                    sh 'rm -rf /www/wwwroot/clear-blog/*'
-                    sh 'ls'
-                    sh 'cp -r .vitepress/dist/* /www/wwwroot/clear-blog/'
-                    echo '部署完成！'
+                    sh '''#!/bin/bash
+                        # 确保目标目录存在
+                        mkdir -p /www/wwwroot/clear-blog
+                        # 清理并复制文件
+                        rm -rf /www/wwwroot/clear-blog/*
+                        cp -r .vitepress/dist/* /www/wwwroot/clear-blog/
+                        echo '部署完成！'
+                    '''
                 }
             }
         }
     }
+
     post {
         success {
             echo 'VitePress项目构建部署成功！'
