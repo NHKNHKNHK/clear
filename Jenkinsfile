@@ -20,7 +20,16 @@ pipeline {
                     echo "设置Node.js环境 (v${env.NODE_VERSION})"
                     // 使用nvm或n来管理Node版本
                     sh '''
-                        # 检查系统Node.js环境
+                        # 安装nvm
+                        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+                        # 加载nvm环境
+                        export NVM_DIR="$HOME/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                        # 安装Node.js 20
+                        nvm install 20
+                        # 使用Node.js 20
+                        nvm use 20
+                        # 检查Node.js和npm版本
                         node -v
                         npm -v
                     '''
