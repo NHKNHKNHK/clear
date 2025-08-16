@@ -24,7 +24,8 @@ pipeline {
                         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
                         # 加载nvm环境
                         export NVM_DIR="$HOME/.nvm"
-                        [ -s "$NVM_DIR/nvm.sh" ] && ./ "$NVM_DIR/nvm.sh"
+                        chmod +x "$NVM_DIR/nvm.sh"  # 添加执行权限
+                        [ -s "$NVM_DIR/nvm.sh" ] && ./ "$NVM_DIR/nvm.sh"  # 使用点命令加载nvm，避免权限问题
                         # 安装Node.js 20
                         nvm install 20
                         # 使用Node.js 20
