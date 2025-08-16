@@ -1301,6 +1301,7 @@ export default {
       collapsed: false,
       items: [
         { text: 'CPU飙高系统反应慢怎么排查？', link: '/17-backend-what/问题排除/CPU飙高系统反应慢怎么排查？' },
+        { text: '怎么分析JVM当前的内存占用情况？OOM后怎么分析？', link: '/17-backend-what/问题排除/怎么分析JVM当前的内存占用情况？OOM后怎么分析？' },
       ]
     },
     {
@@ -1308,6 +1309,14 @@ export default {
       collapsed: false,
       items: [
         { text: '如何避免超预期的高并发压力压垮系统？', link: '/17-backend-what/场景题/如何避免超预期的高并发压力压垮系统？' },
+      ]
+    },
+    {
+      text: '设计题',
+      collapsed: false,
+      items: [
+        { text: '让你实现一个订单超时取消，怎么设计？', link: '/17-backend-what/design/让你实现一个订单超时取消，怎么设计？' },
+        { text: '定时任务扫表的方案有什么缺点？', link: '/17-backend-what/design/定时任务扫表的方案有什么缺点？' },
       ]
     },
     {
