@@ -99,11 +99,16 @@ pipeline {
                         # 确保目标目录存在
                         mkdir -p "${DEPLOY_DIR}"
                         
+                        # 修复构建产物的权限（重要！）
+                        echo "修复构建产物权限..."
+                        chown -R $(whoami):$(whoami) "${WORKSPACE}/.vitepress/dist" || true
+                        chmod -R 755 "${WORKSPACE}/.vitepress/dist" || true
+                        
                         # 清理目录
                         echo "清理目标目录: ${DEPLOY_DIR}"
                         rm -rf "${DEPLOY_DIR}"/*
                         
-                        # 复制构建产物
+                        # 复制构建产物（使用详细输出）
                         echo "从 ${BUILD_OUTPUT_DIR} 复制到 ${DEPLOY_DIR}"
                         cp -rv "${BUILD_OUTPUT_DIR}"/* "${DEPLOY_DIR}"/
                         
@@ -111,8 +116,8 @@ pipeline {
                         echo "部署后目标目录内容:"
                         ls -la "${DEPLOY_DIR}"
                         
-                        # 修复权限
-                        echo "修复目录权限..."
+                        # 修复目标目录权限
+                        echo "修复目标目录权限..."
                         chown -R $(whoami):$(whoami) "${DEPLOY_DIR}" || true
                         chmod -R 755 "${DEPLOY_DIR}" || true
                         
