@@ -94,13 +94,6 @@ pipeline {
     post {
         success {
             echo 'VitePress项目构建部署成功！'
-            script {
-                sh '''#!/bin/bash
-                    echo "验证部署目录内容:"
-                    ls -la "${BUILD_OUTPUT_DIR}"
-                    echo "部署完成！"
-                '''
-            }
         }
         failure {
             echo '构建失败！'
