@@ -13,7 +13,7 @@ pipeline {
         // 添加构建产物目录变量
         BUILD_OUTPUT_DIR = "${env.WORKSPACE}/.vitepress/dist"
         // 添加 Jenkins 容器名称
-        JENKINS_CONTAINER = 'jenkins' // 替换为您的 Jenkins 容器名称
+        JENKINS_CONTAINER = 'jenkins_king-jenkins_king-1' // 替换为您的 Jenkins 容器名称
     }
 
     stages {
