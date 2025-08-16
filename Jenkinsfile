@@ -10,7 +10,7 @@ pipeline {
             BRANCH = 'master'
 
             // Node.js配置
-            NODE_VERSION = '16'  // 推荐使用Node 16或18
+            NODE_VERSION = '20'  // 使用系统已有Node.js 20环境
     }
 
     stages {
@@ -20,12 +20,7 @@ pipeline {
                     echo "设置Node.js环境 (v${env.NODE_VERSION})"
                     // 使用nvm或n来管理Node版本
                     sh '''
-                        # 安装nvm for Linux
-                        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-                        export NVM_DIR="$HOME/.nvm"
-                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                        nvm install $NODE_VERSION
-                        nvm use $NODE_VERSION
+                        # 检查系统Node.js环境
                         node -v
                         npm -v
                     '''
@@ -71,31 +66,16 @@ pipeline {
             steps {
                 script {
                     echo '部署静态文件...'
-                    // 这里提供几种常见的部署方式示例
 
                     // 选项1：使用rsync部署到远程服务器（请替换实际用户、服务器和路径）
                     sh '''
+                        # 注意：需确保Jenkins容器已挂载宿主机目录（-v /www/wwwroot/clear-blog:/www/wwwroot/clear-blog）
                         # 删除旧版本文件
                         rm -rf /www/wwwroot/clear-blog/*
-                        # 复制新版本构建产物
-                        cp -r ./docs/.vitepress/dist/* /www/wwwroot/clear-blog/
+                        # 复制新版本构建产物（构建产物路径：docs/.vitepress/dist）
+                        cp -r .vitepress/dist/* /www/wwwroot/clear-blog/
                     '''
 
-                    // 选项2：使用SSH部署
-                    // sshPublisher(
-                    //     publishers: [
-                    //         sshPublisherDesc(
-                    //             configName: 'your-ssh-server',
-                    //             transfers: [
-                    //                 sshTransfer(
-                    //                     sourceFiles: 'dist/**',
-                    //                     removePrefix: 'dist',
-                    //                     remoteDirectory: '/var/www/html'
-                    //                 )
-                    //             ]
-                    //         )
-                    //     ]
-                    // )
 
                     // 选项3：存档构建产物供后续使用
                     archiveArtifacts artifacts: 'dist/**', fingerprint: true
