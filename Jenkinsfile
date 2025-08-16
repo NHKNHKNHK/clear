@@ -8,12 +8,8 @@ pipeline {
         BRANCH = 'master'
         NODE_VERSION = '20'
         NVM_DIR = "${env.HOME}/.nvm"
-        // 添加部署目标目录变量
-        DEPLOY_DIR = '/www/wwwroot/clear-blog'
         // 添加构建产物目录变量
         BUILD_OUTPUT_DIR = "${env.WORKSPACE}/.vitepress/dist"
-        // 添加 Jenkins 容器名称
-        JENKINS_CONTAINER = 'jenkins_king-jenkins_king-1' // 替换为您的 Jenkins 容器名称
     }
 
     stages {
@@ -93,37 +89,6 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                script {
-                    echo '部署静态文件...'
-                    sh '''#!/bin/bash
-                        # 确保目标目录存在
-                        mkdir -p "${DEPLOY_DIR}"
-                        
-                        
-                        # 清理目录
-                        echo "清理目标目录: ${DEPLOY_DIR}"
-                        rm -rf "${DEPLOY_DIR}"/*
-                        
-                        # 复制构建产物（使用详细输出）
-                        echo "从 ${BUILD_OUTPUT_DIR} 复制到 ${DEPLOY_DIR}"
-                        cp -rv "${BUILD_OUTPUT_DIR}"/* "${DEPLOY_DIR}"/
-                        
-
-                    # 将文件从容器复制到宿主机
-                    docker cp ${JENKINS_CONTAINER}:${DEPLOY_DIR}/. "${DEPLOY_DIR}"
-
-                        # 验证复制结果
-                        echo "部署后目标目录内容:"
-                        ls -la "${DEPLOY_DIR}"
-                        
-                        chmod -R 755 "${DEPLOY_DIR}" || true
-                        echo '部署完成！'
-                    '''
-                }
-            }
-        }
     }
     
     post {
@@ -132,29 +97,14 @@ pipeline {
             script {
                 sh '''#!/bin/bash
                     echo "验证部署目录内容:"
-                    ls -la "${DEPLOY_DIR}"
+                    ls -la "${BUILD_OUTPUT_DIR}"
                     echo "部署完成！"
                 '''
             }
         }
         failure {
             echo '构建失败！'
-            script {
-                sh '''#!/bin/bash
-                    [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-                    pnpm run docs:build --verbose 2>&1 | tee build.log
-                    cat build.log
-                    
-                    # 添加路径验证
-                    echo "工作空间路径: ${WORKSPACE}"
-                    echo "构建产物路径: ${BUILD_OUTPUT_DIR}"
-                    ls -la "${BUILD_OUTPUT_DIR}" || echo "构建产物不存在"
-                    
-                    # 检查部署目录
-                    echo "部署目录内容:"
-                    ls -la "${DEPLOY_DIR}" || echo "无法访问部署目录"
-                '''
-            }
+
         }
     }
 }
