@@ -101,7 +101,7 @@ Bean的生命周期是指从Bean实例从被创建开始，直到它被销毁为
 
 Spring允许开发者通过不同的方法来控制这个过程
 
-![](assets/bean-Lifecycle.png)
+![](assets/Bean-Lifecycle.png)
 
 
 
