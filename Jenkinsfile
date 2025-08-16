@@ -19,15 +19,13 @@ pipeline {
                 script {
                     echo "设置Node.js环境 (v${env.NODE_VERSION})"
                     // 使用nvm或n来管理Node版本
-                    bat '''
-                        @echo off
-                        rem 安装nvm-windows
-                        curl -L -o nvm-setup.exe https://github.com/coreybutler/nvm-windows/releases/download/1.1.11/nvm-setup.exe
-                        start /wait nvm-setup.exe /S
-                        set NVM_HOME="%ProgramFiles%\nvm"
-                        set PATH="%NVM_HOME%;%PATH%"
-                        nvm install %NODE_VERSION%
-                        nvm use %NODE_VERSION%
+                    sh '''
+                        # 安装nvm for Linux
+                        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+                        export NVM_DIR="$HOME/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                        nvm install $NODE_VERSION
+                        nvm use $NODE_VERSION
                         node -v
                         npm -v
                     '''
@@ -48,7 +46,7 @@ pipeline {
                         ])
                     }
                 }
-            }
+            },
      // 阶段3：安装依赖
  stage('Install Dependencies') {
             steps {
@@ -62,7 +60,7 @@ pipeline {
             steps {
                 script {
                     echo '构建VitePress项目...'
-                    sh 'npm run docs:build'  // 使用npm执行构建命令
+                    sh 'pnpm run docs:build'  // 使用pnpm执行构建命令
                 }
             }
         }
