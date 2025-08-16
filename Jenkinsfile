@@ -66,20 +66,9 @@ pipeline {
             steps {
                 script {
                     echo '部署静态文件...'
-
-                    // 选项1：使用rsync部署到远程服务器（请替换实际用户、服务器和路径）
-                    sh '''
-                        # 注意：需确保Jenkins容器已挂载宿主机目录（-v /www/wwwroot/clear-blog:/www/wwwroot/clear-blog）
-                        # 删除旧版本文件
-                        rm -rf /www/wwwroot/clear-blog/*
-                        # 复制新版本构建产物（构建产物路径：docs/.vitepress/dist）
-                        cp -r .vitepress/dist/* /www/wwwroot/clear-blog/
-                    '''
-
-
-                    // 选项3：存档构建产物供后续使用
-                    archiveArtifacts artifacts: 'dist/**', fingerprint: true
-
+                    sh 'rm -rf /www/wwwroot/clear-blog/*'
+                    sh 'ls'
+                    sh 'cp -r .vitepress/dist/* /www/wwwroot/clear-blog/'
                     echo '部署完成！'
                 }
             }
