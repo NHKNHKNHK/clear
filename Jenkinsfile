@@ -6,11 +6,10 @@ pipeline {
         GITEE_REPO = 'https://gitee.com/ninghongkang/easy-interview'
         GITEE_CREDENTIALS_ID = 'your-gitee-credentials-id'
         BRANCH = 'master'
-
-        // Node.js配置
         NODE_VERSION = '20'
-        // 添加NVM目录环境变量
         NVM_DIR = "${env.HOME}/.nvm"
+        // 添加部署目标目录变量
+        DEPLOY_DIR = '/www/wwwroot/clear-blog'
     }
 
     stages {
@@ -18,7 +17,6 @@ pipeline {
             steps {
                 script {
                     echo "设置Node.js环境 (v${env.NODE_VERSION})"
-                    // 使用更可靠的方式安装和加载nvm
                     sh '''#!/bin/bash
                         # 安装nvm（如果尚未安装）
                         if [ ! -d "$NVM_DIR" ]; then
@@ -28,7 +26,7 @@ pipeline {
                         # 确保nvm脚本可执行
                         [ -s "$NVM_DIR/nvm.sh" ] && chmod +x "$NVM_DIR/nvm.sh"
                         
-                        # 加载nvm环境（使用source而不是./）
+                        # 加载nvm环境
                         [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
                         
                         # 安装并使用Node.js
@@ -95,17 +93,17 @@ pipeline {
                     echo '部署静态文件...'
                     sh '''#!/bin/bash
                         # 确保目标目录存在
-                        sudo mkdir -p /www/wwwroot/clear-blog
+                        mkdir -p "${DEPLOY_DIR}"
                         
                         # 清理目录
-                        sudo rm -rf /www/wwwroot/clear-blog/*
+                        rm -rf "${DEPLOY_DIR}"/*
                         
                         # 复制构建产物
-                        sudo cp -r .vitepress/dist/* /www/wwwroot/clear-blog/
+                        cp -r .vitepress/dist/* "${DEPLOY_DIR}"/
                         
-                        # 修复可能的权限问题
-                        sudo chown -R ${USER}:${USER} /www/wwwroot/clear-blog
-                        sudo chmod -R 755 /www/wwwroot/clear-blog
+                        # 修复权限（如果不需要sudo）
+                        chown -R $(whoami):$(whoami) "${DEPLOY_DIR}" || true
+                        chmod -R 755 "${DEPLOY_DIR}" || true
                         
                         echo '部署完成！'
                     '''
