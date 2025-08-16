@@ -30,7 +30,7 @@ pipeline {
                         nvm use %NODE_VERSION%
                         node -v
                         npm -v
-                    ''''
+                    '''
                 }
             }
         }
