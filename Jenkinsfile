@@ -83,9 +83,9 @@ pipeline {
                         [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
                         pnpm run docs:build
                         
-                        # 验证构建产物是否存在
+                        # 验证构建产物
                         echo "构建产物路径: ${env.BUILD_OUTPUT_DIR}"
-                        ls -la "${env.BUILD_OUTPUT_DIR}" || echo "构建产物不存在"
+                        ls -la "${env.BUILD_OUTPUT_DIR}"
                     '''
                 }
             }
@@ -99,10 +99,10 @@ pipeline {
                         # 确保目标目录存在
                         mkdir -p "${DEPLOY_DIR}"
                         
-                        # 修复构建产物的权限（重要！）
+                        # 修复构建产物的权限（关键修复）
                         echo "修复构建产物权限..."
-                        chown -R $(whoami):$(whoami) "${WORKSPACE}/.vitepress/dist" || true
-                        chmod -R 755 "${WORKSPACE}/.vitepress/dist" || true
+                        chown -R $(whoami):$(whoami) "${BUILD_OUTPUT_DIR}" || true
+                        chmod -R 755 "${BUILD_OUTPUT_DIR}" || true
                         
                         # 清理目录
                         echo "清理目标目录: ${DEPLOY_DIR}"
@@ -131,11 +131,11 @@ pipeline {
     post {
         success {
             echo 'VitePress项目构建部署成功！'
-            // 添加部署验证
             script {
                 sh '''#!/bin/bash
                     echo "验证部署目录内容:"
                     ls -la "${DEPLOY_DIR}"
+                    echo "部署完成！"
                 '''
             }
         }
@@ -151,6 +151,10 @@ pipeline {
                     echo "工作空间路径: ${WORKSPACE}"
                     echo "构建产物路径: ${BUILD_OUTPUT_DIR}"
                     ls -la "${BUILD_OUTPUT_DIR}" || echo "构建产物不存在"
+                    
+                    # 检查部署目录
+                    echo "部署目录内容:"
+                    ls -la "${DEPLOY_DIR}" || echo "无法访问部署目录"
                 '''
             }
         }
