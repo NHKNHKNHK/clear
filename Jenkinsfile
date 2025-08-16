@@ -33,22 +33,23 @@ pipeline {
             }
         }
         stage('Checkout') {
-                steps {
-                    script {
-                        echo "从Gitee仓库拉取代码: ${env.GITEE_REPO}"
-                        checkout([
-                            $class: 'GitSCM',
-                            branches: [[name: "${env.BRANCH}"]],
-                            userRemoteConfigs: [[
-                                url: "${env.GITEE_REPO}",
-                                credentialsId: "${env.GITEE_CREDENTIALS_ID}"
-                            ]]
-                        ])
-                    }
+            steps {
+                script {
+                    echo "从Gitee仓库拉取代码: ${env.GITEE_REPO}"
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "${env.BRANCH}"]],
+                        userRemoteConfigs: [[
+                            url: "${env.GITEE_REPO}",
+                            credentialsId: "${env.GITEE_CREDENTIALS_ID}"
+                        ]]
+                    ])
                 }
-            },
-     // 阶段3：安装依赖
- stage('Install Dependencies') {
+            }
+        }
+
+        // 阶段3：安装依赖
+        stage('Install Dependencies') {
             steps {
                 script {
                     echo '安装项目依赖...'
@@ -56,7 +57,7 @@ pipeline {
                 }
             }
         }
- stage('Build') {
+        stage('Build') {
             steps {
                 script {
                     echo '构建VitePress项目...'
