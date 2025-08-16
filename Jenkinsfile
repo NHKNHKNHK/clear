@@ -12,6 +12,8 @@ pipeline {
         DEPLOY_DIR = '/www/wwwroot/clear-blog'
         // 添加构建产物目录变量
         BUILD_OUTPUT_DIR = "${env.WORKSPACE}/.vitepress/dist"
+        // 添加 Jenkins 容器名称
+        JENKINS_CONTAINER = 'jenkins' // 替换为您的 Jenkins 容器名称
     }
 
     stages {
@@ -99,10 +101,6 @@ pipeline {
                         # 确保目标目录存在
                         mkdir -p "${DEPLOY_DIR}"
                         
-                        # 修复构建产物的权限（关键修复）
-                        echo "修复构建产物权限..."
-                        chown -R $(whoami):$(whoami) "${BUILD_OUTPUT_DIR}" || true
-                        chmod -R 755 "${BUILD_OUTPUT_DIR}" || true
                         
                         # 清理目录
                         echo "清理目标目录: ${DEPLOY_DIR}"
@@ -112,15 +110,15 @@ pipeline {
                         echo "从 ${BUILD_OUTPUT_DIR} 复制到 ${DEPLOY_DIR}"
                         cp -rv "${BUILD_OUTPUT_DIR}"/* "${DEPLOY_DIR}"/
                         
+
+                    # 将文件从容器复制到宿主机
+                    docker cp ${JENKINS_CONTAINER}:${DEPLOY_DIR}/. "${DEPLOY_DIR}"
+
                         # 验证复制结果
                         echo "部署后目标目录内容:"
                         ls -la "${DEPLOY_DIR}"
                         
-                        # 修复目标目录权限
-                        echo "修复目标目录权限..."
-                        chown -R $(whoami):$(whoami) "${DEPLOY_DIR}" || true
                         chmod -R 755 "${DEPLOY_DIR}" || true
-                        
                         echo '部署完成！'
                     '''
                 }
