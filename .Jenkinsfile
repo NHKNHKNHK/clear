@@ -3,11 +3,11 @@
 pipeline {
     agent any
 
-     environment {
+    environment {
             // Gitee仓库配置
             GITEE_REPO = 'https://gitee.com/ninghongkang/easy-interview'
             GITEE_CREDENTIALS_ID = 'your-gitee-credentials-id'
-            BRANCH = 'main'
+            BRANCH = 'master'
 
             // Node.js配置
             NODE_VERSION = '16'  // 推荐使用Node 16或18
@@ -19,15 +19,18 @@ pipeline {
                 script {
                     echo "设置Node.js环境 (v${env.NODE_VERSION})"
                     // 使用nvm或n来管理Node版本
-                    sh '''
-                        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-                        export NVM_DIR="$HOME/.nvm"
-                        [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                        nvm install ${NODE_VERSION}
-                        nvm use ${NODE_VERSION}
+                    bat '''
+                        @echo off
+                        rem 安装nvm-windows
+                        curl -L -o nvm-setup.exe https://github.com/coreybutler/nvm-windows/releases/download/1.1.11/nvm-setup.exe
+                        start /wait nvm-setup.exe /S
+                        set NVM_HOME="%ProgramFiles%\nvm"
+                        set PATH="%NVM_HOME%;%PATH%"
+                        nvm install %NODE_VERSION%
+                        nvm use %NODE_VERSION%
                         node -v
                         npm -v
-                    '''
+                    ''''
                 }
             }
         }
@@ -51,7 +54,6 @@ pipeline {
             steps {
                 script {
                     echo '安装项目依赖...'
-                    sh 'npm install'
                     sh 'pnpm install'
                 }
             }
@@ -60,7 +62,7 @@ pipeline {
             steps {
                 script {
                     echo '构建VitePress项目...'
-                    sh 'pnpm run docs:build'  // 默认的VitePress构建命令
+                    sh 'npm run docs:build'  // 使用npm执行构建命令
                 }
             }
         }
@@ -72,8 +74,11 @@ pipeline {
                     echo '部署静态文件...'
                     // 这里提供几种常见的部署方式示例
 
-                    // 选项1：使用rsync部署到远程服务器
-                    // sh 'rsync -avz --delete ./dist/ user@server:/path/to/www/'
+                    // 选项1：使用rsync部署到远程服务器（请替换实际用户、服务器和路径）
+                    bat '''
+                        robocopy ./docs/.vitepress/dist/ \\user@your-server\path\to\www /MIR /NP /NDL /NFL
+                        if %ERRORLEVEL% LEQ 7 (exit 0) else (exit %ERRORLEVEL%)
+                    '''
 
                     // 选项2：使用SSH部署
                     // sshPublisher(
@@ -98,15 +103,15 @@ pipeline {
                 }
             }
         }
-  }
-  post {
-          success {
-              echo 'VitePress项目构建部署成功！'
-              // 可以添加成功通知
-          }
-          failure {
-              echo '构建失败！'
-              // 可以添加失败通知
-          }
-      }
+    }
+    post {
+        success {
+            echo 'VitePress项目构建部署成功！'
+            // 可以添加成功通知
+        }
+        failure {
+            echo '构建失败！'
+            // 可以添加失败通知
+        }
+    }
 }
