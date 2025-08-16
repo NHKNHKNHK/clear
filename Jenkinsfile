@@ -75,9 +75,11 @@ pipeline {
                     // 这里提供几种常见的部署方式示例
 
                     // 选项1：使用rsync部署到远程服务器（请替换实际用户、服务器和路径）
-                    bat '''
-                        robocopy ./docs/.vitepress/dist/ \\user@your-server\path\to\www /MIR /NP /NDL /NFL
-                        if %ERRORLEVEL% LEQ 7 (exit 0) else (exit %ERRORLEVEL%)
+                    sh '''
+                        # 删除旧版本文件
+                        rm -rf /www/wwwroot/clear-blog/*
+                        # 复制新版本构建产物
+                        cp -r ./docs/.vitepress/dist/* /www/wwwroot/clear-blog/
                     '''
 
                     // 选项2：使用SSH部署
