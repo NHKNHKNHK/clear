@@ -1,4 +1,4 @@
-# Spark SQL 基础知识
+<!-- # Spark SQL 基础知识
 
 -   Spark SQL允许开发人员直接处理RDD，同时可以查询在Hive上存储的外部数据。Spark SQL的一个重要特点就是能够统一处理关系表和RDD，使得开发人员可以轻松的使用SQL命令进行外部查询，同时进行更加复杂的数据分析
 -   **Spark SQL是Spark用来操作结构化数据（structured data）/半结构化数据的一个模块**，它提供了一个叫 DataFrame 的编程抽象结构数据模型（即带有 Schema 信息的RDD）
@@ -332,4 +332,4 @@ Spark session available as 'spark'.   # Spark session
 
 scala>
 ```
-
+ -->
