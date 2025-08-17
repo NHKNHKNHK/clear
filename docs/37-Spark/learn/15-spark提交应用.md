@@ -1,4 +1,6 @@
-# 简单回顾在集群上运行Spark应用的过程
+# Spark提交应用
+
+## 简单回顾在集群上运行Spark应用的过程
 
 1）用户通过 spark-submit 脚本提交应用
 
@@ -16,7 +18,7 @@
 
  
 
-# Spark应用提交
+## Spark应用提交
 
 我们需要将我们编写的程序（Scala或Java编写的）打成jar包，提交至服务器进行执行（本地模式、Standalone集群或YARN集群等），类似于MapReduce程序开发流程
 
@@ -26,15 +28,15 @@
 $SPARK_HOME/bin/spark-submit 
 ```
 
-## spark-submit提交应用的格式
+### spark-submit提交应用的格式
 
 ```shell
 Usage: spark-submit [options] <app jar | python file | R file> [app arguments]
 ```
 
--   [options]	表示要传给spark-submit的标记列表，可以使用 spark-submit --help 查看所有可接收的标记
--   <app jar | python file | R file>	表示包含应用入口的 Jar包 或 Python脚本 或 R语言脚本
--   [app arguments]	表示要传给应用的选项
+-   `[options]`	表示要传给spark-submit的标记列表，可以使用 spark-submit --help 查看所有可接收的标记
+-   `<app jar | python file | R file>`	表示包含应用入口的 Jar包 或 Python脚本 或 R语言脚本
+-   `[app arguments]`	表示要传给应用的选项
 
 ```shell
 [nhk@kk01 ~]$ $SPARK_HOME/bin/spark-submit --help
@@ -122,7 +124,7 @@ Options:
   --queue QUEUE_NAME          The YARN queue to submit to (Default: "default").
 ```
 
-## 基本参数配置
+### 基本参数配置
 
 提交运行 Spark Application时，有些基本参数需要传递，如下：
 
@@ -174,7 +176,7 @@ Options:
 --conf "spark.executors.extraJavaOptions=-XX:+PrintGCDetails -XX:+PrintGCTimeStamps"
 ```
 
-## Driver Program 参数配置
+### Driver Program 参数配置
 
 每个Spark Application运行时都会有一个Driver Program，属于一个JVM Process，可以设置Memory 和 CPU Core
 
@@ -195,7 +197,7 @@ Options:
 --supervise
 ```
 
-## Executor 参数配置(难点)
+### Executor 参数配置(难点)
 
 每个Spark Application运行时，需要启动Executor运行Task，需要指定Executor个数及每个Executor资源信息（Memory 和 CPU Core）
 
@@ -221,9 +223,9 @@ Options:
 
 
 
-# Local模式
+## Local模式
 
-## Local模式提交应用
+### Local模式提交应用
 
 ```shell
 [root@kk01 bin]# ./spark-submit \
@@ -240,9 +242,9 @@ Options:
 
 
 
-# Standalone模式
+## Standalone模式
 
-## Standalone任务执行原理
+### Standalone任务执行原理
 
 这种模式下， Driver 和 Worker 是启动在节点上的进程，运行在JVM 中的进程
 
@@ -257,7 +259,7 @@ Options:
 
 ​	Worker、Master是常驻进程、Driver是当有任务来时才会启动	
 
-## Standalone 架构
+### Standalone 架构
 
 Standalone集群在进程上主要有三类进程：
 
@@ -284,7 +286,7 @@ Standalone是完整的 spark运行环境，其中
 
 
 
-## client 模式提交
+### client 模式提交
 
 ```shell
 [root@kk01 spark-standalone]# bin/spark-submit \
@@ -310,7 +312,7 @@ Standalone是完整的 spark运行环境，其中
 
 
 
-### standalone client 任务执行流程
+#### standalone client 任务执行流程
 
 1.  **client** 模式提交任务后，会在客户端**启动 Driver进程**
 2.  **Driver** 会向 **Master** 申请启动 **Application** 启动的资源
@@ -325,7 +327,7 @@ Standalone是完整的 spark运行环境，其中
 
 
 
-## cluster 模式提交
+### cluster 模式提交
 
 ```shell
 [root@kk01 spark-standalone]# bin/spark-submit \
@@ -336,7 +338,7 @@ Standalone是完整的 spark运行环境，其中
 10
 ```
 
-### standalone cluster 任务执行流程
+#### standalone cluster 任务执行流程
 
 1.  **cluster** 模式提交应用程序后，会向 **Master** 请求启动 **Driver**
 2.  **Master** 接受请求，**随机**在**集群的一台节点启动 Driver 进程**
@@ -349,7 +351,7 @@ Standalone是完整的 spark运行环境，其中
 -   **Driver 进程是在集群某一台 Worker上启动的**，在提交 application 的**客户端是无法查看 task 的执行情况**的
 -   假设要提交100个application 到集群运行，每次 Driver 都会在集群中随机某一台 Worker 上启动，那么这100次网卡流量暴增的问题就不会散布在集群的单个节点上。
 
-## 总结
+### 总结
 
 standalone 两种方式提交任务，**Driver** 与集群的通信（即所谓功能）包括：
 
@@ -358,7 +360,7 @@ standalone 两种方式提交任务，**Driver** 与集群的通信（即所谓�
 -   结果的回收
 -   监控 task 执行情况
 
-## 提交到HA 集群
+### 提交到HA 集群
 
 ```shell
 [root@kk01 spark-standalone]# bin/spark-submit \
@@ -370,13 +372,11 @@ standalone 两种方式提交任务，**Driver** 与集群的通信（即所谓�
 
 
 
-# Spark on YARN 
+## Spark on YARN 
 
 当Spark Application连接到yarn集群上运行时，需要设置环境变量HADOOP_CONF_DIR指向Hadoop配置目录，以获取集群信息
 
-
-
-## client 模式提交
+### client 模式提交
 
 ```shell
 [root@kk01 spark-yarn]# bin/spark-submit \
@@ -403,9 +403,7 @@ standalone 两种方式提交任务，**Driver** 与集群的通信（即所谓�
 10
 ```
 
-
-
-### yarn client 任务执行流程
+#### yarn client 任务执行流程
 
 1.  客户端提交一个 Application，在客户端会启动一个 Driver进程
 2.  应用程序启动后会向 RM(ResourceMananger)（相当于 standalone模式下的master进程）发送请求，启动AM(ApplicationMaster)
@@ -430,7 +428,7 @@ ApplicationMaster（executorLauncher）在此模式中的作用：
 
 
 
-## cluster 模式提交
+### cluster 模式提交
 
 ```shell
 [root@kk01 spark-yarn]# pwd
@@ -453,7 +451,7 @@ ApplicationMaster（executorLauncher）在此模式中的作用：
 10
 ```
 
-### yarn cluster 任务执行流程
+#### yarn cluster 任务执行流程
 
 1.  客户机提交 Application 应用程序，发送请求到 RS（ResourceManager），请求启动AM（ApplicationMaster）
 2.  RS 收到请求后随机在一台 NM（NodeManager）上启动AM（相当于Driver端）
@@ -515,7 +513,7 @@ yarn logs --applicationId applicationID
 
 ```
 
-## 总结
+### 总结
 
 Spark On YARN 由两种运行模式，Client、Cluster
 
@@ -534,7 +532,7 @@ Spark On YARN 由两种运行模式，Client、Cluster
 
 
 
-# spark-submit提交应参数
+## spark-submit提交应参数
 
 ```
 Usage: spark-submit [options] <app jar | python file | R file> [app arguments]
@@ -572,7 +570,7 @@ Driver程序使用的内存大小 (e.g. 1000M, 2G) (Default: 1024M).
 
 
 
-# 榨干集群性能
+## 榨干集群性能
 
 查看cpu有几核的命令
 

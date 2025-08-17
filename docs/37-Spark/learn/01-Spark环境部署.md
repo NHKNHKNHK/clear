@@ -1,12 +1,14 @@
-# 1 Spark的部署方式介绍
+# Spark环境部署
+
+## 1 Spark的部署方式介绍
 
 ​	Spark部署模式分为**Local模式（本地模式）**和**集群模式（集群模式又分为Standalone模式、Yarn模式和Mesos模式）**
 
-## 1.1 Local模式
+### 1.1 Local模式
 
 Local模式常用于本地开发程序与测试，如在idea中
 
-## 1.2 Standalone模式
+### 1.2 Standalone模式
 
 ​	Standalone模式被称为**集群单机模式**。Spark与Hadoop1.0版本有点类似，**Spark本身自带了完整的资源调度管理服务**（但这不是它的强项，因为Spark主要是一个计算框架），可以独立部署到集群中，无须依赖任何其他的资源管理系统，在**该模式下，Spark集群架构为主从模式**，即**一台Master节点与多台Slave节点**，Slave节点启动的进程名称为Worker，此时集群会**存在单点故障**。（单点故障可利用Spark HA 与zookeeper解决）
 
@@ -25,7 +27,7 @@ Local模式常用于本地开发程序与测试，如在idea中
 
 ​	Worker、Master是常驻进程、Driver是当有任务来时才会启动	
 
-## 1.3 Yarn模式
+### 1.3 Yarn模式
 
 ​	Yarn模式被称为 Spark on Yarn 模式，即**把Spark作为一个客户端，将作业提交给Yarn服务**，由于在生产环境中，很多时候要与Hadoop使用同一个集群，因此**采用Yarn来管理资源调度，可以有效提高资源利用率**
 
@@ -36,23 +38,23 @@ Yarn模式又分为Yarn Cluster模式、Yarn Client模式
 
 若要基于 yarn 来进行资源调度，必须实现 **ApplicationMaster** 接口，Spark 实现了这个接口，所以可以基于 Yarn 来进行资源调度
 
-## 1.4 Mesos模式
+### 1.4 Mesos模式
 
 ​	Mesos模式被称为 Spark on Mesos 模式，Mesos与Yarn同样是一款**资源调度管理系统**，可以为Spark提供服务，由于Spark与Mesos存在密切的关系，因此在设计Spark框架时充分考虑到了对Mesos的集成，但如果**同时运行Hadoop和Spark，从兼容性的角度来看，Spark on Yarn是更好的选择**。
 
-## 1.5 小结
+### 1.5 小结
 
 Spark作为一个数据处理框架和计算引擎，被设计在所有常见的集群环境中运行, 在国内工作中主流的环境为Yarn，不过逐渐容器式环境也慢慢流行起来。接下来，我们就分别看看不同环境下Spark的运行
 
-# 2 Spark环境部署
+## 2 Spark环境部署
 
-## 2.1 Local模式
+### 2.1 Local模式
 
 Local模式，就是不需要其他任何节点资源就可以在本地执行Spark代码的环境，一般用于教学，调试，演示等
 
 这种模式最为简单，解压即用不需要进入任何配置
 
-### **1）将压缩包上传至Linux并解压到指定目录**
+#### **1）将压缩包上传至Linux并解压到指定目录**
 
 ```shell
 [nhk@kk01 opt]$ tar -zxvf spark-3.2.0-bin-hadoop3.2-scala2.13.tgz -C /opt/software/
@@ -60,7 +62,7 @@ Local模式，就是不需要其他任何节点资源就可以在本地执行Spa
 [nhk@kk01 software]$ mv spark-3.2.0-bin-hadoop3.2-scala2.13 spark-local
 ```
 
-## 2）配置文件spark-env.sh
+#### 2）配置文件spark-env.sh
 
 ```shell
 [nhk@kk01 conf]$ pwd
@@ -75,7 +77,7 @@ SCALA_HOME=/opt/software/scala-2.13.5
 HADOOP_CONF_DIR=/opt/software/hadoop-3.1.3/etc/hadoop
 ```
 
-### **3）启动spark shell**
+#### **3）启动spark shell**
 
 命令
 
@@ -153,7 +155,7 @@ http://kk01:4040
 
 
 
-## 2.2 Standalone模式
+### 2.2 Standalone模式
 
 ​	真实工作中还是要将应用提交到对应的集群中去执行，这里我们来看看只使用Spark自身节点运行的集群模式，也就是我们所谓的**独立部署（Standalone）模式**。
 
@@ -163,13 +165,13 @@ http://kk01:4040
 
 ​	搭建集群之前需要确认 **jdk版本为8**
 
-### 0）集群规划
+#### 0）集群规划
 
 | kk01              | kk02   | kk03   |
 | ----------------- | ------ | ------ |
 | Worker **Master** | Worker | Worker |
 
-### **1）将压缩包上传至Linux并解压到指定目录**
+#### **1）将压缩包上传至Linux并解压到指定目录**
 
 ```shell
 [nhk@kk01 opt]$ tar -zxvf spark-3.2.0-bin-hadoop3.2-scala2.13.tgz -C /opt/software/
@@ -177,7 +179,7 @@ http://kk01:4040
 [nhk@kk01 software]$ mv spark-3.2.0-bin-hadoop3.2-scala2.13 spark-standalone
 ```
 
-### **2）修改配置文件**  
+#### **2）修改配置文件**  
 
 - 进入spark-standalone/**conf目录**，修改workers.template文件名为**workes**（保守做法可以选择复制）
 
@@ -219,7 +221,7 @@ export SPARK_MASTER_PORT=7077
 # 注意：7077端口，相当于kk01内部通信的8020端口(此处的端口需要确认自己的Hadoop)
 ```
 
-### **3）分发spark-standalone目录**
+#### **3）分发spark-standalone目录**
 
 ```shell
 # 使用scp或rsync分发，scp或rsync区别在于 scp是完全拷贝 rsync只对差异文件进行拷贝
@@ -233,13 +235,13 @@ export SPARK_MASTER_PORT=7077
 [nhk@kk01 software]$ xsync spark-standalone
 ```
 
-### **4）启动集群**
+#### **4）启动集群**
 
 ```shell
 [nhk@kk01 spark-standalone]$ sbin/start-all.sh 
 ```
 
-### **5）查看服务器进程**
+#### **5）查看服务器进程**
 
 ```shell
 [nhk@kk01 spark-standalone]$ jps
@@ -256,7 +258,7 @@ export SPARK_MASTER_PORT=7077
 2499 Jps
 ```
 
-### **6）查看Master资源监控Web UI界面**
+#### **6）查看Master资源监控Web UI界面**
 
 http://kk01:8080 
 
@@ -264,7 +266,7 @@ http://kk01:8080
 
 ​	kk01这里默认是填写服务器ip，但是我们在hosts文件里映射了ip，因此填主机名也可以
 
-### **7）提交应用**（client模式）
+#### **7）提交应用**（client模式）
 
 ```shell
 [root@kk01 spark-standalone]# bin/spark-submit \
@@ -301,7 +303,7 @@ http://kk01:8080
 
 -   执行任务时，默认采用服务器集群节点的总核数，每个节点内存1024M。
 
-### **任务执行流程**
+#### **任务执行流程**
 
 1.  client 模式提交任务后，会在客户端启动 Driver进程
 2.  Driver 回向 Master 申请启动 Application 启动的资源
@@ -337,7 +339,7 @@ bin/spark-submit \
 
 ​	**生成环境中不能使用client模式。**因为：假设要提交100个application 到集群运行，Driver每次都会在 client端启动，那么就会导致客户端100网卡流量暴增的问题。
 
-### **8）提交应用（cluster模式）**
+#### **8）提交应用（cluster模式）**
 
 ```shell
 [nhk@kk01 spark-standalone]$ bin/spark-submit \
@@ -348,18 +350,18 @@ bin/spark-submit \
 10
 ```
 
-## 2.3 standalone配置历史服务器
+### 2.3 standalone配置历史服务器
 
 ​	由于spark-shell停止掉后，集群监控kk01:4040页面就看不到历史任务的运行情况，所以开发时都配置历史服务器记录任务运行情况。（说白点，就是Driver节点停止了）
 
-### **1）修改spark-defaults.conf.template文件名为spark-defaults.conf**
+#### **1）修改spark-defaults.conf.template文件名为spark-defaults.conf**
 
 ```shell
 [nhk@kk01 conf]$ cd /opt/software/spark-standalone/conf/
 [nhk@kk01 conf]$ cp spark-defaults.conf.template spark-defaults.conf
 ```
 
-### **2）修改spark-default.conf文件，配置日志存储路径**
+#### **2）修改spark-default.conf文件，配置日志存储路径**
 
 ```shell
 [nhk@kk01 conf]$ vim spark-defaults.conf 
@@ -373,14 +375,14 @@ spark.eventLog.dir               hdfs://kk01:8020/spark-history
 
 ​	需要启动hadoop集群，HDFS上的spark-history 目录需要提前存在。
 
-### **3）在创建HDFS上的spark-history 目录**
+#### **3）在创建HDFS上的spark-history 目录**
 
 ```shell
 [nhk@kk01 conf]$ start-dfs.sh   # Hadoop配置了环境变量，脚本全局可用
 [nhk@kk01 conf]$ hadoop fs -mkdir  /spark-history
 ```
 
-### **4）修改spark-env.sh文件, 添加日志配置**
+#### **4）修改spark-env.sh文件, 添加日志配置**
 
 ```shell
 [nhk@kk01 conf]$ pwd
@@ -399,7 +401,7 @@ export SPARK_HISTORY_OPTS="
 #	参数3含义：指定保存Application历史记录的个数，如果超过这个值，旧的应用程序信息将被删除，这个是内存中的应用数，而不是页面上显示的应用数
 ```
 
-### **5）分发配置文件**
+#### **5）分发配置文件**
 
 ```shell
 # 使用rsync命名更新差异文件  
@@ -415,7 +417,7 @@ export SPARK_HISTORY_OPTS="
 #	-v 显示拷贝过程
 ```
 
-### **6）重新启动集群和历史服务**
+#### **6）重新启动集群和历史服务**
 
 ```shell
 # 先确保hdfs集群、spark集群关闭
@@ -428,7 +430,7 @@ export SPARK_HISTORY_OPTS="
 [nhk@kk01 spark-standalone]$ sbin/start-history-server.sh
 ```
 
-### **7）查看进程**
+#### **7）查看进程**
 
 ```shell
 [nhk@kk01 spark-standalone]$ jps
@@ -440,7 +442,7 @@ export SPARK_HISTORY_OPTS="
 6174 HistoryServer
 ```
 
-### **8）重新执行任务**
+#### **8）重新执行任务**
 
 ```shell
 [nhk@kk01 spark-standalone]$ bin/spark-submit \
@@ -450,7 +452,7 @@ export SPARK_HISTORY_OPTS="
 10
 ```
 
-### **9）查看历史服务**
+#### **9）查看历史服务**
 
 确保历史服务可用
 
@@ -458,7 +460,7 @@ export SPARK_HISTORY_OPTS="
 http://kk01:18080/
 ```
 
-## 2.4 standalone配置高可用（HA）基于Zookeeper
+### 2.4 standalone配置高可用（HA）基于Zookeeper
 
 当前集群中的Master节点只有一个，所以会存在单点故障问题。所以为了解决单点故障问题，需要在集群中配置多个Master节点，一旦处于活动状态的Master发生故障时，由备用Master提供服务，保证作业可以继续执行。这里的高可用一般采用Zookeeper设置
 
@@ -472,7 +474,7 @@ kk02	Worker ZooKeeper Master
 kk03	Worker ZooKeeper 
 ```
 
-### **1）停止集群**（可选）
+#### **1）停止集群**（可选）
 
 在确保hdfs集群、spark集群停止的情况下，才开始配置HA
 
@@ -482,7 +484,7 @@ kk03	Worker ZooKeeper
 
 ```
 
-### **2）启动Zookeeper集群**
+#### **2）启动Zookeeper集群**
 
 ```shell
 [nhk@kk01 spark-standalone]$ zkServer.sh start
@@ -493,7 +495,7 @@ kk03	Worker ZooKeeper
 [nhk@kk01 spark-standalone]$ xzk.sh start
 ```
 
-### 3）修改spark-env.sh文件添加如下配置
+#### 3）修改spark-env.sh文件添加如下配置
 
 ```shell
 [nhk@kk01 conf]$ pwd
@@ -537,7 +539,7 @@ export SPARK_DAEMON_JAVA_OPTS="
 
 ```
 
-### **4）分发配置文件**
+#### **4）分发配置文件**
 
 ```shell
 [nhk@kk01 conf]$ rsync -av /opt/software/spark-standalone/conf/ kk02:/opt/software/spark-standalone/conf/
@@ -545,7 +547,7 @@ export SPARK_DAEMON_JAVA_OPTS="
 [nhk@kk01 conf]$ rsync -av /opt/software/spark-standalone/conf/ kk03:/opt/software/spark-standalone/conf/
 ```
 
-### **5）启动集群**
+#### **5）启动集群**
 
 启动spark集群前先**启动hdfs集群，**确定历史服务器正常，当然也需要**确保zookeeper集群正常启动**
 
@@ -559,14 +561,14 @@ export SPARK_DAEMON_JAVA_OPTS="
 [nhk@kk01 spark-standalone]$ sbin/start-history-server.sh 	# 启动历史服务进程
 ```
 
-### **6） 启动kk02的单独Master节点，此时kk02节点Master状态处于备用状态**
+#### **6） 启动kk02的单独Master节点，此时kk02节点Master状态处于备用状态**
 
 ```shell
 [nhk@kk02 ~]$ cd /opt/software/spark-standalone/
 [nhk@kk02 spark-standalone]$ sbin/start-master.sh 
 ```
 
-### **7）查看进程**
+#### **7）查看进程**
 
 ```shell
 [nhk@kk01 spark-standalone]$ jps
@@ -593,7 +595,7 @@ export SPARK_DAEMON_JAVA_OPTS="
 4111 DataNodes
 ```
 
-### **8）提交应用到高可用集群**
+#### **8）提交应用到高可用集群**
 
 ```shell
 [nhk@kk01 spark-standalone]$ bin/spark-submit \
@@ -603,13 +605,13 @@ export SPARK_DAEMON_JAVA_OPTS="
 10
 ```
 
-### **9）查看kk01的Master 资源监控Web UI**
+#### **9）查看kk01的Master 资源监控Web UI**
 
 http://kk01:8989/ 
 
 发现状态为    Status: ALIVE
 
-### **10）手动停止kk01的Master资源监控进程**
+#### **10）手动停止kk01的Master资源监控进程**
 
 ```shell
 [nhk@kk01 spark-standalone]$ jps
@@ -623,7 +625,7 @@ http://kk01:8989/
 [nhk@kk01 spark-standalone]$ kill -9 8250
 ```
 
-### **11)   查看kk02的Master 资源监控Web UI，稍等一段时间后，kk02节点的Master状态提升为活动状态**
+#### **11)   查看kk02的Master 资源监控Web UI，稍等一段时间后，kk02节点的Master状态提升为活动状态**
 
 http://kk02:8989/  
 
@@ -631,7 +633,7 @@ http://kk02:8989/
 
 ​	Status:STANDBY  ====> Status: ALIVE
 
-## 2.5 Yarn模式
+### 2.5 Yarn模式
 
 ​	独立部署（Standalone）模式由Spark自身提供计算资源，无需其他框架提供资源。这种方式降低了和其他第三方资源框架的耦合性，独立性非常强。但是你也要记住，**Spark主要是计算框架，而不是资源调度框架，所以本身提供的资源调度并不是它的强项，所以还是和其他专业的资源调度框架集成会更靠谱一些。**所以接下来我们来学习在强大的Yarn环境下Spark是如何工作的（其实是因为在国内工作中，Yarn使用的非常多）。
 
@@ -646,7 +648,7 @@ http://kk02:8989/
 -   Driver 角色运行在**YARN容器**内 或 **提交任务的客户端进程**中
 -   真正干活的**Executor运行在YARN提供的容器**内
 
-### 1）上传并解压缩文件
+#### 1）上传并解压缩文件
 
 将spark-3.2.0-bin-hadoop3.2-scala2.13.tgz文件上传到linux并解压缩，放置在指定位置。
 
@@ -657,13 +659,13 @@ http://kk02:8989/
 [nhk@kk01 software]$ tar -zxvf spark-3.2.0-bin-hadoop3.2-scala2.13.tgz -C /opt/software/
 ```
 
-### 2）重命名
+#### 2）重命名
 
 ```shell
 [nhk@kk01 software]$ mv spark-3.2.0-bin-hadoop3.2-scala2.13/ spark-yarn
 ```
 
-### 3）修改配置文件yarn-site.xml
+#### 3）修改配置文件yarn-site.xml
 
 修改hadoop配置文件/opt/software/hadoop-3.1.3/etc/hadoop/**yarn-site.xml**
 
@@ -713,7 +715,7 @@ http://kk02:8989/
 
 
 
-### 4）同步修改的文件至所有服务器
+#### 4）同步修改的文件至所有服务器
 
 ```shell
 [nhk@kk01 hadoop]$ rsync -av /opt/software/hadoop-3.1.3/etc/hadoop/ kk02:/opt/software/hadoop-3.1.3/etc/hadoop/
@@ -721,7 +723,7 @@ http://kk02:8989/
 [nhk@kk01 hadoop]$ rsync -av /opt/software/hadoop-3.1.3/etc/hadoop/ kk03:/opt/software/hadoop-3.1.3/etc/hadoop/
 ```
 
-### **5） 修改conf/spark-env.sh**
+#### **5） 修改conf/spark-env.sh**
 
 当Spark Application连接到yarn集群上运行时，需要设置环境变量HADOOP_CONF_DIR指向Hadoop配置目录，以获取集群信息
 
@@ -742,7 +744,7 @@ HADOOP_CONF_DIR=/opt/software/hadoop-3.1.3/etc/hadoop
 YARN_CONF_DIR=/opt/software/hadoop-3.1.3/etc/hadoop
 ```
 
-### **6）启动HDFS集群、YARN集群**
+#### **6）启动HDFS集群、YARN集群**
 
 ```shell
 # 我们配置过Hadoop环境变量，因此可以直接使用脚本一键启动
@@ -750,7 +752,7 @@ YARN_CONF_DIR=/opt/software/hadoop-3.1.3/etc/hadoop
 [nhk@kk01 conf]$ start-yarn.sh 
 ```
 
-### **7）提交应用**（cluster模式）
+#### **7）提交应用**（cluster模式）
 
 ```shell
 [nhk@kk01 spark-yarn]$ pwd
@@ -796,11 +798,11 @@ YARN_CONF_DIR=/opt/software/hadoop-3.1.3/etc/hadoop
 
 注意：ApplicationMaster 在此模式下有 launchExecutor和申请资源的功能，**没有作业调度的功能**
 
-## 2.6 Yarn配置历史服务器
+### 2.6 Yarn配置历史服务器
 
 ​	**配置了 historyServer，停止程序后，**可以在**web ui** 中 Completed Application 对应的 ApplicationID 中**能查看history**
 
-### 1）spark-defaults.conf
+#### 1）spark-defaults.conf
 
 修改spark-defaults.conf.template 文件名为 spark-defaults.conf
 
@@ -811,7 +813,7 @@ YARN_CONF_DIR=/opt/software/hadoop-3.1.3/etc/hadoop
 [nhk@kk01 conf]$ cp spark-defaults.conf.template spark-defaults.conf
 ```
 
-### 2）修改spark-default.conf文件**，配置日志存储路径**
+#### 2）修改spark-default.conf文件**，配置日志存储路径**
 
 ```shell
 [nhk@kk01 conf]$  vim spark-defaults.conf 
@@ -831,14 +833,14 @@ spark.eventLog.compress 		true
 
 ​	需要启动hadoop集群，**HDFS上的spark-history 目录需要提前存在**。
 
-### **3）在创建HDFS上的directory目录**
+#### **3）在创建HDFS上的directory目录**
 
 ```shell
 [nhk@kk01 conf]$ start-dfs.sh   # Hadoop配置了环境变量，脚本全局可用
 [nhk@kk01 conf]$ hadoop fs -mkdir  /spark-history
 ```
 
-### **4）修改spark-env.sh文件, 添加日志配置**
+#### **4）修改spark-env.sh文件, 添加日志配置**
 
 ```shell
 [nhk@kk01 conf]$  pwd
@@ -857,7 +859,7 @@ export SPARK_HISTORY_OPTS="
 #	参数3含义：指定保存Application历史记录的个数，如果超过这个值，旧的应用程序信息将被删除，这个是内存中的应用数，而不是页面上显示的应用数
 ```
 
-### **5）修改spark-defaults.conf配置SparkHistoryServer**
+#### **5）修改spark-defaults.conf配置SparkHistoryServer**
 
 ```shell
 [nhk@kk01 conf]$ vim spark-defaults.conf
@@ -867,7 +869,7 @@ spark.yarn.historyServer.address=kk01:18080
 spark.history.ui.port=18080
 ```
 
-### **6）启动历史服务器**
+#### **6）启动历史服务器**
 
 ```shell
 [nhk@kk01 conf]$ cd ..
@@ -884,7 +886,7 @@ starting org.apache.spark.deploy.history.HistoryServer, logging to /opt/software
 3134 NodeManager
 ```
 
-### **7）重新提交应用**(client模式)
+#### **7）重新提交应用**(client模式)
 
 ```shell
 [nhk@kk01 spark-yarn]$ bin/spark-submit \
@@ -895,13 +897,13 @@ starting org.apache.spark.deploy.history.HistoryServer, logging to /opt/software
 10
 ```
 
-### 8）Web页面查看日志
+#### 8）Web页面查看日志
 
 http://kk01:18080/
 
 
 
-## 配置依赖Spark jar包（优化配置）
+### 配置依赖Spark jar包（优化配置）
 
 当Spark Application应用提交运行在YARN上时，默认情况下，每次提交应用都需要将Spark相关jar包上传到YARN集群上，为了节省提交时间和存储空间，将Spark相关jar包上传到HDFS目录，设置属性告知Spark Application应用
 

@@ -1,18 +1,18 @@
-有些函数只能用于特定类型的RDD，比如，maen() 、variance() 等RDD只能用于数值RDD上，而 join() 只能用与 键值对RDD上。
+有些函数只能用于特定类型的RDD，比如，`maen()` 、`variance()` 等RDD只能用于数值RDD上，而 `join()` 只能用与 键值对RDD上。
 
 在Scala、Java中，这些函数没有定义在标准的RDD类中，所以要访问这些函数，必须确保获取了正确的专用RDD类。
 
-# Scala
+## Scala
 
 在Scala中，将RDD转为有特定函数的RDD是通过**隐式转换**来自动处理的。
 
-隐式转换可以将一个RDD转为各种封装类，比如 DoubleRDDFunctions（数值RDD）、PairRDDFunctions（键值对RDD），这样我们就可以调用额外的函数了，诸如maen() 、variance() 等
+隐式转换可以将一个RDD转为各种封装类，比如 `DoubleRDDFunctions`（数值RDD）、`PairRDDFunctions`（键值对RDD），这样我们就可以调用额外的函数了，诸如`maen()` 、`variance()` 等
 
 隐式转换虽然强大，但是会让我们阅读代码变得困难。
 
 
 
-# Java
+## Java
 
 在Java中，各种RDD的特殊类型间的转换更为明确。Java中有两个专门的类 `JavaDoubleRDD`和`JavaPairRDD`
 
@@ -37,12 +37,12 @@ extends AbstractJavaRDDLike[JDouble, JavaDoubleRDD]
 
 | 函数名                     | 等价函数                          | 用途                                      |
 | -------------------------- | --------------------------------- | ----------------------------------------- |
-| DoubleFlatMapFunction<T>   | Function<T,Iterable<Double>>      | 用于flatMapToDouble，以生成JavaDoubleRDD  |
-| DoubleFunction<T>          | Function<T,Double>                | 用于mapToDouble，以生成JavaDoubleRDD      |
-| PairFlatMapFunction<T,K,V> | Function<T,Iterable<Tuple2<K,V>>> | 用于flatMapToPair，以生成JavaPairRDD<K,V> |
-| PairFunction<T,K,V>        | Function<T,Tuple2<K,V>>           | 用于mapToPair，以生成JavaPairRDD<K,V>     |
+| `DoubleFlatMapFunction<T>`   | `Function<T,Iterable<Double>>`      | 用于`flatMapToDouble`，以生成`JavaDoubleRDD`  |
+| `DoubleFunction<T>`          | `Function<T,Double>`                | 用于`mapToDouble`，以生成`JavaDoubleRDD`      |
+| `PairFlatMapFunction<T,K,V>` | `Function<T,Iterable<Tuple2<K,V>>>` | 用于`flatMapToPair`，以生成`JavaPairRDD<K,V>` |
+| `PairFunction<T,K,V>`        | `Function<T,Tuple2<K,V>>`           | 用于`mapToPair`，以生成`JavaPairRDD<K,V>`     |
 
-## 声明
+### 声明
 
 Java代码无法直接调用Scala代码中使用了隐式转换、默认参数、和某些Scala反射机制的代码，这些特性在Scala中广泛的使用。这就有必要为Java语言提供相应的类了。
 
@@ -52,7 +52,7 @@ Java代码无法直接调用Scala代码中使用了隐式转换、默认参数�
 
 ​	RDD 的Java版本 JavaRDD
 
-# Python
+## Python
 
 Python的API结构和Java、Scala有所不同。在Python中，所有的函数都实现在了基本的RDD类中（都在rdd.py文件中）。
 
