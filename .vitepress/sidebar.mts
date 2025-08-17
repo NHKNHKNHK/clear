@@ -1649,7 +1649,7 @@ export default {
         { text: 'HBase引入简介', link: '/hbase/learn/00-HBase引入简介' },
         { text: 'HBase部署安装', link: '/hbase/learn/01-HBase部署安装' },
         { text: 'HBase参数文件', link: '/hbase/learn/02-HBase参数文件' },
-        // { text: 'HBase数据模型', link: '/hbase/learn/03-HBase数据模型' },
+        { text: 'HBase数据模型', link: '/hbase/learn/03-HBase数据模型' },
         { text: 'Hbase Shell', link: '/hbase/learn/04-Hbase Shell' },
         { text: 'HBase Java API操作', link: '/hbase/learn/05-HBase Java API操作' },
         { text: 'HBase Java API演示', link: '/hbase/learn/06-HBase Java API演示' },

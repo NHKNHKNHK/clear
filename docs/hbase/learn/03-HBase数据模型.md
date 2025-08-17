@@ -90,10 +90,10 @@
 | ----------------- | -------------- | ----------------------------- | ----------------------------- | --------------------------- |
 | "com.cnn.www"     | t9             |                               | anchor:cnnsi.com = "CNN"      |                             |
 | "com.cnn.www"     | t8             |                               | anchor:my.look.ca = "CNN.com" |                             |
-| "com.cnn.www"     | t6             | contents:html = "<html>…"     |                               |                             |
-| "com.cnn.www"     | t5             | contents:html = "<html>…"     |                               |                             |
-| "com.cnn.www"     | t3             | contents:html = "<html>…"     |                               |                             |
-| "com.example.www" | t5             | contents:html = "<html>…"     |                               | people:author = "John Doe"  |
+| "com.cnn.www"     | t6             | contents:html = "\<html>…"    |                               |                             |
+| "com.cnn.www"     | t5             | contents:html = "\<html>…"    |                               |                             |
+| "com.cnn.www"     | t3             | contents:html = "\<html>…"    |                               |                             |
+| "com.example.www" | t5             | contents:html = "\<html>…"    |                               | people:author = "John Doe"  |
 
 -   上述表格有两行、三个列蔟（contens、ancho、people）
 -   “com.cnn.www”这一行anchor列蔟两个列（`anchor:cssnsi.com、anchor:my.look.ca`）、contents列蔟有个1个列（html）
