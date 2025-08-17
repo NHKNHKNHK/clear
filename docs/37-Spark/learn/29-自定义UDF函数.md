@@ -1,6 +1,8 @@
-# Spark SQL函数
+# 自定义UDF函数
 
-## Spark SQL内置函数
+## Spark SQL函数
+
+### Spark SQL内置函数
 
 无论Hive还是SparkSQL分析处理数据时，往往需要使用函数，SparkSQL模块本身自带很多实现公共功能的函数，在 `org.apache.spark.sql.functions `中这些函数主要分为10类：UDF函数、聚合函数、日期函数、排序函数、非聚合函数、数学函数、混杂函数、窗口函数、字符串函数、集合函数，大部分函数与Hive中相同。
 
@@ -31,7 +33,7 @@ SparkSQL与Hive一样支持定义函数：UDF和UDAF，尤其是UDF函数在实�
 
 由于SparkSQL数据分析有两种方式：DSL编程和SQL编程，所以定义UDF函数也有两种方式， 不同方式可以在不同分析中使用。 
 
-### 注意
+#### 注意
 
 Scala版本中，如果需要使用内置函数，必须引用
 
@@ -68,7 +70,7 @@ Join with another DataFrame, using the given join expression. The following perf
 
 
 
-## 用户自定义函数
+### 用户自定义函数
 
 -   在 Spark 处理数据的过程中，虽然 DataSet 下的算子不多，但已经可以处理大多数的数据需求，但仍有少数需求需要自定义函数。**UDF**(User Defined Functions) 是普通的**不会产生 Shuffle** 不会划分新的阶段的用户自定义函数，UDAF(User Defined Aggregator Functions) 则会打乱分区，用户自定义聚合函数。
 -   因为 **UDF 不需要打乱分区**，直接对 RDD 每个分区中的数据进行处理并返回当前分区，所以可以直接注册 UDF 函数，甚至可以传入匿名函数。
@@ -89,7 +91,7 @@ Join with another DataFrame, using the given join expression. The following perf
 
 
 
-### UDF 用户自定义函数
+#### UDF 用户自定义函数
 
 -   用户可以通过**spark.udf**功能添加自定义函数，**实现自定义功能。**（简单来说，就是对功能的扩展）
 -   **Spark官方为java语言提供了0-22 UDF接口**，UDF0代表无参数输入只有返回参数，UDF1接口表示有一个入参，含义以此类推
@@ -116,7 +118,7 @@ public interface UDF2<T1, T2, R> extends Serializable {
 // R代表返回参数类型
 ```
 
-#### SQL中使用用户自定义函数
+##### SQL中使用用户自定义函数
 
 使用SparkSession中udf方法定义和注册函数，在SQL中使用，使用如下方式定义：
 
@@ -184,7 +186,7 @@ object SparkSQLUDFSQL {
 
 
 
-#### DSL中使用用户自定义函数
+##### DSL中使用用户自定义函数
 
 使用 `org.apache.sql.functions.udf`函数定义和注册函数，在DSL中使用，如下方式
 
@@ -250,7 +252,7 @@ object SparkSQLUDFDSL {
 
 
 
-#### spark-shell 实现UDF
+##### spark-shell 实现UDF
 
 1）创建DataFrame
 
@@ -317,7 +319,7 @@ scala> spark.sql("select age, addName(username) from user").show()
 
 
 
-#### Java 实现UDF（SQL风格）
+##### Java 实现UDF（SQL风格）
 
 未使用UDF的情况
 
@@ -423,14 +425,14 @@ public class SparkSQL_UDF2 {
 
 
 
-### UDAF 用户自定义聚合函数
+#### UDAF 用户自定义聚合函数
 
 -   实现 **UDAF** 函数，如果要自定义类，**要实现UserDefinedAggregateFunction类。**
 -   强类型的 Dataset 和 弱类型的 DataFrame 都提供了相关的聚合函数， 如 count()，countDistinct()，avg()，max()，min()。
 -   除此之外，用户可以设定自己的**自定义聚合函数**。通过**实现UserDefinedAggregateFunction来实现用户自定义弱类型聚合函数**。
 -   从Spark3.0版本后，UserDefinedAggregateFunction已经不推荐使用了。可以统一采用强类型聚合函数**Aggregator**
 
-#### UDAF 弱类型实现
+##### UDAF 弱类型实现
 
 ```java
 package com.clear.udaf;
@@ -601,7 +603,7 @@ init .....0	0
 +------------------+
 ```
 
-#### UDAF 强类型实现(推荐方式)
+##### UDAF 强类型实现(推荐方式)
 
 从Spark3.0版本后，UserDefinedAggregateFunction已经不推荐使用了。可以统一采用强类型聚合函数**Aggregator**
 
@@ -722,7 +724,7 @@ public class SparkSQL_UDAF2 {
 
 
 
-#### Spark早期版本使用强类型UDAF
+##### Spark早期版本使用强类型UDAF
 
 -   在早期版本（3.0以前）中，spark不能在 SQL 中使用强类型UDAF操作
 -   早期的UDAF强类型聚合函数必须使用 DSL 语法风格操作
@@ -777,7 +779,7 @@ public class SparkSQL_RDD {
 
 
 
-## 开窗函数
+### 开窗函数
 
 **row_number()** 开窗函数是按照某个字段分组，然后取另一个字段的前几个的值，相当于分组取topN。
 
