@@ -1,4 +1,4 @@
-<!-- # Spark SQL 基础知识
+# Spark SQL 基础知识
 
 ​	**Spark SQL是Spark用来处理结构化数据（structured data）的一个模块**，它提供了一个叫 DataFrame 的编程抽象结构数据模型（即带有 Schema 信息的RDD），Spark SQL作为分布式SQL查询引擎，让用户通过SQL、DataFrame API 和 Dataset API 三种方式实现对结构化数据的处理。但无论那种API或编程语言，都是基于同样的执行引擎，因此可以在不同的API之间随意切换
 
@@ -2872,4 +2872,4 @@ SparkSession spark = SparkSession.builder()
 ```
 
 
- -->
+
