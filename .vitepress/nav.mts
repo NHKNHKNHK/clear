@@ -56,6 +56,7 @@ export default [
       { text: 'Hadoop', link: '/34-Hadoop/什么是Hadoop' },
       { text: 'HBase', link: '/hbase' },
       { text: 'Spark', link: '/37-Spark' },
+      { text: 'HBase', link: '/hbase' },
       { text: 'HBase', link: '/35-HBase' },
       { text: 'Hive', link: '/36-Hive' },
       { text: 'Flink', link: '/38-Flink' },

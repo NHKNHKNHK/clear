@@ -1,4 +1,4 @@
-# Spark or Hadoop
+<!-- # Spark or Hadoop
 
 Hadoop与Spark都是大数据计算框架，他们有各自的优势，主要区别如下区别：
 
@@ -5083,4 +5083,4 @@ spark
     ```
 
 
-
+ -->

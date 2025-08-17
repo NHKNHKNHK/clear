@@ -1,4 +1,4 @@
-# 1 Spark 程序编写流程
+<!-- # 1 Spark 程序编写流程
 
 -   **创建 SparkConf 对象**（Spark程序必须做的第一件事是创建一个JavaSparkContext/SparkContext对象，它告诉Spark如何访问集群。要创建SparkContext，首先需要构建一个包含应用程序信息的SparkConf对象。）
     -   **设置SparkConf参数**，如appName、master等 （**appName参数是应用程序在集群UI上显示的名称**。master是一个Spark、Mesos或YARN集群的URL，或者一个在本地模式下运行的特殊的“local”字符串。在实践中，当在集群上运行时，您不希望在程序中硬编码master，而是希望使用spark-submit启动应用程序并在那里接收它。然而，对于本地测试和单元测试，您可以通过“local”来运行进程中的Spark。）
@@ -794,7 +794,7 @@ public JavaRDD<T> distinct(final int numPartitions)
 
 -   将RDD数据集中重复的数据去重
 
--   **由于重复数据可能分散在不同的 partition 里面**，**因此需要 shuffle** 来进行 aggregate(聚合) 后再去重。然而，shuffle 要求数据类型是 <K, V> 。如果原始数据只有 Key（比如例子中 record 只有一个整数），那么需要补充成 <K, null> 。这个补充过程由 **map()** 操作完成，生成 MappedRDD。然后调用上面的 **reduceByKey()** 来进行 shuffle，在 map 端进行 combine，然后 reduce 进一步去重，生成 MapPartitionsRDD。最后，将 <K, null> 还原成 K，仍然由 **map()** 完成，生成 MappedRDD。
+-   **由于重复数据可能分散在不同的 partition 里面**，**因此需要 shuffle** 来进行 aggregate(聚合) 后再去重。然而，shuffle 要求数据类型是 `<K, V>` 。如果原始数据只有 Key（比如例子中 record 只有一个整数），那么需要补充成 `<K, null>` 。这个补充过程由 **map()** 操作完成，生成 MappedRDD。然后调用上面的 **reduceByKey()** 来进行 shuffle，在 map 端进行 combine，然后 reduce 进一步去重，生成 MapPartitionsRDD。最后，将 `<K, null>` 还原成 K，仍然由 **map()** 完成，生成 MappedRDD。
 
 -   **distinct算子相当于 map + reduceByKey + map**(在Java中实现需要 mapToPair -> reduceByKet -> map)
 
@@ -3717,4 +3717,4 @@ JavaRDD<String> errors = lines.filter((s) -> "error".contains(s));
 
 
 
-
+ -->
