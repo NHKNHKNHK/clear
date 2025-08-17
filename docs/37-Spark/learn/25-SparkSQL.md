@@ -1,0 +1,335 @@
+# Spark SQL 基础知识
+
+-   Spark SQL允许开发人员直接处理RDD，同时可以查询在Hive上存储的外部数据。Spark SQL的一个重要特点就是能够统一处理关系表和RDD，使得开发人员可以轻松的使用SQL命令进行外部查询，同时进行更加复杂的数据分析
+-   **Spark SQL是Spark用来操作结构化数据（structured data）/半结构化数据的一个模块**，它提供了一个叫 DataFrame 的编程抽象结构数据模型（即带有 Schema 信息的RDD）
+-   Spark SQL作为分布式SQL查询引擎，让用户通过SQL、DataFrame API 和 Dataset API 三种方式实现对结构化数据的处理。但无论那种API或编程语言，都是基于同样的执行引擎，因此可以在不同的API之间随意切换
+
+## Hive and SparkSQL
+
+​	SparkSQL的前身是**Shark**，给熟悉RDBMS但又不理解MapReduce的技术人员提供快速上手的工具。
+
+​	Hive是早期唯一运行在Hadoop上的SQL-on-Hadoop工具。但是MapReduce计算过程中大量的中间磁盘落地过程消耗了大量的I/O，降低的运行效率，为了提高SQL-on-Hadoop的效率，大量的SQL-on-Hadoop工具开始产生，其中表现较为突出的是：
+
+-   Drill
+-   Impala
+-   Shark
+
+​	其中Shark是伯克利实验室Spark生态环境的组件之一，是基于Hive所开发的工具，它运行在Spark系统之上，**Spark重用了 Hive 的工作机制，并且继承了 Hive 的各个组件**，Shark 将SQL语句的转换从 MapReduce 作业替换成了 Spark作业，虽然这样提高了计算效率（Shark的出现，使得SQL-on-Hadoop的性能比Hive有了10-100倍的提高），但是，随着Spark的发展，对于野心勃勃的Spark团队来说，Shark对于Hive的太多依赖（如采用Hive的语法解析器、查询优化器等等），制约了 Spark的One Stack Rule Them All 的既定方针，制约了Spark各个组件的相互集成，所以提出了Spark SQL项目。**SparkSQL抛弃原有Shark的代码**（2014年，伯克利实验室停止了对Shark的维护，转向 Spark SQL 的开发。），**汲取了Shark的一些优点，如内存列存储（In-Memory Columnar Storage）、Hive兼容性等，重新开发了SparkSQL代码**；由于**摆脱了对Hive的依赖性，SparkSQL无论在数据兼容、性能优化、组件扩展方面都得到了极大的方便**，真可谓“退一步，海阔天空”。
+
+-   **数据兼容方面** Spark SQL不但兼容Hive，还可以从各种结构化数据源（如 parquet文件、JSON文件、Hive）中获取数据，未来版本甚至支持获取RDBMS数据以及 cassandra等NOSQL数据；
+-   **性能优化方面** 除了采取 In-Memory Columnar Storage、byte-code generation 等优化技术外、将会引进Cost Model对查询进行动态评估、获取最佳物理计划等等；
+-   **组件扩展方面** 无论是SQL的语法解析器、分析器还是优化器都可以重新定义，进行扩展。
+
+总结：
+
+SparkSQL模块从Hive框架衍生逐渐发展而来，Hive框架提供功能 SparkSQL几乎全部都有，并且SparkSQL完全兼容Hive，从其加载数据进行处理。 
+
+Hive是将SQL转为MapReduce，SparkSQL可以理解成是将SQL解析成RDD + 优化再执行
+
+## SparkSQL前世今生
+
+SparkSQL模块一直到Spark 2.0版本才算真正稳定
+
+2014年6月1日 Shark 项目和 Spark SQL 项目的主持人Reynold Xin宣布：停止对Shark的开发，团队将所有资源放SparkSQL项目上，至此，Shark的发展画上了句话，但也因此发展出两个支线：SparkSQL和Hive on Spark。
+
+其中 Spark SQL 作为 Spark 生态的一员继续发展，而不再受限于Hive，只是兼容Hive；而Hive on Spark是一个Hive的发展计划，该计划将Spark作为Hive的底层引擎之一，也就是说，Hive将不再受限于一个引擎，可以采用Map-Reduce、Tez、Spark等引擎。
+
+**对于开发人员来讲，SparkSQL可以简化RDD的开发，提高开发效率**，且执行效率非常快，所以实际工作中，基本上采用的就是SparkSQL。
+
+Spark SQL为了简化RDD的开发，提高开发效率，提供了2个编程抽象，类似Spark Core中的RDD
+
+-   ​	DataFrame  	Spark 1.3.0
+-   ​	DataSet            Spark 1.6.0
+
+SparkSQL模块发展必须迅速，但是整个历程相当来说比较坎坷：
+
+-   阶段一（Spark 1.0之前）：
+    -   SparkCore：RDD   ->    取代  MapReduce （更多使用Hive，编写SQL）
+    -   `Shark`（Hive on Spark） ->  取代Hive
+        -   Hive底层默认是MapReduce，当SparkCore出现以后，能否将Hive底层变为RDD
+        -   Shark框架：将Hive框架源码拿过来，仅仅修改部分源码 -> SQL转换为RDD，并不是MR，此时Shark框架更多依赖Hive框架
+            -   问题一：Hive框架版本升级，有新功能，Shark 需要升级
+            -   问题二：Spark框架版本升级，有新功能，Shark需要升级
+        -   [从2014年5月全球Spark Summit大会之上，终止Shark开发，自己实现依赖Hive框架代码的所有功能，称为Catalyst。]()
+-   阶段二（Spark 1.0）：
+    -   SparkSQL模块，从1.0开始出现，知道1.3版本才是release版本，可以用于生产环境。
+    -   数据结构：`DataFrame = RDD[Row] + SChema`
+        -   Row：弱类型，表示一行数据，但是一行数据中有多少个字段和字段类型未知
+        -   Schema：约束，字段名称FieldName和字段类型FieldType
+    -   直到Spark 1.6版本开始，数据结构：`Dataset = RDD + Schema` 
+        -   Dataset 属于强类型，类型安全，性能更好
+        -   借鉴于Flink框架中对于批处理数据封装的思想DataSet
+-   阶段三（Spark 2.0）
+    -   合并Dataset和DataFrame数据结构，合为一体
+        -   `Dataset = RDD + Schema` 、`DataFrame = Dataset[Row]`
+        -   DataFrame仅仅是Dataset特殊类型的别名
+    -   提出新的程序入口SparkSession
+    -   Spark2.0中：更加简单（Easier）、更加快速（Speed）、更加智能（Smarter）
+-   阶段四（Spark3.0）
+    -   在Spark 3.0版本中，更多性能提升基本 上都是针对SparkSQL模块
+        -   数据倾斜自动处理
+        -   自动设置分区数目
+        -   ……………………………………………
+
+## Spark on Hive 和 Hive on Spark
+
+Spark on Hive：Hive只作为储存角色，Spark负责SQL解析优化、执行
+
+Hive on Spark：Hive即作为存储又负责SQL解析优化、Spark负责执行。
+
+|               | 元数据 | 计算引擎           | 语法  |
+| ------------- | ------ | ------------------ | ----- |
+| Spark on Hive | MySQL  | DataFrame、Dataset | Spark |
+| Hive on Spark | MySQL  | RDD                | Hive  |
+
+
+
+## Spark SQL 特点
+
+-   **易整合**
+
+Spark SQL无缝的整合了 SQL 查询和 Spark 编程，它能将结构化数据作为Spark中的分布式数据集（RDD）进行查询，在 Python、Scala、Java中均集成了相关的API，这种紧密的集成方式能够轻松地运行SQL查询以及复杂的分析算法。
+
+-   **统一的数据访问**
+
+使用相同的方式连接不同的数据源，可以从各种结构化数据源（如JOSN、Hive、Parquet 等）中读取数据，进行数据分析。
+
+-   **兼容Hive**
+
+在已有的仓库上直接运行 SQL 或者 HiveQL，兼容hive(元数据库、SQL语法、UDF、序列化、反序列化机制)
+
+-   **标准数据连接**
+
+Spark SQL 包含行业标准 JDBC 或者 ODBC 的连接方式，因此它不限于在 Spark 程序内使用SQL语句进行查询
+
+SparkSQL模块官方文档：http://spark.apache.org/docs/3.2.0/sql-programming-guide.html
+
+​	总体来说，Spark SQL 支持多种数据源的查询和加载，兼容 Hive，可以使用 JDBC/ODBC的连接方式来执行SQL语句，它为Saprk 框架在结构化数据分析方面提供了重要的技术支持。
+
+
+
+## DataFrame 与 DataSet
+
+**DataSet** 也是一个**分布式数据容器**。与 RDD 类似，然而 DataSet 更像传统数据库的二维表格，除了数据以外，还掌握数据的结构信息，即 Schema。同时，与 Hive 类似，DataSet 也支持嵌套数据类型（Struct、array和 map）。从 API易用性的角度上来看，DataSet API 提供的是一套高层的关系操作，比函数式的RDD API要更加友好，门槛更低。
+
+**DataSet 的底层封装的是 RDD**，当 **RDD 的泛型是 Row类型**时，我们也可以把他称为 **DataFrame**，即：
+
+```
+Dataset<Row> = DataFrame
+```
+
+**Spark官方描述**
+
+数据集是一个分布式的数据集合。**Dataset是Spark 1.6中添加的一个新接口**，它提供了rdd的优点(**强类型**，能够使用强大的lambda函数)和Spark SQL优化的执行引擎的优点。
+
+数据集可以从JVM对象构造，然后使用功能转换(map、flatMap、filter等)进行操作。
+
+Dataset api在Scala和Java中可用。Python不支持Dataset api。
+
+但是由于Python的动态特性，Dataset API的许多优点已经可用(例如，您可以通过名称自然地访问row. columnname)。R的情况类似。
+
+DataFrame是组织成命名列的数据集。它在概念上等同于关系数据库中的表或R/Python中的数据框架，但在底层进行了更丰富的优化。
+
+数据框架可以从各种来源构建，例如:结构化数据文件、Hive中的表、外部数据库或现有的rdd。DataFrame API在Scala, Java, Python和r中可用。
+
+在Scala和Java中，DataFrame由行数据集表示。在**Scala API中**，**`DataFrame`只是`Dataset [Row]`的类型别名**。而在**Java API中**，用户需要使用**`Dataset<Row>`来表示`DataFrame`**。
+
+
+
+## DataFrame 基础
+
+DataFrame它不是Spark SQL提出来的，而是早期在R、Pandas语言就已经有了的。
+
+就易用性而言，对比传统的MapReduce API，说Spark的RDD API有了数量级的飞跃并不为过。
+
+然而，对于没有MapReduce和函数式编程经验的新手来说，RDD API仍然存在着一定的门槛。另一方面，数据科学家们所熟悉的R、Pandas等传统数据框架虽然提供了直观的API，却局限于单机处理，无法胜任大数据场景。
+
+为了解决这一矛盾，Spark SQL 1.3.0在原有SchemaRDD的基础上提供了与R和Pandas风格类似的DataFrame API。新的DataFrame AP不仅可以大幅度降低普通开发者的学习门槛，同时还支持Scala、Java与Python三种语言。更重要的是，由于脱胎自SchemaRDD，DataFrame天然适用于分布式大数据场景
+
+-   **Spark SQL使用的数据抽象**并非是RDD，而**是DataFrame**
+-   在Spark 1.3.0 版本之前，DataFrame也被称为 SchemaRDD。
+-   DataFrame使Spark 具备了处理大规模结构化数据的能力。
+-   在Spark中，**DataFrame是一种以RDD为基础的分布式数据集**，类似于传统数据库中的二维表格。因此DataFrame可以完成RDD的绝大多数功能，在开发时，也可以调用相应方法将RDD和DataFrame进行相互转换。
+-   DataFrame与RDD的主要区别在于
+    -   前者**带有schema元信息**，即DataFrame所表示的二维表数据集的每一列都带有名称和类型。这使得Spark SQL得以洞察更多的结构信息，从而对于DataFrame背后的数据源以及作用于DataFrame之上的变换进行了针对性的优化，最终达到大幅提升运行时效率的目标。
+    -   反观RDD，由于无从得知所存数据元素的具体内部结构，Spark Core只能在stage层面进行简单、通用的流水线优化。
+-   最主要区别在于，**前者（DataFrame）面向的是结构化数据，后者（RDD）面向的是非结构化数据**
+-   同时，与Hive类似，DataFrame也支持嵌套数据类型（struct、array和map）。从 API 易用性的角度上看，**DataFrame API提供的是一套高层的关系操作，比函数式的RDD API 要更加友好，门槛更低。**
+-   DataFrame是为数据提供了Schema的视图。可以把它当做数据库中的一张表来对待
+-   DataFrame也是**懒执行**的，但**性能上比RDD要高**，主要原因：优化的执行计划，即查询计划通过Spark catalyst optimiser 进行优化。
+
+​	总的来说，DataFrame除了提供比RDD更丰富的算子外，更重要的是提升了 Spark 框架执行效率、减少数据读取时间以及优化执行计划。有了 DataFrame 这个更高层面的抽象后，处理数据就更加简单了，甚至可以直接用 SQL来处理数据，这对于开发者来说，易用性有了很大的提升。不仅如此，**通过DataFrame API 或 SQL 处理数据时，Spark 优化器（Catalyst） 会自带优化代码，即使写的程序 或 SQL不够高效，程序也可以高效地执行**。
+
+
+
+由于 Spark SQL 支持多种语言的开发，所以每种语言都定义了 `DataFrame` 的抽象，主要如下：
+
+| 语言   | 主要抽象                                       |
+| ------ | ---------------------------------------------- |
+| Scala  | Dataset[T]  &  DataFrame (Dataset[Row] 的别名) |
+| Java   | Dataset[T]                                     |
+| Python | DataFrame                                      |
+| R      | DataFrame                                      |
+
+
+
+##  **Schema 信息**
+
+查看DataFrame中Schema是什么，执行如下命令
+
+```scala
+scala> val empSchema = empDF.schema
+empSchema: org.apache.spark.sql.typles.StructType = 		                                                         StructType(	// 结构化类型
+    						StructField(name,StringTyle,true),	// 结构化字段
+							StructField(salary,LongType,true))
+```
+
+可以看出Schema信息封装在StructType中，包含很多StructField对象，查看源码
+
+-   其一：StructType 定义，是一个样例类，属性为StructField的数组
+
+```scala
+case class StructType(fields: Array[StructField]) extends DataType with Seq[StructField]
+```
+
+-   其二：StructField 定义，同样是一个样例类，有四个属性，其中字段名称和类型为必填
+
+```scala
+case class StructField(
+    name: String,		// 字段名称
+    dataType: DataType,		// 字段类型
+    nullable: Boolean = true,		// 字段值是否为空
+    metadata: Metadata = Metadata.empty)	// 字段元数据，默认为空
+```
+
+自定义Schema结构，官方提供实例代码：
+
+```scala
+import org.apache.spark.sql._
+import org.apache.spark.sql.types._
+
+val schema = StructType(
+    StructField("f1",IntegerType,true)::
+    StructField("f2",LongType,true)::
+    StructField("f3",BooleanType,true)::Nil
+)
+```
+
+## **Row**
+
+DataFrame中每条数据封装在Row中，Row表示每行数据，具体哪些字段位置，获取DataFrame中第一条数据
+
+-   **构建Row对象**：要么是传递value，要么是传递Seq，官方实例代码：
+
+```scala
+import org.apache.spark.sql._
+
+// 从values中创建Row
+Row(value1, value2, value3, ...)
+
+// 传递Seq创建Row
+Row(Seq(value1, value2, value3, ...))
+```
+
+-   获取Row中每个字段的值
+    -   方式一：下标获取，从0开始，类似数组下标获取
+        -   例如：val name = empRow(0)
+    -   方式二：指定下标，知道类型
+        -   例如：val name = empRow.getString(0)
+    -   方式三：通过As转换类型（推荐方式）
+        -   例如：val name = empRow.getAs\[String]("name")
+
+
+
+## DataSet 基础
+
+​	DataSet是分布式数据集合。**DataSet是 Spark 1.6中 添加的一个新抽象结构**，是DataFrame的一个扩展，最终在Spark2.0 版本被定义为 Spark 新特性。它提供了RDD的优势（**强类型**，使用强大的lambda函数的能力）以及Spark SQL优化执行引擎的优点。DataSet也可以使用功能性的转换（操作map，flatMap，filter等等）。
+
+-   DataSet是DataFrame API的一个扩展，它提供了一种类型安全的，面向对象的编程接口，是Spark SQL最新的数据抽象
+-   用户友好的API风格，既具有**类型安全检查**也具有DataFrame的**查询优化特性**；
+-   用样例类来对 DataSet 中定义数据的结构信息，**样例类中每个属性的名称直接映射到DataSet中的字段名称**；
+-   **DataSet是强类型的**。比如可以有 DataSet[Car]，DataSet[Person]。
+-   DataSet提供了特定域对象的强类型集合，也就是在RDD 的每行数据中添加了类型约束条件，只要满足约束条件的数据类型才能正常运行，
+-   从Spark 2.0开始，DataFrame与Dataset合并，每个Dataset也有一个被称为一个DataFrame的类型化视图，这种DataFrame是Row类型的Dataset，即Dataset[Row]。 
+-   **DataFrame=DataSet[Row]** ，所以可以通过 as方法将DataFrame转换为DataSet。Row是一个类型，跟Car、Person这些的类型一样，所有的表结构信息都用Row来表示。获取数据时需要指定顺序
+-   DataSet 结合了RDD 和 DataFrame的优点，并且可以调用封装的方法以并行方式进行转换等操作。
+
+ 
+
+## Spark SQL 底层架构
+
+​	首先拿到 SQL 后**解析**一批**未被解决的逻辑计划**，再经过分析得到**分析后的逻辑计划**，再经过一批优化规则转换成 一批**最佳优化的逻辑计划**，再经过 **SparkPlanner** 的策略转换成一批 **物理计划**，随后经过**消费模型**转换成一个个的 **Spark 任务**执行。
+
+
+
+## SparkSession对象（应用入口）
+
+Spark 2.0开始，应用程序入口为SparkSession，加载不同数据源的数据，封装到DataFrame/Dataset集合数据结构中，使得编程更加简单，程序运行更加快速高效
+
+SparkSession：这是一个新入口，取代了原本的SQLContext与HiveContext。对于DataFrameAPI的用户来说，Spark常见的混乱源头来自于使用哪个“context”。
+
+现在使用SparkSession，它作为单个入口可以兼容两者，注意原本的SQLContext与HiveContext仍然保留，以支持向下兼容。 
+
+文档：http://spark.apache.org/docs/3.2.0/sql-getting-started.html#starting-point-sparksession 
+
+SparkSession在SparkSQL模块中，GAV：
+
+```xml
+<dependency>
+ <groupId>org.apache.spark</groupId>
+ <artifactId>spark-sql_2.13</artifactId>
+ <version>3.2.0</version>
+</dependency>
+```
+
+
+
+-   Spark Core中，如果想要执行应用程序，需要首先构建上下文环境对象**SparkContext**，**Spark SQL其实可以理解为对Spark Core的一种封装，不仅仅在模型上进行了封装，上下文环境对象也进行了封装。**
+
+-   在老的版本（Spark 2.0 之前）中，Spark SQL提供两种SQL查询起始点：
+
+    -   一个叫SQLContext，用于Spark自己提供的SQL查询；
+    -   一个叫HiveContext，用于连接Hive的查询。
+
+-   **SparkSession 是Spark最新（Spark 2.0之后）的 SQL 查询起始点，实质上是SQLContext和HiveContext的组合**，所以在 SQLContext 和HiveContext 上可用的API在SparkSession上同样是可以使用的。**SparkSession内部封装了SparkContext，所以计算实际上是由sparkContext完成的**。
+
+    注意：在Java中需要额外创建JavaSparkContext对象，如下
+
+    ```java
+    // 这里的spark 即 SparkSession对象
+    SparkContext sc = spark.sparkContext();
+    JavaSparkContext jsc = new JavaSparkContext(sc);
+    ```
+
+-   创建SparkSession对象可以通过 **SparkSession.builder().getOrCreate()** 方法获取。但当我们使用 spark-shell 的时候, spark框架默认会自动的创建一个名称叫做 spark 的 SparkSession 对象, 就像我们以前可以自动获取到一个 sc 来表示 SparkContext 对象一样，因此可以直接使用，不需要自行创建
+
+启动 Spark-shell 命令如下
+
+```shell
+spark-shell --master[2]
+```
+
+```shell
+# 启动 Spark-shell 完成后，如下所示，可以看出Sparkcontext、SparkSession对象均已创建完成
+[root@kk01 bin]# ./spark-shell
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 3.2.0
+      /_/
+         
+Using Scala version 2.13.5 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_152)
+Type in expressions to have them evaluated.
+Type :help for more information.
+23/05/06 06:51:50 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Spark context Web UI available at http://kk01:4040
+Spark context available as 'sc' (master = local[*], app id = local-1683370311215).
+Spark session available as 'spark'.   # Spark session
+
+scala>
+```
+
