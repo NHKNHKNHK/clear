@@ -1654,9 +1654,29 @@ export default {
 
   '/39-Scala/': [
     {
-      text: 'Scala',
+      text: '其他',
+      collapsed: true,
+      items: [
+        { text: 'Scala环境部署（Windows）', link: '/39-Scala/01-Scala-dev-deploy' },
+
+      ]
+    },
+    {
+      text: 'Scala简明教程',
+      collapsed: false,
       items: [
         { text: '导读', link: '/39-Scala/' },
+        { text: 'Scala变量与数据类型', link: '/39-Scala/02-Scala变量与数据类型' },
+        { text: 'Scala算术运算符', link: '/39-Scala/03-Scala算术运算符' },
+        { text: 'Scala流程控制', link: '/39-Scala/04-Scala流程控制' },
+        { text: 'Scala函数式编程', link: '/39-Scala/05-Scala函数式编程' },
+        { text: 'Scala面向对象', link: '/39-Scala/06-Scala面向对象' },
+        { text: 'Scala集合', link: '/39-Scala/07-Scala集合' },
+        { text: '模式匹配', link: '/39-Scala/08-模式匹配' },
+        { text: '异常体系', link: '/39-Scala/09-异常体系' },
+        { text: '隐式转换', link: '/39-Scala/10-隐式转换' },
+        { text: '泛型', link: '/39-Scala/11-泛型' },
+        { text: '正则表达式', link: '/39-Scala/12-正则表达式' },
       ]
     }
   ],
