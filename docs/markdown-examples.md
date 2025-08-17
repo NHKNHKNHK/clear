@@ -385,9 +385,11 @@ export default {
 
 **错误示例**
 
+````txt
 ```mysql
 select * from user;
 ```
+````
 
 :::tip 温馨提示
 在 Shiki 的代码仓库中，可以找到合法的[编程语言列表](https://shiki.style/languages)。

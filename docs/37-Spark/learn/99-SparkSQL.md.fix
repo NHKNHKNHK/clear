@@ -2616,7 +2616,7 @@ scala> df.show()
 
 则说明宿主机的MySQL不允许远程访问，可以采用如下方式解决
 
-```mysql
+```sql
 # 我们采取的是最简单暴力的方法，修改数据库权限
 mysql> use mysql;
 Database changed
@@ -2737,7 +2737,7 @@ public class SparkSQL_JDBC {
 
 查看MySQL数据库
 
-```mysql
+```sql
 mysql> use company;
 Database changed
 mysql> select * from account2;
