@@ -192,7 +192,19 @@ export default defineConfig({
     ],
     ssr: {
       noExternal: ['element-plus']
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            if (id.includes('element-plus')) return 'element'
+            if (id.includes('node_modules')) return 'vendor'
+          }
+        }
+      },
+      chunkSizeWarningLimit: 1500 // 提高警告阈值
     }
+
   },
 
 
