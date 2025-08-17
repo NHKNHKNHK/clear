@@ -1272,8 +1272,11 @@ export default {
       text: 'Kafka简明教程',
       items: [
         { text: 'Kafka', link: '/15-MQ/Kafka/learn/01-kafka' },
-        { text: 'Kafka', link: '/15-MQ/Kafka/learn/01-kafka' },
-      
+        { text: 'Kafka监控工具', link: '/15-MQ/Kafka/learn/02-Kafka监控工具' },
+        { text: 'Kafka 常用API操作', link: '/15-MQ/Kafka/learn/03-Kafka 常用API操作' },
+        { text: 'Kafak整合Flume', link: '/15-MQ/Kafka/learn/Kafak整合Flume' },
+        { text: '04-KafkaUtils.createDirectStream的消费者LocationStrategies', link: '/15-MQ/Kafka/learn/04-KafkaUtils.createDirectStream的消费者LocationStrategies' },
+
       ],
     },
     {
@@ -1630,6 +1633,27 @@ export default {
         { text: 'HDFS文件块大小', link: '/34-Hadoop/HDFS文件块大小' },
         { text: 'HDFS小文件的危害', link: '/34-Hadoop/HDFS小文件的危害' },
         { text: 'HDFS小文件怎么解决', link: '/34-Hadoop/HDFS小文件怎么解决' },
+      ]
+    }
+  ],
+  '/hbase/': [
+    {
+      text: 'HBase',
+      items: [
+        { text: '导读', link: '/hbase/' },
+      ]
+    },
+    {
+      text: 'HBase简明教程',
+      items: [
+        { text: 'HBase引入简介', link: '/hbase/learn/00-HBase引入简介' },
+        { text: 'HBase部署安装', link: '/hbase/learn/01-HBase部署安装' },
+        { text: 'HBase参数文件', link: '/hbase/learn/02-HBase参数文件' },
+        // { text: 'HBase数据模型', link: '/hbase/learn/03-HBase数据模型' },
+        { text: 'Hbase Shell', link: '/hbase/learn/04-Hbase Shell' },
+        { text: 'HBase Java API操作', link: '/hbase/learn/05-HBase Java API操作' },
+        { text: 'HBase Java API演示', link: '/hbase/learn/06-HBase Java API演示' },
+        { text: 'HBase必坑指南', link: '/hbase/learn/HBase必坑指南' },
       ]
     }
   ],
