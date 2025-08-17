@@ -1269,6 +1269,14 @@ export default {
       ],
     },
     {
+      text: 'Kafka简明教程',
+      items: [
+        { text: 'Kafka', link: '/15-MQ/Kafka/learn/01-kafka' },
+        { text: 'Kafka', link: '/15-MQ/Kafka/learn/01-kafka' },
+      
+      ],
+    },
+    {
       text: 'RabbitMQ',
       items: [
         { text: '导读', link: '/15-MQ/RabbitMQ/' },
