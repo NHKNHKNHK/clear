@@ -415,9 +415,7 @@ public static void main(String[] args) {
 关闭数据库连接
 ```
 
-
-
-##### **map和mapPartitions的区别？**
+###### **map和mapPartitions的区别？**
 
 **数据处理角度**
 
