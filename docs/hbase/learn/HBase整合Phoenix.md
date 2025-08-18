@@ -48,7 +48,7 @@ phoenix，操作的表及数据，存储在HBase上。phoenix只是需要和HBas
 
 ### 1.4 Phoenix架构
 
-![1698046016109](images\phoenix架构.png)                                          
+![1698046016109](images/phoenix架构.png)                                          
 
 ## 2 Phoenix的安装
 
@@ -62,7 +62,7 @@ https://phoenix.apache.org/download.html
 
 我们的Hbase为 2.3.4 根据官网得知，我们可以部署 phoenix 5.1.3，如下：
 
-![1698046613646](images\phoenix与Hbase兼容情况.png)
+![1698046613646](images/phoenix与Hbase兼容情况.png)
 
 ### 1）上传并解压tar包
 
@@ -623,7 +623,7 @@ CREATE INDEX my_index ON my_table (my_col);
 
 查询数据（使用explainPlan执行计划，查看是否有走索引）
 
-![1698126501378](images\二级索引_无索引.png)
+![1698126501378](images/二级索引_无索引.png)
 
 ```shell
 # 创建索引

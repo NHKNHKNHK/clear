@@ -385,7 +385,7 @@ export default {
 
 **错误示例**
 
-````txt
+````
 ```mysql
 select * from user;
 ```
