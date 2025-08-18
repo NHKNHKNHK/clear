@@ -1680,7 +1680,6 @@ export default {
         { text: '向Spark传递函数', link: '/37-Spark/learn/07-向Spark传递函数' },
         { text: 'Spark常用RDD-Java', link: '/37-Spark/learn/08-Spark常用RDD-Java' },
         { text: 'Spark常用RDD-Scala', link: '/37-Spark/learn/08-Spark常用RDD-Scala' },
-        { text: 'Spark常用RDD-Java-Scala', link: '/37-Spark/learn/Spark常用RDD-Java-Scala' },
         { text: '在不同的RDD类型间转换', link: '/37-Spark/learn/09-在不同的RDD类型间转换' },
         { text: 'SparkRDD比较', link: '/37-Spark/learn/10-SparkRDD比较' },
         { text: 'RDD序列化', link: '/37-Spark/learn/11-RDD序列化' },

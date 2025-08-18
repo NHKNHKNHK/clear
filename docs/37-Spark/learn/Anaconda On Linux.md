@@ -99,7 +99,7 @@ Last login: Thu Jun  1 07:16:51 2023 from 192.168.188.1
 
 **base 是默认的虚拟环境**
 
-如果anaconda 安装完之后，没有成功启动（即没有显示 （base) 等字眼）
+如果anaconda 安装完之后，没有成功启动（即没有显示 （base） 等字眼）
 代表没有成功启动，不代表安装失败了。
 
 解决方法：
@@ -174,7 +174,7 @@ Proceed ([y]/n)? y  # 直接y
 
 # 进入虚拟环境
 (base) [root@kk01 ~]# conda activate pyspark
-(pyspark) [root@kk01 
+(pyspark) [root@kk01 ~]# 
 ```
 
 
