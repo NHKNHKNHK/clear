@@ -1,14 +1,18 @@
 # 1 RDD的创建方式
 
-在Spark中将数据封装到RDD中的方式可以分为四种我们常用的两种方式：并行化本地集合（Driver Program中）和引用加载外部存储系统（如HDFS、Hive、HBase、Kafka、Elasticsearch等）数据集
+在Spark中将数据封装到RDD中的方式可以分为四种
 
-
+而我们常用的两种方式：并行化本地集合（Driver Program中）和引用加载外部存储系统（如HDFS、Hive、HBase、Kafka、Elasticsearch等）数据集
 
 ## 1.1 Parallelized Collections（并行化集合）
 
-由一个已经存在的 Scala 集合创建，集合并行化，集合必须时Seq本身或者子类对象。
+由一个已经存在的 Scala 集合创建，集合并行化，集合必须时`Seq`本身或者子类对象。
 
-Spark可以通过并行集合创建RDD。即从一个已存在的集合、数组上，**通过 SparkContext 对象调用 parallelize() 方法创建RDD**
+Spark可以通过并行集合创建RDD。即从一个已存在的集合、数组上，**通过 SparkContext 对象调用 `parallelize()` 方法创建RDD**
+
+**方法说明**
+
+:::code-group
 
 ```scala
 // Scala
@@ -22,9 +26,9 @@ def parallelize[T: ClassTag](
 parallelize(final List<T> list)
 parallelize(final List<T> list, final int numSlices) 
 // numSlices表示设置的分区数量
-//如果不设置，默认使用scheduler.conf().getInt("spark.default.parallelism", this.totalCores())
-//		spark默认从配置对象获取spark.default.parallelism 
-// 		如果获取不到，则使用 totalCores 属性，该属性为当前环境最大的可以核数
+// 如果不设置，默认使用scheduler.conf().getInt("spark.default.parallelism", this.totalCores())
+//  spark默认从配置对象获取spark.default.parallelism 
+// 	如果获取不到，则使用 totalCores 属性，该属性为当前环境最大的可以核数
     
     
     
@@ -34,7 +38,11 @@ wholeTextFiles(final String path)  // 以文件为单位读取数据，读取的
 wholeTextFiles(final String path, final int minPartitions)
 ```
 
-### Java演示
+:::
+
+### 演示
+
+:::code-group
 
 ```java
 SparkConf sparkConf = new SparkConf().setMaster("local[*]").setAppName("rdd");
@@ -49,9 +57,7 @@ RDD.foreach((integer) -> System.out.println(integer));
 sparkContext.stop();
 ```
 
-### Scala演示
-
-```scala
+```scala [scala shell]
 scala> val lines = sc.parallelize(List("hello", "world"))
 val lines: org.apache.spark.rdd.RDD[String] = ParallelCollectionRDD[0] at parallelize at <console>:1
 ```
@@ -60,10 +66,6 @@ val lines: org.apache.spark.rdd.RDD[String] = ParallelCollectionRDD[0] at parall
 /**
  * 采用并行化的方式构建Scala集合Seq中的数据为RDD
  * - 将Scala集合转换为RDD
- * sc.parallelize(seq)
- * - 将RDD转换为Scala中集合
- * rdd.collect()
- * rdd.collectAsMap()
  */
 object _01_ParallelizedCollections {
   def main(args: Array[String]): Unit = {
@@ -103,22 +105,35 @@ object _01_ParallelizedCollections {
 }
 ```
 
+:::
+
+:::tip
+`JavaRDD`是RDD的一层封装，本质还是RDD
+:::
+
 ## 1.2 External Datasets（外部数据集）
 
 Spark可以从Hadoop支持的任何存储源中加载数据去创建RDD，包括**本地文件系统和HDFS（所有Hadoop支持的数据集，比如HDFS、HBase等）等文件系统**
 
-实际使用最多的方法：textFile，读取HDFS或LocalFS上文本文件，指定文件路径和RDD分区数目。 
+实际使用最多的方法：`textFile()`，读取HDFS或LocalFS上文本文件，指定文件路径和RDD分区数目
 
-通过Spark中的**SparkContext对象调用textFile()方法加载数据创建RDD**。
+通过Spark中的**SparkContext对象调用`textFile()`方法加载数据创建RDD**。
 
-注意：
+:::tip
 
--   **JavaSparkContext对象能够直接读取的文件类型有 txt 、sequence、object**
+-   **`JavaSparkContext`对象能够直接读取的文件类型有 txt 、sequence、object**
     -   文本文件（Text File）：可以使用`JavaSparkContext.textFile()`方法读取文本文件，每一行作为一个RDD的元素。
     -   序列化文件（Sequence File）：可以使用`JavaSparkContext.sequenceFile()`方法读取序列化文件，序列化文件是Hadoop中的一种文件格式，可以将多个小文件合并成一个大文件，提高文件读取效率。
     -   对象文件（Object File）：可以使用`JavaSparkContext.objectFile()`方法读取对象文件，对象文件是将Java对象序列化后存储的文件。
--   其他文件类型，如csv、json、parquet、avro等都需要使用**SparkSession**对象来读取
+-   其他文件类型，如csv、json、parquet、avro等都需要使用`SparkSession`对象来读取
 -   或者是利用第三方库读取（比如jsc配合fastjson解析读取JSON数据）
+
+:::
+
+
+**方法说明**
+
+:::code-group
 
 ```scala
 // Scala
@@ -142,6 +157,8 @@ textFile(final String path, final int minPartitions)  // minPartitions设置最�
 // 		最好是全路径，可以指定文件名称，可以指定文件目录，可以使用通配符指定。 
 // 实际项目中如果从HDFS读取海量数据，应用运行在YARN上，默认情况下，RDD分区数目等于HDFS 上Block块数目。
 ```
+
+:::
 
 ### 从Linux本地文件系统加载数据创建RDD
 
@@ -173,7 +190,7 @@ val lines: org.apache.spark.rdd.RDD[String] = README.md MapPartitionsRDD[2] at t
 
 ### 从HDFS中加载数据创建RDD
 
-代码与从从Linux本地文件系统加载数据创建RDD相识，只需做出如下修改
+代码与从Linux本地文件系统加载数据创建RDD相似，只需做出如下修改
 
 ```java
 JavaRDD<String> RDD = sparkContext.textFile("/opt/temp/test.txt"); 
@@ -182,11 +199,13 @@ JavaRDD<String> RDD = sparkContext.textFile("hdfs://localhost:8020/opt/temp/test
 // 上面两种写法都是可以的
 ```
 
+### 小文件读取
 
+在实际项目中，有时往往处理的数据文件属于小文件（每个文件数据数据量很小，比如KB，几十MB等），文件数量又很大，如果一个个文件读取为RDD的一个个分区，计算数据时很耗时性能低下，使用SparkContext中提供：`wholeTextFiles`类，专门读取小文件数据。
 
-### 1.2.1 小文件读取 
+**方法说明**
 
- 在实际项目中，有时往往处理的数据文件属于小文件（每个文件数据数据量很小，比如KB，几十MB等），文件数量又很大，如果一个个文件读取为RDD的一个个分区，计算数据时很耗时性能低下，使用SparkContext中提供：wholeTextFiles类，专门读取小文件数据。 
+:::code-group
 
 ```scala
 // Scala
@@ -205,11 +224,15 @@ wholeTextFiles(final String path)  // 以文件为单位读取数据，读取的
 wholeTextFiles(final String path, final int minPartitions)
 ```
 
-经验：
+:::
 
-​	实际项目中，可以先使用wholeTextFiles方法读取数据，设置适当RDD分区，再将数据保存到文件系统，以便后续应用读取处理，大大提升性能
+:::warning 经验
 
-演示：
+​实际项目中，可以先使用`wholeTextFiles`方法读取数据，设置适当RDD分区，再将数据保存到文件系统，以便后续应用读取处理，大大提升性能
+
+:::
+
+**演示**
 
 读取100个小文件数据，每个文件大小小于1MB，设置RDD分区数目为2
 
@@ -251,8 +274,6 @@ object _01_SparkWholeTextFileTest {
 ## 1.3 从其他RDD创建RDD
 
 主要是通过一个RDD运算完后，再产生新的RDD。
-
-
 
 ## 1.4 直接创建RDD（new）
 

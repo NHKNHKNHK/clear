@@ -1,8 +1,8 @@
-# 5 向Spark传递函数/方法
+# 向Spark传递函数/方法
 
 Spark的大部分转换算子和一部分的行动算子，都需要依赖用户传递的函数来计算。
 
-## 5.1 python
+## python
 
 在python中，我们有三种方式将函数传递给Spark。
 
@@ -10,7 +10,7 @@ Spark的大部分转换算子和一部分的行动算子，都需要依赖用户
 
 除了lambda表达式，我们还可以定义传递顶层函数或是定义的局部函数。
 
-**在Python中传递函数：**
+### **在Python中传递函数**
 
 ```python
 # Lambda表达式传递函数
@@ -25,7 +25,7 @@ word = rdd.filter(containsError)
 
 传递函数时需要小心，python会不经意间把函数所在的对象也序列化传出去。
 
-**传递一个带字段引用的函数：（请不要怎么做）**
+### **传递一个带字段引用的函数（请不要怎么做）**
 
 ```python
 class SearchFunctions(object):
@@ -57,13 +57,11 @@ class WordFunctions(object):
         return rdd.filter(lambda x: query in x)
 ```
 
+## Scala
 
+在Scala中，我们可以把定义的内联函数、方法的引用或静态方法（Scala没有`static`关键字，定义在伴生对象中的方法可以理解为静态方法）传递给Spark
 
-## 5.2 Scala
-
-在Scala中，我们可以把定义的内联函数、方法的引用或静态方法（Scala没有static关键字，定义在伴生对象中的方法可以理解为静态方法）传递给Spark
-
-**Scala中的函数传递方式：**
+**Scala中的函数传递方式**
 
 ```scala
 class SearchFunctions(val query: String) {
@@ -96,7 +94,7 @@ class SearchFunctions(val query: String) {
 
 
 
-## 5.3 Java
+## Java
 
 在Java中，函数(方法)需要实现了Spark的`org.apache.spark.api.java.function`包中任一接口的对象来传递。
 
@@ -125,7 +123,7 @@ public interface FlatMapFunction<T, R> extends Serializable {
 
 Java中常见的向Spark传递函数的方式：
 
--   **使用匿名内部类进行函数传递**
+### **使用匿名内部类进行函数传递**
 
 ```java
 // 向Spark中传递一个匿名内部类，本质上就是想要传递一个函数
@@ -138,7 +136,7 @@ JavaRDD<String> errors = lines.filter(new Function<String, Boolean>() {
 });
 ```
 
--   **使用具名类进行函数传递**
+### **使用具名类进行函数传递**
 
 ```java
 // 向Spark传递一个类，本质上就是想传递类中的一个方法
@@ -153,7 +151,7 @@ class ContainsError implements Function<String, Boolean> {
 JavaRDD<String> errors = lines.filter(new ContainsError());
 ```
 
--   **带参数的Java函数类**
+### **带参数的Java函数类**
 
 ```java
 class Contains implements Function<String,Boolean>{
@@ -172,7 +170,7 @@ class Contains implements Function<String,Boolean>{
 JavaRDD<String> errors = lines.filter(new Contains("error"));
 ```
 
--   **Java8中使用Lambda表达式进行函数传递**
+### **Java8中使用Lambda表达式进行函数传递**
 
 ```java
 // 使用Lambda表达式向Spark传递一个函数
@@ -182,7 +180,7 @@ JavaRDD<String> errors = lines.filter((s) -> "error".contains(s));
 
 说明：
 
-​	匿名内部类和Lambda表达式都可以引用方法中封装的任意 final 变量，因此可以像在python、Scala一样把这写变量传递给Spark
+​	匿名内部类和Lambda表达式都可以引用方法中封装的任意 `final` 变量，因此可以像在python、Scala一样把这写变量传递给Spark
 
 
 

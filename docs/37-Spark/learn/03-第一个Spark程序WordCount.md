@@ -1,12 +1,14 @@
-# Scala版
+# WordCount
 
-## 1）创建项目
+## Scala版
 
-### 增加 Scala 插件  
+### 1）创建项目
+
+#### 增加 Scala 插件  
 
 Spark 由 Scala 语言开发的，咱们当前使用的 Spark 版本为 3.2.0，默认采用的 Scala 编译版本为 2.13，所以后续开发时。我们依然采用这个版本。开发前请保证 IDEA 开发工具中含有 **Scala 开发插件**
 
-### 创建Maven工程
+#### 创建Maven工程
 
 创建Maven Project工程，**GAV**如下：
 
@@ -20,7 +22,7 @@ Spark 由 Scala 语言开发的，咱们当前使用的 Spark 版本为 3.2.0，
 | --------------- | ---------- | ------- |
 | com.clear.spark | spark-core | 1.0     |
 
-### POM
+#### POM
 
 ```xml
 <repositories>
@@ -163,17 +165,15 @@ Spark 由 Scala 语言开发的，咱们当前使用的 Spark 版本为 3.2.0，
 </build>
 ```
 
-### 配置文件
+#### 配置文件
 
 在src/main/resources目录下放置如下三个文件，可以从服务器中拷贝：
 
--   core-site.xml
--   hdfs-site.xml
--   log4j.properties
+-   `core-site.xml`
+-   `hdfs-site.xml`
+-   `log4j.properties`
 
-
-
-## 3）代码编写
+### 3）代码编写
 
 ```scala
 package com.clear.spark
@@ -209,19 +209,15 @@ object SparkWordCount {
 }
 ```
 
-
-
-## 4）测试
+### 4）测试
 
 ```shell
 [nhk@kk01 wordcount]$ $SPARK_HOME/bin/spark-submit --class com.clear.WordCount /opt/data/wordcount/spark-core-scala-1.0.jar 
 ```
 
+## Java版
 
-
-# Java版
-
-## 1）**POM**
+### 1）**POM**
 
 ```xml
 <dependencies>
@@ -277,7 +273,7 @@ object SparkWordCount {
 </build>
 ```
 
-## 2）代码
+### 2）代码
 
 ```java
 package com.clear.wordcount;
@@ -320,7 +316,7 @@ public class JavaSparkWordCount {
 }
 ```
 
-## 3）测试
+### 3）测试
 
 运行：
 

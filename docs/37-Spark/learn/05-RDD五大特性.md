@@ -41,11 +41,15 @@ abstract class RDD[T: ClassTag](
 
 **RDD将Spark的底层的细节都隐藏起来**（自动容错、位置感知、任务调度执行，失败重试等）， 让开发者可以像操作本地集合一样以函数式编程的方式操作RDD这个分布式数据集，进行各种并行计算，RDD中很多处理数据函数与列表List中相同与类似。
 
-## 如何让理解RDD
+## 对于RDD的简单理解
 
-RDD中有很多方法可以将数据向下流转，称之为转换（Transformation）
+-   RDD是Spark框架中的核心数据结构
+-   Spark处理数据时，将数据封装到RDD中（但是RDD不保存数据）
+-   RDD中有很多的Partition（分区），每个Partition被一个Task处理
+    -   对于Spark、Flink这类计算框架，每个Task任务以线程Thread的方式运行
+    -   但是Hadoop的MR在每个Task（MapTask或ReduceTask）以进程Process方式运行
 
-RDD中有很多方法可以控制数据流转，称之为行动（Action）
+
 
 ## RDD五大特征
 
@@ -63,7 +67,7 @@ Internally, each RDD is characterized by five main properties:
 
 前三个特征每个RDD都具备的，后两个特征可选的。
 
-## A list of partitions
+A list of partitions
 
 -   分区列表（a list of partitions）
 -   每个RDD被分为多个分区（partitions），这些分区运行在集群中的不同节点，每个分区都会被一个计算任务处理，**分区数决定了并行数的数量**
@@ -80,7 +84,7 @@ Internally, each RDD is characterized by five main properties:
 protected def getPartitions: Array[Partition]
 ```
 
-## A function for computing each split
+### A function for computing each split
 
 -   每个分区都有一个计算函数（A function for computing each split）：一个函数会被作用在每一个分区
 -   Spark的**RDD的计算函数是以分片为基本单位**的，每个RDD都会实现compute函数，对具体的分片进行计算。
@@ -95,7 +99,7 @@ protected def getPartitions: Array[Partition]
 def compute(split: Partition, context: TaskContext): Iterator[T]
 ```
 
-## A list of dependencies on other RDDs
+### A list of dependencies on other RDDs
 
 一个RDD会依赖于其他多个RDD（A list of dependencies on other RDDs）
 
@@ -111,7 +115,7 @@ def compute(split: Partition, context: TaskContext): Iterator[T]
 protected def getDependencies: Seq[Dependency[_]] = deps
 ```
 
-## Optionally, a Partitioner for key-value RDDs (e.g. to say that the RDD is  hash-partitioned) 
+### Optionally, a Partitioner for key-value RDDs (e.g. to say that the RDD is  hash-partitioned) 
 
  (Key,Value)数据类型的RDD分区器（a Partitioner for Key-Value RDDs）
 
@@ -128,7 +132,7 @@ protected def getDependencies: Seq[Dependency[_]] = deps
 @transient val partitioner: Option[Partitioner] = None
 ```
 
-## Optionally, a list of preferred locations to compute each split on (e.g. block locations  for an HDFS file)
+### Optionally, a list of preferred locations to compute each split on (e.g. block locations  for an HDFS file)
 
 每个分区都有一个优先位置列表（a list of perferred locations to compute each split on）
 
@@ -161,7 +165,7 @@ RDD 是一个数据集的表示，不仅表示了数据集，还表示了这个�
 
 RDD 设计的一个重要优势是能够记录 RDD 间的依赖关系，即所谓血统（lineage）。 通过丰富的转移操作（Transformation），可以构建一个复杂的有向无环图，并通过这个图来一步步进行计算。
 
-# RDD执行原理
+## RDD执行原理
 
 ​	从计算的角度来讲，数据处理过程中需要**计算资源**（内存 & CPU）和**计算模型**（逻辑）。执行时，需要将计算资源和计算模型进行协调和整合。
 

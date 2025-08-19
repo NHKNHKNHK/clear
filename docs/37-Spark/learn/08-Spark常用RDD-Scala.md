@@ -6,7 +6,7 @@
 
 此外，还要控制相关的操作（如：持久化算子）
 
-官方文档：http://spark.apache.org/docs/3.2.0/rdd-programming-guide.html#rdd-operations 
+> 官方文档：http://spark.apache.org/docs/3.2.0/rdd-programming-guide.html#rdd-operations 
 
 **RDD中操作（函数、算子）分为两类** 
 
