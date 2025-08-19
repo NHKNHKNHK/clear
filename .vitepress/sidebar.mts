@@ -1355,6 +1355,12 @@ export default {
         { text: '导读', link: '/19-Linux/' },
       ]
     },
+    {
+      text: '遇到的问题',
+      items: [
+        { text: '上传文件到Linux文件名乱码', link: '/19-Linux/上传文件到Linux文件名乱码' },
+      ]
+    }
   ],
   '/20-operating-system/': [
     {
@@ -1679,6 +1685,7 @@ export default {
         { text: 'RDD的创建', link: '/37-Spark/learn/06-RDD的创建' },
         { text: '向Spark传递函数', link: '/37-Spark/learn/07-向Spark传递函数' },
         { text: 'Spark常用RDD-Java', link: '/37-Spark/learn/08-Spark常用RDD-Java' },
+        { text: 'Spark常用RDD-Java', link: '/37-Spark/learn/08-Spark常用RDD-Java2' },
         { text: 'Spark常用RDD-Scala', link: '/37-Spark/learn/08-Spark常用RDD-Scala' },
         { text: 'Spark常用RDD-Java-Scala', link: '/37-Spark/learn/Spark常用RDD-Java-Scala' },
         { text: '在不同的RDD类型间转换', link: '/37-Spark/learn/09-在不同的RDD类型间转换' },
@@ -1690,7 +1697,7 @@ export default {
         { text: '累加器与广播变量', link: '/37-Spark/learn/14-累加器与广播变量' },
         { text: 'Spark内核调度', link: '/37-Spark/learn/14-Spark内核调度' },
         { text: 'Spark提交应用', link: '/37-Spark/learn/15-spark提交应用' },
-        { text: '分区数与并行度', link: '/37-Spark/learn/16-分区数与并行度' },
+        { text: 'RDD并行度与分区', link: '/37-Spark/learn/16-分区数与并行度' },
         { text: 'RDD的并行度调优', link: '/37-Spark/learn/17-RDD的并行度调优' },
         { text: 'tuple._1与tuplt._1()的区别', link: '/37-Spark/learn/18-tuple._1与tuplt._1()的区别' },
         { text: '数据的读取与保存', link: '/37-Spark/learn/19-数据的读取与保存' },
@@ -1711,7 +1718,7 @@ export default {
     {
       text: '案例',
       items: [
-           { text: 'spark影评分析案例', link: '/37-Spark/learn/spark影评分析案例' },
+        { text: 'spark影评分析案例', link: '/37-Spark/learn/spark影评分析案例' },
       ]
     }
   ],
