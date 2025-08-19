@@ -1,10 +1,14 @@
 # RDD简介
 
-A Resilient Distributed Dataset (RDD), the basic abstraction in Spark. Represents an immutable, 
+> A Resilient Distributed Dataset (RDD), the basic abstraction in Spark. Represents an immutable, partitioned collection of elements that can be operated on in parallel. 
 
-partitioned collection of elements that can be operated on in parallel. 
+:::tip 翻译
+弹性分布式数据集（RDD）是Spark中的基本抽象概念。它表示一个不可变的，可并行操作的元素的分区集合。
+:::
 
-RDD（Resilient Distributed Dataset）即**弹性分布式数据集**，是一个容错的、并行的数据结构，是Spark中最基本的**数据处理模型**。代码中是一个抽象类，它代表一个弹性的、**不可变**、**可分区**、里面的元素可**并行**计算的集合。
+RDD（Resilient Distributed Dataset）即**弹性分布式数据集**，是一个容错的、并行的数据结构，是Spark中最基本的**数据处理模型**。
+
+RDD在代码中是一个`抽象类`，它代表一个弹性的、**不可变**、**可分区**、里面的元素可**并行**计算的集合。
 
 -   弹性
     -   存储的弹性：内存与磁盘的自动切换；
@@ -18,29 +22,32 @@ RDD（Resilient Distributed Dataset）即**弹性分布式数据集**，是一�
 -   可分区 partitioned：RDD中的数据被划分为很多部分，每部分称为分区 partition
 -   并行计算 parallel：RDD中的数据可以被并行计算的处理，每个分区的数据被一个Task处理
 
-类比：
+**类比**
 
-​	RDD的数据处理方式类似于IO流，也有装饰者设计模式
+- RDD的数据处理方式类似于Java IO流，也采用装饰者设计模式来实现功能。
+- RDD的数据只有在调用行动算子（例如，`collect()`）时，才会真正执行业务逻辑操作。
+- RDD是不保存数据的，但是IO可以临时保存一部分数据
+- 可以认为RDD是分布式的列表List或数组Array，抽象的数据结构，**RDD是一个`抽象类Abstract`**  
 
-​	RDD的数据只有在调用行动算子（例如，collect()）时，才会真正执行业务逻辑操作。
-
-​	RDD是不保存数据的，但是IO可以临时保存一部分数据
-
-可以认为RDD是分布式的列表List或数组Array，抽象的数据结构，**RDD是一个抽象类Abstract**  
-
-**Class和泛型Generic Type：** 
+**Class和泛型Generic Type**
 
 ```scala
 // RDD类声明
 abstract class RDD[T: ClassTag](
     @transient private var _sc: SparkContext,
     @transient private var deps: Seq[Dependency[_]]
-  ) extends Serializable with Logging {
+  ) extends Serializable with Logging
 ```
 
 **RDD将Spark的底层的细节都隐藏起来**（自动容错、位置感知、任务调度执行，失败重试等）， 让开发者可以像操作本地集合一样以函数式编程的方式操作RDD这个分布式数据集，进行各种并行计算，RDD中很多处理数据函数与列表List中相同与类似。
 
-# RDD五大特征
+## 如何让理解RDD
+
+RDD中有很多方法可以将数据向下流转，称之为转换（Transformation）
+
+RDD中有很多方法可以控制数据流转，称之为行动（Action）
+
+## RDD五大特征
 
 RDD 数据结构内部有五个特性（摘录RDD 源码）：
 

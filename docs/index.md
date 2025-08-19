@@ -264,6 +264,10 @@ import { ElButton } from 'element-plus'
 <el-button type="warning">Warning</el-button>
 <el-button type="danger">Danger</el-button>
 
+  <el-button type="primary" :icon="Search">搜索</el-button>
+  <el-button type="success" :icon="Edit">编辑</el-button>
+  <el-button type="danger" :icon="Delete">删除</el-button>
+
 ## 一些额外的内容
 
 You can get started using VitePress right away using `npx`!
