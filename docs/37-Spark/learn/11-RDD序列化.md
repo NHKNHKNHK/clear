@@ -1,6 +1,8 @@
-### RDD序列化
+# RDD序列化
 
-问题导出
+在实际开发中我们往往需要自己定义一些对于RDD的操作，那么此时需要注意的是，初始化工作是在Driver端进行的，而实际运行程序是在Executor端进行的，这就涉及到了跨进程通信，是需要序列化的。
+
+## 问题导出
 
 foreach算子演示
 
@@ -28,13 +30,12 @@ public class SparkRDD_foreach2 {
 }
 
 
-
 class User{
     int age=30;
 }
 ```
 
-改进
+### 改进
 
 ```java
 public class SparkRDD_foreach2 {
@@ -68,13 +69,13 @@ class User implements Serializable {
 }
 ```
 
-#### 1）闭包检查
+### 1）闭包检查
 
 ​	从计算的角度, **算子以外的代码都是在Driver端执行, 算子里面的代码都是在Executor端执行**。那么在scala的函数式编程中，就会导致**算子内经常会用到算子外的数据**，这样就形成了闭包的效果，如果使用的算子外的数据无法序列化，就意味着无法传值给Executor端执行，就会发生错误，所以需要在执行任务计算前，检测闭包内的对象是否可以进行序列化，这个操作我们称之为**闭包检测**。**Scala2.12版本后闭包编译方式发生了改变**
 
 
 
-#### 2）序列化方法和属性
+### 2）序列化方法和属性
 
 ​	**从计算的角度, 算子以外的代码都是在Driver端执行, 算子里面的代码都是在Executor端执行**，代码如下
 
@@ -125,14 +126,19 @@ class Search implements Serializable {  // 实现序列化接口
 ```
 
 
+### 3）Kryo序列化框架
 
-#### 3）Kryo序列化框架
+​Java的序列化能够序列化任何的类。但是**比较重**（字节多），序列化后，对象的提交也比较大。
 
-​	Java的序列化能够序列化任何的类。但是**比较重**（字节多），序列化后，对象的提交也比较大。Spark出于性能的考虑，**Spark2.0开始支持另外一种Kryo序列化机制。Kryo速度是Serializable的10倍**。当RDD在Shuffle数据的时候，简单数据类型、数组和字符串类型已经在Spark内部使用Kryo来序列化。
+Spark出于性能的考虑，**Spark2.0开始支持另外一种Kryo序列化机制。Kryo速度是Serializable的10倍**。
 
-​	Kryo 是一个快速、高效的 Java 序列化框架，适用于大规模数据的序列化和反序列化操作。**在 Spark 中，可以使用 Kryo 替代 Java 自带的序列化框架，提高性能**。
+当RDD在Shuffle数据的时候，简单数据类型、数组和字符串类型已经在Spark内部使用Kryo来序列化。
 
-**注意：即使使用Kryo序列化，也要实现Serializable接口。**
+​Kryo 是一个快速、高效的 Java 序列化框架，适用于大规模数据的序列化和反序列化操作。**在 Spark 中，可以使用 Kryo 替代 Java 自带的序列化框架，提高性能**。
+
+:::warning
+即使使用Kryo序列化，也要实现`Serializable`接口。
+:::
 
 ```java
 // 首先，需要在 SparkConf 中启用 Kryo 序列化器
@@ -194,6 +200,6 @@ class MyClass implements Serializable {
 
 因为，MyClass类没有实现toString方法
 
-```
+```txt
 [com.clear.rdd.serial.MyClass@290aeb20, com.clear.rdd.serial.MyClass@73ad4ecc, com.clear.rdd.serial.MyClass@69da0b12]
 ```

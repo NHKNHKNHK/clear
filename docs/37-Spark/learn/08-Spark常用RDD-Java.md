@@ -10,7 +10,7 @@ RDD中有很多方法可以控制数据流转，称之为行动（Action）
 
 ## 4.1 什么是算子
 
--   算子：Operator（操作）算子的本质就是**函数**
+- 算子：Operator（操作）算子的本质就是**函数**
 
 :::tip
 - RDD的方法和Scala集合对象的方法不一样
@@ -88,7 +88,9 @@ Spark使用惰性求值，就可以把一些操作优化合并到一起减少计
 
 ## 转换算子 Transformation
 
-RDD处理过程中的 **转换** 操作主要是**根据已有的RDD创建新的RDD**，每一次通过Transformation算子计算后都会返回一个一个新的RDD，供给下一个转换算子使用。
+在Spark中Transformation操作表示将一个RDD通过一系列操作变为另一个RDD的过程，这个操作可能是简单的加减操作，也可能是某个函数或某一系列函数。【这个操作也可以称之为 **转换**】
+
+值得注意的是**Transformation操作并不会触发真正的计算，只会建立RDD间的关系图**
 
 简单来说，**转换就是功能的补充和封装，将旧的RDD包装成新的RDD**
 
@@ -114,9 +116,18 @@ Java中比较淡化这个概念，虽然有HashMap
 
 **方法签名**
 
+:::code-group
+
 ```java
 public <R> JavaRDD<R> map(final Function<T, R> f)
 ```
+
+```scala
+// 通过对这个RDD的所有元素应用一个函数f返回一个新的RDD。
+def map[U: ClassTag](f: T => U): RDD[U]
+```
+
+:::
 
 **方法说明**
 
@@ -166,7 +177,19 @@ public static void main(String[] args) {
 
 ##### 2）mapPartitions
 
+:::tip
+
+每个RDD由多分区组成的，实际开发建议对每个分区数据的进行操作。尤其是创建对象时，建议使用
+
+- `map`函数使用 `mapPartitions`代替
+
+- `foreach`函数使用 `foreachPartition`代替
+
+:::
+
 **方法签名**
+
+:::code-group
 
 ```java
 public <U> JavaRDD<U> mapPartitions(final FlatMapFunction<Iterator<T>, U> f)
@@ -177,8 +200,16 @@ public <U> JavaRDD<U> mapPartitions(final FlatMapFunction<Iterator<T>, U> f)
 public <U> JavaRDD<U> mapPartitions(final FlatMapFunction<Iterator<T>, U> f, final boolean preservesPartitioning)
     
 // 第一个函数是基于第二个函数实现的，使用的是preservesPartitioning为false。而第二个函数我们可以指定preservesPartitioning，preservesPartitioning表示是否保留父RDD的partitioner分区信息；FlatMapFunction中的Iterator是这个rdd的一个分区的所有element组成的Iterator。
-
 ```
+
+```scala
+def mapPartitions[U: ClassTag](
+    f: Iterator[T] => Iterator[U],
+    preservesPartitioning: Boolean = false): RDD[U]
+```
+
+:::
+
 
 **方法说明**
 
@@ -438,10 +469,19 @@ public static void main(String[] args) {
 
 **方法签名**
 
+:::code-group
+
 ```java
-// 	首先对这个RDD的所有元素应用一个函数，然后将结果扁平化，从而返回一个新的RDD。
+// 首先对这个RDD的所有元素应用一个函数，然后将结果扁平化，从而返回一个新的RDD。
 public <U> JavaRDD<U> flatMap(final FlatMapFunction<T, U> f)
 ```
+
+```scala
+// 表示将 RDD 经由某一函数 f 后，转变为一个新的 RDD，但是与 map 不同，RDD 中的每一个元素会被映射成新的 0到多个元素（f 函数返回的是一个序列 Seq）
+def flatMap[U: ClassTag](f: T => TraversableOnce[U]): RDD[U]
+```
+
+:::
 
 **方法说明**
 
@@ -567,9 +607,18 @@ public <U> JavaPairRDD<U, Iterable<T>> groupBy(final Function<T, U> f, final int
 
 **方法签名**
 
+:::code-group
+
 ```java
 public JavaRDD<T> filter(final Function<T, Boolean> f)
 ```
+
+```scala
+// 表示将 RDD 经由某一函数 f 后，只保留 f 返回为 true 的数据，组成新的 RDD
+def filter(f: T => Boolean): RDD[T] 
+```
+
+:::
 
 **方法说明**
 
@@ -793,12 +842,11 @@ public static void main(String[] args) {
 ```
 
 
-
 ##### 13）repartition（宽） 增加分区
 
 **方法签名**
 
-```javascript
+```java
 public JavaRDD<T> repartition(final int numPartitions)
 ```
 
@@ -2174,15 +2222,25 @@ public static void main(String[] args) {
 
 结果
 
-```
+```txt
 [(apache,1), (hello,1), (spark,1), (world,1)]
 ```
 
-
-
 ##### 32）join（宽）
 
+:::tip
+当两个RDD的数据类型为二元组Key/Value对时，可以依据Key进行关联Join
+
+-   在SQL中JOIN时：
+    -   指定 关联字段 `a join b on a.xx = b.yy`
+-   在RDD中JOIN数据时，要求RDD中数据类型必须是二元组：
+    -   依据key进行关联
+:::
+
+
 **方法签名**
+
+:::code-group
 
 ```java
 public <W> JavaPairRDD<K, Tuple2<V, W>> join(final JavaPairRDD<K, W> other)
@@ -2191,6 +2249,16 @@ public <W> JavaPairRDD<K, Tuple2<V, W>> join(final JavaPairRDD<K, W> other, fina
 
 public <W> JavaPairRDD<K, Tuple2<V, W>> join(final JavaPairRDD<K, W> other, final Partitioner partitioner)
 ```
+
+```scala
+def join[W](other: RDD[(K, W)]): RDD[(K, (V, W))]
+
+def leftOuterJoin[W](other: RDD[(K, W)]): RDD[(K, (V, Option[W]))]
+
+def rightOuterJoin[W](other: RDD[(K, W)]): RDD[(K, (Option[V], W))] 
+```
+
+:::
 
 **方法说明**
 
@@ -2257,11 +2325,11 @@ public static void main(String[] args) {
     }
 ```
 
-
-
 ##### 33）leftOuterJoin
 
 **方法签名**
+
+:::code-group
 
 ```java
 public <W> JavaPairRDD<K, Tuple2<V, Optional<W>>> leftOuterJoin(final JavaPairRDD<K, W> other)
@@ -2270,6 +2338,16 @@ public <W> JavaPairRDD<K, Tuple2<V, Optional<W>>> leftOuterJoin(final JavaPairRD
 
 public <W> JavaPairRDD<K, Tuple2<V, Optional<W>>> leftOuterJoin(final JavaPairRDD<K, W> other, final Partitioner partitioner)
 ```
+
+```scala
+def join[W](other: RDD[(K, W)]): RDD[(K, (V, W))]
+
+def leftOuterJoin[W](other: RDD[(K, W)]): RDD[(K, (V, Option[W]))]
+
+def rightOuterJoin[W](other: RDD[(K, W)]): RDD[(K, (Option[V], W))] 
+```
+
+:::
 
 **方法说明**
 
@@ -2604,12 +2682,19 @@ JavaDoubleRDD distanceDoubles = distances.mapToDouble(new DoubleFunction<String>
         System.out.println(StringUtil.join(reasonableDistances.collect(),","));
 ```
 
-
 ### 行动算子 Action
 
-行动算子主要是将在数据集上运行计算后的数值返回到驱动程序，从而**触发真正的计算**（惰性执行）。
+:::tip
+行动算子是触发了整个作业的执行。因为转换算子都是懒加载，并不会立即执行
+:::
+
+行动算子主要是将在数据集上运行计算后的数值返回到驱动程序（Driver），从而**触发真正的计算**（惰性执行）。
 
 简单来说，**行动就是触发任务的调度和作业的执行**
+
+不同于Transformation操作，Action操作代表一次计算的结束，不再产生新的 RDD，将结果返回到Driver程序或者输出到外部。所以**Transformation操作只是建立计算关系，而Action 操作才是实际的执行者**。
+
+**每个Action操作都会调用SparkContext的runJob 方法向集群正式提交请求，所以每个Action操作对应一个Job。**
 
 每次调用新的行动算子，整个RDD都会重头开始计算（为了避免这种行为，有时候我们可以将中间结果进行持久化）
 
@@ -2667,28 +2752,31 @@ public class SparkRDD_reduce {
 
 #### 2）collect 采集
 
+:::warning
+所有的数据都会被拉取到Driver端，慎用！！！ 不能用于大规模数据集上
+:::
+
 **方法签名**
+
+:::code-group
 
 ```java
 public List<T> collect()
 ```
 
-**方法说明**
-
--   在驱动程序（Driver）中，以集合 List 的形式返回数据集的所有元素
--   `collect`方法会将不同分区的数据**按照分区顺序采集到Driver端内存中**，形成数组
--   **结果会被收集到 Driver 端的内存中**
--   使用`collect`算子，必须实现序列化，因为涉及到了executor端到Driver端
-
-Scala函数签名：
-
 ```scala
 def collect(): Array[T] = withScope
 ```
 
-:::warning
-`collect`算子不能用于大规模数据集上
 :::
+
+
+**方法说明**
+
+-   在驱动程序（Driver）中，以集合`List`的形式返回数据集的所有元素
+-   `collect`方法会将不同分区的数据**按照分区顺序采集到Driver端内存中**，形成数组
+-   **结果会被收集到 Driver 端的内存中**
+-   使用`collect`算子，必须实现序列化，因为涉及到了executor端到Driver端
 
 
 演示：
@@ -2735,7 +2823,7 @@ public static void main(String[] args) {
 
 结果
 
-```
+```txt
 {a=1 2, b=3 4, c=5 6}
 ```
 
@@ -2743,19 +2831,22 @@ public static void main(String[] args) {
 
 **方法签名**
 
+:::code-group
+
 ```java
 public long count()
 ```
+
+```scala
+def count(): Long
+```
+
+:::
 
 **方法说明**
 
 -   返回RDD中元素的个数，会在结果计算完后回收到 Driver 端
 
-Scala函数签名：
-
-```scala
-def count(): Long
-```
 
 演示：
 
@@ -2831,19 +2922,23 @@ public static void main(String[] args) {
 
 **方法签名**
 
+:::code-group
+
 ```java
 public List<T> take(final int num)
 ```
+
+```scala
+def take(num: Int): Array[T]
+```
+
+:::
 
 **方法说明**
 
 -   返回一个由RDD的前n个元素组成的数组
 
-Scala函数签名：
 
-```scala
-def take(num: Int): Array[T]
-```
 
 演示：
 
@@ -3056,21 +3151,27 @@ public Map<K, Long> countByKey()
 
 -   原理是：先是进行map操作转化为(key,1)键值对，再进行`reduce`聚合操作，最后利用`collect`函数将数据加载到driver，并转化为map类型。
 
-    ```
-    Scala源码体现
-    要处理非常大的结果,请考虑使用 rdd.mapValue(_ => 1L).reduceByKey(_ + _),返回一个 RDD[T,Long]
-    代替一个map
-    ```
-
--   `countByKey`操作**将数据全部加载到driver端的内存，如果数据量比较大，可能出现OOM**。
-
-该算子的Scala源码
+**Scala源码**
 
 ```scala
 def countByKey(): Map[K,Long] = self.withScope{
 	self.mapValues(_ => 1L).reduceBykey(_ + _).collect().toMap
 }
 ```
+
+```txt
+Scala源码体现
+要处理非常大的结果,请考虑使用 rdd.mapValue(_ => 1L).reduceByKey(_ + _),返回一个 RDD[T,Long]
+代替一个map
+```
+
+:::warning
+
+`countByKey`操作**将数据全部加载到driver端的内存，如果数据量比较大，可能出现OOM**。
+
+:::
+
+演示
 
 ```java
 public static void main(String[] args) {
@@ -3100,7 +3201,7 @@ public static void main(String[] args) {
 
 结果
 
-```
+```txt
 当前的key为a ，当前的value为 2
 当前的key为b ，当前的value为 3
 当前的key为c ，当前的value为 1
@@ -3165,6 +3266,8 @@ public static void main(String[] args) {
 
 **saveAsObjectFile**
 
+:::code-group
+
 ```java
 // saveAsTextFile  保存成Text文件
 public void saveAsTextFile(final String path)
@@ -3176,10 +3279,18 @@ public void saveAsTextFile(final String path, final Class<? extends CompressionC
 public void saveAsObjectFile(final String path) 
 // saveAsSequenceFile  保存成SequenceFile文件  此方法要求数据格式必须为 K-V 类型
     
-
-
-// 注意：在Java中保存 SequenceFile 文件比较复杂，因为JavaPairRDD上没有提供saveAsSequenceFile算子。所以我们要使用Spark保存自定义Hadoop格式的功能来实现。     
 ```
+
+```scala
+// 数据集内部的元素会调用其 toString 方法，转换为字符串形式，然后根据传入的路径保存成文本文件，既可以是本地文件系统，也可以是HDFS 等
+def saveAsTextFile(path: String): Unit
+```
+
+:::
+
+:::warning
+在Java中保存 SequenceFile 文件比较复杂，因为JavaPairRDD上没有提供saveAsSequenceFile算子。所以我们要使用Spark保存自定义Hadoop格式的功能来实现。
+:::
 
 **方法说明**
 
@@ -3187,6 +3298,8 @@ public void saveAsObjectFile(final String path)
 -   从源码中可以看到，**`saveAsTextFile`函数是依赖于`saveAsHadoopFile`函数**，由于`saveAsHadoopFile`函数接受PairRDD，所以在`saveAsTextFile`函数中利用`rddToPairRDDFunctions`函数转化为(NullWritable,Text)类型的RDD，然后通过`saveAsHadoopFile`函数实现相应的写操作。
 -   `saveAsObjectFile`用于将RDD中的元素序列化成对象，存储到文件中。
 -   从源码中可以看出，`saveAsObjectFile`函数是依赖于`saveAsSequenceFile`函数实现的，将RDD转化为类型为
+
+演示
 
 ```java
 public static void main(String[] args) {
@@ -3200,14 +3313,23 @@ public static void main(String[] args) {
 ```
 
 
-
 #### 14）foreach
 
 **方法签名**
 
+:::code-group
+
 ```java
 public void foreach(final VoidFunction<T> f)
 ```
+
+```scala
+// 将函数 f 应用于此 RDD 的所有元素
+def foreach(f: T => Unit): Unit
+```
+
+:::
+
 
 **方法说明**
 
@@ -3252,11 +3374,29 @@ public static void main(String[] args) {
 
 #### 15）foreachPartition
 
+:::tip
+
+每个RDD由多分区组成的，实际开发建议对每个分区数据的进行操作。尤其是创建对象时，建议使用
+
+- `map`函数使用 `mapPartitions`代替
+
+- `foreach`函数使用 `foreachPartition`代替
+
+:::
+
 **方法签名**
+
+:::code-group
 
 ```java
 public void foreachPartition(final VoidFunction<Iterator<T>> f)
 ```
+
+```scala
+def foreachPartition(f: Iterator[T] => Unit): Unit
+```
+
+:::
 
 **方法说明**
 

@@ -24,78 +24,6 @@
     -   RDD中封装的是计算逻辑，而不是真正的数据
 -   第二点：**RDD中的所有转换都是惰性求值/延迟执行的**，也就是说并不会直接计算。只有当发生一个要求返回结果给Driver的Action动作时，这些转换才会真正运行。之所以使用惰性求值/延迟执行，是因为这样可以在Action时对RDD操作形成DAG有向无环图进行Stage的划分和并行优化，这种设计让Spark更加有效率地运行
 
-### Transformation函数
-
-在Spark中Transformation操作表示将一个RDD通过一系列操作变为另一个RDD的过程，这个操作可能是简单的加减操作，也可能是某个函数或某一系列函数。值得注意的是**Transformation操作并不会触发真正的计算，只会建立RDD间的关系图**
-
-### Action函数
-
-不同于Transformation操作，Action操作代表一次计算的结束，不再产生新的 RDD，将结果返回到Driver程序或者输出到外部。所以**Transformation操作只是建立计算关系，而Action 操作才是实际的执行者**。
-
-**每个Action操作都会调用SparkContext的runJob 方法向集群正式提交请求，所以每个Action操作对应一个Job。**
-
-## 2 常用RDD
-
-### **2.1 基本函数** 
-
-RDD中 map、filter、flatMap及 foreach 等函数为最基本函数，都是都RDD中每个元素进行操作，将元素传递到函数中进行转换。
-
-#### map
-
-```scala
-// 通过对这个RDD的所有元素应用一个函数f返回一个新的RDD。
-def map[U: ClassTag](f: T => U): RDD[U]
-```
-
-#### flatMap
-
-```scala
-// 表示将 RDD 经由某一函数 f 后，转变为一个新的 RDD，但是与 map 不同，RDD 中的每一个元素会被映射成新的 0到多个元素（f 函数返回的是一个序列 Seq）
-def flatMap[U: ClassTag](f: T => TraversableOnce[U]): RDD[U]
-```
-
-#### filter
-
-```scala
-// 表示将 RDD 经由某一函数 f 后，只保留 f 返回为 true 的数据，组成新的 RDD
-def filter(f: T => Boolean): RDD[T] 
-```
-
-#### foreach
-
-```scala
-// 将函数 f 应用于此 RDD 的所有元
-def foreach(f: T => Unit): Unit
-```
-
-#### saveAsTextFile
-
-```scala
-// 数据集内部的元素会调用其 toString 方法，转换为字符串形式，然后根据传入的路径保存成文本文件，既可以是本地文件系统，也可以是HDFS 等
-def saveAsTextFile(path: String): Unit
-```
-
-### 2.2 分区操作函数
-
-每个RDD由多分区组成的，实际开发建议对每个分区数据的进行操作。尤其是创建对象时，建议使用
-
-- `map`函数使用 `mapPartitions`代替
-
-- `foreach`函数使用 `foreachPartition`代替
-
-#### mapPartitions
-
-```scala
-def mapPartitions[U: ClassTag](
-    f: Iterator[T] => Iterator[U],
-    preservesPartitioning: Boolean = false): RDD[U]
-```
-
-#### foreachPartition
-
-```scala
-def foreachPartition(f: Iterator[T] => Unit): Unit
-```
 
 ### 2.3 重分区函数
 
@@ -275,7 +203,7 @@ def aggregateByKey[U: ClassTag](zeroValue: U, partitioner: Partitioner)
 ```scala
 def join[W](other: RDD[(K, W)]): RDD[(K, (V, W))]
 
-def leftOuterJoin[W](other: RDD[(K, W)]): RDD[(K, (V, Option[W]))]	
+def leftOuterJoin[W](other: RDD[(K, W)]): RDD[(K, (V, Option[W]))]
 
 def rightOuterJoin[W](other: RDD[(K, W)]): RDD[(K, (Option[V], W))] 
 ```
