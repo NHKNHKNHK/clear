@@ -1679,15 +1679,16 @@ export default {
         { text: 'Spark简介', link: '/37-Spark/learn/00-Spark简介' },
         { text: 'Spark环境部署', link: '/37-Spark/learn/01-Spark环境部署' },
         { text: '打包代码与依赖', link: '/37-Spark/learn/02-打包代码与依赖' },
+        { text: 'Spark 程序编写流程', link: '/37-Spark/learn/Spark 程序编写流程' },
+        
         { text: '第一个Spark程序WordCount', link: '/37-Spark/learn/03-第一个Spark程序WordCount' },
         { text: '监控页面及圆周率PI运行', link: '/37-Spark/learn/04-监控页面及圆周率PI运行' },
         { text: 'RDD五大特性', link: '/37-Spark/learn/05-RDD五大特性' },
         { text: 'RDD的创建', link: '/37-Spark/learn/06-RDD的创建' },
+        
         { text: '向Spark传递函数', link: '/37-Spark/learn/07-向Spark传递函数' },
         { text: 'Spark常用RDD-Java', link: '/37-Spark/learn/08-Spark常用RDD-Java' },
-        { text: 'Spark常用RDD-Java', link: '/37-Spark/learn/08-Spark常用RDD-Java2' },
         { text: 'Spark常用RDD-Scala', link: '/37-Spark/learn/08-Spark常用RDD-Scala' },
-        { text: 'Spark常用RDD-Java-Scala', link: '/37-Spark/learn/Spark常用RDD-Java-Scala' },
         { text: '在不同的RDD类型间转换', link: '/37-Spark/learn/09-在不同的RDD类型间转换' },
         { text: 'SparkRDD比较', link: '/37-Spark/learn/10-SparkRDD比较' },
         { text: 'RDD序列化', link: '/37-Spark/learn/11-RDD序列化' },
@@ -1712,6 +1713,7 @@ export default {
         { text: 'DStream基础输入源', link: '/37-Spark/learn/34-DStream基础输入源' },
         { text: 'SparkStreaming集成Kafka分区', link: '/37-Spark/learn/35-SparkStreaming集成Kafka' },
         { text: 'Anaconda On Linux', link: '/37-Spark/learn/Anaconda On Linux' },
+        { text: 'Anaconda与PySpark安装', link: '/37-Spark/learn/Anaconda与PySpark安装' },
         { text: '开发常见问题', link: '/37-Spark/learn/开发常见问题' },
       ]
     },

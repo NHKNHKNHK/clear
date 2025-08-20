@@ -193,6 +193,7 @@ export default defineConfig({
     ssr: {
       noExternal: ['element-plus']
     },
+
     // build: {
     //   rollupOptions: {
     //     output: {
