@@ -1628,6 +1628,8 @@ public static void main(String[] args) {
 
 **方法签名**
 
+:::code-group
+
 ```java
 public <U> JavaPairRDD<K, U> mapValues(final Function<V, U> f)
 ```
@@ -1635,6 +1637,8 @@ public <U> JavaPairRDD<K, U> mapValues(final Function<V, U> f)
 ```scala
 def mapValues[U](f: JFunction[V, U]): JavaPairRDD[K, U]
 ```
+
+:::
 
 **方法说明**
 
