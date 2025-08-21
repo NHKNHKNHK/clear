@@ -1,46 +1,73 @@
 # Scala集合
 
+## 回顾Java集合体系
+
+在Java中，集合有三大类：`List`、`Set`、`Map`
+
+`List`、`Set`有一个公共的父接口`Collection`，`Collection`在英文中是集合的意思，从直觉才讲它应该是所有集合的根接口，但是实际上并不是
+
+`Map`比较特殊，它里面存储的是键值对，它不属于`Collection`体系
+
+`Map`可以调用方法将键转换为`Collection`集合，值转换为`Collection`集合
+
+:::warning
+
+真实因为Java中的集合体系不是很合理，所以Scala重新设计了集合体系**
+
+:::
+
 ## 1 集合简介
 
-在Java中，集合有三大类：List、Set、Map
 
-1）Scala的集合有三大类：**序列Seq、集Set、映射Map**，所有的集合都扩展自 Iterable特质。
+Scala的集合有三大类：**序列`Seq`、集`Set`、映射`Map`**，所有的集合都扩展自`Iterable`特质。
 
-2）对于几乎所有的集合类，Scala都同时提供了可变和不可变的版本
+对于几乎所有的集合类，Scala都同时提供了**可变**和**不可变**的版本
 
--   不可变集合：scala.collection.immutable
--   可变集合：scala.collection.mutable
+- 不可变集合：`scala.collection.immutable`
+- 可变集合：`scala.collection.mutable`
 
-3）Scala 不可变集合，就是指该集合对象本身不可改变，每次修改就会返回一个新对象，而不会对原对象进行修改。类似于java的String对象
+:::tip
+集合类的可变与不可变不是通过类型体系中继承关系实现的，而是通过放在不同的包下区分的
 
-4）可变集合，就是这个集合可以直接对原对象进行修改，而不回返回新对象。类似于java中的StringBuilder
+因此有些集合，可变与不可变名称是一样的，但是所在的包不同
+:::
 
-建议：
+Scala不可变集合，就是指该集合对象本身不可改变，每次修改就会返回一个新对象，而不会对原对象进行修改。类似于java的String对象
 
-​	在操作集合的时候，不可变用符号（符号在Scala底层也是方法调用），可变用方法
+可变集合，就是这个集合可以直接对原对象进行修改，而不回返回新对象。类似于java中的StringBuilder
+
+:::warning 建议
+在操作集合的时候，不可变用符号（符号在Scala底层也是方法调用），可变用方法
+:::
 
 ### 不可变集合继承图
 
 ![1690341110196](imges/不可变集合继承图.png)
 
-1）Set、Map是Java中也有的集合
+- `Set`、`Map`是Java中也有的集合
 
-2）Seq是Java没有的，我们发现List归属到Seq了，因此这里的List就和Java不是同一个概念了
+- `Seq`是Java没有的，我们发现`List`归属到`Seq`了，因此这里的List就和Java不是同一个概念了
 
-3）我们前面的for循环有一个 1 to 3，就是IndexedSeq下的Vector
+- 我们前面的for循环有一个 1 to 3，就是`IndexedSeq`下的`Range`
 
-4）String也是属于IndexeSeq
+- `String`、`Array`也是属于`IndexedSeq`
 
-5）我们发现经典的数据结构比如Queue和Stack被归属到LinerSeq
+:::tip
+在继承图中，可以发现它们与`IndexedSeq`是通过虚线指向的
 
-6）大家注意Scala中的Map体系有一个SortedMap，说明Scala的Map可以支持排序
+因为`String`、`Array`并不直接继承自`IndexedSeq`，而是通过隐式转换的方式实现的（隐式转换规则在`Predef.scala`中）
 
-7）IndexSeq和LinearSeq的区别：
+:::
 
-（1）IndexSeq是通过索引来查找和定位，因此速度快，比如String就是一个索引集合，通过索引即可定位
+- 我们发现经典的数据结构比如`Queue`和`Stack`被归属到`LinerSeq`
 
-（2）LineaSeq是线型的，即有头尾的概念，这种数据结构一般是通过遍历来查找
+- 注意Scala中的`Map`体系有一个`SortedMap`，说明Scala的`Map`可以支持排序
 
+**`IndexedSeq`和`LinearSeq`的区别**
+
+（1）`IndexSeq`是通过索引来查找和定位，因此速度快，比如String就是一个索引集合，通过索引即可定位
+
+（2）`LinearSeq`是线型的，即有头尾的概念，这种数据结构一般是通过遍历来查找
 
 ### 可变集合继承图
 
@@ -50,18 +77,33 @@
 
 ### 2.1 不可变数组
 
-不可变指的是引用地址、数组长度不可改变，但是我们可以修改指定索引位置的元素
+不可变指的是引用地址、数组长度不可改变，但是我们**可以修改**指定索引位置的**元素**
 
-1）基本语法
+基本语法
+
+:::code-group
 
 ```scala
 // 数组的定义
 val arr01 = new Array[Int](10)
-
-// new 是关键字
-// [Int] 表示该数组只能存放Int类型数据，想要存放任意类型，可以指定为 Any
-// (10)，表示数组的大小，确定后就不可以改变
 ```
+
+```scala [伴生对象创建集合.scala]
+// 伴生对象类似于工厂方法的感觉
+// 因为伴生对象可以访问到Array类中的所有私有方法，所以可以创建数组方法
+val arr01 = Array.apply(12, 13, 58, 99)
+
+// 简写为
+val arr01 = Array(12, 13, 58, 99)
+```
+
+:::
+
+说明
+
+- `new` 是关键字
+- `[Int]` 表示该数组只能存放Int类型数据，想要存放任意类型，可以指定为`Any`
+- (10)，表示数组的大小，确定后就不可以改变【不可变集合的体现】
 
 演示：
 
@@ -76,7 +118,7 @@ object ImmutableArray {
         // 2.访问元素
         println(arr2(0))
         println(arr2(1))
-        //    println(arr2(5))  // ArrayIndexOutOfBoundsException
+        // println(arr2(5))  // ArrayIndexOutOfBoundsException
 
         // 3.数组赋值
         // 3.1 修改某个元素的值
@@ -95,10 +137,10 @@ object ImmutableArray {
         for (i <- 0 until arr2.length) { // until表不包含边界
             println(arr2(i))
         }
-        for (i <- arr2.indices) {
+        for (i <- arr2.indices) { // indices的返回值就是 0 until arr2.length
             println(arr2(i))
         }
-        // 4.2 增强for
+        // 4.2 增强for Java中的增加for就是借鉴Scala的
         for (e <- arr2) {
             println(e)
         }
@@ -157,6 +199,19 @@ object ImmutableArray {
     }
 }
 ```
+
+:::tip
+`arr2(0)`、`arr2(1)`等的底层实际上是调用了`Array`类的`apply()`方法，注意不是伴生对象里的`apply()`方法
+
+编译器在编译时，会将`arr2(0)`转换为`arr2.apply(0)`【我们无法直接调用，由编译器完成】
+
+看`apply()`的方法注释也可以看到
+
+
+`arr2(1) = 99`的底层实际上是调用了`Array`类的`update()`方法，与上面同理
+
+:::
+
 
 ### 2.2 可变数组
 
