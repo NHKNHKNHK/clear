@@ -34,6 +34,8 @@ MyBatis 提供了`#{}`占位符，用于安全地传递参数。与之相对的�
 
 MyBatis 提供了 SQL 构建工具（如SqlBuilder），可以帮助构建安全的 SQL 查询，现实很少用，本质也是`#`占位符
 
+{% raw %}
+
 ```java
 import org.apache.ibatis.jdbc.SQL;
 
@@ -46,4 +48,4 @@ public String buildSelectUserById(final int id) {
 }
 ```
 
-
+{% endraw %}
