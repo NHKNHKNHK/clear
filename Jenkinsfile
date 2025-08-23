@@ -99,17 +99,35 @@ pipeline {
                 script {
                     echo "将构建产物复制到宿主机..."
                     // 在宿主机执行docker cp命令
-                    sh """
-                        # 确保宿主机目标目录存在
-                        # mkdir -p $HOST_TARGET_DIR
+                    // sh """
+                    //     # 确保宿主机目标目录存在
+                    //     # mkdir -p $HOST_TARGET_DIR
 
-                        # 执行docker cp命令将容器内文件复制到宿主机
-                        docker cp $env.JENKINS_CONTAINER:$env.BUILD_OUTPUT_DIR/. $HOST_TARGET_DIR
+                    //     # 执行docker cp命令将容器内文件复制到宿主机
+                    //     docker cp $env.JENKINS_CONTAINER:$env.BUILD_OUTPUT_DIR/. $HOST_TARGET_DIR
 
-                        # 设置正确的权限（根据需要调整）
-                        # chmod -R 755 $HOST_TARGET_DIR
-                        # chown -R www:www $HOST_TARGET_DIR
-                    """
+                    //     # 设置正确的权限（根据需要调整）
+                    //     # chmod -R 755 $HOST_TARGET_DIR
+                    //     # chown -R www:www $HOST_TARGET_DIR
+                    // """
+                    sh '''
+                        # 关键：用 docker run 启动临时容器，在宿主机环境执行复制
+                        docker run --rm \
+                          -v /var/run/docker.sock:/var/run/docker.sock \
+                          alpine sh -c " \
+                            # 1. 从 Jenkins 容器复制产物到宿主机临时目录
+                            docker cp $JENKINS_CONTAINER:$BUILD_OUTPUT_DIR/. /tmp/clear-blog && \
+                            # 2. 将临时目录内容移动到最终目标（宿主机真实路径）
+                            mv /tmp/clear-blog/* $HOST_TARGET_DIR && \
+                            # 3. 清理临时目录
+                            rm -rf /tmp/clear-blog \
+                          "
+                        
+                        # （可选）设置权限（确保宿主机执行）
+                        docker run --rm \
+                          -v /var/run/docker.sock:/var/run/docker.sock \
+                          alpine sh -c "chown -R www:www $HOST_TARGET_DIR"
+                    '''
                 }
             }
         }
