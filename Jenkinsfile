@@ -30,8 +30,8 @@ pipeline {
                         [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
                         
                         # 安装并使用Node.js
-                        nvm install ${NODE_VERSION} || true
-                        nvm use ${NODE_VERSION}
+                        nvm install $NODE_VERSION || true
+                        nvm use $NODE_VERSION
                         
                         # 全局安装pnpm
                         npm install -g pnpm
@@ -82,8 +82,8 @@ pipeline {
                         pnpm run docs:build
                         
                         # 验证构建产物
-                        echo "构建产物路径: ${env.BUILD_OUTPUT_DIR}"
-                        ls -la "${env.BUILD_OUTPUT_DIR}"
+                        echo "构建产物路径: $BUILD_OUTPUT_DIR"
+                        ls -la "$BUILD_OUTPUT_DIR"
                     '''
                 }
             }
@@ -97,7 +97,6 @@ pipeline {
         }
         failure {
             echo '构建失败！'
-
         }
     }
 }

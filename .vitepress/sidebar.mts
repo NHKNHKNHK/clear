@@ -1771,7 +1771,7 @@ export default {
     {
       text: '基础',
       items: [
-        { text: 'tuple._1与tuple._1()的区别', link: '/39-Scala/learn/tuple._1与tuple._1()的区别' },
+        { text: 'tuple._1与tuple._1()的区别', link: '/39-Scala/tuple._1与tuple._1()的区别' },
       ]
     }
   ],
