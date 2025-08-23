@@ -10,6 +10,8 @@ import mediumZoom from "medium-zoom" // 图片放大插件
 import { inBrowser } from "vitepress";
 import { NProgress } from "nprogress-v2/dist/index.js"; // 进度条组件
 import ArticleMetadata from "./components/ArticleMetadata.vue"
+import Confetti from './components/Confetti.vue'
+import HomeUnderline  from './components/HomeUnderline.vue'
 
 import './styles/style.css'
 import 'virtual:group-icons.css' //代码组样式
@@ -44,7 +46,8 @@ export default {
     install(app)
     // 注册自定义全局组件
     app.component('MyGlobalComponent' /* ... */)
-    // app.component('Confetti', Confetti)
+    app.component('Confetti', Confetti)
+    app.component('HomeUnderline', HomeUnderline)
 
     app.component('ArticleMetadata', ArticleMetadata)
 
