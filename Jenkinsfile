@@ -89,6 +89,26 @@ pipeline {
             }
         }
 
+        stage('Copy to Host') {
+            steps {
+                script {
+                    echo "将构建产物复制到宿主机..."
+                    // 在宿主机执行docker cp命令
+                    sh """
+                        # 确保宿主机目标目录存在
+                        mkdir -p $env.HOST_TARGET_DIR
+                        
+                        # 执行docker cp命令将容器内文件复制到宿主机
+                        docker cp $env.JENKINS_CONTAINER:$env.BUILD_OUTPUT_DIR/. $env.HOST_TARGET_DIR
+
+                        # 设置正确的权限（根据需要调整）
+                        chmod -R 755 $env.HOST_TARGET_DIR
+                        chown -R www:www $env.HOST_TARGET_DIR
+                    """
+                }
+            }
+        }
+
     }
     
     post {
