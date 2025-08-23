@@ -184,21 +184,6 @@ features:
       height: 40
 
 ---
-<script  setup>
-// 在使用的地方显式的导入，使它们可以正确地进行代码拆分，并且仅在显示相关页面时才加载
-import Confetti from '../.vitepress/theme/components/Confetti.vue'
-import HomeUnderline  from '../.vitepress/theme/components/HomeUnderline.vue'
-import {
-  Check,
-  Delete,
-  Edit,
-  Message,
-  Search,
-  Star,
-} from '@element-plus/icons-vue'
-import { ElButton } from 'element-plus'
-
-</script>
 
 <style>
 /* 首页hero中文字无法选中 */
@@ -254,18 +239,6 @@ import { ElButton } from 'element-plus'
 <!-- 首页文字下划线效果 -->
 <HomeUnderline/>
 
-## 整合ElementPlus
-
-<el-button>Default</el-button>
-<el-button type="primary">Primary</el-button>
-<el-button type="success">Success</el-button>
-<el-button type="info">Info</el-button>
-<el-button type="warning">Warning</el-button>
-<el-button type="danger">Danger</el-button>
-
-  <el-button type="primary" :icon="Search">搜索</el-button>
-  <el-button type="success" :icon="Edit">编辑</el-button>
-  <el-button type="danger" :icon="Delete">删除</el-button>
 
 ## 一些额外的内容
 

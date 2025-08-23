@@ -4,9 +4,6 @@ import sidebar from './sidebar.mjs'
 import UnoCSS from 'unocss/vite'
 // 代码组icon
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
-import AutoImport from "unplugin-auto-import/vite";
-import {ElementPlusResolver} from "unplugin-vue-components/resolvers";
-import Components from "unplugin-vue-components/vite";
 
 
 const base = process.env.GITHUB_ACTIONS === 'true' ? '/clear/' : '/'
@@ -186,28 +183,10 @@ export default defineConfig({
           vue: "vscode-icons:file-type-vue",
         },
       }),
-      AutoImport({
-        resolvers: [ElementPlusResolver()],
-      }),
-      Components({
-        resolvers: [ElementPlusResolver()],
-      }),
     ],
     ssr: {
-      noExternal: ['element-plus']
+    
     },
-
-    // build: {
-    //   rollupOptions: {
-    //     output: {
-    //       manualChunks: (id) => {
-    //         if (id.includes('element-plus')) return 'element'
-    //         if (id.includes('node_modules')) return 'vendor'
-    //       }
-    //     }
-    //   },
-    //   chunkSizeWarningLimit: 1500 // 提高警告阈值
-    // }
 
   },
 

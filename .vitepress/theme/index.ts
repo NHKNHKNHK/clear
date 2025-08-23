@@ -18,9 +18,6 @@ import 'virtual:group-icons.css' //代码组样式
 import "nprogress-v2/dist/index.css"; // 进度条样式
 import './styles/index.scss'
 
-import { install } from 'element-plus'
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-
 // 彩虹背景动画样式
 let homePageStyle: HTMLStyleElement | undefined
 
@@ -43,18 +40,12 @@ export default {
    *    siteData: Ref<SiteData> // 站点级元数据
    */
   enhanceApp({ app, router, siteData }) {
-    install(app)
     // 注册自定义全局组件
     app.component('MyGlobalComponent' /* ... */)
     app.component('Confetti', Confetti)
     app.component('HomeUnderline', HomeUnderline)
 
     app.component('ArticleMetadata', ArticleMetadata)
-
-    // 注册所有图标（或按需注册）
-    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-      app.component(key, component)
-    }
 
     // 彩虹背景动画样式
     if (typeof window !== 'undefined') {
