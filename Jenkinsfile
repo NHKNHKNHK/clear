@@ -113,20 +113,20 @@ pipeline {
                     sh '''
                         # 关键：用 docker run 启动临时容器，在宿主机环境执行复制
                         docker run --rm \
-                          -v /var/run/docker.sock:/var/run/docker.sock \
-                          alpine sh -c " \
-                            # 1. 从 Jenkins 容器复制产物到宿主机临时目录
-                            docker cp $JENKINS_CONTAINER:$BUILD_OUTPUT_DIR/. /tmp/clear-blog && \
-                            # 2. 将临时目录内容移动到最终目标（宿主机真实路径）
-                            mv /tmp/clear-blog/* $HOST_TARGET_DIR && \
-                            # 3. 清理临时目录
-                            rm -rf /tmp/clear-blog \
-                          "
-                        
-                        # （可选）设置权限（确保宿主机执行）
-                        docker run --rm \
-                          -v /var/run/docker.sock:/var/run/docker.sock \
-                          alpine sh -c "chown -R www:www $HOST_TARGET_DIR"
+                  -v /var/run/docker.sock:/var/run/docker.sock \
+                  docker sh -c " \
+                    # 1. 从 Jenkins 容器复制产物到宿主机临时目录
+                    docker cp $JENKINS_CONTAINER:$BUILD_OUTPUT_DIR/. /tmp/clear-blog && \
+                    # 2. 将临时目录内容移动到最终目标（宿主机真实路径）
+                    mv /tmp/clear-blog/* $HOST_TARGET_DIR && \
+                    # 3. 清理临时目录
+                    rm -rf /tmp/clear-blog \
+                  "
+                
+                # （可选）设置权限（确保宿主机执行）
+                docker run --rm \
+                  -v /var/run/docker.sock:/var/run/docker.sock \
+                  docker sh -c "chown -R www:www $HOST_TARGET_DIR"
                     '''
                 }
             }
