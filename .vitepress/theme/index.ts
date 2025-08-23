@@ -3,15 +3,14 @@ import { h } from 'vue'
 import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import MyLayout from './MyLayout.vue'
-// import Confetti from './components/Confetti.vue'
+import Confetti from './components/Confetti.vue'
+import HomeUnderline  from './components/HomeUnderline.vue'
+import ArticleMetadata from "./components/ArticleMetadata.vue"
 import { onMounted, watch, nextTick } from "vue"
 import { useRoute } from "vitepress"
 import mediumZoom from "medium-zoom" // 图片放大插件
 import { inBrowser } from "vitepress";
 import { NProgress } from "nprogress-v2/dist/index.js"; // 进度条组件
-import ArticleMetadata from "./components/ArticleMetadata.vue"
-import Confetti from './components/Confetti.vue'
-import HomeUnderline  from './components/HomeUnderline.vue'
 
 import './styles/style.css'
 import 'virtual:group-icons.css' //代码组样式
