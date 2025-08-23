@@ -8,16 +8,19 @@ import AutoImport from "unplugin-auto-import/vite";
 import {ElementPlusResolver} from "unplugin-vue-components/resolvers";
 import Components from "unplugin-vue-components/vite";
 
+
+const base = process.env.GITHUB_ACTIONS === 'true' ? '/clear/' : '/'
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  base: '/clear/', // 此处与github仓库名匹配
+  base: base,
   // =====================
   // 站点级选项
   // =====================
   lang: 'zh-CN',
   title: "Clear吗？有点意思",
   description: "包含前后端的技术栈",
-  head: [['link', { rel: 'icon', href: '/favicon.ico' }]], // 页签图标
+  head: [['link', { rel: 'icon', href: `${base}/favicon.ico` }]], // 页签图标
   // lastUpdated: true, // 显示最后更新时间，会根据 git 提交记录自动生成
 
   themeConfig: {
