@@ -1700,7 +1700,6 @@ export default {
         { text: 'Spark提交应用', link: '/37-Spark/learn/15-spark提交应用' },
         { text: 'RDD并行度与分区', link: '/37-Spark/learn/16-分区数与并行度' },
         { text: 'RDD的并行度调优', link: '/37-Spark/learn/17-RDD的并行度调优' },
-        { text: 'tuple._1与tuplt._1()的区别', link: '/37-Spark/learn/18-tuple._1与tuplt._1()的区别' },
         { text: '数据的读取与保存', link: '/37-Spark/learn/19-数据的读取与保存' },
         { text: '基于Spark SQL的WordCount', link: '/37-Spark/learn/26-基于Spark SQL的WordCount' },
         { text: 'Dataset 与 DataFrame', link: '/37-Spark/learn/27-Dataset 与 DataFrame' },
@@ -1767,6 +1766,12 @@ export default {
         { text: '隐式转换', link: '/39-Scala/10-隐式转换' },
         { text: '泛型', link: '/39-Scala/11-泛型' },
         { text: '正则表达式', link: '/39-Scala/12-正则表达式' },
+      ]
+    },
+    {
+      text: '基础',
+      items: [
+        { text: 'tuple._1与tuple._1()的区别', link: '/39-Scala/learn/tuple._1与tuple._1()的区别' },
       ]
     }
   ],
