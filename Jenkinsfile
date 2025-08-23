@@ -12,6 +12,7 @@ pipeline {
         // BUILD_OUTPUT_DIR = "$env.WORKSPACE/.vitepress/dist"
         BUILD_OUTPUT_DIR = "/var/jenkins_home/workspace/clear-blog-job2/.vitepress/dist"
 
+        HOST_TARGET_DIR = "/www/wwwroot/clear-blog"
         // Jenkins容器名称或ID（需要替换为实际值）
         JENKINS_CONTAINER = "7ff384ec65af"
     }
@@ -100,14 +101,14 @@ pipeline {
                     // 在宿主机执行docker cp命令
                     sh """
                         # 确保宿主机目标目录存在
-                        # mkdir -p $env.HOST_TARGET_DIR
+                        # mkdir -p $HOST_TARGET_DIR
 
                         # 执行docker cp命令将容器内文件复制到宿主机
-                        docker cp $env.JENKINS_CONTAINER:$env.BUILD_OUTPUT_DIR/. $env.HOST_TARGET_DIR
+                        docker cp $env.JENKINS_CONTAINER:$env.BUILD_OUTPUT_DIR/. $HOST_TARGET_DIR
 
                         # 设置正确的权限（根据需要调整）
-                        # chmod -R 755 $env.HOST_TARGET_DIR
-                        # chown -R www:www $env.HOST_TARGET_DIR
+                        # chmod -R 755 $HOST_TARGET_DIR
+                        # chown -R www:www $HOST_TARGET_DIR
                     """
                 }
             }
