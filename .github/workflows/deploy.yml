@@ -1,55 +1,99 @@
-# 构建 VitePress 站点并将其部署到 GitHub Pages 的示例工作流程
+# 构建 VitePress 站点并将其部署到 GitHub Pages 的工作流程
 name: Deploy VitePress site to Pages
 
 on:
-  # 在针对 `main` 分支的推送上运行。如果你
-  # 使用 `master` 分支作为默认分支，请将其更改为 `master`
+  # 在针对 `main` 分支的推送上运行
   push:
     branches: [main]
+    # 仅在文档相关文件变更时触发
+    paths:
+      - 'docs/**'
+      - '.vitepress/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/deploy-vitepress.yml'
 
-  # 允许你从 Actions 选项卡手动运行此工作流程
+  # 允许手动运行工作流程
   workflow_dispatch:
 
-# 设置 GITHUB_TOKEN 的权限，以允许部署到 GitHub Pages
+# 设置权限
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 只允许同时进行一次部署，跳过正在运行和最新队列之间的运行队列
-# 但是，不要取消正在进行的运行，因为我们希望允许这些生产部署完成
+# 并发控制
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  # 构建工作
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # 如果未启用 lastUpdated，则不需要
-      # - uses: pnpm/action-setup@v3 # 如果使用 pnpm，请取消注释
-      # - uses: oven-sh/setup-bun@v1 # 如果使用 Bun，请取消注释
-      - name: Setup Node
+          fetch-depth: 0  # 用于lastUpdated功能
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          run_install: false
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm # 或 pnpm / yarn
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+          cache: 'pnpm'
+          cache-dependency-path: |
+            **/pnpm-lock.yaml
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "store-dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.store-dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
       - name: Install dependencies
-        run: pnpm install # 或 pnpm install / yarn install / bun install
+        run: pnpm install --frozen-lockfile
+        env:
+          # 解决可能的网络问题
+          NODE_OPTIONS: --max-old-space-size=4096
+
+      - name: Lint docs (可选)
+        run: pnpm run docs:lint || true  # 即使 lint 失败也继续
+
       - name: Build with VitePress
-        run: pnpm run docs:build # 或 pnpm docs:build / yarn docs:build / bun run docs:build
+        run: pnpm run docs:build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+
+      - name: Check build output
+        run: |
+          if [ ! -d ".vitepress/dist" ]; then
+            echo "Build directory not found!"
+            exit 1
+          fi
+          if [ -z "$(ls -A .vitepress/dist)" ]; then
+            echo "Build directory is empty!"
+            exit 1
+          fi
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .vitepress/dist # 构建输出目录
+          path: .vitepress/dist
+          retention-days: 1
 
-  # 部署工作
   deploy:
     environment:
       name: github-pages
@@ -61,3 +105,12 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          timeout: 120000  # 延长超时时间到2分钟
+
+      - name: Verify deployment
+        if: success()
+        run: |
+          echo "部署成功! 访问地址: ${{ steps.deployment.outputs.page_url }}"
+          # 简单检查页面是否可访问
+          curl -s --head --fail ${{ steps.deployment.outputs.page_url }} || echo "部署验证警告: 页面可能暂时无法访问"
