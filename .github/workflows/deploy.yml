@@ -1,5 +1,5 @@
 # 构建 VitePress 站点并将其部署到 GitHub Pages 的示例工作流程
-name: Deploy VitePress site to Pages
+name: 构建 VitePress 站点并将其部署到 GitHub Pages 
 
 on:
   # 在针对 `main` 分支的推送上运行。如果你
@@ -33,6 +33,11 @@ jobs:
           fetch-depth: 0 # 如果未启用 lastUpdated，则不需要
       # - uses: pnpm/action-setup@v3 # 如果使用 pnpm，请取消注释
       # - uses: oven-sh/setup-bun@v1 # 如果使用 Bun，请取消注释
+      # 新增：安装 pnpm，解决找不到 pnpm 问题
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8 # 可指定具体版本，如 8.15.5，不指定则装最新
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
