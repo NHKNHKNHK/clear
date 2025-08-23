@@ -97,17 +97,29 @@ pipeline {
                 script {
                     echo "将构建产物复制到宿主机..."
                     // 在宿主机执行docker cp命令
-                    sh """
-                        # 确保宿主机目标目录存在
-                        mkdir -p $env.HOST_TARGET_DIR
+                    // sh """
+                    //     # 确保宿主机目标目录存在
+                    //     mkdir -p $env.HOST_TARGET_DIR
                         
-                        # 执行docker cp命令将容器内文件复制到宿主机
-                        docker cp $env.JENKINS_CONTAINER:$env.BUILD_OUTPUT_DIR/. $env.HOST_TARGET_DIR
+                    //     # 执行docker cp命令将容器内文件复制到宿主机
+                    //     docker cp $env.JENKINS_CONTAINER:$env.BUILD_OUTPUT_DIR/. $env.HOST_TARGET_DIR
 
-                        # 设置正确的权限（根据需要调整）
-                        chmod -R 755 $env.HOST_TARGET_DIR
-                        chown -R www:www $env.HOST_TARGET_DIR
-                    """
+                    //     # 设置正确的权限（根据需要调整）
+                    //     chmod -R 755 $env.HOST_TARGET_DIR
+                    //     chown -R www:www $env.HOST_TARGET_DIR
+                    // """
+                           sh """
+                # 1. 先把产物从容器复制到宿主机
+                mkdir -p $env.HOST_TARGET_DIR
+                docker cp $env.JENKINS_CONTAINER:$env.BUILD_OUTPUT_DIR/. $env.HOST_TARGET_DIR
+                
+                # 2. 在宿主机执行 chown（通过 ssh 或 docker exec 调用宿主机命令）
+                # 示例：用 docker exec 让宿主机的 shell 执行命令（前提：Jenkins 容器挂载了宿主机的 docker.sock）
+                docker exec $(hostname) chown -R www:www $env.HOST_TARGET_DIR
+                
+                # 也可以用 ssh 方式（需配置免密）：
+                # ssh root@localhost "chown -R www:www $env.HOST_TARGET_DIR"
+            """
                 }
             }
         }
