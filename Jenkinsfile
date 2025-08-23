@@ -113,7 +113,14 @@ pipeline {
                         mkdir -p $HOST_TARGET_DIR
                         docker cp $JENKINS_CONTAINER:$BUILD_OUTPUT_DIR/. $HOST_TARGET_DIR
                 
-                        docker exec $(hostname) chown -R www:www $HOST_TARGET_DIR
+                        # 2. 关键修复：直接指定宿主机的用户ID和组ID
+                        # 先获取宿主机上www用户的UID和GID
+                        WWW_UID=$(docker run --rm --net=host -v /etc/passwd:/etc/passwd:ro alpine grep www /etc/passwd | cut -d: -f3)
+                        WWW_GID=$(docker run --rm --net=host -v /etc/passwd:/etc/passwd:ro alpine grep www /etc/passwd | cut -d: -f4)
+                        
+                        # 使用UID:GID方式设置权限，避免用户名称解析问题
+                        chown -R $WWW_UID:$WWW_GID $HOST_TARGET_DIR
+                        chmod -R 755 $HOST_TARGET_DIR
                     """
                 }
             }
