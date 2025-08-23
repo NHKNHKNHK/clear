@@ -110,12 +110,10 @@ pipeline {
                     // """
                     sh """
                         # 1. 先把产物从容器复制到宿主机
-                        mkdir -p $env.HOST_TARGET_DIR
-                        docker cp $env.JENKINS_CONTAINER:$env.BUILD_OUTPUT_DIR/. $env.HOST_TARGET_DIR
-                        
-                        # 2. 在宿主机执行 chown（通过 ssh 或 docker exec 调用宿主机命令）
-                        # 示例：用 docker exec 让宿主机的 shell 执行命令（前提：Jenkins 容器挂载了宿主机的 docker.sock）
-                        docker exec $(hostname) chown -R www:www $env.HOST_TARGET_DIR
+                        mkdir -p $HOST_TARGET_DIR
+                        docker cp $JENKINS_CONTAINER:$BUILD_OUTPUT_DIR/. $HOST_TARGET_DIR
+                
+                        docker exec $(hostname) chown -R www:www $HOST_TARGET_DIR
                     """
                 }
             }
