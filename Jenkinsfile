@@ -9,8 +9,9 @@ pipeline {
         NODE_VERSION = '20'
         NVM_DIR = "${env.HOME}/.nvm"
         // 添加构建产物目录变量
-        BUILD_OUTPUT_DIR = "$env.WORKSPACE/.vitepress/dist"
-        HOST_TARGET_DIR = "/www/wwwroot/clear-blog"
+        // BUILD_OUTPUT_DIR = "$env.WORKSPACE/.vitepress/dist"
+        BUILD_OUTPUT_DIR = "/var/jenkins_home/workspace/clear-blog-job2/.vitepress/dist"
+
         // Jenkins容器名称或ID（需要替换为实际值）
         JENKINS_CONTAINER = "7ff384ec65af"
     }
