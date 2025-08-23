@@ -26,7 +26,7 @@ MyBatis 提供了`#{}`占位符，用于安全地传递参数。与之相对的�
 
 ```xml
 <select id="selectUserByName" parameterType="string" resultType="com.example.model.User">
-  SELECT * FROM users WHERE username = '${username}'
+  SELECT * FROM users WHERE username = ${username}
 </select>
 ```
 
@@ -34,9 +34,9 @@ MyBatis 提供了`#{}`占位符，用于安全地传递参数。与之相对的�
 
 MyBatis 提供了 SQL 构建工具（如SqlBuilder），可以帮助构建安全的 SQL 查询，现实很少用，本质也是`#`占位符
 
-{% raw %}
 
 ```java
+{% raw %}
 import org.apache.ibatis.jdbc.SQL;
 
 public String buildSelectUserById(final int id) {
@@ -46,6 +46,6 @@ public String buildSelectUserById(final int id) {
         WHERE("user_id = #{id}");
     }}.toString();
 }
+{% endraw %}
 ```
 
-{% endraw %}
