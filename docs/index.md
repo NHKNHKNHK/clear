@@ -1,3 +1,19 @@
+<script setup>
+// 在使用的地方显式的导入，使它们可以正确地进行代码拆分，并且仅在显示相关页面时才加载
+import Confetti from '../.vitepress/theme/components/Confetti.vue'
+import HomeUnderline  from '../.vitepress/theme/components/HomeUnderline.vue'
+import {
+  Check,
+  Delete,
+  Edit,
+  Message,
+  Search,
+  Star,
+} from '@element-plus/icons-vue'
+import { ElButton } from 'element-plus'
+
+</script>
+
 ---
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
@@ -234,22 +250,7 @@ features:
 }
 </style>
 
-<script setup>
-// 在使用的地方显式的导入，使它们可以正确地进行代码拆分，并且仅在显示相关页面时才加载
-import Confetti from '../.vitepress/theme/components/Confetti.vue'
-import HomeUnderline  from '../.vitepress/theme/components/HomeUnderline.vue'
-import {
-  Check,
-  Delete,
-  Edit,
-  Message,
-  Search,
-  Star,
-} from '@element-plus/icons-vue'
-import { ElButton } from 'element-plus'
 
-
-</script>
 <!-- 烟火效果 -->
 <Confetti/>
 <!-- 首页文字下划线效果 -->
