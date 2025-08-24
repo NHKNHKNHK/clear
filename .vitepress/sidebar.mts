@@ -1790,6 +1790,21 @@ export default {
       text: 'Docker',
       items: [
         { text: '导读', link: '/Docker/' },
+        { text: 'Docker基础', link: '/Docker/01-docker基础' },
+        { text: 'Docker network', link: '/Docker/04-docker network' },
+        { text: 'Dockerfile', link: '/Docker/02-Dockerfile' },
+        { text: 'Dockerfile部署Tomcat', link: '/Docker/03-Dockerfile部署Tomcat' },
+        { text: 'Docker中部署redis集群', link: '/Docker/05-docker中部署redis集群' },
+        { text: 'Portainer安装', link: '/Docker/05-Portainer安装' },
+        { text: 'Docker compose容器编排', link: '/Docker/06-Docker compose容器编排' },
+        { text: 'Docker容器监控CIG', link: '/Docker/06-Docker容器监控CIG' },
+        { text: 'Docker容器固定IP', link: '/Docker/07-docker容器固定IP' },
+        { text: 'Docker搭建Hadoop、spark', link: '/Docker/08-Docker搭建Hadoop、spark' },
+        { text: 'Docker上部署hbase', link: '/Docker/09-docker上部署hbase' },
+        { text: 'Docker上部署kafka', link: '/Docker/10-docker上部署kafka' },
+        { text: 'Docker中部署主从复制MySQL', link: '/Docker/12-docker中部署主从复制MySQL' },
+        { text: 'Docker私有仓库', link: '/Docker/14-Docker私有仓库' },
+        { text: 'Docker部署ElasticSearch、Kibana', link: '/Docker/15-Docker部署ElasticSearch、Kibana' },
       ]
     }
   ],

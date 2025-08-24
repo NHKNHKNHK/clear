@@ -117,6 +117,7 @@ pipeline {
                   docker sh -c " \
                     # 1. 从 Jenkins 容器复制产物到宿主机临时目录
                     docker cp $JENKINS_CONTAINER:$BUILD_OUTPUT_DIR/. /tmp/clear-blog && \
+                    echo '临时目录内容：' && ls -la /tmp/clear-blog && \
                     # 2. 将临时目录内容移动到最终目标（宿主机真实路径）
                     mv /tmp/clear-blog/* $HOST_TARGET_DIR && \
                     # 3. 清理临时目录
