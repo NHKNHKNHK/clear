@@ -451,7 +451,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.152-b16, mixed mode)
 
 什么是虚悬镜像？
 
-仓库名、标签都是 <none> 的镜像，俗称 dangling image
+仓库名、标签都是 `<none>` 的镜像，俗称 dangling image
 
 查看虚悬镜像的命令
 
