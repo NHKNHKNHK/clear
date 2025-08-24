@@ -2395,7 +2395,7 @@ mysql>
 
 建库建表插入数据
 
-```mysql
+```sql
 mysql> create database db01;
 
 mysql> use db01;
@@ -2421,7 +2421,7 @@ mysql> select * from tb1;
 
 ​	docker上默认字符集编码隐患，在docker里查看容器实例，如下
 
-```mysql
+```sql
 mysql> show variables like 'character%';
 +--------------------------+----------------------------+
 | Variable_name            | Value                      |
@@ -2451,7 +2451,7 @@ my.cnf设置字符集 ===> 解决中文乱码问题
 
 **1）新建容器实例**
 
-```mysql
+```sql
 [root@nhk ~]# docker run -d -p 3306:3306 --privileged=true -v /opt/data/mysql/log:/var/log/mysql -v /opt/data/mysql/data:/var/lib/mysql -v /opt/data/mysql/conf:/etc/mysql/conf.d --name mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.7
 
 [root@nhk mysql]# pwd
@@ -2506,7 +2506,7 @@ mysql> show variables like 'character%';
 
 通过datagrip测试
 
-```mysql
+```sql
 create database db01;
 use db01;
 create table tb1(age int,name varchar(20));
