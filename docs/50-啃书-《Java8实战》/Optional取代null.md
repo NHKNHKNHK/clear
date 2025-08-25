@@ -1,6 +1,8 @@
-# 1 Optional类的引入
+# Optional取代null值
 
-## 1.1 Java8之前对缺失值的处理
+## 1 Optional类的引入
+
+### 1.1 Java8之前对缺失值的处理
 
 演示：
 
@@ -81,7 +83,7 @@ public String getCarInsuranceName(Person person){
 
 
 
-## 1.2 null带来的问题
+### 1.2 null带来的问题
 
 -   null是错误之源
     -   NullPointerException是目前Java程序开发中最典型的异常
@@ -94,7 +96,7 @@ public String getCarInsuranceName(Person person){
 -   null在Java的类型系统上开了一个口子
     -   null并不属于任何类型，这意味着它可以被赋值给任意引用类型的变量。这会导致问题，原因是当这个变量被传递到系统中的另一个部分后，我们将无法获知这个null变量最初赋值到底是什么类型
 
-## 1.3 Optional类源码
+### 1.3 Optional类源码
 
 ```java
 // Optional 类是 Java 8 引入的一个类，用于处理可能为空的值。它提供了一种优雅的方式来处理可能存在或不存在的值，以避免空指针异常。
@@ -233,7 +235,7 @@ public final class Optional<T> {
 }
 ```
 
-# 2 Optional入门
+## 2 Optional入门
 
 java8提供了`java.util.Optional<T>`用于取代null
 
@@ -288,9 +290,9 @@ public class Insurance {  // 保险
 -   但实际中差别非常大，当我们尝试解引用一个null，会触发NullPoinerException；我们使用Optional.empty 就不会有这个问题
 -   Optional类是一个有效对象，很多场景都能用，并且非常有用
 
-# 3 应用 Optional 的几种应用模式
+## 3 应用 Optional 的几种应用模式
 
-## 3.1 创建 Optional 对象
+### 3.1 创建 Optional 对象
 
 -   **声明一个空的Optional**
 
@@ -366,7 +368,7 @@ public void test3(){
 }
 ```
 
-## 3.2 使用 map 从 Optional 对象中提取和转换值
+### 3.2 使用 map 从 Optional 对象中提取和转换值
 
 从一个对象中提取信息是比较常见的模式。为了支持这种模式，Optional提供了一个map方法
 
@@ -390,7 +392,7 @@ Optional<String> name = optInsurance.map(Insurance::getName);
 System.out.println(name);
 ```
 
-## 3.3 使用 flatMap 链接 Optional 对象
+### 3.3 使用 flatMap 链接 Optional 对象
 
 flatMap方法接收一个Function函数式接口，返回值是另一个流
 
@@ -424,7 +426,7 @@ public String getCarInsuranceName(Optional<Person> person){
 
 其中，返回的Optional 可能有两种情况，如果调用链上的任何一个方法返回空的Optional，那么结果就为空，否则返回的就是期望值。
 
-## 3.4 默认行为及解引用 Optional 对象
+### 3.4 默认行为及解引用 Optional 对象
 
 我们可以使用osElse方法读取Optional对象中包装的值，如果Optional对象不为空则返回值，为空则返回默认值
 
@@ -461,7 +463,7 @@ public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSuppli
 public void ifPresent(Consumer<? super T> consumer)
 ```
 
-## 3.5 两个 Optional 对象的组合
+### 3.5 两个 Optional 对象的组合
 
 假设我们有一个方法，它接受一个Person和一个Car对象，并以此为条件对外部提供的服务进行查询，通过一些复杂的业务逻辑，试图找到满足该组合的最便宜的保险公司：
 
@@ -504,7 +506,7 @@ public Optional<Insurance> nullSafeFindCheapestInsurance(
 }
 ```
 
-## 3.6 使用 fliter 剔除特定的值
+### 3.6 使用 filter 剔除特定的值
 
 我们经常需要调用某个对象的方法，查询他的某个属性。比如，检查保险公司的名字是否为 ”Cambridge-Insurance“。为了以一种安全的方式进行操作，首先需要null检查，然后在调用getName方法：
 
@@ -524,9 +526,9 @@ OptInsurance.filter(insurance ->
 
 filter方法接受一个谓词作为参数。如果Optional对象的值存在，并且它符合谓词的条件，filter方法就返回其值；否则就返回空Optional对象。
 
-# 4 注意
+## 4 注意
 
-## 4.1 Optional无法序列化
+### 4.1 Optional无法序列化
 
 `Optional` 类没有实现 `Serializable` 接口的设计是有意为之的。
 
@@ -550,15 +552,15 @@ public class Person {
 }
 ```
 
-# 5 Optional 使用实战
+## 5 Optional 使用实战
 
-## 5.1 用 Optional 封装可能为null的值
+### 5.1 用 Optional 封装可能为null的值
 
 现在Java API几乎都是通过返回一个null的方式来表示需要值的缺失，或者由于某些原因计算无法得到该值。比如，如果Map中不含指定的键对应的值，它的get方法会返回一个null。但是现在我们大多情况下都希望返回一个Optional对象，然而我们又无法对Java类库中的源代码进行修改，所以我们可以对源码中方法的返回值进行封装为Optional。
 
 演示：
 
-我们有一个Map\<String, String>，如果调用get方法没有对应的key，则返回null
+我们有一个`Map<String, String>`，如果调用get方法没有对应的key，则返回null
 
 ```java
 String value = map.get("key");
@@ -567,9 +569,11 @@ String value = map.get("key");
 Optional<String> value = Optional.ofNullable(map.get("key"));
 ```
 
-## 5.2 异常与 Optional 的对比
+### 5.2 异常与 Optional 的对比
 
-由于某种原因，方法无法返回某个值，此时除了返回null以外，Java API中比较常见的做法是抛出一个异常。例如，使用静态方法Integer.parseInt("123abc")。将String类型转换为int类型。在这里转换异常会抛出NumberFormatException。
+由于某种原因，方法无法返回某个值，此时除了返回null以外，Java API中比较常见的做法是抛出一个异常。
+
+例如，使用静态方法`Integer.parseInt("123abc")`。将String类型转换为int类型。在这里转换异常会抛出`NumberFormatException`。
 
 以往我们是通过try-catch的方式处理异常，现在我们要加上Optional对象
 
@@ -589,11 +593,13 @@ public static Optional<Integer> stringToInt(String s){
 }
 ```
 
-建议
+:::warning 建议
 
 ​	可以将多个类型的方法封装到一个工具类中，例如OptionalUtility，之后可以通过OptionalUtility.stringToInt 直接调用
 
-## 5.3 基础类型的 Optional 对象
+:::
+
+### 5.3 基础类型的 Optional 对象
 
 与Stream一样，Optional也提供了类似的基础类型，例如 OptionsInt、OptionalLong、OptionalDouble
 
@@ -601,7 +607,7 @@ public static Optional<Integer> stringToInt(String s){
 
 但是对于Optional 而言，不建议，业务Optional对象最多包含一个值，并且 Optional 不支持 map、flatMap、filter方法
 
-## 5.4 把所有的内容整合起来
+### 5.4 把所有的内容整合起来
 
 演示：
 
@@ -630,15 +636,15 @@ public int readDuration(Properties props, String name) {
 public int readDuration(Properties props, String name) {
     return Optional.ofNullable(props.getProperty(name))
         .flatMap(OptionalUtility::stringToInt)
-        .fliter(i -> i > 0)
+        .filter(i -> i > 0)
         .orElse(0);
 }
 ```
 
-## 5.5 工作中使用
+### 5.5 工作中使用
 
 ```java
-public class OptioanlTest {
+public class OptionalTest {
     public static void main(String[] args) {
         Student student = new Student("张三");
         student = null;
