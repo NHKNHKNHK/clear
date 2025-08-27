@@ -29,6 +29,35 @@ Collections.synchronizedList 方法返回一个线程安全的列表，该列表
 List<String> list = Collections.synchronizedList(new ArrayList<>());
 ```
 
+:::tip
+Collections.synchronizedList 的底层实现是基于装饰器模式，对List中的所有方法进行同步。如下是它的set、add方法源码
+
+```java
+public E set(int index, E element) {
+    synchronized (mutex) {return list.set(index, element);}
+}
+
+public void add(int index, E element) {
+    synchronized (mutex) {list.add(index, element);}
+}
+```
+
+:::
+
+:::warning
+
+Collections.synchronizedList方法包装过后的集合对象本身是线程安全的，但是我们在写多线程代码时需要注意原子性问题，如下示例就是一个非原子性操作
+
+```java
+Collection<Integer> list = Collections.synchronizedList(new ArrayList<>());
+if (list.isEmpty()) {
+    list.add(1);
+}
+```
+
+:::
+
+
 ## **4、 使用并发集合**
 
 Java 并发包 java.util.concurrent 提供了一些线程安全的集合类，如 **CopyOnWriteArrayList**。这些类提供了不同的线程安全保证和性能特性。
