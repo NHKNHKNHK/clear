@@ -1,4 +1,4 @@
-# 谈谈你对AQS的理解？AbstractQueuedSynchronizedr 
+# 谈谈你对AQS的理解？AbstractQueuedSynchronizer
 
 >   补充说明：
 >
@@ -11,15 +11,15 @@
 >   -   数据结构之双向链表
 >   -   设计模式之模板设计模式
 
-**口语化**
+## 口语化
 
-简单来说，AQS是**线程同步器**，它是juc包中多个组件的底层实现，比如ReentrantLock、CountDownLatch、Semaphore等，底层都使用了AQS。
+简单来说，AQS是**线程同步器**，它是juc包中多个组件（lock）的底层实现，比如ReentrantLock、CountDownLatch、Semaphore等，底层都使用了AQS。
 
 AQS它起到了一个**抽象、封装**的作用，把一些排队、入队、加锁、中断等方法提供（抽象）出来，便于其他相关JUC锁的使用，具体的加锁时机、入队时机等都需要实现类自己来控制。
 
 它主要通过维护一个**共享状态（state）**和一个**先进先出（FIFO）**的等待队列，来管理线程对共享资源的访问。
 
-state使用 volatile 修饰，表示当前资源的状态。例如，在独占锁中，state 为 0 表示锁未被占用，为 1 表示已被占用。
+`state`使用 `volatile` 修饰，表示当前资源的状态。例如，在独占锁中，`state` 为 `0` 表示锁未被占用，为 `1` 表示已被占用。
 
 当一个线程尝试获取资源失败时，会被加入到AQS的等待队列中。这个队列是一个变体的CLH队列，采用双向链表结构，节点包含线程的引用、等待状态以及前驱和后继节点的指针，
 
@@ -30,7 +30,7 @@ state使用 volatile 修饰，表示当前资源的状态。例如，在独占�
 
 
 
-**AQS的核心概念**
+## **AQS的核心概念**
 
 -   **状态（state）**：AQS通过一个整型变量state来表示同步状态。不同的同步器可以根据自己的需求定义state的含义，例如对于独占锁，state可以表示锁的持有状态；对于共享锁，state可以表示可用资源的数量。
 
@@ -44,19 +44,19 @@ state使用 volatile 修饰，表示当前资源的状态。例如，在独占�
 
 ```java
 static final class Node {
-        static final Node SHARED = new Node();
-        static final Node EXCLUSIVE = null;
- 		...
-        volatile int waitStatus;
-        volatile Node prev;
-        volatile Node next;
-        volatile Thread thread; // 保存等待的线程
-        Node nextWaiter;
-    	...
+    static final Node SHARED = new Node();
+    static final Node EXCLUSIVE = null;
+    ...
+    volatile int waitStatus;
+    volatile Node prev;
+    volatile Node next;
+    volatile Thread thread; // 保存等待的线程
+    Node nextWaiter;
+    ...
 }
 ```
 
-**AQS的工作原理**
+## **AQS的工作原理**
 
 AQS通过以下几个核心方法来实现同步器的功能：
 
@@ -69,6 +69,7 @@ AQS通过以下几个核心方法来实现同步器的功能：
 7.  **tryAcquireShared(int arg)**：尝试以共享模式获取同步状态，返回大于等于0的值表示获取成功，返回负值表示获取失败。需要由具体的同步器实现。
 8.  **tryReleaseShared(int arg)**：尝试以共享模式释放同步状态，返回true表示释放成功，返回false表示释放失败。需要由具体的同步器实现。
 
+## AQS的简单实现
 
 
 AQS实现一个简单的独占锁

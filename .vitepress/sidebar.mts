@@ -454,7 +454,7 @@ export default {
         { text: 'Java中线程安全是什么意思？', link: '/04-Java并发篇/Java中线程安全是什么意思？' },
         { text: '你是怎么理解线程安全问题的？', link: '/04-Java并发篇/你是怎么理解线程安全问题的？' },
         { text: 'Java中线程之间是如何通信的？', link: '/04-Java并发篇/Java中线程之间是如何通信的？' },
-        { text: '谈谈你对AQS的理解？AbstractQueuedSynchronizedr', link: '/04-Java并发篇/谈谈你对AQS的理解？AbstractQueuedSynchronizedr' },
+        { text: '谈谈你对AQS的理解？', link: '/04-Java并发篇/谈谈你对AQS的理解' },
         { text: '谈谈你对CAS的理解？Compare-And-Swap', link: '/04-Java并发篇/谈谈你对CAS的理解？Compare-And-Swap' },
         { text: 'Unsafe', link: '/04-Java并发篇/Unsafe' },
         { text: 'CAS的缺点？', link: '/04-Java并发篇/CAS的缺点？' },
