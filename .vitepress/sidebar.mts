@@ -1512,11 +1512,17 @@ export default {
   ],
   '/26-React/': [
     {
+      text: 'React简明教程',
+      items: [
+        { text: '无状态组件与有状态组件', link: '/26-React/learn/react-compoents-status' },
+      ],
+    },
+    {
       text: 'React',
       items: [
         { text: '导读', link: '/26-React/' },
       ],
-    }
+    },
   ],
   '/27-JavaScript/': [
     {
