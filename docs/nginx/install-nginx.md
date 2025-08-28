@@ -19,6 +19,7 @@ vim nginx.repo
 # 或 直接新建 nginx.repo 文件
 vim /etc/yum.repos.d/nginx.repo
 ```
+
 - 3、添加配置信息到 nginx.repo 文件中
 
 ```shell
@@ -38,6 +39,7 @@ enabled=0
 gpgkey=https://nginx.org/keys/nginx_signing.key
 module_hotfixes=true
 ```
+
 :::tip
 一般在阿里云等ECS服务器中可以省略以上步骤
 
