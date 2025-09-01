@@ -1225,6 +1225,13 @@ export default {
   ],
   '/13-Zookeeper/': [
     {
+      text: 'Zookeeper简明教程',
+      items: [
+        { text: 'ZooKeeper快速入门', link: '/13-Zookeeper/learn/01-ZooKeeper快速入门' },
+        { text: 'zookeeper节点动态上下线案例', link: '/13-Zookeeper/learn/zookeeper节点动态上下线案例' },
+      ]
+    },
+    {
       text: 'Zookeeper',
       items: [
         { text: 'Zookeeper', link: '/13-Zookeeper/index' },
@@ -1686,12 +1693,12 @@ export default {
         { text: 'Spark环境部署', link: '/37-Spark/learn/01-Spark环境部署' },
         { text: '打包代码与依赖', link: '/37-Spark/learn/02-打包代码与依赖' },
         { text: 'Spark 程序编写流程', link: '/37-Spark/learn/Spark 程序编写流程' },
-        
+
         { text: '第一个Spark程序WordCount', link: '/37-Spark/learn/03-第一个Spark程序WordCount' },
         { text: '监控页面及圆周率PI运行', link: '/37-Spark/learn/04-监控页面及圆周率PI运行' },
         { text: 'RDD五大特性', link: '/37-Spark/learn/05-RDD五大特性' },
         { text: 'RDD的创建', link: '/37-Spark/learn/06-RDD的创建' },
-        
+
         { text: '向Spark传递函数', link: '/37-Spark/learn/07-向Spark传递函数' },
         { text: 'Spark常用RDD-Java', link: '/37-Spark/learn/08-Spark常用RDD-Java' },
         { text: 'Spark常用RDD-Scala', link: '/37-Spark/learn/08-Spark常用RDD-Scala' },
