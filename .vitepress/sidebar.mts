@@ -1528,6 +1528,7 @@ export default {
       text: 'React',
       items: [
         { text: '导读', link: '/26-React/' },
+        { text: 'React生命周期', link: '/26-React/life-cycle' },
       ],
     },
   ],
