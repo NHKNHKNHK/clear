@@ -1523,6 +1523,8 @@ export default {
       items: [
         { text: '无状态组件与有状态组件', link: '/26-React/learn/react-compoents-status' },
         { text: 'React组件通信', link: '/26-React/learn/component-communication' },
+        { text: '错误边界', link: '/26-React/learn/error-boundary' },
+        { text: 'Context', link: '/26-React/learn/content' },
       ],
     },
     {
@@ -1530,6 +1532,7 @@ export default {
       items: [
         { text: '导读', link: '/26-React/' },
         { text: 'React生命周期', link: '/26-React/life-cycle' },
+        { text: '你在项目中是如何进行错误监控的', link: '/26-React/你在项目中是如何进行错误监控的' },
       ],
     },
   ],
