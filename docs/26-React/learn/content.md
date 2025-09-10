@@ -357,6 +357,13 @@ const value = { theme: "light" }; // 或用useMemo缓存
 <ThemeContext.Provider value={value}>
 ```
 
+:::warning
+因为content会根据引用标识来决定何时更新（本质上是value属性值的浅比较），所以这里可能存在一些陷阱，当 `ThemeContext.Provider` 的父组件进行重渲染时，Provider 的 value 属性也会被重新赋值，从而导致消费者组件重新渲染。
+
+为了放在这种情况，可以将 value 状态提升到父组件的状态中，并传递给 Provider。
+:::
+
+
 - defaultValue 的陷阱：
   - 仅当组件没有被 Provider 包裹时，defaultValue 才会生效。
   - 不要依赖 defaultValue 作为初始值（应在 Provider 中显式设置初始值）。

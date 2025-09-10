@@ -1525,6 +1525,7 @@ export default {
         { text: 'React组件通信', link: '/26-React/learn/component-communication' },
         { text: '错误边界', link: '/26-React/learn/error-boundary' },
         { text: 'Context', link: '/26-React/learn/content' },
+        { text: '组件实例的三大核心属性', link: '/26-React/learn/component-props、state、refs' },
       ],
     },
     {
