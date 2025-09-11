@@ -1424,6 +1424,13 @@ export default {
   ],
   '/25-Vue/': [
     {
+      text: 'Vue简明教程',
+      collapsed: false,
+      items: [
+        { text: 'Vue组件通信', link: '/25-Vue/learn/component-communication' },
+      ],
+    },
+    {
       text: '基础',
       collapsed: false,
       items: [
@@ -1520,6 +1527,7 @@ export default {
   '/26-React/': [
     {
       text: 'React简明教程',
+      collapsed: false,
       items: [
         { text: '无状态组件与有状态组件', link: '/26-React/learn/react-compoents-status' },
         { text: 'React组件通信', link: '/26-React/learn/component-communication' },
@@ -1530,6 +1538,7 @@ export default {
     },
     {
       text: 'React',
+      collapsed: false,
       items: [
         { text: '导读', link: '/26-React/' },
         { text: 'React生命周期', link: '/26-React/life-cycle' },
