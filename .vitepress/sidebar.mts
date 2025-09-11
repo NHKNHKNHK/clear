@@ -1548,6 +1548,13 @@ export default {
   ],
   '/27-JavaScript/': [
     {
+      text: 'JavaScript简明教程',
+      collapsed: false,
+      items: [
+        { text: 'es6 class', link: '/27-JavaScript/learn/es6-class' },
+      ]
+    },
+    {
       text: 'JavaScript',
       items: [
         { text: '导读', link: '/27-JavaScript/' },
