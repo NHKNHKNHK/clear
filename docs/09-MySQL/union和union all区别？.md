@@ -95,6 +95,7 @@ id | name
 示例
 
 **原始 IN 查询**
+
 ```sql
 SELECT * FROM employees 
 WHERE department_id IN (10, 20, 30, 40);
