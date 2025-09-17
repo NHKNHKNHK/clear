@@ -1,22 +1,29 @@
 # MySQL中count(*)、count(1)和count(字段名)有什么区别？
 
+## 口语化
+
 在 MySQL 中，COUNT(*)、COUNT(1) 和 COUNT(字段名) 都用于统计行数
 
-**COUNT(*)**
+关于COUNT(*)、COUNT(1) 和 COUNT(字段名) 用哪个好首先需要考虑存储引擎。
+
+- 在MyISAM存储引擎的表中是没有区别的，因为内部有一个计数器来记录行数。
+- 在Innodb存储引擎的表中，COUNT(*)、COUNT(1) 是直接读行数，复杂度是O(n)，因为Innodb真的要去数一遍。但是好于COUNT(字段名)。 
+
+## **COUNT(*)**
 
 -   定义：统计表中的所有行数，包括包含 NULL 值的行。
 -   特点：
     -   最常用的形式，适用于大多数场景。
     -   **不会忽略**任何行，即使所有列都为 **NULL**。
 
-**COUNT(1)**
+## **COUNT(1)**
 
 -   定义：统计表中的所有行数，类似于 COUNT(\*)。
 -   特点：
     -   实际上与 COUNT(\*) 没有本质区别，**MySQL 优化器会将 COUNT(\*) 转换为 COUNT(1) 处理**。
     -   有些人认为 COUNT(1) 更直观，因为它明确指定了一个常量值。
 
-**COUNT(字段名)**
+## **COUNT(字段名)**
 
 -   定义：统计指定字段不为 NULL 的行数。
 -   特点：
@@ -54,13 +61,13 @@ SELECT COUNT(*), COUNT(1), COUNT(email) FROM users;
 
 
 
-**COUNT(\*) vs COUNT(1)**
+## **COUNT(\*) vs COUNT(1)**
 
 -   **性能差异**：没有区别。**MySQL 优化器会将 COUNT(\*) 转换为 COUNT(1) 处理**，因此两者的执行计划和性能是相同的。
     -   MySQL官方解释是没有区别的，MySQL 优化器会将 COUNT(\*) 优化为 COUNT(0)， 
 -   选择建议：可以根据个人或团队的习惯选择使用哪一个，两者在功能和性能上没有显著差异。
 
-**COUNT(*) vs COUNT(字段名)**
+## **COUNT(*) vs COUNT(字段名)**
 
 -   性能差异：
     -   对于带有索引的字段，COUNT(字段名) 可能会稍微快一些，因为它可以直接利用索引来统计非 NULL 的行数。
@@ -69,7 +76,7 @@ SELECT COUNT(*), COUNT(1), COUNT(email) FROM users;
     -   如果你需要统计所有行数，无论字段是否为 NULL，应使用 COUNT(\*)。
     -   如果你需要统计某个特定字段非 NULL 的行数，应使用 COUNT(字段名)。
 
-**总结**
+## **总结**
 
 -   COUNT(\*)：统计所有行数，包括 NULL 值。
 -   COUNT(1)：等价于 COUNT(*)，由 MySQL 优化器转换处理。
