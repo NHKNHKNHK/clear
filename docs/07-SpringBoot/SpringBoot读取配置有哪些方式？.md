@@ -10,7 +10,7 @@ Spring Boot 读取配置的方式很多，但最常用的就这三种：
 
 其他像 **@PropertySource**（加载外部properties文件）、**手动加载YAML**（麻烦但能救急）、**IO流硬刚**（一般不推荐）属于“备用方案”，特定场景才会用。
 
-# @Value
+## @Value
 
 
 **使用`@Value`注解注入配置**
@@ -184,7 +184,7 @@ public class YamlConfig {
 // 之后就可以用@Value("${yaml.key}")获取了
 ```
 
-##  IO流
+## IO流
 
 **IO流暴力读取**：最底层的方式
 

@@ -7,19 +7,17 @@
     -   血泪的教训，我在开发中就被坑过，待会会说
 :::
 
-## 口语化
 
 SpringBoot内部配置文件的加载顺序，从高到低大致如下：
 
-**1）`bootstrap.yml`（或`bootstrap.properties`）**
+## **1）`bootstrap.yml`（或`bootstrap.properties`）**
 
 这个文件用于应用程序上下文的引导阶段配置，如配置应用程序的外部配置源（如配置中心）等。
 
 它的加载时机早于`application.yml`或`application.properties`，且其配置内容不会被后者覆盖。
 
 
-
-**2）项目根目录下的`config`文件夹中的配置文件**
+## **2）项目根目录下的`config`文件夹中的配置文件**
 
 包括`application.properties`、`application.yml`、`application-{profile}.properties`、`application-{profile}.yml`等，这些文件的优先级高于项目根目录下的配置文件。
 
@@ -36,28 +34,22 @@ SpringBoot内部配置文件的加载顺序，从高到低大致如下：
 >   最后发现是项目根目录下存在`config`文件夹，里面的配置文件优先级高于`resources`目录下的配置文件（尼玛，气死我，当时调了一上午）
 
 
-
-**3）项目根目录下的配置文件**
+## **3）项目根目录下的配置文件**
 
 包括`application.properties`、`application.yml`、`application-{profile}.properties`、`application-{profile}.yml`等。
 
 
-
-**4）`resources/config`目录下的配置文件**
+## **4）`resources/config`目录下的配置文件**
 
 这是放置在项目的资源（`resources`）目录下的`config`文件夹中的配置文件，优先级低于项目根目录及其`config`文件夹下的配置文件。
 
-
-
-**5）`resources`目录下的配置文件**
+## **5）`resources`目录下的配置文件**
 
 最后加载的是项目资源目录（`resources`）下的配置文件，如`application.properties`、`application.yml`等。
 
 >   注意：这里的配置文件优先级其实是比较低的，但是我们开发中常常会把配置项写在这里
 
-
-
-**5）@PropertySource注解**
+## **5）@PropertySource注解**
 
 如果`@Configuration`类上使用了`@PropertySource`注解来指定额外的配置文件，那么这些文件将在上述所有内部配置文件之后加载。
 
@@ -66,8 +58,6 @@ SpringBoot内部配置文件的加载顺序，从高到低大致如下：
 @PropertySource("classpath:custom.properties")
 public class AppConfig { ... }
 ```
-
-
 
 ## **总结**
 

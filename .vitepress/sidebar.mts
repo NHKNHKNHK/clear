@@ -954,7 +954,7 @@ export default {
         { text: 'MySQL的innodb和myisam索引的区别', link: '/09-MySQL/MySQL的innodb和myisam索引的区别' },
         { text: 'union和union all区别？', link: '/09-MySQL/union和union all区别？' },
         { text: 'MySQL中数据排序的实现原理是什么？', link: '/09-MySQL/MySQL中数据排序的实现原理是什么？' },
-        { text: 'SQL语法顺序？', link: '/09-MySQL/SQL语法顺序？' },
+        { text: 'MySQL书写顺序与执行顺序', link: '/09-MySQL/MySQL书写顺序与执行顺序' },
         { text: '简述一条SQL在MySQL中的执行过程？', link: '/09-MySQL/简述一条SQL在MySQL中的执行过程？' },
         { text: 'MySQL中一条查询语句是如何执行的？', link: '/09-MySQL/MySQL中一条查询语句是如何执行的？' },
         { text: 'MySQL中一条更新语句是如何执行的？', link: '/09-MySQL/MySQL中一条更新语句是如何执行的？' },
