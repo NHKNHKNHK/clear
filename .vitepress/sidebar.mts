@@ -58,8 +58,12 @@
 // ]
 
 
+import javaSidebar from './sidebar/java/index'
+
+
 export default {
   '/01-Java基础/': [
+    javaSidebar,
     {
       text: 'Java基础',
       collapsed: false, // 折叠 默认展开，初始页面加载时折叠设置为true
