@@ -1,6 +1,8 @@
-# 1 包装类
+# 自动装箱
 
-## 为什么要引入包装类
+## 1 包装类
+
+### 为什么要引入包装类
 
 引入包装类（Wrapper Class）有以下几个主要的原因：
 
@@ -11,7 +13,7 @@
 
 总的来说，引入包装类使得基本数据类型能够在面向对象的环境中使用，并提供了基本数据类型和引用类型之间的转换功能，同时还提供了额外的功能和方法。这样可以更方便地进行编程，并且能够充分利用Java的面向对象特性和其他功能特性。
 
-## 获取包装类对象：以 Integer对象为例
+### 获取包装类对象：以 Integer对象为例
 
 在JDK5以前，获取 Integer对象的方式主要为：
 
@@ -49,7 +51,7 @@ Integer i5 = Integer.valueOf("123");
 Integer i7 =Integer.valueOf("123",8);  // 将八进制数“123” 转换为 十进制 83
 ```
 
-### new Integer() 与 Integer.valueOf 的区别
+#### new Integer() 与 Integer.valueOf 的区别
 
 ```java
 // 通过new关键字得到了每次都是一个新的对象，这个很好理解
@@ -87,9 +89,9 @@ static final int high = 127;
 
 
 
-## 包装类的计算
+### 包装类的计算
 
-### JDK5之前
+#### JDK5之前
 
 这样的代码很笨拙，我们现在是不会怎么写代码的
 
@@ -108,7 +110,7 @@ public static void main(String[] args) {
 }
 ```
 
-### JDK5开始：自动拆箱、装箱
+#### JDK5开始：自动拆箱、装箱
 
 ```java
 // JDK5开始的计算操作
@@ -131,7 +133,7 @@ public static void main(String[] args) {
 
 
 
-## 包装类常用方法
+### 包装类常用方法
 
 ```java
 // 把整数转成二进制
@@ -163,7 +165,7 @@ public static void main(String[] args) {
 }
 ```
 
-### parseXxx 和 valueOf
+#### parseXxx 和 valueOf
 
 在包装类中，有两个常用的方法用于将字符串转换为对应的包装类对象，它们分别是`parseXxx`和`valueOf`。
 
@@ -203,21 +205,21 @@ public static void main(String[] args) {
 
 
 
-# 2 自动装箱、拆箱
+## 2 自动装箱、拆箱
 
 JDK5引入的
 
-## 为什么Java需要引入自动装箱、拆箱
+### 为什么Java需要引入自动装箱、拆箱
 
 Java类型要么是引用类型（比如Byte、Integer、Object、List），要么是原始类型（比如int、double、byte、char）。
 
-但是**泛型（比如Consumer<T>中的T）只能绑定到引用类型**。这是由泛型内部的实现方式造成的。
+但是**泛型（比如`Consumer<T>`中的T）只能绑定到引用类型**。这是由泛型内部的实现方式造成的。
 
 因此，在Java里有一个将**原始类型转换为对应的引用类型的机制**。这个机制叫作**装箱（boxing）**。相反的操作，也就是将**引用类型转换为对应的原始类型，叫作拆箱**（unboxing）。
 
 Java还有一个自动装箱机制来帮助程序员执行这一任务：**装箱和拆箱操作是自动完成的**。
 
-## 自动装箱示例
+### 自动装箱示例
 
 例如，这就是为什么下面的代码是有效的（一个int被装箱成为Integer）：
 
@@ -231,11 +233,11 @@ for (int i = 300; i < 400; i++){
 
 但这在性能方面是要付出代价的。**装箱后的值本质上就是把原始类型包裹起来，并保存在堆里**。因此，装箱后的值需要更多的内存，并需要额外的内存搜索来获取被包裹的原始值。 
 
-## Java8为中的特例
+### Java8为中的特例
 
 ​	Java 8 函数式接口带来了一个专门的版本，以便在**输入和输出都是原始类型时避免自动装箱的操作。**
 
-比如，在下面的代码中，使用IntPredicate就避免了对值1000进行装箱操作，但要是用Predicate<Integer>就会把参数1000装箱到一个Integer对象中：
+比如，在下面的代码中，使用IntPredicate就避免了对值1000进行装箱操作，但要是用`Predicate<Integer>`就会把参数1000装箱到一个Integer对象中：
 
 ```java
 public interface IntPredicate{ 
@@ -248,7 +250,7 @@ Predicate<Integer> oddNumbers = (Integer i) -> i % 2 == 1;
 oddNumbers.test(1000);
 ```
 
-## 基本类型自动装箱为包装类
+### 基本类型自动装箱为包装类
 
 ```java
 /**
@@ -291,7 +293,7 @@ public class IntegerDemo {
 }
 ```
 
-## 基本数据类型存入集合中进行的自动装箱
+### 基本数据类型存入集合中进行的自动装箱
 
 ```java
 public class Test1 {
@@ -321,7 +323,7 @@ public class Test2 {
 
 
 
-## 理解数据类型不能自动装箱
+### 理解数据类型不能自动装箱
 
 数据值可以自动装箱
 
@@ -347,7 +349,7 @@ List<int> list2 = new ArrayList<>();	// 编译错误，数据类型不能自动�
 
 
 
-# 3 开发经验
+## 3 开发经验
 
 JDK5开始引入自动装箱、自动拆箱，我们使用包装类时，不需要new，也不需要调用valueOf方法，直接赋值即可
 
