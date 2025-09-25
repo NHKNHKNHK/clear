@@ -608,6 +608,7 @@ export default {
         { text: '@Component和@Configuration能不能互换', link: '/05-Spring/@Component和@Configuration能不能互换' },
         { text: '@Bean写在配置类与@Bean不写在配置类中的区别', link: '/05-Spring/@Bean写在配置类与@Bean不写在配置类中的区别' },
         { text: '@Autowired和@Resource的区别', link: '/05-Spring/@Autowired和@Resource的区别' },
+        { text: '为什么不推荐使用@Autowired', link: '/05-Spring/为什么不推荐使用@Autowired' },
         { text: '@PropertySource注解的作用？', link: '/05-Spring/@PropertySource注解的作用？' },
         { text: '@Qualifier注解有什么用？', link: '/05-Spring/@Qualifier注解有什么用？' },
         { text: '@ComponentScan注解的作用？', link: '/05-Spring/@ComponentScan注解的作用？' },
