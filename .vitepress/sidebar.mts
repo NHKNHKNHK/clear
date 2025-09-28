@@ -729,6 +729,7 @@ export default {
         { text: 'SpringBoot读取配置有哪些方式？', link: '/07-SpringBoot/SpringBoot读取配置有哪些方式？' },
         { text: 'SpringBoot项目内部配置文件加载顺序？', link: '/07-SpringBoot/SpringBoot项目内部配置文件加载顺序？' },
         { text: 'SpringBoot外部配置文件加载顺序？', link: '/07-SpringBoot/SpringBoot外部配置文件加载顺序？' },
+        { text: 'SpringBoot加载配置application.yml的过程与原理', link: '/07-SpringBoot/SpringBoot加载配置application.yml的过程与原理' },
         { text: '@Value和@ConfigurationProperties比较', link: '/07-SpringBoot/@Value和@ConfigurationProperties比较' },
         { text: '如何对SpringBoot配置文件敏感信息加密？', link: '/07-SpringBoot/如何对SpringBoot配置文件敏感信息加密？' },
         { text: '谈谈你对SpringBoot约定优于配置的理解？', link: '/07-SpringBoot/谈谈你对SpringBoot约定优于配置的理解？' },
@@ -1548,6 +1549,7 @@ export default {
         { text: '导读', link: '/26-React/' },
         { text: 'React生命周期', link: '/26-React/life-cycle' },
         { text: '你在项目中是如何进行错误监控的', link: '/26-React/你在项目中是如何进行错误监控的' },
+        { text: 'react-why-hooks', link: '/26-React/react-why-hooks' },
       ],
     },
   ],
@@ -1623,6 +1625,7 @@ export default {
       items: [
         { text: '导读', link: '/31-front-what/' },
         { text: '如何禁止别人调式前端页面代码？', link: '/31-front-what/如何禁止别人调式前端页面代码？' },
+        { text: 'xhr与fetch', link: '/31-front-what/xhr与fetch' },
       ]
     },
     {
