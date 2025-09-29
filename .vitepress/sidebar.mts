@@ -975,7 +975,7 @@ export default {
       text: '数据类型与函数',
       collapsed: true,
       items: [
-        { text: 'Mysql的常用数据类型？', link: '/09-MySQL/Mysql的常用数据类型？' },
+        { text: 'MySQL的常用数据类型', link: '/09-MySQL/MySQL的常用数据类型' },
         { text: 'Mysql的char和varchar的区别？', link: '/09-MySQL/Mysql的char和varchar的区别？' },
         { text: 'MySQL中varchar(100)和varchar(10)的区别？', link: '/09-MySQL/MySQL中varchar(100)和varchar(10)的区别？' },
         { text: 'MySQL中text类型最大可以存储多长的文本？', link: '/09-MySQL/MySQL中text类型最大可以存储多长的文本？' },
@@ -1143,7 +1143,6 @@ export default {
         { text: '为什么不推荐在MySQL中直接存储图片、音频、视频等大容量内容？', link: '/09-MySQL/为什么不推荐在MySQL中直接存储图片、音频、视频等大容量内容？' },
         { text: 'MySQL的Doublewriter Buffer是什么？有什么用？', link: '/09-MySQL/MySQL的Doublewriter Buffer是什么？有什么用？' },
         { text: 'MySQL的Long Buffer是什么？有什么用？', link: '/09-MySQL/MySQL的Long Buffer是什么？有什么用？' },
-
       ]
     },
 

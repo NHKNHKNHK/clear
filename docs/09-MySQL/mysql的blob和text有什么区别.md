@@ -1,1 +1,3 @@
 # mysql的blob和text有什么区别
+
+mysql不允许text作为主键
