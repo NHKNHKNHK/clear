@@ -865,18 +865,63 @@ export default {
   ],
   '/09-MySQL/': [
     {
-      text: 'MySQL',
+      text: 'SQL基本语法',
+      collapsed: true,
       items: [
         { text: 'MySQL', link: '/09-MySQL/' },
-        { text: '相比Oracle，MySQL的优势有哪些？', link: '/09-MySQL/相比Oracle，MySQL的优势有哪些？' },
-        { text: '慢SQL优化思路？', link: '/09-MySQL/慢SQL优化思路？' },
-        { text: '如何在MySQL中监控和优化慢SQL？', link: '/09-MySQL/如何在MySQL中监控和优化慢SQL？' },
-        { text: 'MySQL数据库的性能优化方法有哪些？', link: '/09-MySQL/MySQL数据库的性能优化方法有哪些？' },
-        { text: 'MySQL如何进行SQL调优？', link: '/09-MySQL/MySQL如何进行SQL调优？' },
+
+        { text: 'MySQL使用规范你觉得都有什么？', link: '/09-MySQL/MySQL使用规范你觉得都有什么？' },
+        { text: '创建数据库表要注意什么？', link: '/09-MySQL/创建数据库表要注意什么？' },
+        { text: '数据库的三大范式是什么？', link: '/09-MySQL/数据库的三大范式是什么？' },
+        { text: '什么是反三范式？', link: '/09-MySQL/什么是反三范式？' },
+
+        { text: 'MySQL中主键自增（auto_increment）列到达最大值时会发生什么？你会怎么调整', link: '/09-MySQL/MySQL中主键自增（auto_increment）列到达最大值时会发生什么？你会怎么调整' },
+
+        { text: 'MySQL中exists和in的区别？', link: '/09-MySQL/MySQL中exists和in的区别？' },
+        { text: 'MySQL在inner join、left join、right join的区别是什么？', link: '/09-MySQL/MySQL在inner join、left join、right join的区别是什么？' },
+        { text: '为什么SQL语句不要过多的使用join？', link: '/09-MySQL/为什么SQL语句不要过多的使用join？' },
+        { text: '为什么在MySQL在不推荐使用对表join？', link: '/09-MySQL/为什么在MySQL在不推荐使用对表join？' },
+        { text: 'MySQL中数据排序的实现原理是什么？', link: '/09-MySQL/MySQL中数据排序的实现原理是什么？' },
+        { text: 'MySQL书写顺序与执行顺序', link: '/09-MySQL/MySQL书写顺序与执行顺序' },
+        { text: '简述一条SQL在MySQL中的执行过程？', link: '/09-MySQL/简述一条SQL在MySQL中的执行过程？' },
+        { text: 'MySQL中一条查询语句是如何执行的？', link: '/09-MySQL/MySQL中一条查询语句是如何执行的？' },
+        { text: 'MySQL中一条更新语句是如何执行的？', link: '/09-MySQL/MySQL中一条更新语句是如何执行的？' },
+        { text: 'union和union all区别？', link: '/09-MySQL/union和union all区别？' },
+
+      ]
+    },
+    {
+      text: '事务',
+      collapsed: true,
+      items: [
         { text: 'MySQL事务的四大特性', link: '/09-MySQL/MySQL事务的四大特性' },
+        { text: '什么是脏读、幻读、不可重复读？', link: '/09-MySQL/什么是脏读、幻读、不可重复读？' },
+        { text: '不可重复读和幻读有什么区别', link: '/09-MySQL/不可重复读和幻读有什么区别' },
+        { text: 'innoDB如何解决幻读？', link: '/09-MySQL/innoDB如何解决幻读？' },
         { text: 'MySQL的事务隔离级别？', link: '/09-MySQL/MySQL的事务隔离级别？' },
         { text: 'MySQL默认事务隔离级别是什么？为什么选这个级别？', link: '/09-MySQL/MySQL默认事务隔离级别是什么？为什么选这个级别？' },
         { text: '你们生产环境的MySQL中使用了什么事务隔离级别？为什么？', link: '/09-MySQL/你们生产环境的MySQL中使用了什么事务隔离级别？为什么？' },
+
+
+        { text: 'MySQL是如何实现事务的？', link: '/09-MySQL/MySQL是如何实现事务的？' },
+        { text: 'MySQL中大事务会有哪些影响？', link: '/09-MySQL/MySQL中大事务会有哪些影响？' },
+        { text: 'MySQL中长事务可能会导致哪些问题？', link: '/09-MySQL/MySQL中长事务可能会导致哪些问题？' },
+
+      ]
+    },
+
+    {
+      text: '索引',
+      collapsed: true,
+      items: [
+        // 聚集索引
+        // 非聚集索引
+        // 回表查询
+        // 覆盖索引
+        // 前缀索引
+        // 复合索引
+        // 索引下推
+        { text: 'MySQL的索引类型有哪些？', link: '/09-MySQL/MySQL的索引类型有哪些？' },
         { text: 'MySQL常见索引失效的情况？', link: '/09-MySQL/MySQL常见索引失效的情况？' },
         { text: '什么情况下应不建或少建索引？', link: '/09-MySQL/什么情况下应不建或少建索引？' },
         { text: '在建立索引的时，需要考虑哪些因素？', link: '/09-MySQL/在建立索引的时，需要考虑哪些因素？' },
@@ -884,20 +929,12 @@ export default {
         { text: 'MySQL在使用索引一定有效吗？如何排查索引效果？', link: '/09-MySQL/MySQL在使用索引一定有效吗？如何排查索引效果？' },
         { text: 'MySQL中索引数量是否越多越好？为什么？', link: '/09-MySQL/MySQL中索引数量是否越多越好？为什么？' },
         { text: '在什么情况下，不推荐为数据库建立索引？', link: '/09-MySQL/在什么情况下，不推荐为数据库建立索引？' },
-        { text: '什么是脏读、幻读、不可重复读？', link: '/09-MySQL/什么是脏读、幻读、不可重复读？' },
-        { text: '不可重复读和幻读有什么区别', link: '/09-MySQL/不可重复读和幻读有什么区别' },
-        { text: 'innoDB如何解决幻读？', link: '/09-MySQL/innoDB如何解决幻读？' },
-        { text: 'MySQL的存储引擎有哪些？有什么区别？', link: '/09-MySQL/MySQL的存储引擎有哪些？有什么区别？' },
-        { text: 'MySQL中InnoDB和MyISAM的区别？', link: '/09-MySQL/MySQL中InnoDB和MyISAM的区别？' },
-        { text: '存储引擎应该如何选择？', link: '/09-MySQL/存储引擎应该如何选择？' },
-        { text: 'InnoDB引擎的4大特性？', link: '/09-MySQL/InnoDB引擎的4大特性？' },
-        { text: 'InnoDB 的双写缓冲是什么？', link: '/09-MySQL/InnoDB 的双写缓冲是什么？' },
-        { text: 'MyISAM Static 和 MyISAM Dynamic 有什么区别？', link: '/09-MySQL/MyISAM Static 和 MyISAM Dynamic 有什么区别？' },
+        { text: 'MySQL InnoDB引擎中的聚簇索引和非聚簇索引有什么区别？', link: '/09-MySQL/MySQL InnoDB引擎中的聚簇索引和非聚簇索引有什么区别？' },
+        { text: 'MySQL中的回表是什么？', link: '/09-MySQL/MySQL中的回表是什么？' },
+        { text: 'MySQL索引最左前缀匹配原则？', link: '/09-MySQL/MySQL索引最左前缀匹配原则？' },
+
         { text: '什么是自适应hash索引？', link: '/09-MySQL/什么是自适应hash索引？' },
-        { text: 'MySQL使用规范你觉得都有什么？', link: '/09-MySQL/MySQL使用规范你觉得都有什么？' },
-        { text: '创建数据库表要注意什么？', link: '/09-MySQL/创建数据库表要注意什么？' },
-        { text: '数据库的三大范式是什么？', link: '/09-MySQL/数据库的三大范式是什么？' },
-        { text: '什么是反三范式？', link: '/09-MySQL/什么是反三范式？' },
+
         { text: '什么是索引？有什么用？', link: '/09-MySQL/什么是索引？有什么用？' },
         { text: '索引的本质？', link: '/09-MySQL/索引的本质？' },
         { text: '索引底层的数据结构？', link: '/09-MySQL/索引底层的数据结构？' },
@@ -931,12 +968,13 @@ export default {
         { text: 'b树和b+简述MySQL的b+树查询数据的全过程？', link: '/09-MySQL/简述MySQL的b+树查询数据的全过程？' },
         { text: '为什么MySQL选择使用B+树作为索引结构？', link: '/09-MySQL/为什么MySQL选择使用B+树作为索引结构？' },
         { text: '单个索引的大小会对B+树造成什么影响？', link: '/09-MySQL/单个索引的大小会对B+树造成什么影响？' },
-        { text: '怎么做数据冷热分离？', link: '/09-MySQL/怎么做数据冷热分离？' },
-        { text: '为什么MyISAM不支持行锁，而InnoDB支持？', link: '/09-MySQL/为什么MyISAM不支持行锁，而InnoDB支持？' },
-        { text: 'Mysql如何做分库分表？', link: '/09-MySQL/Mysql如何做分库分表？' },
-        { text: 'MySQL的锁，表级锁是哪一层的锁？', link: '/09-MySQL/MySQL的锁，表级锁是哪一层的锁？' },
-        { text: 'MySQL中主键自增（auto_increment）列到达最大值时会发生什么？你会怎么调整', link: '/09-MySQL/MySQL中主键自增（auto_increment）列到达最大值时会发生什么？你会怎么调整' },
-        { text: 'MySQL 有关权限的表都有哪几个？', link: '/09-MySQL/MySQL 有关权限的表都有哪几个？' },
+
+      ]
+    },
+    {
+      text: '数据类型与函数',
+      collapsed: true,
+      items: [
         { text: 'Mysql的常用数据类型？', link: '/09-MySQL/Mysql的常用数据类型？' },
         { text: 'Mysql的char和varchar的区别？', link: '/09-MySQL/Mysql的char和varchar的区别？' },
         { text: 'MySQL中varchar(100)和varchar(10)的区别？', link: '/09-MySQL/MySQL中varchar(100)和varchar(10)的区别？' },
@@ -949,33 +987,116 @@ export default {
         { text: 'MySQL中count(*)、count(1)和count(字段名)有什么区别？', link: '/09-MySQL/MySQL中countx、count1和count字段名有什么区别？' },
         { text: 'drop、delete与truncate的区别？', link: '/09-MySQL/drop、delete与truncate的区别？' },
         { text: 'MySQL中`limit 1000000,10`和`limit 10`的执行速度是否相同？', link: '/09-MySQL/MySQL中`limit 1000000,10`和`limit 10`的执行速度是否相同？' },
-        { text: 'MySQL中exists和in的区别？', link: '/09-MySQL/MySQL中exists和in的区别？' },
-        { text: 'MySQL在inner join、left join、right join的区别是什么？', link: '/09-MySQL/MySQL在inner join、left join、right join的区别是什么？' },
-        { text: '为什么SQL语句不要过多的使用join？', link: '/09-MySQL/为什么SQL语句不要过多的使用join？' },
-        { text: '为什么在MySQL在不推荐使用对表join？', link: '/09-MySQL/为什么在MySQL在不推荐使用对表join？' },
         { text: 'MySQL中datetime和timestamp类型的区别？', link: '/09-MySQL/MySQL中datetime和timestamp类型的区别？' },
         { text: '在MySQL中，你使用过哪些函数？常用函数？', link: '/09-MySQL/在MySQL中，你使用过哪些函数？常用函数？' },
         { text: '在MySQL存储金额数据，应该使用什么数据类型？', link: '/09-MySQL/在MySQL存储金额数据，应该使用什么数据类型？' },
 
-        { text: 'MySQL的innodb和myisam索引的区别', link: '/09-MySQL/MySQL的innodb和myisam索引的区别' },
-        { text: 'union和union all区别？', link: '/09-MySQL/union和union all区别？' },
-        { text: 'MySQL中数据排序的实现原理是什么？', link: '/09-MySQL/MySQL中数据排序的实现原理是什么？' },
-        { text: 'MySQL书写顺序与执行顺序', link: '/09-MySQL/MySQL书写顺序与执行顺序' },
-        { text: '简述一条SQL在MySQL中的执行过程？', link: '/09-MySQL/简述一条SQL在MySQL中的执行过程？' },
-        { text: 'MySQL中一条查询语句是如何执行的？', link: '/09-MySQL/MySQL中一条查询语句是如何执行的？' },
-        { text: 'MySQL中一条更新语句是如何执行的？', link: '/09-MySQL/MySQL中一条更新语句是如何执行的？' },
+      ]
+    },
+    {
+      text: '存储引擎',
+      collapsed: true,
+      items: [
 
-        { text: 'MySQL的索引类型有哪些？', link: '/09-MySQL/MySQL的索引类型有哪些？' },
-        { text: 'MySQL InnoDB引擎中的聚簇索引和非聚簇索引有什么区别？', link: '/09-MySQL/MySQL InnoDB引擎中的聚簇索引和非聚簇索引有什么区别？' },
-        { text: 'MySQL中的回表是什么？', link: '/09-MySQL/MySQL中的回表是什么？' },
-        { text: 'MySQL索引最左前缀匹配原则？', link: '/09-MySQL/MySQL索引最左前缀匹配原则？' },
-        { text: 'MySQL是如何实现事务的？', link: '/09-MySQL/MySQL是如何实现事务的？' },
-        { text: 'MySQL中大事务会有哪些影响？', link: '/09-MySQL/MySQL中大事务会有哪些影响？' },
-        { text: 'MySQL中长事务可能会导致哪些问题？', link: '/09-MySQL/MySQL中长事务可能会导致哪些问题？' },
+        { text: 'MySQL的存储引擎有哪些？有什么区别？', link: '/09-MySQL/MySQL的存储引擎有哪些？有什么区别？' },
+        { text: 'MySQL中InnoDB和MyISAM的区别？', link: '/09-MySQL/MySQL中InnoDB和MyISAM的区别？' },
+        { text: '存储引擎应该如何选择？', link: '/09-MySQL/存储引擎应该如何选择？' },
+        { text: 'InnoDB引擎的4大特性？', link: '/09-MySQL/InnoDB引擎的4大特性？' },
+        { text: 'InnoDB 的双写缓冲是什么？', link: '/09-MySQL/InnoDB 的双写缓冲是什么？' },
+        { text: 'MyISAM Static 和 MyISAM Dynamic 有什么区别？', link: '/09-MySQL/MyISAM Static 和 MyISAM Dynamic 有什么区别？' },
+        { text: 'MySQL的innodb和myisam索引的区别', link: '/09-MySQL/MySQL的innodb和myisam索引的区别' },
+
+      ]
+    },
+    {
+      text: '场景',
+      collapsed: true,
+      items: [
+        // 冷热分离怎么做
+        // 索引失效场景？
+        { text: '怎么做数据冷热分离？', link: '/09-MySQL/怎么做数据冷热分离？' },
+        { text: 'MySQL数据库的性能优化方法有哪些？', link: '/09-MySQL/MySQL数据库的性能优化方法有哪些？' },
+        { text: 'MySQL如何进行SQL调优？', link: '/09-MySQL/MySQL如何进行SQL调优？' },
+        { text: '相比Oracle，MySQL的优势有哪些？', link: '/09-MySQL/相比Oracle，MySQL的优势有哪些？' },
+        { text: '慢SQL优化思路？', link: '/09-MySQL/慢SQL优化思路？' },
+        { text: '如何在MySQL中监控和优化慢SQL？', link: '/09-MySQL/如何在MySQL中监控和优化慢SQL？' },
+
+
+      ]
+    },
+    {
+      text: '分库分表',
+      collapsed: true,
+      items: [
+        // 概念
+        // 垂直拆分or水平拆分
+        // 分表路由
+        // 跨库join
+        // 分布式id问题
+        // 扩容方案
+
+        { text: 'Mysql中什么是表分区？', link: '/09-MySQL/Mysql中什么是表分区？' },
+        { text: 'Mysql如何做分库分表？', link: '/09-MySQL/Mysql如何做分库分表？' },
+        { text: '表分区与分表的区别？', link: '/09-MySQL/表分区与分表的区别？' },
+        { text: '什么是分库分表？分库分表有哪些策略？如何实现？', link: '/09-MySQL/什么是分库分表？分库分表有哪些策略？如何实现？' },
+        { text: '如何在MySQL中实施分库分表策略？', link: '/09-MySQL/如何在MySQL中实施分库分表策略？' },
+        { text: '对数据库实施分库分表可能会引发哪些问题？', link: '/09-MySQL/对数据库实施分库分表可能会引发哪些问题？' },
+        { text: '单表数据量多少需要分表？', link: '/09-MySQL/单表数据量多少需要分表？' },
+        { text: '数据量过大的情况下，怎么处理？分库分表的设计规范是什么？', link: '/09-MySQL/数据量过大的情况下，怎么处理？分库分表的设计规范是什么？' },
+
+        { text: 'MySQL如何实现读写分离？Java代码中如何实现？', link: '/09-MySQL/MySQL如何实现读写分离？Java代码中如何实现？' },
+
+      ]
+    },
+    {
+      text: '集群',
+      collapsed: true,
+      items: [
+        // 主从复制原理
+        // 数据同步的一致性
+        // 故障切换，数据补偿
+        // 多主 vs 单主
+        // 脑裂问题
+
+        { text: 'mysql的全复制、半复制、异步复制都是什么？', link: '/09-MySQL/mysql的全复制、半复制、异步复制都是什么？' },
+        { text: 'mysql半同步复制的特点', link: '/09-MySQL/mysql半同步复制的特点' },
+        { text: 'mysql主从同步原理？', link: '/09-MySQL/mysql主从同步原理？' },
+        { text: 'MySQL的主从同步机制？它是如何实现的？', link: '/09-MySQL/MySQL的主从同步机制？它是如何实现的？' },
+        { text: 'mysql主从同步延迟的原因和解决办法？', link: '/09-MySQL/mysql主从同步延迟的原因和解决办法？' },
+        { text: 'MySQL中如何避免单点故障？', link: '/09-MySQL/MySQL中如何避免单点故障？' },
+
+      ]
+    },
+    {
+      text: 'MVCC',
+      collapsed: true,
+      items: [
+        // 概念
+        // 事务id 回滚指针 行id
+        // undo log
+        // read view
+        // 版本链
+        // RR和RC
         { text: 'MySQL中MVCC是什么？', link: '/09-MySQL/MySQL中MVCC是什么？' },
         { text: 'MVCC解决了什么问题？', link: '/09-MySQL/MVCC解决了什么问题？' },
         { text: '如果MySQL没有MVCC，会有什么影响？', link: '/09-MySQL/如果MySQL没有MVCC，会有什么影响？' },
         { text: '什么是当前读与快照读（一致性读）？', link: '/09-MySQL/什么是当前读与快照读（一致性读）？' },
+
+      ]
+    },
+    {
+      text: '锁',
+      collapsed: true,
+      items: [
+        // MySQL中有哪些类型的锁？
+        // 行级锁
+        // 共享锁（S）与排他锁（X）的区别？
+        // 什么是意向锁
+        // 记录锁 间隙锁 临键锁
+        // MySQL中如何实现乐观锁
+        // 行级锁什么情况下会升级为表级锁
+        // 自增锁
+
         { text: 'MySQL中有哪些锁类型？|MySQL中有哪几种锁？', link: '/09-MySQL/MySQL中有哪些锁类型？' },
         { text: 'MySQL的乐观锁和悲观锁有什么区别？', link: '/09-MySQL/MySQL的乐观锁和悲观锁有什么区别？' },
         { text: 'mysql的行锁和表锁是什么？分别在哪些情况下会出现 ？', link: '/09-MySQL/mysql的行锁和表锁是什么？分别在哪些情况下会出现 ？' },
@@ -984,6 +1105,19 @@ export default {
         { text: 'mysql什么情况下会产生死锁？', link: '/09-MySQL/mysql什么情况下会产生死锁？' },
         { text: 'MySQL中如果发生死锁如何解决？', link: '/09-MySQL/MySQL中如果发生死锁如何解决？' },
         { text: 'Mysql死锁常见解决方案？', link: '/09-MySQL/Mysql死锁常见解决方案？' },
+        { text: 'MySQL的锁，表级锁是哪一层的锁？', link: '/09-MySQL/MySQL的锁，表级锁是哪一层的锁？' },
+        { text: '为什么MyISAM不支持行锁，而InnoDB支持？', link: '/09-MySQL/为什么MyISAM不支持行锁，而InnoDB支持？' },
+
+
+      ]
+    },
+    {
+      text: '其他',
+      collapsed: true,
+      items: [
+
+        { text: 'MySQL 有关权限的表都有哪几个？', link: '/09-MySQL/MySQL 有关权限的表都有哪几个？' },
+
         { text: 'MySQL的查询优化器如何选择执行计划？', link: '/09-MySQL/MySQL的查询优化器如何选择执行计划？' },
         { text: '如何实现数据库的不停服迁移？', link: '/09-MySQL/如何实现数据库的不停服迁移？' },
         { text: '什么是数据库逻辑删除？与物理删除有啥区别？', link: '/09-MySQL/什么是数据库逻辑删除？与物理删除有啥区别？' },
@@ -992,20 +1126,10 @@ export default {
         { text: '为什么阿里手册不推荐使用存储过程？', link: '/09-MySQL/为什么阿里手册不推荐使用存储过程？' },
         { text: '什么是视图？为什么要使用视图？', link: '/09-MySQL/什么是视图？为什么要使用视图？' },
         { text: '什么是游标？', link: '/09-MySQL/什么是游标？' },
-        { text: 'mysql的全复制、半复制、异步复制都是什么？', link: '/09-MySQL/mysql的全复制、半复制、异步复制都是什么？' },
-        { text: 'mysql半同步复制的特点', link: '/09-MySQL/mysql半同步复制的特点' },
-        { text: 'mysql主从同步原理？', link: '/09-MySQL/mysql主从同步原理？' },
-        { text: 'MySQL的主从同步机制？它是如何实现的？', link: '/09-MySQL/MySQL的主从同步机制？它是如何实现的？' },
-        { text: 'mysql主从同步延迟的原因和解决办法？', link: '/09-MySQL/mysql主从同步延迟的原因和解决办法？' },
-        { text: 'MySQL中如何避免单点故障？', link: '/09-MySQL/MySQL中如何避免单点故障？' },
-        { text: 'Mysql中什么是表分区？', link: '/09-MySQL/Mysql中什么是表分区？' },
-        { text: '表分区与分表的区别？', link: '/09-MySQL/表分区与分表的区别？' },
-        { text: '什么是分库分表？分库分表有哪些策略？如何实现？', link: '/09-MySQL/什么是分库分表？分库分表有哪些策略？如何实现？' },
-        { text: '如何在MySQL中实施分库分表策略？', link: '/09-MySQL/如何在MySQL中实施分库分表策略？' },
-        { text: '对数据库实施分库分表可能会引发哪些问题？', link: '/09-MySQL/对数据库实施分库分表可能会引发哪些问题？' },
-        { text: '单表数据量多少需要分表？', link: '/09-MySQL/单表数据量多少需要分表？' },
-        { text: '数据量过大的情况下，怎么处理？分库分表的设计规范是什么？', link: '/09-MySQL/数据量过大的情况下，怎么处理？分库分表的设计规范是什么？' },
-        { text: 'MySQL如何实现读写分离？Java代码中如何实现？', link: '/09-MySQL/MySQL如何实现读写分离？Java代码中如何实现？' },
+
+
+        { text: 'MySQL的存储引擎都有哪些？', link: '/09-MySQL/MySQL的存储引擎都有哪些？' },
+
         { text: 'MySQL在如何解决数据深度分页的问题？', link: '/09-MySQL/MySQL在如何解决数据深度分页的问题？' },
         { text: '什么是数据库脏页？', link: '/09-MySQL/什么是数据库脏页？' },
         { text: 'mysql的redolog是什么？', link: '/09-MySQL/mysql的redolog是什么？' },
@@ -1021,7 +1145,8 @@ export default {
         { text: 'MySQL的Long Buffer是什么？有什么用？', link: '/09-MySQL/MySQL的Long Buffer是什么？有什么用？' },
 
       ]
-    }
+    },
+
   ],
   '/10-Redis/': [
     {
