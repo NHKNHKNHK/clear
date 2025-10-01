@@ -51,8 +51,6 @@ Lombok是一个Java库，它**通过注解的方式简化了Java代码的编写*
 
 ​	Lombok是在==编译时通过注解处理器生成代码==，因此在使用Lombok时，IDE可能无法正确地显示生成的代码。但在编译时，Lombok会自动为我们生成相应的代码，所以在实际运行时是没有问题的。
 
-
-
 ## lombok的注解
 
 @Getter / @Setter：自动生成字段的getter和setter方法
