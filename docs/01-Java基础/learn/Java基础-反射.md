@@ -625,13 +625,13 @@ public class MyClass {
 
 -   **初始化（Initialization）** 
 
-执行类构造器 <clinit>()方法的过程。
+执行类构造器 `<clinit>()`方法的过程。
 
-类构造器<clinit>()方法是由编译期自动收集类中所有类变量的赋值动作和静态代码块中的语句合并产生的（类构造器是构造类信息的，不是构造该类对象的构造器）。 
+类构造器`<clinit>()`方法是由编译期自动收集类中所有类变量的赋值动作和静态代码块中的语句合并产生的（类构造器是构造类信息的，不是构造该类对象的构造器）。 
 
 当初始化一个类的时候，如果发现其父类还没有进行初始化，则需要先触发其父类的初始化。 
 
-虚拟机会保证一个类的 <clinit>()方法在多线程环境中被正确加锁和同步。 
+虚拟机会保证一个类的 `<clinit>()`方法在多线程环境中被正确加锁和同步。 
 
 ## 类加载器（classloader）
 
@@ -1433,13 +1433,13 @@ class Son extends Father<String,Integer>{
 
 ### 获取内部类或外部类信息
 
-public Class<?>[] getClasses()：返回所有公共内部类和内部接口。包括从超类继承的公共类和接口成员以及该类声明的公共类和接口成员。 
+`public Class<?>[] getClasses()`：返回所有公共内部类和内部接口。包括从超类继承的公共类和接口成员以及该类声明的公共类和接口成员。 
 
-public Class<?>[] getDeclaredClasses()：返回 Class 对象的一个数组，这些对象反映声明为此 Class 对象所表示的类的成员的所有类和接口。包括该类所声明的公共、保护、默认（包）访问及私有类和接口，但不包括继承的类和接口。 
+`public Class<?>[] getDeclaredClasses()`：返回 Class 对象的一个数组，这些对象反映声明为此 Class 对象所表示的类的成员的所有类和接口。包括该类所声明的公共、保护、默认（包）访问及私有类和接口，但不包括继承的类和接口。 
 
-public Class<?> getDeclaringClass()：如果此 Class 对象所表示的类或接口是一个内部类或内部接口，则返回它的外部类或外部接口，否则返回 null。 
+`public Class<?> getDeclaringClass()`：如果此 Class 对象所表示的类或接口是一个内部类或内部接口，则返回它的外部类或外部接口，否则返回 null。 
 
-Class<?> getEnclosingClass() ：返回某个内部类的外部类
+`Class<?> getEnclosingClass()` ：返回某个内部类的外部类
 
 ```java
 @Test

@@ -1,6 +1,8 @@
-# 什么是异常
+# Java异常体系
 
-## **异常** 
+## 什么是异常
+
+### **异常** 
 
 指的是程序在执行过程中，出现的非正常情况，如果不处理最终会导致 JVM 的非正常停止。 
 
@@ -8,15 +10,15 @@
 
 代码逻辑错误，只是没有得到想要的结果，例如：求 a 与 b 的和，你 写成了 a-b
 
-##  异常的抛出机制
+###  异常的抛出机制
 
 Java 中是如何表示不同的异常情况，又是如何让程序员得知，并处理异常的呢？ 
 
 Java 中把不同的异常用不同的类表示，一旦发生某种异常，就*创建该异常类型的* *对象*，并且抛出（throw）。然后程序员可以捕获(catch)到这个异常对象，并处理；如果没有捕获(catch)这个异常对象，那么这个异常对象将会导致程序终止 。
 
-# Java异常的体系结构
+## Java异常的体系结构
 
-## Throwable
+### Throwable
 
 `Throwable`是Java中所有错误和异常的基类。它是一个类层次结构的根，包括`Error`和`Exception`两个子类。
 
@@ -55,7 +57,7 @@ public synchronized Throwable getCause() {
 
 ​	在Java中，异常处理是通过`try-catch-finally`语句块来实现的。可以使用`try`块来包含可能抛出异常的代码，然后使用`catch`块来捕获并处理异常，最后可以使用`finally`块来执行清理操作。
 
-## Error和Exception
+### Error和Exception
 
 Throwable 可分为两类：Error 和 Exception。分别对应着 *java.lang.Error* 与 *java.lang.Exception* 两个类。 
 
@@ -82,7 +84,7 @@ java.lang.Throwable:异常体系的根父类
 			|----IllegalArgumentException（参数错误，比如方法入参类型错误）
 ```
 
-## 常见的Error
+### 常见的Error
 
 最常见的就是 VirtualMachineError，它有两个经典的子类：
 
@@ -119,7 +121,7 @@ public class ErrorTest {
 }
 ```
 
-## 常见编译时异常
+### 常见编译时异常
 
 ```java
 /**
@@ -194,7 +196,7 @@ public class CompilationException {
 
 
 
-## 常见运行时异常
+### 常见运行时异常
 
 ```java
 public class RunTimeExceptionTest {
@@ -239,7 +241,7 @@ public class RunTimeExceptionTest {
 }
 ```
 
-# 异常的处理
+## 异常的处理
 
 ​	在编写程序时，经常要在可能出现错误的地方加上检测的代码，如进行 x/y 运算时，要检测分母为0，数据为空，输入的不是数据而是字符等。过多的 if-else 分支会导致程序的代码加长*、*臃肿，可读性差，程序员需要花很大的精力“堵漏洞”。因此采用异常处理机制。
 
@@ -252,7 +254,7 @@ public class RunTimeExceptionTest {
 -   方式一：**try-catch-finally**
 -   方式二：**throws+异常处理**
 
-## 方式 1：捕获异常（try-catch-finally）
+### 方式 1：捕获异常（try-catch-finally）
 
 -   Java 程序的执行过程中如出现异常，会生成一个异常类对象，该异常对象 将被提交给 Java 运行时系统，这个过程称为*抛出**(throw)**异常*。 
 -   如果一个方法内抛出异常，该异常对象会被抛给调用者方法中处理。如果异常没有在调用者方法中处理，它继续被抛给这个调用方法的上层方法。这个过程将一直继续下去，直到异常被处理。这一过程称为*捕获**(catch)**异常*。 
@@ -306,7 +308,7 @@ try {
 
 -   一定要进行处理。否则编译不通过
 
-### catch的使用
+#### catch的使用
 
 ```java
 public class ExceptionHandleTest {
@@ -337,7 +339,7 @@ jennie
 程序结束
 ```
 
-### finally的使用
+#### finally的使用
 
 ```java
 public class FinallyTest {
@@ -397,7 +399,7 @@ java.lang.ArithmeticException: / by zero
 通过观察发现，当catch语句中存在异常时，接下来的代码将不会执行（这是我们为什么在test1中看不到输出
 “程序结束”的原因），无论catch是否存在异常，finally语句中的代码一定会被执行
 
-### 使用细节
+#### 使用细节
 
 -   深刻理解：无论try中或catch是否存在仍未被处理的异常，无论try中是否存在return语句等，finally中声明的语句都一定要被执行
 -   finally语句和catch语句是可选的，但finally语句不能单独使用。
@@ -408,24 +410,24 @@ java.lang.ArithmeticException: / by zero
 
 2、为了保证这些资源在使用完以后，不管是否出现了未被处理的异常情况下，这些资源都能被关闭。我们必须将这些操作声明在finally中
 
-### 异常处理体会
+#### 异常处理体会
 
 -   前面使用的异常都是 **RuntimeException类或是它的子类**，这些类的异常的特点是：即使**没有使用 try 和 catch 捕获，Java 自己也能捕获，并且编译通过** ( 但运行时会发生异常使得程序运行终止 )。所以，对**于这类异常，可以不作处理**，因为这类异常很普遍，若全处理可能会对程序的可读性和运行效率产生影响。 
 -   如果抛出的**异常是 IOException 等类型的非运行时异常，则必须捕获，否则编译错误**。也就是说，我们必须处理编译时异常，将异常进行捕捉，转化为运行时异常。 
 
-## 方式2：声明抛出异常类型（throws）
+### 方式2：声明抛出异常类型（throws）
 
 如果在编写方法体的代码时，某句代码可能**发生某个编译时异常**，**不处理编译不通过**，但是在当前方法体中可能不适合处理或无法给出合理的处理方式，则此方法应**显示地声明抛出异常**，表明该方法将不对这些异常进行处理，而**由该方法的调用者负责处理**。
 
 **基本格式**
 
-```
+```java
 修饰符 返回值类型 方法名(参数列表) throws 异常类型1,异常类型2....{
 
 }
 ```
 
-### 异常抛出机制
+#### 异常抛出机制
 
 举例
 
@@ -452,7 +454,7 @@ public class ThrowsTest  {
 
 
 
-### 方法重写中throws的要求
+#### 方法重写中throws的要求
 
 方法重写时，对于方法签名是有严格要求的。
 
@@ -524,7 +526,7 @@ class Son extends Father {
 
 
 
-## 两种异常处理方式的选择
+### 两种异常处理方式的选择
 
 对于异常，使用相应的处理方式。此时的异常，主要指的是编译时异常。 
 
@@ -536,7 +538,7 @@ class Son extends Father {
 
 
 
-# 手动抛出异常对象 trhow
+## 手动抛出异常对象 trhow
 
 Java 中异常对象的生成有两种方式： 
 
@@ -603,13 +605,13 @@ java.lang.Exception: 输入的id非法
 
 ```
 
-**1、为什么需要手动抛出异常？**
+### **1、为什么需要手动抛出异常？**
 
 在实际的开发过程中。如果出现不满足具体场景的代码问题，我们就有必要手动抛出一个指定类型的异常对象。
 
 
 
-**2、如何理解“自动”vs“手动”抛出异常对象？**
+### **2、如何理解“自动”vs“手动”抛出异常对象？**
 
 1）过程1：“抛”
 
@@ -625,13 +627,13 @@ java.lang.Exception: 输入的id非法
 
 
 
-**3、如何实现手动抛出异常？**
+### **3、如何实现手动抛出异常？**
 
 在方法内部，满足指定条件的情况下，使用" throw 异常类对象 "的方式抛出。
 
 
 
-**4、注意点：throw后的代码不能被执行，编译不通过**
+### **4、注意点：throw后的代码不能被执行，编译不通过**
 
 ```java
 public void regist(int id) throws Exception {
@@ -645,7 +647,7 @@ public void regist(int id) throws Exception {
 }
 ```
 
-**5、面试题：throw和throws的区别？**
+### **5、面试题：throw和throws的区别？**
 
 -   throws使用于方法声明（方法签名）处，指明将产生的异常向上一层抛出（抛给方法调用者）。
 
@@ -697,7 +699,6 @@ public class ReturnExceptionDemo {
 进入方法B
 用B方法的finally
 ```
-
 
 
 ## 自定义异常
