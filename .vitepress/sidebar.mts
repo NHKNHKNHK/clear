@@ -725,6 +725,7 @@ export default {
         { text: '如何在SpringBoot启动时执行特定代码？有哪些方式？', link: '/07-SpringBoot/如何在SpringBoot启动时执行特定代码？有哪些方式？' },
         { text: 'SpringBoot中为什么不推荐使用@Autowrited', link: '/07-SpringBoot/SpringBoot中为什么不推荐使用@Autowrited' },
         { text: 'SpringBoot的自动配置？', link: '/07-SpringBoot/SpringBoot的自动配置？' },
+        { text: '@AutoConfiguration注解', link: '/07-SpringBoot/@AutoConfiguration注解' },
         { text: 'SpringBoot自动装配原理？', link: '/07-SpringBoot/SpringBoot自动装配原理？' },
         { text: 'SpringBoot读取配置有哪些方式？', link: '/07-SpringBoot/SpringBoot读取配置有哪些方式？' },
         { text: 'SpringBoot项目内部配置文件加载顺序？', link: '/07-SpringBoot/SpringBoot项目内部配置文件加载顺序？' },
