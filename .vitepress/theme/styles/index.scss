@@ -3,15 +3,17 @@
 // 渐变色动画
 @use "./rainbow.scss";
 @use "./var.scss";
-
+// markdown引用样式修改（引用符号 >）
 @use "./blockquote.scss";
+// markdown容器颜色样式修改（tip warning）
 @use "./custom-block.scss";
+// 导航毛玻璃效果
 @use "./header-nav-blur.scss";
 // 代码块样式
 @use "./vp-code.scss";
 // 代码组样式
 @use "./vp-code-group.scss";
-// 重置medium-zoom样式，图片放大后z-index大于导航栏
+// 图片缩放——重置medium-zoom样式，图片放大后z-index大于导航栏
 @use "./reset-medium-zoom.scss";
 // 重置nprogress样式
 @use "./reset-nprogress.scss";
