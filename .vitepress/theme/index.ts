@@ -12,8 +12,7 @@ import mediumZoom from "medium-zoom" // 图片放大插件
 import { inBrowser } from "vitepress";
 import { NProgress } from "nprogress-v2/dist/index.js"; // 进度条组件
 
-import './styles/style.css'
-import 'virtual:group-icons.css' //代码组样式
+import 'virtual:group-icons.css' // 代码组图标样式
 import "nprogress-v2/dist/index.css"; // 进度条样式
 import './styles/index.scss'
 

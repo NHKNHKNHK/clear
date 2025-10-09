@@ -158,7 +158,7 @@ export default defineConfig({
     plugins: [
       UnoCSS(),
       groupIconVitePlugin({  //代码组图标
-        // 以下配置的效果是在 代码组中不书写文件名页可以有图标显示
+        // 以下配置的效果是在 代码组中不书写文件也可以有图标显示
         customIcon: {
           mts: "vscode-icons:file-type-typescript",
           cts: "vscode-icons:file-type-typescript",

@@ -1,13 +1,17 @@
-@use './rainbow.scss';
-@use './var.scss';
-@use './blockquote.scss';
-@use './custom-block.scss';
-@use './header-nav-blur.scss';
+@use "./style.css";
+
+// 渐变色动画
+@use "./rainbow.scss";
+@use "./var.scss";
+
+@use "./blockquote.scss";
+@use "./custom-block.scss";
+@use "./header-nav-blur.scss";
 // 代码块样式
 @use "./vp-code.scss";
 // 代码组样式
 @use "./vp-code-group.scss";
-// 重置medium-zoom样式
-@use './reset-medium-zoom.scss';
+// 重置medium-zoom样式，图片放大后z-index大于导航栏
+@use "./reset-medium-zoom.scss";
 // 重置nprogress样式
-@use './reset-nprogress.scss';
+@use "./reset-nprogress.scss";
