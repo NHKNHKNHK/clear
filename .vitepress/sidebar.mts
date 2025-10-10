@@ -889,6 +889,7 @@ export default {
         { text: 'MySQL中一条更新语句是如何执行的？', link: '/09-MySQL/MySQL中一条更新语句是如何执行的？' },
         { text: 'union和union all区别？', link: '/09-MySQL/union和union all区别？' },
 
+        { text: '多表查询分类', link: '/09-MySQL/多表查询分类' },
       ]
     },
     {
