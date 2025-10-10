@@ -48,6 +48,7 @@ export default [
       { text: 'NodeJS', link: '/28-NodeJS' },
       { text: 'Nginx', link: '/nginx' },
       { text: '前端性能优化、场景、bug', link: '/31-front-what' },
+      { text: 'WebPack', link: '/33-webpack/what-webpack' },
     ]
   },
   {

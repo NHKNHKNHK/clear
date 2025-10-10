@@ -1783,6 +1783,20 @@ export default {
       ]
     }
   ],
+  '/33-webpack/': [
+    {
+      text: 'WebPack',
+      items: [
+        { text: '什么是Webpack', link: '/33-webpack/what-webpack' },
+        { text: '为什么需要打包工具', link: '/33-webpack/why-build' },
+        { text: 'Webpack 的五大核心概念', link: '/33-webpack/Webpack 的五大核心概念' },
+        { text: 'Webpack中Loader和Plugin是什么，有什么区别', link: '/33-webpack/Webpack中Loader和Plugin是什么，有什么区别' },
+        { text: 'Webpack常用的插件有哪些', link: '/33-webpack/Webpack常用的插件有哪些' },
+        { text: 'Webpack的核心原理是什么', link: '/33-webpack/Webpack的核心原理是什么' },
+        { text: 'Vite和Webpack在热更新上有什么区别', link: '/33-webpack/Vite和Webpack在热更新上有什么区别' },
+      ]
+    }
+  ],
   '/nginx/': [
     {
       text: 'Nginx',
