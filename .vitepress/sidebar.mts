@@ -572,7 +572,7 @@ export default {
         { text: '自动装配（注入）有什么限制或者说注意事项？', link: '/05-Spring/自动装配（注入）有什么限制或者说注意事项？' },
         { text: 'Spring自动装配的方式有哪些？', link: '/05-Spring/Spring自动装配的方式有哪些？' },
         { text: 'Spring使用注解的进行装配的时候，需要什么注解', link: '/05-Spring/Spring使用注解的进行装配的时候，需要什么注解' },
-        { text: '什么是SpringIOC？', link: '/05-Spring/什么是SpringIOC？' },
+        { text: '什么是SpringIOC？', link: '/05-Spring/why-spring-ioc' },
         { text: '解释一下Spring的IOC控制反转？', link: '/05-Spring/解释一下Spring的IOC控制反转？' },
         { text: 'SpringIOC容器初始化过程？', link: '/05-Spring/SpringIOC容器初始化过程？' },
         { text: 'SpringIOC有什么好处？', link: '/05-Spring/SpringIOC有什么好处？' },
