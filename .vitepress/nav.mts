@@ -12,21 +12,10 @@ export default [
       { text: 'SpringBoot', link: '/07-SpringBoot' },
       { text: 'SpringCloud、微服务', link: '/08-SpringCloud、微服务' },
       { text: '分布式', link: '/12-分布式' },
-      { text: 'MySQL', link: '/09-MySQL' },
-      { text: 'Redis', link: '/10-Redis' },
+
       { text: 'ORM', link: '/11-ORM' },
-      { text: 'Zookeeper', link: '/13-Zookeeper' },
-      { text: 'ElasticSearch', link: '/14-ElasticSearch' },
-      {
-        text: '消息队列',
-        items: [
-          { text: 'RocketMQ', link: '/15-MQ/RocketMQ' },
-          { text: 'Kafka', link: '/15-MQ/Kafka' },
-          { text: 'RabbitMQ', link: '/15-MQ/RabbitMQ' },
-        ]
-      },
+
       { text: '问题排除、场景题、性能优化', link: '/17-backend-what' },
-      { text: 'MongoDB', link: '/16-MongoDB' },
       { text: 'Git', link: '/18-Git' },
       { text: 'Linux', link: '/19-Linux' },
       { text: '操作系统', link: '20-operating-system' },
@@ -52,6 +41,24 @@ export default [
     ]
   },
   {
+    text: '中间件',
+    items: [
+      { text: 'MySQL', link: '/09-MySQL' },
+      { text: 'Redis', link: '/10-Redis' },
+      { text: 'Zookeeper', link: '/13-Zookeeper' },
+      { text: 'ElasticSearch', link: '/14-ElasticSearch' },
+      {
+        text: '消息队列',
+        items: [
+          { text: 'RocketMQ', link: '/15-MQ/RocketMQ' },
+          { text: 'Kafka', link: '/15-MQ/Kafka' },
+          { text: 'RabbitMQ', link: '/15-MQ/RabbitMQ' },
+        ]
+      },
+      { text: 'MongoDB', link: '/16-MongoDB' },
+    ]
+  },
+  {
     text: 'BigData',
     items: [
       { text: 'Hadoop', link: '/34-Hadoop/什么是Hadoop' },
@@ -71,7 +78,8 @@ export default [
       { text: 'VitePress Markdown语法扩展', link: '/markdown-examples' },
       { text: 'Docker', link: '/Docker' },
       { text: 'Python', link: '/Python' },
-      { text: '书籍阅读记录',  
+      {
+        text: '书籍阅读记录',
         items: [
           { text: '《Java8实战》', link: '/50-啃书-《Java8实战》/01-将函数参数化进行传递' },
           { text: '《effective java》', link: '/51-啃书-《effective java》/01-考虑使用静态方法代替构造方法' },
