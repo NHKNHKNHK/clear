@@ -12,7 +12,9 @@ REST 样式的 Web 服务若有返回结果，大多数以JSON字符串形式返
 
 ## 1 ES数据格式
 
-Elasticsearch 是**面向文档型数据库**，一条数据在这里就是一个文档。 为了方便理解，我们将 Elasticsearch 里存储文档数据和关系型数据库 MySQL 存储数据的概念进行一个类比：
+Elasticsearch 是**面向文档型数据库**，一条数据在这里就是一个文档。 
+
+为了方便理解，我们将 Elasticsearch 里存储文档数据和关系型数据库 MySQL 存储数据的概念进行一个类比：
 
 -   ElasticSearch ===> MySQL
 -   Index(索引) ===> Database(数据库)
@@ -22,53 +24,57 @@ Elasticsearch 是**面向文档型数据库**，一条数据在这里就是一�
 
 ![1701306503229](assets\ES数据格式.png)
 
-ES 里的 Index 可以看做一个库，而 Types 相当于表， Documents 则相当于表的行。这里 Types 的概念已经被逐渐弱化， Elasticsearch 6.X 中，一个 index 下已经只能包含一个type， **Elasticsearch 7.X 中, Type 的概念已经被删除了。**
+ES 里的 Index 可以看做一个库，而 Types 相当于表， Documents 则相当于表的行。
+
+:::tip
+这里 Types 的概念已经被逐渐弱化， Elasticsearch 6.X 中，一个 index 下已经只能包含一个type， **Elasticsearch 7.X 中, Type 的概念已经被删除了。**
+:::
 
 ## 2 倒排索引简单概念
 
-正排索引：
+**正排索引：**
 
 例如：
 
+```
 ​	id							content
 
 ​	1001				my name is zhang san
 
 ​	1002				my name is li si
+```
 
-倒排索引：
+**倒排索引：**
 
 例如：
 
+```
 ​	keyword				id
 
 ​	name					 1001, 1002
 
 ​	zhang					1001
-
-
+```
 
 ## 3 索引操作
 
-Postman 官网：https://www.getpostman.com 
-
-Postman 下载：https://www.getpostman.com/apps
+> Postman 官网：https://www.getpostman.com 
+> 
+> Postman 下载：https://www.getpostman.com/apps
 
 ### 3.1 创建索引 PUT
 
 在ES中创建索引（index），对比关系型数据库，创建索引就等同于创建数据库
 
-在 Postman 中，向 ES 服务器发 **PUT** 请求 ：http://127.0.0.1:9200/shopping
+在 Postman 中，向 ES 服务器发 **PUT** 请求 ：`http://127.0.0.1:9200/shopping`
 
 ```
-PUT		http://127.0.0.1:9200/shopping
+PUT http://127.0.0.1:9200/shopping
 ```
 
 说明：
-
-​	 http://127.0.0.1:9200	表示的是ES
-
-​	shopping	表示的是index的名称
+- `http://127.0.0.1:9200` 表示的是ES
+- `shopping` 表示的是index的名称
 
 请求后，服务器返回响应：
 
@@ -86,18 +92,18 @@ PUT		http://127.0.0.1:9200/shopping
 [2023-09-08T15:55:30,053][INFO ][o.e.c.m.MetadataCreateIndexService] [YOU] [shopping] creating index, cause [api], templates [], shards [1]/[1], mappings []
 ```
 
-注意：
-
-​	如果重复发 PUT 请求 ： http://127.0.0.1:9200/shopping 添加索引，会返回错误信息 
+:::warning 注意
+​如果重复发 PUT 请求： `http://127.0.0.1:9200/shopping` 添加索引，会返回错误信息 
+:::
 
 ### 3.2 获取索引 GET
 
 #### 3.2.1 查看单个索引
 
-在 Postman 中，向 ES 服务器发 **GET** 请求 ： http://127.0.0.1:9200/shopping
+在 Postman 中，向 ES 服务器发 **GET** 请求 ：`http://127.0.0.1:9200/shopping`
 
 ```
-GET		http://127.0.0.1:9200/shopping
+GET	http://127.0.0.1:9200/shopping
 ```
 
 返回结果如下：
@@ -125,21 +131,18 @@ GET		http://127.0.0.1:9200/shopping
 
 #### 3.2.2 查看所有索引
 
-在 Postman 中，向 ES 服务器发 **GET** 请求 ： http://127.0.0.1:9200/_cat/indices?v
+在 Postman 中，向 ES 服务器发 **GET** 请求 ： `http://127.0.0.1:9200/_cat/indices?v`
 
 ```
-GET		http://127.0.0.1:9200/_cat/indices?v
+GET	http://127.0.0.1:9200/_cat/indices?v
 ```
 
 查看索引向 ES 服务器发送的请求路径和创建索引是一致的。但是 HTTP 方法不一致。这里可以体会一下 RESTful 的意义
 
 说明：
-
-​	_cat 表示查看的意思
-
-​	indices 表示索引
-
-​	所以整体含义就是查看当前 ES服务器中的所有索引，就好像 MySQL 中的 show tables 的感觉
+- `_cat` 表示查看的意思
+- `indices` 表示索引
+- 所以整体含义就是查看当前 ES服务器中的所有索引，就好像 MySQL 中的 show tables 的感觉
 
 服务器响应结果如下 :
 
@@ -150,21 +153,21 @@ yellow open   shopping b16KI_pfTxq61Fq0cdZiPg   1   1          0            0   
 
 说明：
 
--   health	当前服务器健康状态： green(集群完整) 、yellow(单点正常、集群不完整) 、red(单点不正常)
--   status	索引打开、关闭状态
--   index	索引名
--   uuid	索引统一编号
--   pri	主分片数量
--   rep	副本数量
--   docs.count	可用文档数量
--   docs.deleted	文档删除状态（逻辑删除）
--   store.size	主分片和副分片整体占空间大小
--   pri.store.size	主分片占空间大小
+-   `health`	当前服务器健康状态： green(集群完整) 、yellow(单点正常、集群不完整) 、red(单点不正常)
+-   `status`	索引打开、关闭状态
+-   `index`	索引名
+-   `uuid`	索引统一编号
+-   `pri`	主分片数量
+-   `rep`	副本数量
+-   `docs.count`	可用文档数量
+-   `docs.deleted`	文档删除状态（逻辑删除）
+-   `store.size`	主分片和副分片整体占空间大小
+-   `pri.store.size`	主分片占空间大小
     
 
 ### 3.3 删除索引 DELETE
 
-在 Postman 中，向 ES 服务器发 **DELETE** 请求 ： http://127.0.0.1:9200/shopping
+在 Postman 中，向 ES 服务器发 **DELETE** 请求 ： `http://127.0.0.1:9200/shopping`
 
 ```shell
 DELETE http://127.0.0.1:9200/shopping
@@ -184,14 +187,14 @@ DELETE http://127.0.0.1:9200/shopping
 
 假设索引已经创建好了，接下来我们来创建文档，并添加数据。这里的**文档（Documents）可以类比为关系型数据库中的表数据**，添加的数据格式为 **JSON** 格式
 
-注意：
+:::warning 注意
+​ES 7.x 中没有Type（类型）的概念，而是直接在 index 中添加 Documents
+:::
 
-​	ES 7.x 中没有Type（类型）的概念，而是直接在 index 中添加 Documents 
-
-在 Postman 中，向 ES 服务器发 **POST** 请求 ： http://127.0.0.1:9200/shopping/_doc
+在 Postman 中，向 ES 服务器发 **POST** 请求 ： `http://127.0.0.1:9200/shopping/_doc`
 
 ```json
-POST	http://127.0.0.1:9200/shopping/_doc
+POST http://127.0.0.1:9200/shopping/_doc
 	
 {
     "title":"小米手机",
@@ -201,9 +204,10 @@ POST	http://127.0.0.1:9200/shopping/_doc
 }
 ```
 
-注意：
-
-​	此处发送请求的方式必须为 POST，不能是 PUT，否则会发生错误 
+:::warning 注意
+此处发送请求的方式必须为 POST，不能是 PUT，否则会发生错误
+:::
+ 
 
 返回结果：
 
@@ -226,12 +230,12 @@ POST	http://127.0.0.1:9200/shopping/_doc
 
 说明：
 
-​	**在没有指定数据唯一性标识（ID），默认情况下， ES 服务器会随机生成一个**
+- **在没有指定数据唯一性标识（ID），默认情况下， ES 服务器会随机生成一个**
 
-如果想要自定义唯一性标识，需要在创建时指定： http://127.0.0.1:9200/shopping/_doc/1001，请求体JSON内容为：
+如果想要自定义唯一性标识，需要在创建时指定： `http://127.0.0.1:9200/shopping/_doc/1001`，请求体JSON内容为：
 
 ```json
-PUT		http://127.0.0.1:9200/shopping/_doc/1001
+PUT	http://127.0.0.1:9200/shopping/_doc/1001
 
 {
     "title":"小米手机",
@@ -241,9 +245,12 @@ PUT		http://127.0.0.1:9200/shopping/_doc/1001
 }
 ```
 
-**注意：**
+:::warning 注意
 
-​	**如果增加数据时明确数据主键，那么请求方式也可以为 PUT。**
+如果增加数据时明确数据主键，那么请求方式也可以为 PUT。
+
+:::
+
 
 返回结果如下：
 
@@ -264,16 +271,14 @@ PUT		http://127.0.0.1:9200/shopping/_doc/1001
 }
 ```
 
-
-
 ### 4.2 查询文档—主键查询 GET
 
 **查看文档时，需要指明文档的唯一性标识**，类似于 MySQL 中数据的主键查询
 
-在 Postman 中，向 ES 服务器发 **GET** 请求 ： http://127.0.0.1:9200/shopping/_doc/1001
+在 Postman 中，向 ES 服务器发 **GET** 请求 ： `http://127.0.0.1:9200/shopping/_doc/1001`
 
 ```
-GET		http://127.0.0.1:9200/shopping/_doc/1001
+GET	http://127.0.0.1:9200/shopping/_doc/1001
 ```
 
 返回结果：
@@ -296,10 +301,10 @@ GET		http://127.0.0.1:9200/shopping/_doc/1001
 }
 ```
 
-查找不存在的内容，向 ES 服务器发 GET 请求 ： http://127.0.0.1:9200/shopping/_doc/1002
+查找不存在的内容，向 ES 服务器发 GET 请求 ： `http://127.0.0.1:9200/shopping/_doc/1002`
 
 ```
-GET		http://127.0.0.1:9200/shopping/_doc/1002
+GET	http://127.0.0.1:9200/shopping/_doc/1002
 ```
 
 返回结果：
@@ -315,7 +320,7 @@ GET		http://127.0.0.1:9200/shopping/_doc/1002
 
 ### 4.3 查询文档—全查询 GET
 
-查看索引下所有数据，向 ES 服务器发 **GET** 请求 ： http://127.0.0.1:9200/shopping/_search
+查看索引下所有数据，向 ES 服务器发 **GET** 请求 ： `http://127.0.0.1:9200/shopping/_search`
 
 ```
 GET		 http://127.0.0.1:9200/shopping/_search
@@ -375,10 +380,10 @@ GET		 http://127.0.0.1:9200/shopping/_search
 
 注意：**全量修改时，POST 和 PUT 请求都可以**
 
-在 Postman 中，向 ES 服务器发 **POST** 请求 ： http://127.0.0.1:9200/shopping/_doc/1001
+在 Postman 中，向 ES 服务器发 **POST** 请求 ： `http://127.0.0.1:9200/shopping/_doc/1001`
 
 ```json
-POST	http://127.0.0.1:9200/shopping/_doc/1001
+POST http://127.0.0.1:9200/shopping/_doc/1001
 
 {
     "title":"华为手机",
@@ -411,7 +416,7 @@ POST	http://127.0.0.1:9200/shopping/_doc/1001
 
 修改数据时，也可以只修改某一给条数据的局部信息
 
-在 Postman 中，向 ES 服务器发 POST 请求 ： http://127.0.0.1:9200/shopping/_update/1001
+在 Postman 中，向 ES 服务器发 POST 请求 ： `http://127.0.0.1:9200/shopping/_update/1001`
 
 ```json
 POST    http://127.0.0.1:9200/shopping/_update/1001
@@ -424,9 +429,9 @@ POST    http://127.0.0.1:9200/shopping/_update/1001
 }
 ```
 
-注意：
-
-​	局部修改的是时候，所使用的请求体也不同
+:::warning 注意
+​局部修改的是时候，所使用的请求体也不同
+:::
 
 返回结果：
 
@@ -447,10 +452,10 @@ POST    http://127.0.0.1:9200/shopping/_update/1001
 }
 ```
 
-在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_doc/1001，查看修改内容
+在 Postman 中，向 ES 服务器发 GET请求 ： `http://127.0.0.1:9200/shopping/_doc/1001`，查看修改内容
 
 ```
-GET		http://127.0.0.1:9200/shopping/_doc/1001
+GET	http://127.0.0.1:9200/shopping/_doc/1001
 ```
 
 返回结果：
@@ -479,15 +484,14 @@ GET		http://127.0.0.1:9200/shopping/_doc/1001
 -   局部修改为只会修改某条文档中指定的属性的值
 
 
-
 ### 4.6 删除文档 DELETE
 
 删除一个文档不会立即从磁盘上移除，它只是被标记成已删除（**逻辑删除**）。
 
-在 Postman 中，向 ES 服务器发 DELETE 请求 ： http://127.0.0.1:9200/shopping/_doc/1001
+在 Postman 中，向 ES 服务器发 DELETE 请求 ： `http://127.0.0.1:9200/shopping/_doc/1001`
 
 ```
-DELETE	 http://127.0.0.1:9200/shopping/_doc/1001
+DELETE http://127.0.0.1:9200/shopping/_doc/1001
 ```
 
 返回结果：
@@ -535,7 +539,7 @@ DELETE	 http://127.0.0.1:9200/shopping/_doc/1001
 1）首先分别增加多条数据
 
 ```json
-POST	 http://127.0.0.1:9200/shopping/phone/1
+POST http://127.0.0.1:9200/shopping/phone/1
 
 {
     "title":"小米手机",
@@ -544,7 +548,7 @@ POST	 http://127.0.0.1:9200/shopping/phone/1
     "price":4000.00
 }
 
-POST	 http://127.0.0.1:9200/shopping/phone/1
+POST http://127.0.0.1:9200/shopping/phone/1
 
 {
     "title":"华为手机",
@@ -554,7 +558,7 @@ POST	 http://127.0.0.1:9200/shopping/phone/1
 }
 ```
 
-2）向 ES 服务器发 **POST** 请求 ：http://127.0.0.1:9200/shopping**/_delete_by_query**
+2）向 ES 服务器发 **POST** 请求 ：`http://127.0.0.1:9200/shopping/_delete_by_query`
 
 ```json
 POST  http://127.0.0.1:9200/shopping/_delete_by_query
@@ -607,7 +611,7 @@ Elasticsearch 提供了基于 JSON 提供完整的查询 DSL 来定义查询
 1）**先创建一个索引（不含映射关系）**：（PUT请求）
 
 ```
-PUT		http://127.0.0.1:9200/user
+PUT	http://127.0.0.1:9200/user
 ```
 
 返回结果：
@@ -626,42 +630,40 @@ PUT		http://127.0.0.1:9200/user
 
 -   字段名：任意填写，下面指定许多属性，例如：title、subtitle、images、price
 
--   type：类型，Elasticsearch 中支持的数据类型非常丰富，说几个关键的：
+-   `type`：类型，Elasticsearch 中支持的数据类型非常丰富，说几个关键的：
 
-    -   String 类型，又分两种： 
+    -   `String` 类型，又分两种：
 
-        text：可分词
+        `text`：可分词
 
-        keyword：不可分词，数据会作为完整字段进行匹配
+        `keyword`：不可分词，数据会作为完整字段进行匹配
 
-    -   Numerical：数值类型，分两类 
+    -   `Numerical`：数值类型，分两类
 
-        基本数据类型：long、integer、short、byte、double、float、half_float 
+        基本数据类型：`long`、`integer`、`short`、`byte`、`double`、`float`、`half_float`
 
-        浮点数的高精度类型：scaled_float
+        浮点数的高精度类型：`scaled_float`
 
-    -   Date：日期类型 
+    -   `Date`：日期类型 
 
-    -   Array：数组类型 
+    -   `Array`：数组类型 
 
-    -   Object：对象
+    -   `Object`：对象
 
--   index：是否索引，默认为 true，也就是说你不进行任何配置，所有字段都会被索引。 
+-   `index`：是否索引，默认为 true，也就是说你不进行任何配置，所有字段都会被索引。 
     -   true：字段会被索引，则可以用来进行搜索 
     -   false：字段不会被索引，不能用来搜索 
 
--   store：是否将数据进行独立存储，默认为 false 
+-   `store`：是否将数据进行独立存储，默认为 false 
     
-    -   原始的文本会存储在\_source 里面，默认情况下其他提取出来的字段都不是独立存储的，是从\_source 里面提取出来的。当然你也可以独立的存储某个字段，只要设置 "store": true 即可，获取独立存储的字段要比从_source 中解析快得多，但是也会占用 
+    -   原始的文本会存储在`_source` 里面，默认情况下其他提取出来的字段都不是独立存储的，是从`_source` 里面提取出来的。当然你也可以独立的存储某个字段，只要设置 `"store": true` 即可，获取独立存储的字段要比从`_source` 中解析快得多，但是也会占用更多的空间，所以要根据实际业务需求来设置。 
 
-更多的空间，所以要根据实际业务需求来设置。 
-
--   analyzer：分词器，这里的 ik_max_word 即使用 ik 分词器
+-   `analyzer`：分词器，这里的 `ik_max_word` 即使用 ik 分词器
 
 2）**修改映射：**
 
 ```json
-PUT		 http://127.0.0.1:9200/user/_mapping
+PUT	http://127.0.0.1:9200/user/_mapping
 
 {
     "properties": {
@@ -722,7 +724,7 @@ GET		http://127.0.0.1:9200/user/_mapping
 
 增加数据（发送PUT请求）
 
-http://127.0.0.1:9200/user/_create/1001
+`http://127.0.0.1:9200/user/_create/1001`
 
 JSON请求体如下：
 
@@ -755,7 +757,7 @@ JSON请求体如下：
 
 查找name含有”小“数据（GET请求）
 
-http://127.0.0.1:9200/user/_search
+`http://127.0.0.1:9200/user/_search`
 
 JSON请求体如下：
 
@@ -806,7 +808,7 @@ JSON请求体如下：
 
 查找sex含有”男“数据（GET请求）：
 
- http://127.0.0.1:9200/user/_search
+ `http://127.0.0.1:9200/user/_search`
 
 JSON请求体如下：
 
@@ -851,7 +853,7 @@ JSON请求体如下：
 
 再次请求
 
- http://127.0.0.1:9200/user/_search
+ `http://127.0.0.1:9200/user/_search`
 
 JSON请求体如下：
 
@@ -902,7 +904,7 @@ JSON请求体如下：
 
 查询电话（GET请求）
 
-http://127.0.0.1:9200/user/_search
+`http://127.0.0.1:9200/user/_search`
 
 ```json
 {
@@ -959,7 +961,7 @@ http://127.0.0.1:9200/user/_search
 
 ### 条件查询
 
-假设有以下文档内容，（在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search）：
+假设有以下文档内容，（在 Postman 中，向 ES 服务器发 GET请求 ： `http://127.0.0.1:9200/shopping/_search`）：
 
 ```json
 {
@@ -1021,7 +1023,11 @@ http://127.0.0.1:9200/user/_search
 
 #### URL带参查询 GET
 
-**查找category为小米的文档**，在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search?q=category:小米
+**查找category为小米的文档**，在 Postman 中，向 ES 服务器发 GET请求 ： 
+
+```
+GET http://127.0.0.1:9200/shopping/_search?q=category:小米
+```
 
 返回结果如下：
 
@@ -1080,9 +1086,11 @@ http://127.0.0.1:9200/user/_search
 
 #### 请求体带参查询 GET
 
-接下带JSON请求体，还是**查找category为小米的文档**，在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search，附带JSON体如下：
+接下带JSON请求体，还是**查找category为小米的文档**，在 Postman 中，向 ES 服务器发 GET请求
 
 ```json
+GET http://127.0.0.1:9200/shopping/_search
+
 {
 	"query":{
 		"match":{
@@ -1142,10 +1150,10 @@ http://127.0.0.1:9200/user/_search
 
 #### 带请求体方式的查找所有内容 GET
 
-**查找所有文档内容**，也可以这样，在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search，附带JSON体如下：
+**查找所有文档内容**，也可以这样，在 Postman 中，向 ES 服务器发 GET请求：
 
 ```json
-GET		http://127.0.0.1:9200/shopping/_search	
+GET	http://127.0.0.1:9200/shopping/_search	
 
 {
 	"query":{
@@ -1221,9 +1229,11 @@ GET		http://127.0.0.1:9200/shopping/_search
 
 #### 查询指定字段 GET
 
-**如果你想查询指定字段**，在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search，附带JSON体如下：
+**如果你想查询指定字段**，在 Postman 中，向 ES 服务器发 GET请求 ：
 
 ```json
+GET http://127.0.0.1:9200/shopping/_search
+
 {
 	"query":{
 		"match_all":{}
@@ -1285,9 +1295,11 @@ GET		http://127.0.0.1:9200/shopping/_search
 
 ### 分页查询 GET
 
-在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search，附带JSON体如下：
+在 Postman 中，向 ES 服务器发 GET请求 ：
 
 ```json
+GET http://127.0.0.1:9200/shopping/_search
+
 {
 	"query":{
 		"match_all":{}
@@ -1347,9 +1359,11 @@ GET		http://127.0.0.1:9200/shopping/_search
 
 ### 查询排序 GET
 
-如果你想通过排序查出价格最高的手机，在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search，附带JSON体如下：
+如果你想通过排序查出价格最高的手机，在 Postman 中，向 ES 服务器发 GET请求 ：
 
 ```json
+GET http://127.0.0.1:9200/shopping/_search
+
 {
 	"query":{
 		"match_all":{}
@@ -1433,13 +1447,19 @@ GET		http://127.0.0.1:9200/shopping/_search
 
 ### 多条件查询 GET
 
+#### must
+
 假设想找出小米牌子，价格为3999元的。
 
-在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search，附带JSON体如下：
+在 Postman 中，向 ES 服务器发 GET请求 ：
 
-说明：must相当于数据库的&&
+:::tip
+must相当于数据库的&&
+:::
 
 ```json
+GET http://127.0.0.1:9200/shopping/_search
+
 {
 	"query":{
 		"bool":{
@@ -1505,13 +1525,19 @@ GET		http://127.0.0.1:9200/shopping/_search
 }
 ```
 
+#### should
+
 假设想找出小米和华为的牌子。
 
-在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search，附带JSON体如下：
+在 Postman 中，向 ES 服务器发 GET请求 ：
 
-说明：should相当于数据库的||
+:::tip
+should相当于数据库的||
+:::
 
 ```json
+GET http://127.0.0.1:9200/shopping/_search
+
 {
 	"query":{
 		"bool":{
@@ -1562,9 +1588,11 @@ GET		http://127.0.0.1:9200/shopping/_search
 
 假设想找出小米和华为的牌子，价格大于2000元的手机。
 
-在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search，附带JSON体如下：
+在 Postman 中，向 ES 服务器发 GET请求 ：
 
 ```json
+GET http://127.0.0.1:9200/shopping/_search
+
 {
 	"query":{
 		"bool":{
@@ -1641,9 +1669,11 @@ GET		http://127.0.0.1:9200/shopping/_search
 
 这功能像搜索引擎那样，如品牌输入“小华”，返回结果带回品牌有“小米”和华为的。
 
-在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search，附带JSON体如下：
+在 Postman 中，向 ES 服务器发 GET请求 ： 
 
 ```json
+GET http://127.0.0.1:9200/shopping/_search
+
 {
 	"query":{
 		"match":{
@@ -1715,13 +1745,13 @@ GET		http://127.0.0.1:9200/shopping/_search
 }
 ```
 
-
-
 ### 完全匹配 GET
 
-在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search，附带JSON体如下：
+在 Postman 中，向 ES 服务器发 GET请求 ：
 
 ```json
+GET http://127.0.0.1:9200/shopping/_search
+
 {
 	"query":{
 		"match_phrase":{
@@ -1767,12 +1797,13 @@ GET		http://127.0.0.1:9200/shopping/_search
 }
 ```
 
-
 ### 高亮查询 GET
 
-在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search，附带JSON体如下：
+在 Postman 中，向 ES 服务器发 GET请求 ：
 
 ````json
+GET http://127.0.0.1:9200/shopping/_search
+
 {
 	"query":{
 		"match_phrase":{
@@ -1829,16 +1860,17 @@ GET		http://127.0.0.1:9200/shopping/_search
 ```
 
  
-
 ### 聚合查询
 
-聚合允许使用者对 es 文档进行统计分析，类似与关系型数据库中的 group by，当然还有很多其他的聚合，例如取最大值max、平均值avg等等。
+聚合允许使用者对 es 文档进行统计分析，类似与关系型数据库中的 `group by`，当然还有很多其他的聚合，例如取最大值max、平均值avg等等。
 
 接下来按price字段进行分组：
 
-在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search，附带JSON体如下：
+在 Postman 中，向 ES 服务器发 GET请求 ：
 
 ```json
+GET http://127.0.0.1:9200/shopping/_search
+
 {
 	"aggs":{	//聚合操作
 		"price_group":{	//名称，随意起名
@@ -1926,9 +1958,13 @@ GET		http://127.0.0.1:9200/shopping/_search
 }
 ```
 
-上面返回结果会附带原始数据的。若不想要不附带原始数据的结果，在 Postman 中，向 ES 服务器发 GET请求 ： http://127.0.0.1:9200/shopping/_search，附带JSON体如下：
+上面返回结果会附带原始数据的。
+
+若不想要不附带原始数据的结果，在 Postman 中，向 ES 服务器发 GET请求 ：
 
 ```json
+GET http://127.0.0.1:9200/shopping/_search
+
 {
 	"aggs":{
 		"price_group":{

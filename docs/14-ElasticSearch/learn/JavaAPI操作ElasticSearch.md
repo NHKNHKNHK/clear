@@ -1,19 +1,20 @@
-# 0 ES 客户端说明 
+# Java API操作Elasticsearch
 
-目前市面上有两类客户端。 
+## ES 客户端说明
+
+目前市面上有两类客户端。
 
 -   一类是 `TransportClient` 为代表的 **ES 原生客户端**，不能执行原生 DSL 语句，必须使用它的 Java API 方法。 
 
 -   **另外一种是以 Rest API 为主的 missing client**，最典型的就是 jest。 这种客户端可以直接使用 DSL 语句拼成的字符串，直接传给服务端，然后返回 json 字符串再解析。 
 
-两种方式各有优劣，但是最近 elasticsearch 官网，宣布计划在 **7.0 以后的版本中废除 TransportClient**，以 RestClient 为主。
+两种方式各有优劣，但是最近 elasticsearch 官网，宣布计划在 **7.0 以后的版本中废除 `TransportClient`**，以 RestClient 为主。
 
 目前 RestClient 类型的 es 客户端有很多种，比如：
 
--   Jest
-
--    High level Rest Client
--    ElasticsearchRestTemplate 
+- `Jest`
+- `High level Rest Client`
+- `ElasticsearchRestTemplate`（Spring Data Elasticsearch）
 
 下面是官网描述：
 
@@ -21,19 +22,21 @@ We plan on deprecating the TransportClient in Elasticsearch 7.0 and removing it 
 The Java High Level REST Client currently has support for the more commonly used APIs, but there are a lot more that still need to be added. You can help us prioritise by telling us which missing APIs you need for your application by adding a comment to this issue: Java high-level REST client completeness.
 Any missing APIs can always be implemented today by using the low level Java REST Client with JSON request and response bodies.
 
+:::details 翻译
+
 我们**计划在Elasticsearch 7.0中弃用TransportClient，并在8.0中完全删除它**。相反，您应该使用Java高级REST客户端，它执行HTTP请求而不是序列化的Java请求。迁移指南描述了迁移所需的所有步骤。
 
 Java高级REST客户端目前支持更常用的api，但还有很多需要添加的。您可以通过在这个问题上添加注释来告诉我们您的应用程序需要哪些缺失的api，从而帮助我们确定优先级Java高级REST客户端完整性。
 
 现在，任何缺失的api都可以通过使用带有JSON请求和响应主体的底层Java REST客户机来实现。
 
+:::
 
-
-# 1 ES 开发准备
+## 开发准备
 
 Elasticsearch 软件是由 Java 语言开发的，所以也可以通过 Java API 的方式对 Elasticsearch 服务进行访问
 
-## 1.1 创建Maven项目
+### 创建Maven项目
 
 GAV
 
@@ -95,7 +98,7 @@ POM
 </dependencies>
 ```
 
-# 2 客户端对象说明
+## 客户端对象说明
 
 代码中创建 Elasticsearch 客户端对象 因为早期版本的客户端对象已经不再推荐使用，且在未来版本中会被删除，所以这里我们采用高级 REST 客户端对象
 
@@ -115,11 +118,11 @@ try {
 }
 ```
 
-# 3 索引操作
+## 索引操作
 
 ES 服务器正常启动后，可以通过 Java API 客户端对象对 ES 索引进行操作
 
-## 3.1 创建索引
+### 创建索引
 
 ```java
 package com.clear.es.index;
@@ -170,7 +173,7 @@ public class CreateIndex {
 }
 ```
 
-## 查询索引
+### 查询索引
 
 ```java
 package com.clear.es;
@@ -217,7 +220,7 @@ public class SearchIndex {
 }
 ```
 
-## 删除索引
+### 删除索引
 
 ```java
 package com.clear.es;
@@ -268,9 +271,9 @@ public class DeleteIndex {
 }
 ```
 
-# 文档操作
+## 文档操作
 
-## 新增文档
+### 新增文档
 
 User类
 
@@ -346,7 +349,7 @@ public class InsertDocuments {
 }
 ```
 
-## 修改文档
+### 修改文档
 
 ```java
 import org.apache.http.HttpHost;
@@ -395,7 +398,7 @@ public class UpdateDocuments {
 }
 ```
 
-## 查询文档
+### 查询文档
 
 ```java
 import org.apache.http.HttpHost;
@@ -439,7 +442,7 @@ public class GetDocuments {
 }
 ```
 
-## 删除文档
+### 删除文档
 
 ```java
 import org.apache.http.HttpHost;
@@ -484,7 +487,7 @@ public class DeleteDocuments {
 }
 ```
 
-## 批量新增文档
+### 批量新增文档
 
 ```java
 import org.apache.http.HttpHost;
@@ -534,7 +537,7 @@ public class InsertDocuments_Batch {
 }
 ```
 
-## 批量删除文档
+### 批量删除文档
 
 ```java
 import org.apache.http.HttpHost;
@@ -582,9 +585,9 @@ public class DeleteDocuments_Batch {
 }
 ```
 
-## 高级查询
+### 高级查询
 
-### 全量查询
+#### 全量查询
 
 ```java
 /**
@@ -627,9 +630,7 @@ public class QueryDocuments {
 }
 ```
 
-
-
-### 分页查询
+#### 分页查询
 
 ```java
 import org.apache.http.HttpHost;
@@ -689,7 +690,7 @@ public class PagingQueryDocuments {
 }
 ```
 
-### 排序查询
+#### 排序查询
 
 ```java
 import org.apache.http.HttpHost;
@@ -748,7 +749,7 @@ public class SortQueryDocuments {
 }
 ```
 
-### 条件查询
+#### 条件查询
 
 ```java
 import org.apache.http.HttpHost;
@@ -804,7 +805,7 @@ public class ConditionQueryDocuments {
 }
 ```
 
-### 字段查询
+#### 字段查询
 
 ```java
 import org.apache.http.HttpHost;
@@ -864,7 +865,7 @@ public class FieldQueryDocuments {
 }
 ```
 
-### 组合查询
+#### 组合查询
 
 ```java
 import org.apache.http.HttpHost;
@@ -926,7 +927,7 @@ public class CombinatorialQueryDocuments {
 }
 ```
 
-### 范围查询
+#### 范围查询
 
 ```java
 import org.apache.http.HttpHost;
@@ -989,7 +990,7 @@ public class RangeQueryDocuments {
 }
 ```
 
-### 模糊查询
+#### 模糊查询
 
 ```java
 package com.clear.es.document;
@@ -1055,7 +1056,7 @@ public class FuzzyQueryDocuments {
 
 ```
 
-### 高亮查询
+#### 高亮查询
 
 ```java
 import org.apache.http.HttpHost;
@@ -1124,9 +1125,9 @@ public class HighlightQueryDocuments {
 }
 ```
 
-### 聚合查询
+#### 聚合查询
 
-#### 最大值查询
+##### 最大值查询
 
 ```java
 import org.apache.http.HttpHost;
@@ -1186,7 +1187,7 @@ public class MaxQueryDocuments {
 }
 ```
 
-#### 分组查询
+##### 分组查询
 
 ```java
 import org.apache.http.HttpHost;
@@ -1245,4 +1246,3 @@ public class GroupingQueryDocuments {
     }
 }
 ```
-
