@@ -32,11 +32,12 @@ Spring IoC（Inversion of Control，控制反转）是Spring框架中的一个�
 - **构造函数注入**：通过构造函数将依赖对象传递给被依赖对象。
 
 ```java
-public class Service {
-    private final Repository repository;
+public class SystemUserController {
 
-    public Service(Repository repository) {
-        this.repository = repository;
+    private final SystemUserService systemUserService;
+
+    public SystemUserController(SystemUserService systemUserService) {
+        this.systemUserService = systemUserService;
     }
 }
 ```
@@ -46,26 +47,39 @@ Spring官方推荐使用构造器来注入依赖对象，这样做的好处是�
 
 开发中构造器注入常常是配合Lombok的`@RequiredArgsConstructor`注解使用，这样可以简化构造函数的书写。
 
+```java
+@RequiredArgsConstructor
+public class SystemUserController {
+
+    private final SystemUserService systemUserService;
+
+}
+```
+
 :::
 
 - **Setter方法注入**：通过Setter方法将依赖对象注入到被依赖对象中。
 
 ```java
-public class Service {
-    private Repository repository;
+public class SystemUserController {
 
-    public void setRepository(Repository repository) {
-        this.repository = repository;
+    private SystemUserService systemUserService;
+
+    public void setSystemUserService(SystemUserService systemUserService) {
+        this.systemUserService = systemUserService;
     }
+
 }
 ```
 
 - **字段注入**：直接在字段上使用注解进行注入
 
 ```java
-public class Service {
+public class SystemUserController {
+
     @Autowired
-    private Repository repository;
+    private SystemUserService systemUserService;
+
 }
 ```
 
@@ -83,9 +97,9 @@ Spring IoC容器可以通过多种方式进行配置
 
 ```xml
 <beans>
-    <bean id="repository" class="com.example.Repository"/>
-    <bean id="service" class="com.example.Service">
-        <constructor-arg ref="repository"/>
+    <bean id="systemUserService" class="com.clear.lease.admin.service.SystemUserService"><"/>
+    <bean id="systemUserController" class="com.clear.lease.admin.controller.system.SystemUserController">
+        <constructor-arg ref="systemUserService"/>
     </bean>
 </beans>
 ```
@@ -94,29 +108,48 @@ Spring IoC容器可以通过多种方式进行配置
 
 ```java
 @Configuration
-public class AppConfig {
+public class Knife4jConfiguration {
+
     @Bean
-    public Repository repository() {
-        return new Repository();
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI().info(
+                new Info()
+                        .title("后台管理系统API")
+                        .version("1.0")
+                        .description("后台管理系统API"));
     }
 
     @Bean
-    public Service service() {
-        return new Service(repository());
+    public GroupedOpenApi systemAPI() {
+        return GroupedOpenApi.builder().group("系统信息管理").
+                pathsToMatch("/admin/system/**")
+                .build();
     }
+
 }
+
 ```
 
 - **注解配置**：通过注解（如`@Component`、`@Autowired`）自动扫描和注入Bean。
 
 ```java
-@Component
-public class Repository {
+@RestController
+@RequestMapping("/admin/system/user")
+@RequiredArgsConstructor
+public class SystemUserController {
+
+    private final SystemUserService systemUserService;
+
+    ...
+
 }
 
-@Component
-public class Service {
-    @Autowired
-    private Repository repository;
+@Service
+@RequiredArgsConstructor
+public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemUser>
+        implements SystemUserService {
+
+    ...
+
 }
 ```
