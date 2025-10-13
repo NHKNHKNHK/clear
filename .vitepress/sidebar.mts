@@ -60,6 +60,7 @@
 
 import javaSidebar from './sidebar/java/index'
 import vueSidebar from './sidebar/vue/index'
+import esSidebar from './sidebar/es/index'
 
 export default {
   '/01-Java基础/': [
@@ -1373,15 +1374,7 @@ export default {
       ]
     }
   ],
-  '/14-ElasticSearch/': [
-    {
-      text: 'ElasticSearch',
-      items: [
-        { text: 'ES', link: '/14-ElasticSearch/index' },
-        { text: 'ES检索比较快的原因，为什么MySQL不行？', link: '/14-ElasticSearch/ES检索比较快的原因，为什么MySQL不行？' },
-      ]
-    }
-  ],
+  '/14-ElasticSearch/': esSidebar,
   '/15-MQ/': [
     {
       text: '消息队列',
