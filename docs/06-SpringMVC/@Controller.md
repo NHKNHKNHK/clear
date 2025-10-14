@@ -1,4 +1,4 @@
-# Spring MVC 中的 @Controller 注解有什么作用？
+# @Controller
 
 `@Controller` 注解用于标记一个类作为控制器组件。控制器是处理 HTTP 请求的核心组件，它负责接收请求、处理业务逻辑并返回视图或数据响应。
 
