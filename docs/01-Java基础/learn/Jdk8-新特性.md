@@ -4,17 +4,22 @@
 
 ### 接口中默认方法修饰为普通方法
 
-在jdk8之前，interface之中可以定义变量和方法，**变量必须是public、static、final的**，**方法必须是public、abstract的**，由于这些修饰符都是默认的，所以在书写的时候可以省略不写。
+在jdk8之前，`interface`之中可以定义变量和方法，**变量必须是`public static final`的**，**方法必须是`public abstract`的**，由于这些修饰符都是默认的，所以在书写的时候可以省略不写。
 
-接口定义方法：public 抽象方法 需要子类实现
+- 接口定义方法：`public 返回类型 方法名(参数列表)` 需要子类实现
 
-接口定义变量：public、static、final （记住，接口中的变量必须初始化）
+- 接口定义变量：`public static final 变量名` （记住，接口中的变量必须初始化）
 
- 在JDK 1.8开始 支持使用static和default 修饰 可以写方法体，不需要子类重写。
-方法：
-	普通方法 可以有方法体
+:::warning
+准确的来说，接口中定义的变量应该叫做常量，而不是变量。
+:::
 
-​	抽象方法 没有方法体**需要子类实现 重写**。
+在JDK 1.8开始 支持使用`static`和`default` 修饰 可以写方法体，不需要子类重写。
+
+方法区别：
+
+- 普通方法 可以有方法体
+- 抽象方法 没有方法体**需要子类实现 重写**。
 
 演示
 
@@ -59,8 +64,6 @@ public class MyInterfaceImpl implements MyInterface{
 
 ```
 
-
-
 ## Java8新特性—Lambda表达式
 
 Java中使用Lambda表达式（Lambda expression）是为了**简化匿名内部类的代码形式**
@@ -79,15 +82,15 @@ lambda形参列表 -> lambda体
 // -> 是语法形式，无实际意义
 ```
 
-注意：
-
-​	Lamdba表达式只能简化**函数式接口的匿名内部类**的写法形式
+:::warning
+Lamdba表达式只能简化**函数式接口的匿名内部类**的写法形式
+:::
 
 **函数式接口**（jdk8新特性）
 
 -   必须是接口
 -   接口中只有一个抽象方法（接口中可以有多个static方法、default方法，但只能有一个抽象方法）
--   一般可以加上**@FunctionalInterface**注解，来声明这是函数式接口
+-   一般可以加上`@FunctionalInterface`注解，来声明这是函数式接口
 
 ### 为什么要使用Lambda
 
@@ -995,8 +998,6 @@ public class ConstructorRefTest {
     }
 ```
 
-
-
 ## Java8新特性—Stream
 
 Java8中有两个最强的的改变。一个是Lambda表达式，另一个是Stream
@@ -1005,7 +1006,9 @@ Stream API（java.util.stream）把真正的函数式编程风格引入到Java�
 
 Stream是Java8中处理集合的关键抽象概念，它可以对集合的数据进行操作，可以执行非常复杂的查找、过滤和映射数据等操作。使用Stream API对集合进行操作，就类似于使用SQL执行的数据库查询。
 
-
+:::tip
+Scala 早于 Java 支持 匿名函数 和 函数作为一等公民（如 `(a: String, b: String) => a.length - b.length`），Lambda 表达式的设计直接参考了 Scala 的函数语法。
+:::
 
 ### 什么是流？
 

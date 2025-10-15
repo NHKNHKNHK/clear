@@ -1,5 +1,9 @@
 # Optional取代null值
 
+:::tip
+核心思想：封装 “可能为 null 的值”，避免直接操作 null 导致的 `NullPointerException`
+:::
+
 ## 1 Optional类的引入
 
 ### 1.1 Java8之前对缺失值的处理

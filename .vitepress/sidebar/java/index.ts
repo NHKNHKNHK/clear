@@ -37,6 +37,7 @@ export default {
     { text: 'Java-IO流', link: basePath + 'Java-IO流' },
     { text: 'Java-多线程基础', link: basePath + 'Java-多线程基础' },
     { text: 'Jdk8-新特性', link: basePath + 'Jdk8-新特性' },
+    { text: 'JDK新特性', link: basePath + 'jdk-new-feature' },
 
     { text: 'Java比较器-Comparable-Comparator', link: basePath + 'Java比较器-Comparable-Comparator' },
 
