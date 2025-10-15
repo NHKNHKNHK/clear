@@ -573,7 +573,7 @@ public class TextBlockDemo {
 }
 ```
 
-### Switch 表达式增强（预览）
+### Switch 表达式增强 <Badge type="tip" text="预览" />
 
 补充 yield 关键字，用于在代码块中返回 Switch 表达式的结果（箭头语法适合单行，yield 适合多行逻辑）。
 
@@ -868,7 +868,7 @@ JDK 16 预览的 instanceof 模式匹配正式成为标准特性，无需开启�
 
 同 JDK 16 的 instanceof 示例，仅需移除预览配置。
 
-### Switch 模式匹配（预览）
+### Switch 模式匹配 <Badge type="tip" text="预览"/>
 
 Switch 支持 类型模式（如 case String s），可直接匹配对象类型并强转，替代多层 instanceof。
 

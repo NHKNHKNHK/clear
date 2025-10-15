@@ -4,7 +4,8 @@ import sidebar from './sidebar.mjs'
 import UnoCSS from 'unocss/vite'
 // 代码组icon
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
-
+// markmap
+import { vitepressPluginLegend } from 'vitepress-plugin-legend'
 
 const base = process.env.GITHUB_ACTIONS === 'true' ? '/clear/' : '/'
 
@@ -151,6 +152,12 @@ export default defineConfig({
         if (tokens[idx].tag === 'h1') htmlResult += `<ArticleMetadata />`;
         return htmlResult;
       }
+
+      // markmap 
+      vitepressPluginLegend(md, {
+        markmap: { showToolbar: true }, // 显示脑图工具栏
+        mermaid: true // 启用 Mermaid
+      })
     },
   },
 
@@ -185,7 +192,7 @@ export default defineConfig({
       }),
     ],
     ssr: {
-    
+
     },
 
   },

@@ -4,17 +4,21 @@ import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import MyLayout from './MyLayout.vue'
 import Confetti from './components/Confetti.vue'
-import HomeUnderline  from './components/HomeUnderline.vue'
+import HomeUnderline from './components/HomeUnderline.vue'
 import ArticleMetadata from "./components/ArticleMetadata.vue"
 import { onMounted, watch, nextTick } from "vue"
 import { useRoute } from "vitepress"
 import mediumZoom from "medium-zoom" // 图片放大插件
 import { inBrowser } from "vitepress";
 import { NProgress } from "nprogress-v2/dist/index.js"; // 进度条组件
+// markmap
+import { initComponent } from 'vitepress-plugin-legend/component'
 
 import 'virtual:group-icons.css' // 代码组图标样式
 import "nprogress-v2/dist/index.css"; // 进度条样式
 import './styles/index.scss'
+// markmap
+import 'vitepress-plugin-legend/dist/index.css'
 
 // 彩虹背景动画样式
 let homePageStyle: HTMLStyleElement | undefined
@@ -44,6 +48,9 @@ export default {
     app.component('HomeUnderline', HomeUnderline)
 
     app.component('ArticleMetadata', ArticleMetadata)
+
+    // markmap
+    initComponent(app)
 
     // 彩虹背景动画样式
     if (typeof window !== 'undefined') {
