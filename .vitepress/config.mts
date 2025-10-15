@@ -6,11 +6,13 @@ import UnoCSS from 'unocss/vite'
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
 // markmap
 import { vitepressPluginLegend } from 'vitepress-plugin-legend'
+// drawio
+import withDrawio from '@dhlx/vitepress-plugin-drawio'
 
 const base = process.env.GITHUB_ACTIONS === 'true' ? '/clear/' : '/'
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+export default withDrawio(defineConfig({
   base: base,
   // =====================
   // 站点级选项
@@ -198,4 +200,35 @@ export default defineConfig({
   },
 
 
+}), {
+  // default page
+  // set default width， default： 100%
+  width: "100%",
+  // set default height，default： 600px
+  height: "600px",
+  // start page 0
+  page: 0,
+  // set page title
+  // dark mode，default： auto, options： light, dark, auto
+  "darkMode": "auto",
+
+  // enable toolbar resize，default： false
+  resize: true,
+
+  // enable toolbar change pages，default： false
+  pages: true,
+  // enable toolbar zoom，default： false
+  zoom: true,
+
+  // enable toolbar layers，default： false
+  layers: true,
+
+  // enable toolbar lightbox，default： false
+  lightbox: true,
+
+  // set highlight color，default： #0000FF
+  highlight: "#0000ff",
+
+  // set transparent background，default： false
+  transparent: true,
 })

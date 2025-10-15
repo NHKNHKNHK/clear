@@ -26,6 +26,7 @@
     "vitepress-plugin-group-icons": "^1.6.1"
   },
   "dependencies": {
+    "@dhlx/vitepress-plugin-drawio": "^0.0.10",
     "@giscus/vue": "^3.1.1",
     "@vueuse/core": "^13.6.0",
     "canvas-confetti": "^1.9.3",
