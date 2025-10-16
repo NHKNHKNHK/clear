@@ -27,3 +27,7 @@ https://juejin.cn/post/7362547962604437541
 参考：https://juejin.cn/post/7519812415854395446?searchId=202510152331520FFE72EFF7461FB432EB#heading-1
 
 官方仓库：https://github.com/LiDengHui/vitepress-plugin-drawio
+
+## 永久链接
+
+参考：https://github.com/Kele-Bingtang/vitepress-theme-teek/tree/main/plugins/vitepress-plugin-permalink

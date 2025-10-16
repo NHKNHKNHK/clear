@@ -1,3 +1,7 @@
+---
+permalink: /25/10/16/java/jdk8-new-features
+---
+
 # Java8新特性
 
 ## Java8新特性—接口新特性

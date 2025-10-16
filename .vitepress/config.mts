@@ -8,6 +8,8 @@ import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-i
 import { vitepressPluginLegend } from 'vitepress-plugin-legend'
 // drawio
 import withDrawio from '@dhlx/vitepress-plugin-drawio'
+// 永久链接插件
+import Permalink from "vitepress-plugin-permalink";
 
 const base = process.env.GITHUB_ACTIONS === 'true' ? '/clear/' : '/'
 
@@ -166,6 +168,8 @@ export default withDrawio(defineConfig({
   vite: {
     plugins: [
       UnoCSS(),
+      // 永久链接插件
+      Permalink(),
       groupIconVitePlugin({  //代码组图标
         // 以下配置的效果是在 代码组中不书写文件也可以有图标显示
         customIcon: {
