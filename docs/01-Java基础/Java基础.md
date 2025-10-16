@@ -1349,9 +1349,6 @@ public class MyInterfaceImpl implements MyInterface{
 
 
 
-### CompletableFuture
-
-
 
 ### Lambda
 
