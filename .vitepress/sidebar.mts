@@ -308,7 +308,8 @@ export default {
   ],
   '/04-Java并发篇/': [
     {
-      text: 'Java并发篇',
+      text: '线程基础',
+      collapsed: false,
       items: [
         { text: '为什么要使用多线程？', link: '/04-Java并发篇/index' },
         { text: '串行、并行和并发有什么区别？', link: '/04-Java并发篇/串行、并行和并发有什么区别？' },
@@ -321,6 +322,37 @@ export default {
         { text: 'Thread类的特性？', link: '/04-Java并发篇/Thread类的特性？' },
         { text: 'Java创建线程的方式有哪些？', link: '/04-Java并发篇/Java创建线程的方式有哪些？' },
         { text: 'Java创建线程的几种方式有什么区别？', link: '/04-Java并发篇/Java创建线程的几种方式有什么区别？' },
+
+        { text: '终止线程的四种方式', link: '/04-Java并发篇/终止线程的四种方式' },
+        { text: '启动一个线程用start还是run？', link: '/04-Java并发篇/启动一个线程用start还是run？' },
+        { text: '为什么启动线程不直接调用run()，而调用start()？', link: '/04-Java并发篇/为什么启动线程不直接调用run()，而调用start()？' },
+        { text: '两次调用start方法会怎么样？', link: '/04-Java并发篇/两次调用start方法会怎么样？' },
+        { text: 'Java多线程的生命周期是什么', link: '/04-Java并发篇/Java多线程的生命周期是什么' },
+        { text: '创建线程的底层原理？', link: '/04-Java并发篇/创建线程的底层原理？' },
+        { text: '怎么理解线程分组？编程实现一个线程分组的例子？', link: '/04-Java并发篇/怎么理解线程分组？编程实现一个线程分组的例子？' },
+        { text: '线程的状态有哪几种？', link: '/04-Java并发篇/线程的状态有哪几种？' },
+        { text: 'JDK1.5之前线程的五种状态', link: '/04-Java并发篇/JDK1.5之前线程的五种状态' },
+        { text: 'JDK1.5之后线程的五种状态', link: '/04-Java并发篇/JDK1.5之后线程的五种状态' },
+        { text: '线程的生命周期在Java中是如何定义的？', link: '/04-Java并发篇/线程的生命周期在Java中是如何定义的？' },
+        { text: 'Java的线程的优先级是什么？有什么用？', link: '/04-Java并发篇/Java的线程的优先级是什么？有什么用？' },
+        { text: 'join方法有什么用？什么原理？', link: '/04-Java并发篇/join方法有什么用？什么原理？' },
+
+
+        { text: 'sleep和wait的主要区别？', link: '/04-Java并发篇/sleep和wait的主要区别？' },
+        { text: 'sleep和wait、yield方法有什么区别？', link: '/04-Java并发篇/sleep和wait、yield方法有什么区别？' },
+        { text: 'Thread.sleep(0)有意义吗？有什么用？', link: '/04-Java并发篇/Thread.sleep(0)有意义吗？有什么用？' },
+        { text: '怎么理解Java中的线程中断（interrupt）？', link: '/04-Java并发篇/怎么理解Java中的线程中断（interrupt）？' },
+        { text: '为什么多线程执行时，需要catch InterruptedException异常，catch里面写啥', link: '/04-Java并发篇/为什么多线程执行时，需要catch InterruptedException异常，catch里面写啥' },
+        { text: 'interrupt的标志位是否会回归到原有标记', link: '/04-Java并发篇/interrupt的标志位是否会回归到原有标记' },
+        { text: 'interrupt和stop有什么区别？', link: '/04-Java并发篇/interrupt和stop有什么区别？' },
+        { text: '为什么推荐使用 interrupt() 而不是 stop()？', link: '/04-Java并发篇/为什么推荐使用 interrupt() 而不是 stop()？' },
+
+      ]
+    },
+    {
+      text: '线程池',
+      collapsed: false,
+      items: [
         { text: '为什么不建议使用Executors来创建线程池？', link: '/04-Java并发篇/为什么不建议使用Executors来创建线程池？' },
         { text: '线程池相关的常用API？', link: '/04-Java并发篇/线程池相关的常用API？' },
         { text: 'BlockingQueue是什么？', link: '/04-Java并发篇/BlockingQueue是什么？' },
@@ -338,32 +370,47 @@ export default {
         { text: '利用线程池批量删除数据，数据量突然增大怎么办？', link: '/04-Java并发篇/利用线程池批量删除数据，数据量突然增大怎么办？' },
         { text: 'Java中有哪些队列？', link: '/04-Java并发篇/Java中有哪些队列？' },
         { text: '阻塞队列原理？', link: '/04-Java并发篇/阻塞队列原理？' },
-        { text: '终止线程的四种方式', link: '/04-Java并发篇/终止线程的四种方式' },
-        { text: '启动一个线程用start还是run？', link: '/04-Java并发篇/启动一个线程用start还是run？' },
-        { text: '为什么启动线程不直接调用run()，而调用start()？', link: '/04-Java并发篇/为什么启动线程不直接调用run()，而调用start()？' },
-        { text: '两次调用start方法会怎么样？', link: '/04-Java并发篇/两次调用start方法会怎么样？' },
-        { text: 'Java多线程的生命周期是什么', link: '/04-Java并发篇/Java多线程的生命周期是什么' },
-        { text: '创建线程的底层原理？', link: '/04-Java并发篇/创建线程的底层原理？' },
-        { text: '怎么理解线程分组？编程实现一个线程分组的例子？', link: '/04-Java并发篇/怎么理解线程分组？编程实现一个线程分组的例子？' },
-        { text: '线程的状态有哪几种？', link: '/04-Java并发篇/线程的状态有哪几种？' },
-        { text: 'JDK1.5之前线程的五种状态', link: '/04-Java并发篇/JDK1.5之前线程的五种状态' },
-        { text: 'JDK1.5之后线程的五种状态', link: '/04-Java并发篇/JDK1.5之后线程的五种状态' },
-        { text: '线程的生命周期在Java中是如何定义的？', link: '/04-Java并发篇/线程的生命周期在Java中是如何定义的？' },
-        { text: 'Java的线程的优先级是什么？有什么用？', link: '/04-Java并发篇/Java的线程的优先级是什么？有什么用？' },
-        { text: 'join方法有什么用？什么原理？', link: '/04-Java并发篇/join方法有什么用？什么原理？' },
+
+      ]
+    },
+    {
+      text: '锁',
+      collapsed: false,
+      items: [
+        { text: '如何优化Java中的锁？', link: '/04-Java并发篇/如何优化Java中的锁？' },
+
+      ]
+    },
+    {
+      text: '并发工具',
+      collapsed: false,
+      items: [
+        { text: '什么是Java的Semaphore？', link: '/04-Java并发篇/什么是Java的Semaphore？' },
+        { text: '什么是Java的CycliBarrier？', link: '/04-Java并发篇/什么是Java的CycliBarrier？' },
+        { text: '什么是Java的CountDownLatch？countdownLatch用法', link: '/04-Java并发篇/什么是Java的CountDownLatch？countdownLatch用法' },
+        { text: '什么是Java的CyclicBarrier？CyclicBarrier用法？', link: '/04-Java并发篇/什么是Java的CyclicBarrier？CyclicBarrier用法？' },
+        { text: '什么是Java的StampedLock？', link: '/04-Java并发篇/什么是Java的StampedLock？' },
+        { text: '什么是FutureTask？', link: '/04-Java并发篇/什么是FutureTask？' },
+        { text: '什么是Java的CompletableFuture？', link: '/04-Java并发篇/什么是Java的CompletableFuture？' },
+
+      ]
+    },
+    {
+      text: '实战',
+      collapsed: false,
+      items: [
         { text: '怎么让3个线程按顺序执行？', link: '/04-Java并发篇/怎么让3个线程按顺序执行？' },
+      ]
+    },
+    {
+      text: 'Java并发篇',
+      items: [
+
+
         { text: '线程间的通信方式？', link: '/04-Java并发篇/线程间的通信方式？' },
         { text: 'JVM的线程调度是什么？', link: '/04-Java并发篇/JVM的线程调度是什么？' },
         { text: '引起CPU进行上下文切换的原因', link: '/04-Java并发篇/引起CPU进行上下文切换的原因' },
         { text: '线程什么时候主动放弃CPU', link: '/04-Java并发篇/线程什么时候主动放弃CPU' },
-        { text: 'sleep和wait的主要区别？', link: '/04-Java并发篇/sleep和wait的主要区别？' },
-        { text: 'sleep和wait、yield方法有什么区别？', link: '/04-Java并发篇/sleep和wait、yield方法有什么区别？' },
-        { text: 'Thread.sleep(0)有意义吗？有什么用？', link: '/04-Java并发篇/Thread.sleep(0)有意义吗？有什么用？' },
-        { text: '怎么理解Java中的线程中断（interrupt）？', link: '/04-Java并发篇/怎么理解Java中的线程中断（interrupt）？' },
-        { text: '为什么多线程执行时，需要catch InterruptedException异常，catch里面写啥', link: '/04-Java并发篇/为什么多线程执行时，需要catch InterruptedException异常，catch里面写啥' },
-        { text: 'interrupt的标志位是否会回归到原有标记', link: '/04-Java并发篇/interrupt的标志位是否会回归到原有标记' },
-        { text: 'interrupt和stop有什么区别？', link: '/04-Java并发篇/interrupt和stop有什么区别？' },
-        { text: '为什么推荐使用 interrupt() 而不是 stop()？', link: '/04-Java并发篇/为什么推荐使用 interrupt() 而不是 stop()？' },
         { text: '什么是LockSupport类？Park和unPark的使用', link: '/04-Java并发篇/什么是LockSupport类？Park和unPark的使用' },
         { text: 'LockSupport的park/unpark为什么可以突破wait/notify的原有调用顺序？', link: '/04-Java并发篇/LockSupport的park、unpark为什么可以突破wait、notify的原有调用顺序？' },
         { text: 'LockSupport的park/unpark为什么唤醒两次后阻塞两次，但最终结果还是会阻塞线程？', link: '/04-Java并发篇/LockSupport的park、unpark为什么唤醒两次后阻塞两次，但最终结果还是会阻塞线程？' },
@@ -437,7 +484,8 @@ export default {
         { text: '你的项目中是如何使用线程池的？', link: '/04-Java并发篇/你的项目中是如何使用线程池的？' },
         { text: '如何设置Java线程池的线程数（实际工作中）？', link: '/04-Java并发篇/如何设置Java线程池的线程数（实际工作中）？' },
         { text: 'Java线程池有哪些拒绝策略？', link: '/04-Java并发篇/Java线程池有哪些拒绝策略？' },
-        { text: '如何优化Java中的锁？', link: '/04-Java并发篇/如何优化Java中的锁？' },
+
+
         { text: '线程池如何知道一个线程的任务已经执行完毕了？（小米）', link: '/04-Java并发篇/线程池如何知道一个线程的任务已经执行完毕了？（小米）' },
         { text: 'Java并发库中提供了哪些线程池实现？它们有什么区别？', link: '/04-Java并发篇/Java并发库中提供了哪些线程池实现？它们有什么区别？' },
         { text: 'Java中的Delay和ScheduledThreadPool有什么区别？', link: '/04-Java并发篇/Java中的Delay和ScheduledThreadPool有什么区别？' },
@@ -456,13 +504,8 @@ export default {
         { text: 'reentrantLock是如何实现公平锁和非公平锁？', link: '/04-Java并发篇/reentrantLock是如何实现公平锁和非公平锁？' },
         { text: 'reentrantLock的实现原理？', link: '/04-Java并发篇/reentrantLock的实现原理？' },
         { text: '你了解Java中的读写锁吗？', link: '/04-Java并发篇/你了解Java中的读写锁吗？' },
-        { text: '什么是Java的Semaphore？', link: '/04-Java并发篇/什么是Java的Semaphore？' },
-        { text: '什么是Java的CycliBarrier？', link: '/04-Java并发篇/什么是Java的CycliBarrier？' },
-        { text: '什么是Java的CountDownLatch？countdownLatch用法', link: '/04-Java并发篇/什么是Java的CountDownLatch？countdownLatch用法' },
-        { text: '什么是Java的CyclicBarrier？CyclicBarrier用法？', link: '/04-Java并发篇/什么是Java的CyclicBarrier？CyclicBarrier用法？' },
-        { text: '什么是Java的StampedLock？', link: '/04-Java并发篇/什么是Java的StampedLock？' },
-        { text: '什么是FutureTask？', link: '/04-Java并发篇/什么是FutureTask？' },
-        { text: '什么是Java的CompletableFuture？', link: '/04-Java并发篇/什么是Java的CompletableFuture？' },
+
+
         { text: '什么是Java的ForkJoinPool？', link: '/04-Java并发篇/什么是Java的ForkJoinPool？' },
         { text: '乐观锁如果通过数据库实现，并发情况下，数据库如何保证一致', link: '/04-Java并发篇/乐观锁如果通过数据库实现，并发情况下，数据库如何保证一致' },
         { text: '一道题搞懂所有锁', link: '/04-Java并发篇/一道题搞懂所有锁' },
