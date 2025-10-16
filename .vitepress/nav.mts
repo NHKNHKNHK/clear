@@ -78,6 +78,7 @@ export default [
       { text: 'VitePress Markdown语法扩展', link: '/markdown-examples' },
       { text: 'Docker', link: '/Docker' },
       { text: 'Python', link: '/Python' },
+      { text: '其他', link: '/other/wx/wx-play/index' },
       {
         text: '书籍阅读记录',
         items: [
