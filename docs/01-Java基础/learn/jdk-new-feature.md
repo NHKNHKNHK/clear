@@ -6,22 +6,22 @@ JDK 8 是 Java 历史上的里程碑版本，引入大量函数式编程特性�
 
 **正式特性**
 
--   Lambda
--   函数式接口
--   Stream API
--   方法引用
--   接口默认方法和静态方法
--   Optional
--   新的日期时间 API
--   重复注解
--   类型注解
+- Lambda
+- 函数式接口
+- Stream API
+- 方法引用
+- 接口默认方法和静态方法
+- Optional
+- 新的日期时间 API
+- 重复注解
+- 类型注解
 
 **其他特性**
 
--   Nashorn Javascript引擎
--   并行数组操作
--   Base64编码解码操作
--   紧凑配置文件
+- Nashorn Javascript引擎
+- 并行数组操作
+- Base64编码解码操作
+- 紧凑配置文件
 
 ### Lambda 表达式
 
@@ -188,14 +188,14 @@ public class DateTimeDemo {
 
 **正式特性**
 
--   模块化
--   集合工厂方法
--   Jshell
--   HTML5 Javadoc
--   Javadoc 搜索
--   紧凑字符串
--   Stack-Walk API
--   并发更新
+- 模块化
+- 集合工厂方法
+- Jshell
+- HTML5 Javadoc
+- Javadoc 搜索
+- 紧凑字符串
+- Stack-Walk API
+- 并发更新
 
 ### 模块化
 
@@ -203,7 +203,7 @@ public class DateTimeDemo {
 
 1.定义模块（创建 module-info.java 文件）
 
-```java 
+```java
 // 模块名：com.example.user
 module com.example.user {
     // 导出 com.example.user 包（外部可访问）
@@ -275,7 +275,7 @@ public class PrivateMethodDemo {
 
 ### var 关键字
 
-核心解释：简化本地变量的声明，编译器自动推断类型。
+简化本地变量的声明，编译器自动推断类型
 
 ```java
 import java.util.ArrayList;
@@ -303,13 +303,18 @@ public class VarDemo {
 
 快速创建 不可变集合（替代 Collections.unmodifiableList()），语法简洁，且性能更优。
 
-```java
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+在JDK9之前，创建不可变集合比较麻烦，开发者大多都会选择第三方库，如Guava的ImmutableList等
 
+```java
 public class CollectionFactoryDemo {
     public static void main(String[] args) {
+        // JDK9之前
+        List<String> immutableList = Collections.unmodifiableList(Arrays.asList("a", "b", "c"));
+        // 或 Guava ImmutableList.of()
+        ImmutableList<String> immutableList2 = ImmutableList.of("a", "b", "c");
+        
+
+        // JDK9+ 静态工厂方法（不可变）
         // 创建不可变 List
         List<String> list = List.of("a", "b", "c");
         // list.add("d"); // 抛出 UnsupportedOperationException（不可修改）
@@ -327,22 +332,90 @@ public class CollectionFactoryDemo {
 }
 ```
 
-### 改进 try-with-resources
+修改不可变集合会抛出`UnsupportedOperationException`异常
+
+### 紧凑字符串
+
+Java 9 优化了 String 类的内部实现。之前 String 内部使用 `char[]` 数组存储字符，每个字符占用 2 字节。Java 9 引入了紧凑字符串特性，String 内部改用 `byte[]` 数组 + 编码标志：
 
 ```java
+public final class String {
+    private final byte[] value;  // 字符数据
+    private final byte coder;    // 编码标志：0=LATIN1，1=UTF16
 
+    ...
+}
+```
+
+- 如果字符串只包含 Latin1 字符（ASCII），每个字符只占用 1 字节
+- 如果包含其他 Unicode 字符，才使用 UTF-16 编码，每个字符占用 2 字节
+
+[String底层实现是怎么样的](../String底层实现是怎么样的)
+
+### 改进 try-with-resources
+
+Java 9 改进了 `try-with-resources` 语句，在这之前，我们不能在 try 子句中使用外部定义的变量，必须在 try 括号内重新声明，会让代码变得冗余
+
+```java
+// Java 9 之前
+public void readFile(String filename) throws IOException {
+    BufferedReader reader = Files.newBufferedReader(Paths.get(filename));
+    try (BufferedReader br = reader) { // 需要重新赋值
+        br.lines().forEach(System.out::println);
+    }
+}
+```
+
+Java 9 的改进让代码更加简洁：
+
+```java
+// Java 9
+public void readFile(String filename) throws IOException {
+    BufferedReader reader = Files.newBufferedReader(Paths.get(filename));
+    try (reader) { // 直接使用 effectively final 变量
+        reader.lines().forEach(System.out::println);
+    }
+}
+```
+
+而且还可以同时使用多个变量：
+
+```java
+public void processFiles(String file1, String file2) throws IOException {
+    var reader1 = Files.newBufferedReader(Paths.get(file1));
+    var reader2 = Files.newBufferedReader(Paths.get(file2));
+    try (reader1; reader2) { // 可以使用多个变量
+        String line1 = reader1.readLine();
+        String line2 = reader2.readLine();
+        while (line1 != null && line2 != null) {
+            System.out.println(line1 + " | " + line2);
+            line1 = reader1.readLine();
+            line2 = reader2.readLine();
+        }
+    }
+}
 ```
 
 ## JDK 10（2018）
 
-局部变量类型推断（var 关键字）
-核心解释：局部变量无需显式声明类型，编译器根据赋值语句自动推断类型（如` var list = new ArrayList<String>()` 推断为 `ArrayList<String>`），简化代码。
+**正式特性**
+
+- 局部变量类型推断（var 关键字）
+- 应用程序类数据共享
+- 垃圾收集器接口
+- G1的并行完整GC
+- 线程局部握手
+- 在备用内存存储设备上进行堆分配
+- 根证书
+- 基于时间版本发布
+
+### 局部变量类型推断（var 关键字）
+
+局部变量无需显式声明类型，编译器根据赋值语句自动推断类型（如`var list = new ArrayList<String>()` 推断为 `ArrayList<String>`），简化代码。
+
 限制：仅支持 局部变量（方法内、for 循环变量等），不支持成员变量、方法参数、返回值。
 
 ```java
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class VarDemo {
     public static void main(String[] args) {
         // 推断为 ArrayList<String>
@@ -367,22 +440,22 @@ public class VarDemo {
 
 **正式特性**
 
--   HttpClient
--   String 增强方法（`isBlank()`、`strip()`、`lines()`）
--   Lambda参数的局部变量语法
--   Unicode 10
--   Fight Recoder
--   启动单文件源代码程序
--   低开销堆分析
+- HttpClient
+- String 增强方法（`isBlank()`、`strip()`、`lines()`）
+- Lambda参数的局部变量语法
+- Unicode 10
+- Fight Recoder
+- 启动单文件源代码程序
+- 低开销堆分析
 
--   基于嵌套的访问控制
--   动态类文件常量
--   Epsilon无操作垃圾收集器
--   TLS 1.3
+- 基于嵌套的访问控制
+- 动态类文件常量
+- Epsilon无操作垃圾收集器
+- TLS 1.3
 
 **实验特性**
 
--   ZGC可扩展低延迟垃圾收集器
+- ZGC可扩展低延迟垃圾收集器
 
 ### 标准 HttpClient（java.net.http）
 
@@ -448,20 +521,20 @@ public class StringEnhanceDemo {
 
 **正式特性**
 
--   微基准测试套件
--   JVM常量API
--   一个AArch64端口，而不是两个
--   默认CDS归档
--   G1的可中止混合收集
--   从G1及时返回未使用的已提交内存
+- 微基准测试套件
+- JVM常量API
+- 一个AArch64端口，而不是两个
+- 默认CDS归档
+- G1的可中止混合收集
+- 从G1及时返回未使用的已提交内存
 
 **预览特性**
 
--   Switch表达式
+- Switch表达式
 
 **实验特性**
 
--   Shenandoah：低暂停时间垃圾收集器
+- Shenandoah：低暂停时间垃圾收集器
 
 ### Switch 表达式
 
@@ -527,23 +600,21 @@ public class CompactNumberDemo {
 
 **正式特性**
 
--   动态CDS归档
--   ZGC取消提交未使用的内存
+- 动态CDS归档
+- ZGC取消提交未使用的内存
 
 **预览特性**
 
--   Switch表达式
--   文本块
+- Switch表达式
+- 文本块
 
 **实验特性**
 
--   Shenandoah：低暂停时间垃圾收集器
+- Shenandoah：低暂停时间垃圾收集器
 
+### 文本块（Text Blocks） <Badge type="tip" text="预览" />
 
-
-### 文本块（Text Blocks，预览）
-
-用 `"""` 包裹多行字符串，无需手动添加 \n 或 \" 转义，适合 SQL、JSON、HTML 等场景。
+用 `"""` 包裹多行字符串，无需手动添加 `\n` 或 `\"` 转义，适合 SQL、JSON、HTML 等场景。
 
 ```java
 public class TextBlockDemo {
@@ -598,28 +669,28 @@ public class SwitchYieldDemo {
 
 **正式特性**
 
--   Switch转正
--   G1的NUMA感知内存分配
--   JFR事件流
--   非易失性映射字节缓冲区
--   空指针异常（NPE）增强
--   弃用 Solaris 和 SPARC 端口
--   删除并发标记扫描（CMS）垃圾收集器
--   macOS上的ZGC
--   window上的ZGC
--   删除Pack200工具和API
+- Switch转正
+- G1的NUMA感知内存分配
+- JFR事件流
+- 非易失性映射字节缓冲区
+- 空指针异常（NPE）增强
+- 弃用 Solaris 和 SPARC 端口
+- 删除并发标记扫描（CMS）垃圾收集器
+- macOS上的ZGC
+- window上的ZGC
+- 删除Pack200工具和API
 
 **预览特性**
 
--   instanceof的模式匹配
--   Record 
+- instanceof的模式匹配
+- Record 
 
 **孵化器特性**
 
--   打包工具
--   外部内存访问 API
+- 打包工具
+- 外部内存访问 API
 
-### Record（预览）
+### Record <Badge type="tip" text="预览" />
 
 自动生成 equals()、hashCode()、toString()、全参构造器和 getter 方法，用于快速定义 “数据载体类”（仅存数据，无复杂逻辑）
 
@@ -645,7 +716,7 @@ Record 直接参考 Scala 的 Case Class。Scala 的 Case Class 会自动生成 
 优势：Record不会生成伴生对象，避免额外内存开销，且更符合 Java 开发者的 “极简数据载体” 需求（补充：Java中也没有伴生对象的概念）
 :::
 
-###  Switch 表达式转正
+### Switch 表达式 <Badge type="info" text="转正" />
 
 JDK 12 预览的 Switch 表达式（箭头语法、返回值）正式成为标准特性，无需开启预览模式。
 
@@ -665,35 +736,34 @@ public class NpeEnhanceDemo {
 }
 ```
 
-
 ## JDK 15（2020）
 
 文本块转正和密封类预览。
 
 **正式特性**
 
--   文本块正
--   Edwards曲线数字签名算法（EdDSA）
--   隐藏类
--   删除Nashorn Javascript引擎
--   重新实现传统DatagramSocket API
--   禁用和弃用偏向锁定
--   ZGC可扩展低延迟垃圾收集器
--   Shenandoah低暂停垃圾收集器
--   删除Solairs和SPARC端口
--   弃用RMI激活以供删除
+- 文本块正
+- Edwards曲线数字签名算法（EdDSA）
+- 隐藏类
+- 删除Nashorn Javascript引擎
+- 重新实现传统DatagramSocket API
+- 禁用和弃用偏向锁定
+- ZGC可扩展低延迟垃圾收集器
+- Shenandoah低暂停垃圾收集器
+- 删除Solairs和SPARC端口
+- 弃用RMI激活以供删除
 
 **预览特性**
 
--   密封类
--   Records（二次预览）
--   instanceof的模式匹配（二次预览）
+- 密封类
+- Record（二次预览）
+- instanceof的模式匹配（二次预览）
 
 **孵化器特性**
 
--   外部内存访问 AP（二次孵化）
+- 外部内存访问 AP（二次孵化）
 
-### 文本块转正
+### 文本块 <Badge type="info" text="转正" />
 
 JDK 13/14 预览的文本块正式成为标准特性，支持 `\s` （自动补全空白）和 `\`（取消换行）。
 
@@ -713,9 +783,9 @@ public class TextBlockFinalDemo {
 }
 ```
 
-### 密封类（Sealed Classes，预览）
+### 密封类（Sealed Classes） <Badge type="tip" text="预览" />
 
-限制类的继承关系，仅允许 指定的子类 继承（避免不可控的子类扩展），用 sealed 修饰类，permits 指定子类。
+限制类的继承关系，仅允许 指定的子类 继承（避免不可控的子类扩展），用 `sealed` `修饰类，permits` 指定子类。
 
 ```java
 // 密封类：仅允许 Circle、Square 继承
@@ -743,35 +813,35 @@ JDK17密封类优势：
 
 **正式特性**
 
--   Record 转正
--   instanceof的模式匹配 转正
--   启用C++14语言特性
--   从Mercurial迁移到Git
--   迁移到GitHub
--   ZGC并发线程堆栈处理
--   Unix域套接字通道
--   Alpine Linux端口
--   弹性元空间
--   window/AArch64端口
--   基于值的类的警告
--   打包工具
--   默认强封装JDK内部
+- Record 转正
+- instanceof的模式匹配 转正
+- 启用C++14语言特性
+- 从Mercurial迁移到Git
+- 迁移到GitHub
+- ZGC并发线程堆栈处理
+- Unix域套接字通道
+- Alpine Linux端口
+- 弹性元空间
+- window/AArch64端口
+- 基于值的类的警告
+- 打包工具
+- 默认强封装JDK内部
 
 **预览特性**
 
--   密封类（二次预览）
+- 密封类（二次预览）
 
 **孵化器特性**
 
--   外部内存访问 AP（三次孵化）
--   向量API
--   外部链接器API
+- 外部内存访问 AP（三次孵化）
+- 向量API
+- 外部链接器API
 
 
 
-### Record 转正
+### Record <Badge type="info" text="转正" />
 
-核心解释：JDK 14 预览的 Record 正式成为标准特性，支持自定义构造器（需调用全参构造器）。
+JDK 14 预览的 Record 正式成为标准特性，支持自定义构造器（需调用全参构造器）。
 
 ```java
 record Person(String name, int age) {
@@ -790,7 +860,7 @@ public class RecordFinalDemo {
 }
 ```
 
-### Pattern Matching for instanceof（预览）
+### Pattern Matching for instanceof <Badge type="tip" text="预览" />
 
 `instanceof` 检查通过后，自动将对象强转为目标类型，无需手动写 (Type) obj。
 
@@ -821,30 +891,30 @@ Java 17 是继 JDK 8 后的又一重要 LTS 版本，转正了密封类、模式
 
 **正式特性**
 
--   密封类 转正
--   强封装JDK内部
--   恢复始终严格的浮点语义
--   增强的伪随机数生成器
--   新的macOS渲染管道
--   macOS/AArch64端口
--   弃用Applet API以供删除
--   删除RMI激活
--   删除实验性AOT和JIT编译器
--   弃用安全管理器以供删除
--   上下文特性的反序列化过滤器
+- 密封类 转正
+- 强封装JDK内部
+- 恢复始终严格的浮点语义
+- 增强的伪随机数生成器
+- 新的macOS渲染管道
+- macOS/AArch64端口
+- 弃用Applet API以供删除
+- 删除RMI激活
+- 删除实验性AOT和JIT编译器
+- 弃用安全管理器以供删除
+- 上下文特性的反序列化过滤器
 
 **预览特性**
 
--   Switch的模式匹配
+- Switch的模式匹配
 
 **孵化器特性**
 
--   向量API（二次孵化）
--   外部函数和内存 API
+- 向量API（二次孵化）
+- 外部函数和内存 API
 
-### 密封类转正
+### 密封类 <Badge type="info" text="转正" />
 
-核心解释：JDK 15/16 预览的密封类正式成为标准特性，支持密封接口，子类可在不同文件（需模块导出）。
+JDK 15/16 预览的密封类正式成为标准特性，支持密封接口，子类可在不同文件（需模块导出）。
 
 ```java
 // 密封接口：仅允许 Dog、Cat 实现
@@ -862,7 +932,7 @@ public class SealedClassFinalDemo {
 }
 ```
 
-### Pattern Matching for instanceof 转正
+### Pattern Matching for instanceof <Badge type="info" text="转正" />
 
 JDK 16 预览的 instanceof 模式匹配正式成为标准特性，无需开启预览模式。
 
@@ -897,20 +967,20 @@ public class SwitchPatternDemo {
 
 **正式特性**
 
--   字符集默认为 UTF-8
--   简单 Web 服务器
--   Java API文档中的代码片段
--   使用方法句柄重新实现核心反射
--   互联网地址解析SPI
+- 字符集默认为 UTF-8
+- 简单 Web 服务器
+- Java API文档中的代码片段
+- 使用方法句柄重新实现核心反射
+- 互联网地址解析SPI
 
 **预览特性**
 
--   Switch的模式匹配（二次预览）
+- Switch的模式匹配（二次预览）
 
 **孵化器特性**
 
--   向量API（三次孵化）
--   外部函数和内存 API（二次孵化）
+- 向量API（三次孵化）
+- 外部函数和内存 API（二次孵化）
 
 ### UTF-8 作为默认字符集
 
@@ -961,24 +1031,23 @@ public class SimpleWebServerDemo {
 
 **正式特性**
 
--   Linux/RISC-V 端口
+- Linux/RISC-V 端口
 
 **预览特性**
 
--   Record 模式匹配
--   Switch的模式匹配（三次预览）
--   虚拟线程
--   外部函数和内存 API
+- Record 模式匹配
+- Switch的模式匹配（三次预览）
+- 虚拟线程
+- 外部函数和内存 API
 
 **孵化器特性**
 
--   向量API（四次孵化）
--   结构化并发
+- 向量API（四次孵化）
+- 结构化并发
 
+### 虚拟线程（Virtual Threads） <Badge type="tip" text="预览" />
 
-### 虚拟线程（Virtual Threads，预览）
-
-核心解释：轻量级线程（由 JVM 管理，而非 OS 内核），创建成本极低（可创建百万级线程），支持高并发，无需手动维护线程池。
+轻量级线程（由 JVM 管理，而非 OS 内核），创建成本极低（可创建百万级线程），支持高并发，无需手动维护线程池。
 
 ```java
 import java.util.concurrent.Executors;
@@ -1015,7 +1084,7 @@ Java 虚拟线程
   - 比 Python Asyncio 更强：虚拟线程可利用多核（无 GIL 限制），且无需手动写 `async/await`（避免 “回调地狱”），同步代码即可享受高并发性能。
 :::
 
-### Switch 模式匹配增强（预览）
+### Switch 模式匹配增强 <Badge type="tip" text="预览" />
 
 支持 guard 条件（when 关键字），在模式匹配后添加额外判断。
 
@@ -1044,25 +1113,19 @@ public class SwitchGuardDemo {
 
 **预览特性**
 
--   Record 模式匹配（二次预览）
--   Switch的模式匹配（四次预览）
--   虚拟线程（二次预览）
--   外部函数和内存 API（二次预览）
+- Record 模式匹配（二次预览）
+- Switch的模式匹配（四次预览）
+- 虚拟线程（二次预览）
+- 外部函数和内存 API（二次预览）
 
 **孵化器特性**
 
--   向量API（五次孵化）
--   结构化并发（二次孵化）
--   作用域值
+- 向量API（五次孵化）
+- 结构化并发（二次孵化）
+- 作用域值
 
 
-### 虚拟线程（预览，第二次）
-
-修复 JDK 19 预览中的问题，增强与现有 API 的兼容性（如 Thread.sleep() 优化）。
-
-示例代码：同 JDK 19 虚拟线程示例，功能更稳定。
-
-### Record 模式匹配（预览）
+### Record 模式匹配 <Badge type="tip" text="预览" />
 
 支持对 Record 进行 解构模式匹配，直接提取 Record 的字段值，无需调用 getter。
 
@@ -1089,39 +1152,38 @@ JDK 21 是最新 LTS 版本，转正了虚拟线程、Record 模式匹配等关�
 
 **正式特性**
 
--   有序集合
--   分代ZGC
--   Record 模式匹配 转正
--   Switch 模式匹配 转正
--   虚拟线程 转正
--   弃用window 32位x86端口以供删除
--   准备禁用代理的动态加载
--   密钥封装机制 API
+- 有序集合
+- 分代ZGC
+- Record 模式匹配 转正
+- Switch 模式匹配 转正
+- 虚拟线程 转正
+- 弃用window 32位x86端口以供删除
+- 准备禁用代理的动态加载
+- 密钥封装机制 API
 
 **预览特性**
 
--   字符串模板
--   Record 模式匹配（二次预览）
--   外部函数和内存 API（三次预览）
--   未命名模式和变量
--   为命名类和实例主方法
--   作用域值
--   结构化并发
--   Switch的模式匹配（四次预览）
--   虚拟线程（二次预览）
+- 字符串模板
+- Record 模式匹配（二次预览）
+- 外部函数和内存 API（三次预览）
+- 未命名模式和变量
+- 为命名类和实例主方法
+- 作用域值
+- 结构化并发
+- Switch的模式匹配（四次预览）
+- 虚拟线程（二次预览）
 
 **孵化器特性**
 
--   向量API（六次孵化）
+- 向量API（六次孵化）
 
-### 虚拟线程转正
+### 虚拟线程 <Badge type="info" text="转正" />
 
-核心解释：JDK 19/20 预览的虚拟线程正式成为标准特性，成为 Java 并发编程的默认选择之一。
-示例代码：同 JDK 19 虚拟线程示例，无需开启预览模式
+JDK 19/20 预览的虚拟线程正式成为标准特性，成为 Java 并发编程的默认选择之一。
 
-### Record 模式匹配转正
+### Record 模式匹配 <Badge type="info" text="转正" />
 
-核心解释：JDK 20 预览的 Record 模式匹配正式成为标准特性，支持嵌套 Record 解构。
+JDK 20 预览的 Record 模式匹配正式成为标准特性，支持嵌套 Record 解构。
 
 ```java
 record Point(int x, int y) {}
@@ -1142,11 +1204,9 @@ public class NestedRecordPatternDemo {
 }
 ```
 
-### Switch 模式匹配转正
+### Switch 模式匹配 <Badge type="info" text="转正" />
 
 JDK 17/19 预览的 Switch 模式匹配（类型模式、guard 条件）正式成为标准特性
-
-同 JDK 19 的 Switch 模式匹配示例，无需开启预览模式。
 
 ## JDK 22（2024）
 
@@ -1154,27 +1214,27 @@ JDK 17/19 预览的 Switch 模式匹配（类型模式、guard 条件）正式�
 
 **正式特性**
 
--   G1的区域固定
--   外部函数和内存 API
--   未命名模式和变量
--   启动多文件源代码程序   
+- G1的区域固定
+- 外部函数和内存 API
+- 未命名模式和变量
+- 启动多文件源代码程序   
 
 **预览特性**
 
--   字符串模板（二次预览）
--   super(...)之前的语句
--   类文件 API
--   Stream Gatheres
--   结构化并发（二次预览）
--   隐式声明类和实例主方法 （二次预览）
--   作用域值（二次预览）
+- 字符串模板（二次预览）
+- super(...)之前的语句
+- 类文件 API
+- Stream Gatheres
+- 结构化并发（二次预览）
+- 隐式声明类和实例主方法 （二次预览）
+- 作用域值（二次预览）
 
 **孵化器特性**
 
--   向量API（七次孵化）
+- 向量API（七次孵化）
 
 
-### 字符串模板（String Templates，预览）
+### 字符串模板（String Templates） <Badge type="tip" text="预览" />
 
 替代 `String.format()` 和字符串拼接，支持嵌入表达式（如 `STR."Hello \{name}"`），更安全（避免注入攻击）、更灵活。
 
@@ -1220,9 +1280,9 @@ Java22字符串模板的优势：
 
 :::
 
-### 外部函数和内存 API（转正）
+### 外部函数和内存 API <Badge type="info" text="转正" />
 
-核心解释：JDK 17-20 孵化器 / 预览的 API 正式转正，支持安全访问 JVM 外的内存（如 native 内存）和调用外部函数（替代 JNI），性能更高、安全性更强。
+JDK 17-20 孵化器 / 预览的 API 正式转正，支持安全访问 JVM 外的内存（如 native 内存）和调用外部函数（替代 JNI），性能更高、安全性更强。
 
 示例代码（调用 C 语言的 sqrt 函数）：
 
@@ -1277,24 +1337,24 @@ Java22的改进：
 
 **正式特性**
 
--   md文档注释
--   弃用`sun.misc.Unsafe`中的内存访问方法以供删除
--   ZGC默认分代模式
+- md文档注释
+- 弃用`sun.misc.Unsafe`中的内存访问方法以供删除
+- ZGC默认分代模式
 
 **预览特性**
 
--   字符串模板（二次预览）
--   类文件 API（二次预览）
--   Stream Gatheres（二次预览）
--   结构化并发（三次预览）
--   隐式声明类和实例主方法 （三次预览）
--   作用域值（三次预览）
--   灵活的构造函数体（二次预览）
--   模块导入声明
+- 字符串模板（二次预览）
+- 类文件 API（二次预览）
+- Stream Gatheres（二次预览）
+- 结构化并发（三次预览）
+- 隐式声明类和实例主方法 （三次预览）
+- 作用域值（三次预览）
+- 灵活的构造函数体（二次预览）
+- 模块导入声明
 
 **孵化器特性**
 
--   向量API（八次孵化）
+- 向量API（八次孵化）
 
 
 ## JDK 24（2025）
@@ -1302,26 +1362,26 @@ Java22的改进：
 
 **正式特性**
 
--   类文件 API 转正
--   Stream Gathers 转正
--   永久禁用安全管理器
--   删除window 32位x86端口
--   弃用32位x86端口以供删除
--   ZGC删除非分代模式
--   同步虚拟线程而不固定
--   链接运行时镜像而不使用JMODs
--   量子抗性模块格基密钥封装机制
--   量子抗性模块格基密钥签名算法
--   警告使用`sun.misc.Unsafe`中的内存访问API
+- 类文件 API 转正
+- Stream Gathers 转正
+- 永久禁用安全管理器
+- 删除window 32位x86端口
+- 弃用32位x86端口以供删除
+- ZGC删除非分代模式
+- 同步虚拟线程而不固定
+- 链接运行时镜像而不使用JMODs
+- 量子抗性模块格基密钥封装机制
+- 量子抗性模块格基密钥签名算法
+- 警告使用`sun.misc.Unsafe`中的内存访问API
 
 **预览特性**
 
--   结构化并发（四次预览）
--   作用域值（四次预览）
--   简单源文件和实例主方法（四次预览）
--   灵活的构造函数体（二三预览）
--   模块导入声明（二次预览）
--   密钥派生函数
+- 结构化并发（四次预览）
+- 作用域值（四次预览）
+- 简单源文件和实例主方法（四次预览）
+- 灵活的构造函数体（二三预览）
+- 模块导入声明（二次预览）
+- 密钥派生函数
 
 **实验特性**
 
@@ -1330,4 +1390,4 @@ Java22的改进：
 
 **孵化器特性**
 
--   向量API（九次孵化）
+- 向量API（九次孵化）
