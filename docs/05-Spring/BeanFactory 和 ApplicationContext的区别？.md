@@ -1,3 +1,7 @@
+---
+permalink: /25/8/6/java/beanfactory-applicationcontext
+---
+
 # BeanFactory 和 ApplicationContext的区别？
 
 ## 口语化

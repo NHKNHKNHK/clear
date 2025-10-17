@@ -1,5 +1,7 @@
 # @Transactional底层实现？
 
+## 工作原理
+
 @Transactional 是 Spring 框架提供的一个注解，用于简化声明式事务管理。以下是它的底层实现原理：
 
 1.  **解析`@Transactional`注解**：Spring在启动时会扫描所有带有`@Transactional`注解的类和方法，并解析注解中的属性，生成`TransactionAttribute`对象。

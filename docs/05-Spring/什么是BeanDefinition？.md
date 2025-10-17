@@ -1,3 +1,8 @@
+---
+permalink: /25/8/6/spring/beanDefinition
+---
+
+
 # 什么是BeanDefinition？
 
 `BeanDefinition` 是 Spring 框架中的一个核心接口，用于描述和定义一个 Spring Bean 的元信息

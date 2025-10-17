@@ -18,3 +18,7 @@ public class CustomBeanFactoryPostProcessor implements BeanFactoryPostProcessor 
     }
 }
 ```
+
+:::tip
+很多三方框架的实现都依赖于这个扩展点与Spring集成
+:::

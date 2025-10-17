@@ -1,12 +1,15 @@
+---
+permalink: /25/8/6/spring/index
+---
+
 # 导读
 
 脑图
 
 ```markmap
-# 前端面试
-## HTML
-- 语义化标签
-- SEO 优化
+## 基础
+- Spring概念
+- 核心特性
 ## CSS
 - Flex 布局
 - Grid 布局

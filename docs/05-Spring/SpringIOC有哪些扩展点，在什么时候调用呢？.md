@@ -4,6 +4,10 @@ Spring IOC 容器提供了丰富的扩展点，允许开发者在容器初始化
 
 ## **BeanFactoryPostProcessor**
 
+:::tip
+很多三方框架的实现都依赖于这个扩展点与Spring集成
+:::
+
 -   **描述**：用于修改 Bean 定义（`BeanDefinition`）的扩展点。
 -   调用时机：
     -   在所有 Bean 实例化之前调用。

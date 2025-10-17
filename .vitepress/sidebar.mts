@@ -327,6 +327,7 @@ export default {
         { text: '启动一个线程用start还是run？', link: '/04-Java并发篇/启动一个线程用start还是run？' },
         { text: '为什么启动线程不直接调用run()，而调用start()？', link: '/04-Java并发篇/为什么启动线程不直接调用run()，而调用start()？' },
         { text: '两次调用start方法会怎么样？', link: '/04-Java并发篇/两次调用start方法会怎么样？' },
+        { text: '如何优雅的终止一个线程？', link: '/04-Java并发篇/如何优雅的终止一个线程？' },
         { text: 'Java多线程的生命周期是什么', link: '/04-Java并发篇/Java多线程的生命周期是什么' },
         { text: '创建线程的底层原理？', link: '/04-Java并发篇/创建线程的底层原理？' },
         { text: '怎么理解线程分组？编程实现一个线程分组的例子？', link: '/04-Java并发篇/怎么理解线程分组？编程实现一个线程分组的例子？' },
@@ -346,6 +347,9 @@ export default {
         { text: 'interrupt的标志位是否会回归到原有标记', link: '/04-Java并发篇/interrupt的标志位是否会回归到原有标记' },
         { text: 'interrupt和stop有什么区别？', link: '/04-Java并发篇/interrupt和stop有什么区别？' },
         { text: '为什么推荐使用 interrupt() 而不是 stop()？', link: '/04-Java并发篇/为什么推荐使用 interrupt() 而不是 stop()？' },
+        { text: '如何判断代码是不是有线程安全问题？如何解决', link: '/04-Java并发篇/如何判断代码是不是有线程安全问题？如何解决' },
+        { text: 'wait和notify的虚假唤醒的产生原因及如何解决', link: '/04-Java并发篇/wait和notify的虚假唤醒的产生原因及如何解决' },
+        { text: '怎么理解wait、notify、notifyAll方法？', link: '/04-Java并发篇/怎么理解wait、notify、notifyAll方法？' },
 
       ]
     },
@@ -414,10 +418,8 @@ export default {
         { text: '什么是LockSupport类？Park和unPark的使用', link: '/04-Java并发篇/什么是LockSupport类？Park和unPark的使用' },
         { text: 'LockSupport的park/unpark为什么可以突破wait/notify的原有调用顺序？', link: '/04-Java并发篇/LockSupport的park、unpark为什么可以突破wait、notify的原有调用顺序？' },
         { text: 'LockSupport的park/unpark为什么唤醒两次后阻塞两次，但最终结果还是会阻塞线程？', link: '/04-Java并发篇/LockSupport的park、unpark为什么唤醒两次后阻塞两次，但最终结果还是会阻塞线程？' },
-        { text: '如何优雅的终止一个线程？', link: '/04-Java并发篇/如何优雅的终止一个线程？' },
-        { text: '如何判断代码是不是有线程安全问题？如何解决', link: '/04-Java并发篇/如何判断代码是不是有线程安全问题？如何解决' },
-        { text: 'wait和notify的虚假唤醒的产生原因及如何解决', link: '/04-Java并发篇/wait和notify的虚假唤醒的产生原因及如何解决' },
-        { text: '怎么理解wait、notify、notifyAll方法？', link: '/04-Java并发篇/怎么理解wait、notify、notifyAll方法？' },
+
+
         { text: '死锁的发生原因？怎么避免？', link: '/04-Java并发篇/死锁的发生原因？怎么避免？' },
         { text: '排除死锁的方式有哪些？', link: '/04-Java并发篇/排除死锁的方式有哪些？' },
         { text: '什么是协程？Java支持协程吗？', link: '/04-Java并发篇/什么是协程？Java支持协程吗？' },

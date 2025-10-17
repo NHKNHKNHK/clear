@@ -3,7 +3,7 @@ const basePath = '/05-Spring/'
 export default [
   {
     text: '基础',
-    collapsed: true,
+    collapsed: false,
     items: [
       { text: '导读', link: '/05-Spring/index' },
       // 优劣势
@@ -36,6 +36,8 @@ export default [
       { text: 'SpringIOC容器初始化过程？', link: '/05-Spring/SpringIOC容器初始化过程？' },
       { text: 'SpringIOC有什么好处？', link: '/05-Spring/SpringIOC有什么好处？' },
       { text: 'Spring中的DI（依赖注入）是什么？', link: '/05-Spring/Spring中的DI（依赖注入）是什么？' },
+      { text: 'Spring一共有几种注入方式？', link: '/05-Spring/Spring一共有几种注入方式？' },
+
       { text: 'SpringIOC有哪些扩展点，在什么时候调用呢？', link: '/05-Spring/SpringIOC有哪些扩展点，在什么时候调用呢？' },
     ],
   },
@@ -109,8 +111,6 @@ export default [
       { text: 'Spring不能解决的循环依赖有哪些？', link: '/05-Spring/Spring不能解决的循环依赖有哪些？' },
 
 
-      // 设计模式
-      { text: 'Spring都用到哪些设计模式？', link: '/05-Spring/Spring都用到哪些设计模式？' },
       {
         text: '发布订阅',
         collapsed: true,
@@ -155,11 +155,40 @@ export default [
   },
 
   {
-    text: 'Spring',
+    text: '扩展机制',
+    collapsed: false,
     items: [
-
       { text: '如何在所有BeanDefinition注册完以后做扩展？', link: '/05-Spring/如何在所有BeanDefinition注册完以后做扩展？' },
 
+
+    ]
+  },
+  {
+    text: '性能优化',
+    collapsed: false,
+    items: [
+      { text: '如何优化Spring应用的启动时间', link: '/05-Spring/如何优化Spring应用的启动时间' },
+      { text: '懒加载的使用场景', link: '/05-Spring/懒加载的使用场景' },
+
+
+    ]
+  },
+  {
+    text: '故障排查',
+    collapsed: false,
+    items: [
+      { text: '如何排查Bean无法注入', link: '/05-Spring/如何在所有BeanDefinition注册完以后做扩展？' },
+      { text: '如何排查声明式事务不生效', link: '/05-Spring/如何在所有BeanDefinition注册完以后做扩展？' },
+      { text: '如何排查AOP不生效', link: '/05-Spring/如何在所有BeanDefinition注册完以后做扩展？' },
+
+
+    ]
+  },
+  {
+    text: '设计模式',
+    collapsed: false,
+    items: [
+      { text: 'Spring都用到哪些设计模式？', link: '/05-Spring/Spring都用到哪些设计模式？' },
 
     ]
   }

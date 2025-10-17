@@ -1,3 +1,7 @@
+---
+permalink: /25/8/6/spring/factoryBean-beanFactory
+---
+
 # BeanFactory 和 FactoryBean 的区别？
 
 ## 口语化
@@ -6,7 +10,7 @@ BeanFactory是一个工厂，也就是一个容器，是用来管理和生成Bea
 
 FactoryBean是一个bean，但它是一个特殊的bean，所以也是由BeanFactory所管理的，不过FactoryBean不是一个普通的Bean，他会表现出工厂模式的样子，是一个能产生或者修饰对象生成的工厂Bean，里面的`getObject()`就是用来获取FactoryBean产生的对象。所以在BeanFactory中使用 "&" 来得到FactoryBean本身，用来区分通过容器获取FactoryBean产生的对象还是获取FactoryBean本身。
 
-## **BeanFactory**
+## BeanFactory
 
 -   定义：BeanFactory 是 Spring 中最基本的 IoC 容器接口，用于管理 Bean 的生命周期和依赖注入。
 -   作用：它负责根据配置（如 XML、注解或 Java 配置类）创建和管理 Bean 实例，并提供获取这些 Bean 的方法（如 getBean()）。
@@ -22,7 +26,7 @@ FactoryBean是一个bean，但它是一个特殊的bean，所以也是由BeanFac
     FactoryBean
     通常在 XML 配置文件或 Java 配置类中声明为普通的 Bean，Spring 容器会自动识别并调用其 getObject() 方法来创建实际的 Bean。
 
-## **FactoryBean**
+## FactoryBean
 
 -   定义：FactoryBean 是一个特殊的接口，允许开发者自定义 Bean 的创建逻辑。它不是容器本身，而是一个由容器管理的 Bean，通过实现特定的方法来生成其他对象。
 -   作用：主要用于在容器中创建复杂的对象或需要特殊初始化逻辑的对象。它可以通过 `getObject()` 方法返回最终的 Bean 实例。
@@ -31,7 +35,6 @@ FactoryBean是一个bean，但它是一个特殊的bean，所以也是由BeanFac
     -   `Object getObject()`：返回由 FactoryBean 创建的对象实例。
     -   `Class<?> getObjectType()`：返回 getObject() 方法返回的对象类型。
     -   `boolean isSingleton()`：指示 FactoryBean 创建的对象是否为单例。
-
 
 
 ## 使用 BeanFactory
