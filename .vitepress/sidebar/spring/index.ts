@@ -55,7 +55,7 @@ export default [
       { text: '简述Spring拦截链的实现？', link: '/05-Spring/简述Spring拦截链的实现？' },
       { text: 'Spring AOP和AspectJ有什么区别？', link: '/05-Spring/Spring AOP和AspectJ有什么区别？' },
       {
-        text: '事务',
+        text: 'Spring事务',
         collapsed: true,
         items: [
           { text: 'Spring通知类型有哪些？', link: '/05-Spring/Spring通知类型有哪些？' },

@@ -8,17 +8,17 @@ permalink: /25/10/21/spring/component-controller-repository-service
 
 本质上都是`@Component`，`@Controller`、`@Repository`和`@Service`都是`@Component`注解的语义化封装。
 
-所有它们**本质上是没什么区别**的，但是又有一点点区别。
-
 语义化的核心是为了更好的分层管理，提高代码的可读性和可维护性。
 
-`@Component`注解标记的类为通用组件，写工具类、公共Bean等
+所有它们**本质上是没什么区别**的，但是又有一点点区别。
 
-`@Controller`注解专门标记控制层（Web层），处理Http请求，返回Web页面或Json等。他也是MVC中的C
+- `@Component`注解标记的类为通用组件，写工具类、公共Bean等
 
-`@Service`注解专门标记业务逻辑层（Service层），业务处理的逻辑都封装在该类标记的方法中。
+- `@Controller`注解专门标记控制层（Web层），处理Http请求，返回Web页面或Json等。他也是MVC中的C
 
-`@Repository`注解专门标记数据访问层（Dao层），负责与数据库交互的逻辑都封装在该类标记的方法中。
+- `@Service`注解专门标记业务逻辑层（Service层），业务处理的逻辑都封装在该类标记的方法中。
+
+- `@Repository`注解专门标记数据访问层（Dao层），负责与数据库交互的逻辑都封装在该类标记的方法中。
 
 
 它们的一小点区别。因为Spring对不同的注解有**特殊处理**。

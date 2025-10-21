@@ -8,14 +8,18 @@ permalink: /25/8/6/spring/index
 
 ```markmap
 ## 基础
-- Spring概念
-- 核心特性
-## CSS
-- Flex 布局
-- Grid 布局
-## JavaScript
-- 闭包
-- 事件循环
+### Spring概念
+- DI、IOC
+- beanFactory、applicationContext
+### AOP
+- 什么是AOP
+- 动态代理
+- Spring事务
+## Bean
+### 生命周期
+### 作用范围
+### bean实例的方式
+### 属性注入的方式 
 ```
 
 
