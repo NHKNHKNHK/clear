@@ -4,8 +4,7 @@ permalink: /25/10/21/spring/aop
 
 # 什么是AOP？
 
-:::tip
-核心
+:::tip 核心
 
 AOP是面向切面编程，是对面向对象编程的补充，不是替代
 
