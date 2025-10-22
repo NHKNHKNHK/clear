@@ -97,6 +97,7 @@ export default [
       { text: '自动装配（注入）有什么限制或者说注意事项？', link: '/05-Spring/自动装配（注入）有什么限制或者说注意事项？' },
       { text: 'Spring自动装配的方式有哪些？', link: '/05-Spring/Spring自动装配的方式有哪些？' },
       { text: 'Spring使用注解的进行装配的时候，需要什么注解', link: '/05-Spring/Spring使用注解的进行装配的时候，需要什么注解' },
+      { text: 'Bean如何修改', link: '/05-Spring/Bean如何修改' },
     ],
   },
 
@@ -116,6 +117,7 @@ export default [
         collapsed: true,
         items: [
           { text: 'Spring 提供的事件发布和监听机制？', link: '/05-Spring/Spring 提供的事件发布和监听机制？' },
+          { text: '为什么不建议直接使用Spring的@Async', link: '/05-Spring/为什么不建议直接使用Spring的@Async' },
           { text: 'Spring事件监听什么情况下会失效？', link: '/05-Spring/Spring事件监听什么情况下会失效？' },
           { text: 'Spring异步发布事件的核心机制？', link: '/05-Spring/Spring异步发布事件的核心机制？' },
           { text: 'Spring引入外部配置文件的方式', link: '/05-Spring/Spring引入外部配置文件的方式' },
@@ -150,6 +152,7 @@ export default [
       { text: '@Conditional及相关注解的作用？', link: '/05-Spring/Conditional及相关注解的作用？' },
       { text: '@Lazy注解的作用？', link: '/05-Spring/@Lazy注解的作用？' },
       { text: '@EventListener注解的作用？', link: '/05-Spring/@EventListener注解的作用？' },
+      { text: '@Component和@Service能不能互换', link: '/05-Spring/@Component和@Service能不能互换' },
 
     ],
   },
