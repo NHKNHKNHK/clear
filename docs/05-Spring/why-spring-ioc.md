@@ -1,3 +1,7 @@
+---
+permalink: /25/10/22/spring/why-spring-ioc
+---
+
 # 什么是SpringIOC？
 
 ## 口语化
