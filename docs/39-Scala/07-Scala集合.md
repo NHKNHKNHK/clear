@@ -1,3 +1,7 @@
+---
+permalink: /25/8/17/scala/scala-collection
+---
+
 # Scala集合
 
 ## 回顾Java集合体系
@@ -12,7 +16,7 @@
 
 :::warning
 
-真实因为Java中的集合体系不是很合理，所以Scala重新设计了集合体系**
+正是因为Java中的集合体系不是很合理，所以Scala重新设计了集合体系
 
 :::
 

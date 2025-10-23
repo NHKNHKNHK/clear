@@ -1271,14 +1271,6 @@ export default {
 
   '/39-Scala/': [
     {
-      text: '其他',
-      collapsed: true,
-      items: [
-        { text: 'Scala环境部署（Windows）', link: '/39-Scala/01-Scala-dev-deploy' },
-
-      ]
-    },
-    {
       text: 'Scala简明教程',
       collapsed: false,
       items: [
@@ -1301,7 +1293,14 @@ export default {
       items: [
         { text: 'tuple._1与tuple._1()的区别', link: '/39-Scala/tuple._1与tuple._1()的区别' },
       ]
-    }
+    },
+    {
+      text: '其他',
+      collapsed: true,
+      items: [
+        { text: 'Scala环境部署（Windows）', link: '/39-Scala/01-Scala-dev-deploy' },
+      ]
+    },
   ],
 
   '/40-data-sync/': [
