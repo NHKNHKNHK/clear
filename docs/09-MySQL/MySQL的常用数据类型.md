@@ -1,6 +1,48 @@
+---
+permalink: /25/9/29/mysql/mysql-datatype
+---
+
 # MySQL的常用数据类型？
 
+```markmap
+# 
+## 数值类型
+### 整数类型 
+- TINYINT、SMALLINT、MEDIUMINT、INT(或INTEGER)、BIGINT
+### 浮点类型
+- FLOAT、DOUBLE
+### 定点数类型
+- DECIMAL
+### 位类型
+- BIT
 
+## 日期时间类型
+- YEAR、TIME、DATE
+- DATETIME
+- TIMESTAMP
+
+## 字符串类型
+### 文本字符串类型
+- CHAR
+- VARCHAR
+- TINYTEXT、TEXT、MEDIUMTEXT、LONGTEXT
+### 枚举类型
+- ENUM
+### 集合类型
+- SET
+### 二进制字符串类型
+- BINARY、VARBINARY
+- TINYBLOB、BLOB
+- MEDIUMBLOB、LONGBLOB
+### JSON类型
+- JSON对象、JSON数组
+
+## 空间数据类型
+### 单值类型
+- GEOMETRY、POINT、LINESTRING、POLYGON
+### 集合类型
+- MULTIPOINT、MULTILINESTRING、MULTIPOLYGON、GEOMETRYCOLLECTION
+```
 
 ## 全部数据类型
 
@@ -18,6 +60,17 @@
 | JSON类型 | JSON对象、JSON数组 |
 | 空间数据类型 | 单值类型：GEOMETRY、POINT、LINESTRING、POLYGON；<br>集合类型：MULTIPOINT、MULTILINESTRING、MULTIPOLYGON、GEOMETRYCOLLECTION |
 
+
+## 使用时的注意点
+
+- INT类型可以设置显示宽度，如`INT(11)`，但是他与真正存储的值范围无关；MySQL 8开始不推荐使用显示宽度属性
+  - `INT(M)`必须和`UNSIGNED ZEROFILL`配合使用采用意义
+- 使用DECIMAL类型时必须指定精度M、标度D——DECIMAL(M,D)，如`DECIMAL(5, 2)`表示取值范围是 -999.99 ~ 999.99
+- 日期时间类型，建议使用`DATETIME`，因为此数据类型包含完整的日期和时间信息，取值范围也大
+- TIMESTAMP类型只能存储“1970-01-01 00:00:01 UTC”到“2038-01-19 03:14:07 UTC”之间的时间，且使用TIMESTAMP存储的同一个时间值，在不同的时区查询时会显示不同的时间。因此一般不用
+- 使用CHAR类型是建议指定长度，，否则默认`CHAR(1)`
+- 使用VARCHAR类型是**必须指定**长度，否则报错
+  -  `VARCHAR(M)`，建议M是2的幂，如 16、32、64
 
 
 ## 数据类型的选择建议
