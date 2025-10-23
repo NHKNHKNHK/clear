@@ -1,14 +1,20 @@
-# 0 JMS规范介绍
+---
+permalink: /25/8/17/mq/kafka/kafka
+---
 
-## 0.1 JMS简介
+# Kafka
 
-​	JMS，全称**Java Message Service**，即Java消息服务应用程序接口，是一个Java平台中关于面向消息中间件的API，用于在两个应用程序之间、或者分布式系统中发送消息，进行异步通信。
+## 0 JMS规范介绍
 
-​	JMS是一种与厂商无关的API，用来访问消息、收发系统消息，它类似于JDBC。
+### 0.1 JMS简介
 
-​	JMS可以自己使用Java代码或者别的代码来编写，开源的实现有 Active MQ、阿里的Rocket MQ（已捐献给Apache）、Kafka等
+JMS，全称**Java Message Service**，即Java消息服务应用程序接口，是一个Java平台中关于面向消息中间件的API，用于在两个应用程序之间、或者分布式系统中发送消息，进行异步通信。
 
-## 0.2 JMS核心组件
+JMS是一种与厂商无关的API，用来访问消息、收发系统消息，它类似于JDBC。
+
+JMS可以自己使用Java代码或者别的代码来编写，开源的实现有 Active MQ、阿里的Rocket MQ（已捐献给Apache）、Kafka等
+
+### 0.2 JMS核心组件
 
 | 组件名称  | 作用                                                         |
 | --------- | ------------------------------------------------------------ |
@@ -20,7 +26,7 @@
 | JMS队列   | 一个容纳那些被发送的等待阅读的消息的区域。<br>与队列名字所暗示的意义不同，消息的接收顺序并不一定要与消息的发送顺序一致。<br>一旦一个消息被阅读，该消息将被从队列中移走。 |
 | JMS主题   | 一种支持发送消息给多个订阅者的机制                           |
 
-## 0.3 JMS对象模型
+### 0.3 JMS对象模型
 
 | 组件              | 功能                                                         |
 | ----------------- | ------------------------------------------------------------ |
@@ -31,15 +37,15 @@
 | MessageConsumer   | 消息消费者由Session创建，用于接收被发送到Destination的消息。同样，消息消费者分两种：QueueReceiver、TopicSubscriber。<br>可以通过Session的creareReceiver(Queue)或creareSubscriber(Topic)来创建。当然，也可以用Session的createDurableSubscriber方法创建持久化的订阅者。 |
 | Destination       | Destination的意思是消息生产者的消息发送目标或消费者消费数据的来源。<br>对于消息生产者来说，它的Destination是某个队列或某个主题。<br>对于消息消费者来说，它的Destination也是某个队列或某个主题。 |
 
-## 0.4 JMS消息传输模型
+### 0.4 JMS消息传输模型
 
 在JMS标准中，有两种消息模型：P2P、Pub/Sub
 
-### 0.4.1 P2P 点对点模型
+#### 0.4.1 P2P 点对点模型
 
-​	点对点消息传递模式（Point to Point，P2P），在该模式中，通常是基于拉取或者是轮询的消息传递模式，消息是通过一个虚拟通道进行传递的，**生产者发送一条数据，消息将持久化到队列中**，此时将有一个或多个消费者会在消费队列中的数据，但是**一条消息只能消费一次，且消费后的数据会从消息队列中删除**，因此，即使有多个消费者同时消费数据，数据都可以被有序处理。
+点对点消息传递模式（Point to Point，P2P），在该模式中，通常是基于拉取或者是轮询的消息传递模式，消息是通过一个虚拟通道进行传递的，**生产者发送一条数据，消息将持久化到队列中**，此时将有一个或多个消费者会在消费队列中的数据，但是**一条消息只能消费一次，且消费后的数据会从消息队列中删除**，因此，即使有多个消费者同时消费数据，数据都可以被有序处理。
 
-​	简单来说，就是**消费者主动拉取（pull）数据，消息收到后清除队列中的消息**
+简单来说，就是**消费者主动拉取（pull）数据，消息收到后清除队列中的消息**
 
 **P2P消息传输模型特点**
 
@@ -49,7 +55,7 @@
 
 -   消费者在成功消费消息后，需要向消息队列中发送确认收到通知（acknowlegment）
 
-### 0.4.2 Pub/Sub 发布/订阅模型
+#### 0.4.2 Pub/Sub 发布/订阅模型
 
 ​	发布订阅消息传递模式（Publish/Subscribe），是一个基于推送的消息传送模式，在该模式中，**发布者用于发布消息，订阅者用于订阅消息**。发布订阅模式可以有多种不同的订阅者，**发布者发布的消息会被持久化到一个主题中**，与 点对点模式 不同，订阅者可以订阅一个或多个主题，订阅者可以拉取（pull）该主题中的所有数据，同一条数据可以被多个订阅者消费，**消息被消费后也不会被立即删除。**
 
@@ -63,19 +69,19 @@
 
 -   为了缓和这样的严格的时间相关性，JMS允许订阅者创建一个可持久化的订阅者。这样，即便订阅者没有运行，他也能接收到发布者的消息。
 
-## 0.5 消息接收
+### 0.5 消息接收
 
 在JMS中，消息的接收可以使用以下两种方式
 
--   同步：使用同步方式接收消息的话，消息订阅者调用receive()方法。在receive()方法中，消息未达到或到达指定时间之前，方法会阻塞，直到消息可用。
+-   同步：使用同步方式接收消息的话，消息订阅者调用`receive()`方法。在`receive()`方法中，消息未达到或到达指定时间之前，方法会阻塞，直到消息可用。
 
--   **异步**：使用异步方式接收消息的话，**消息订阅者需要注册一个消息监听者**，类似于事件监听器，只要消息到达，JMS服务提供者会调用监听器的 onMessage() 方法递送消息
+-   **异步**：使用异步方式接收消息的话，**消息订阅者需要注册一个消息监听者**，类似于事件监听器，只要消息到达，JMS服务提供者会调用监听器的 `onMessage()` 方法递送消息
 
-## 0.6 JMS消息结构
+### 0.6 JMS消息结构
 
 消息（Message）主要由三部分组成，分别是Header、Properties、Body。
 
--   Headr：消息头，所有类型的消息这部分都是一样的。
+-   Header：消息头，所有类型的消息这部分都是一样的。
 
 -   Properties：消息属性，按类型可以划分应用设置属性、标准属性、消息中间件定义的属性
 
@@ -83,9 +89,9 @@
 
 
 
-# 1 Kafka概述
+## 1 Kafka概述
 
-## 1.1 Kafka简介
+### 1.1 Kafka简介
 
 -   Apache Kafka是一个开源的`消息系统`、一个开源分布式流平台，由Scala编写。		
 -   Kafka最初是LinkedIn 开发，并于2011年初开源。2012年10月从Apache LinkedIn毕业。
@@ -94,7 +100,7 @@
 -   Kafka对消息保存时根据 Topic 进行归类，发送消息者为Producer，消息接收者为Conumser，此外Kafka集群有多个Kafka实例组成，每个实例（Server）称为 broker；
 -   无论是Kafka集群，还是 Producer、Conusmer都依赖于Zookeeper集群保存的一些meta信息，来保证系统的可用性。
 
-## 1.2 定义
+### 1.2 定义
 
 **Kafka传统定义**
 
@@ -110,13 +116,13 @@
 
 
 
-## 1.3 消息队列
+### 1.3 消息队列
 
 常见的消息队列产品主要有 Kafka、ActiveMQ、RabbitMQ、RocketMQ等
 
 在大数据场景下，主要使用Kafka作为消息队列。在JavaEE开发中主要采用ActiveMQ、RabbitMQ、RocketMQ
 
-### 1.3.1 消息队列应具备的能力
+#### 1.3.1 消息队列应具备的能力
 
 -   存储能力，可以存储信息。也就是一个消息容器，一般采用**队列**的结构。
 
@@ -124,7 +130,7 @@
 
 -   消息的出队能力，即消费消息。
 
-### 1.3.2 传统消息队列的应用场景
+#### 1.3.2 传统消息队列的应用场景
 
 传统消息队列的应用场景主要包括：**缓存/消峰（消除峰值）、解耦和、异步通信**
 
@@ -142,15 +148,15 @@
 
     
 
-### 1.3.3 消息队列的两种模式
+#### 1.3.3 消息队列的两种模式
 
-#### 1.3.3.1 P2P 点对点模式
+##### 1.3.3.1 P2P 点对点模式
 
 ​	点对点消息传递模式（Point to Point，P2P），在该模式中，通常是基于拉取或者是轮询的消息传递模式，消息是通过一个虚拟通道进行传递的，生产者发送一条数据，消息将持久化到队列中，此时将有一个或多个消费者会在消费队列中的数据，但是**一条消息只能消费一次，且消费后的数据会从消息队列中删除**，因此，即使有多个消费者同时消费数据，数据都可以被有序处理。
 
 ​	简单来说，就是**消费者主动拉取数据，消息收到后清除队列中的消息**
 
-#### 1.3.3.2 Pub/Sub 发布/订阅模式
+##### 1.3.3.2 Pub/Sub 发布/订阅模式
 
 ​	发布订阅消息传递模式（Publish/Subscribe），是一个基于推送的消息传送模式，在该模式中，**发布者用于发布消息，订阅者用于订阅消息**。发布订阅模式可以有多种不同的订阅者，**发布者发布的消息会被持久化到一个主题中**，与	点对点模式不同，订阅者可以订阅一个或多个主题，订阅者可以拉取该主题中的所有数据，同一条数据可以被多个订阅者消费，**消息被消费后也不会被立即删除。**（Kafka会默认保留一段时间，然后再删除。）
 
@@ -158,11 +164,11 @@
 
 
 
-## 1.4 Kafka与Flume的区别与联系
+### 1.4 Kafka与Flume的区别与联系
 
 Kafka 与 Flume的很多功能确实是重叠的，二者的联系与区别如下：
 
--   **Kafka是一个通用型系统，可以有许多生产者和消费者共享多个主题。**相反地，**Flume被设计成特定通途的系统，只向HDFS和HBase发送数据。**Flume为了更好的为HDFS服务而做了特定的优化，并且与Hadoop的安全体系整合在了一起。因此，如果数据需要被多个应用程序消费，推荐使用Kafka；如果数据只是面向Hadoop的，推荐使用Flume
+-   **Kafka是一个通用型系统，可以有许多生产者和消费者共享多个主题**。相反地，**Flume被设计成特定通途的系统，只向HDFS和HBase发送数据**。Flume为了更好的为HDFS服务而做了特定的优化，并且与Hadoop的安全体系整合在了一起。因此，如果数据需要被多个应用程序消费，推荐使用Kafka；如果数据只是面向Hadoop的，推荐使用Flume
 
 -   Flume拥有各种配置的数据源（Source）和数据槽（Sink），而Kafka拥有的是非常小的生产者和消费者环境体系。**如果数据源已经确定，不需要额外的编码，那么推荐使用Flume提供的数据源和数据槽**。反之，**如果需要准备自己的生产者和消费者，那么就适合使用Kafka。**
 
@@ -186,38 +192,38 @@ Kafka 与 Flume的很多功能确实是重叠的，二者的联系与区别如�
 
 
 
-​	Kafka像其他Mq一样，也有自己的基础架构，主要存在生产者Producer、Kafka集群Broker、消费者Consumer、注册消息Zookeeper.
+​	Kafka像其他Mq一样，也有自己的基础架构，主要存在生产者`Producer`、Kafka集群`Broker`、消费者`Consumer`、注册消息`Zookeeper`.
 
 Kafka系统包含了许多组件，如下
 
-| 组件名称                              | 相关说明                                                     |
-| ------------------------------------- | ------------------------------------------------------------ |
-| Producer <br>消息生产者               | 生成者即数据的发布者，向Kafka中发布消息的角色                |
-| Consumer<br> 消息消费者               | 即从Kafka中拉取消息消费的客户端                              |
-| Consumer Group（CG）<br/>消息消费者组 | 消费者组，由多个consumer组成。<br>消费者组内每个消费者负责消费不同分区的数据，**一个分区中的消息只能够一个消费者组中的一个消费者所消费**，消费者消费Broker中当前Topic的不同分区中的消息，**消费者组之间互不影响**，所有的消费者都属于某个消费者组（若未指定消费者组，默认一个消费者就是在一个组中），即**消费者组是逻辑上的一个订阅者**。 |
-| Broker <br/> 经纪人                   | **一台Kafka服务器就是一个Broker，一个集群由多个Broker组成，一个Broker可以容纳多个Topic** |
-| Topic<br/> 主题                       | 可以理解为一个队列，**生产者和消费者都是面向一个Topic**      |
-| Partition 分区                        | 为了实现扩展性，一个非常大的Topic可以分布到多个Broker上，一个Topic可以分不到多个Broker（即服务器）上，**一个topic可以分为多个partition**，每个partition是一个**有序的队列**(分区有序，不能保证全局有序) |
-| Replicas 副本Replication              | 为保证集群中某个节点发生故障，节点上的Partition数据不丢失，Kafka可以正常 工作，Kafka提供了副本机制，一个Topic的每个分区有若干个副本，**一个Leader和多个Follower** |
-| Segment 分段                          | partition物理上由多个segment组成，每个 Segment存着 message信息。 |
-| Leader                                | 每个分区多个**副本的主角色**，生产者发送数据的对象，以及消费者消费数据的对象都是Leader |
-| Follower                              | 每个分区多个**副本的从角色**，实时的从Leader中同步数据，保持和Leader数据的同步，Leader发生故障的时候，某个Follower会成为新的Leader。 |
+| 组件名称                           | 相关说明                                                     |
+|--------------------------------| ------------------------------------------------------------ |
+| Producer <br> 消息生产者            | 生成者即数据的发布者，向Kafka中发布消息的角色                |
+| Consumer<br> 消息消费者             | 即从Kafka中拉取消息消费的客户端                              |
+| Consumer Group（CG）<br/> 消息消费者组 | 消费者组，由多个consumer组成。<br>消费者组内每个消费者负责消费不同分区的数据，**一个分区中的消息只能够一个消费者组中的一个消费者所消费**，消费者消费Broker中当前Topic的不同分区中的消息，**消费者组之间互不影响**，所有的消费者都属于某个消费者组（若未指定消费者组，默认一个消费者就是在一个组中），即**消费者组是逻辑上的一个订阅者**。 |
+| Broker <br/> 经纪人               | **一台Kafka服务器就是一个Broker，一个集群由多个Broker组成，一个Broker可以容纳多个Topic** |
+| Topic <br/> 主题                 | 可以理解为一个队列，**生产者和消费者都是面向一个Topic**      |
+| Partition 分区                   | 为了实现扩展性，一个非常大的Topic可以分布到多个Broker上，一个Topic可以分不到多个Broker（即服务器）上，**一个topic可以分为多个partition**，每个partition是一个**有序的队列**(分区有序，不能保证全局有序) |
+| Replicas <br/> 副本Replication   | 为保证集群中某个节点发生故障，节点上的Partition数据不丢失，Kafka可以正常 工作，Kafka提供了副本机制，一个Topic的每个分区有若干个副本，**一个Leader和多个Follower** |
+| Segment  <br/> 分段              | partition物理上由多个segment组成，每个 Segment存着 message信息。 |
+| Leader                         | 每个分区多个**副本的主角色**，生产者发送数据的对象，以及消费者消费数据的对象都是Leader |
+| Follower                       | 每个分区多个**副本的从角色**，实时的从Leader中同步数据，保持和Leader数据的同步，Leader发生故障的时候，某个Follower会成为新的Leader。 |
 
 
 
 
 
-# 2 Kafka集群部署
+## 2 Kafka集群部署
 
 Kafka集群部署依赖于 Java环境 和 Zookeeper服务
 
-## 集群规划
+### 集群规划
 
 | kk01       | kk02       | kk03       |
 | ---------- | ---------- | ---------- |
 | zk、broker | zk、broker | zk、broker |
 
-## 1）下载、解压安装包
+### 1）下载、解压安装包
 
 访问Kafka官网下载安装包即可（为了方便Kafka与Spark整合，因此选择**Kafka版本时要与Scala版本保持一致**）
 
@@ -231,7 +237,7 @@ Kafka集群部署依赖于 Java环境 和 Zookeeper服务
 # 3.0.0 表示Kafka版本
 ```
 
-## 2）修改解压后的文件名称（可选） 
+### 2）修改解压后的文件名称（可选） 
 
 为了区分版本，我们就不做此操作
 
@@ -239,7 +245,7 @@ Kafka集群部署依赖于 Java环境 和 Zookeeper服务
 [nhk@kk01 software]$ mv kafka_2.13-3.0.0 kafka-3.0.0
 ```
 
-## 3）修改配置文件server.properties
+### 3）修改配置文件server.properties
 
 进入/opt/software/kafka_2.13-3.0.0/config目录下，**修改配置文件server.properties**
 
@@ -310,14 +316,14 @@ host.name=kk01
 
 关于server.properties文件核心参数介绍如下：
 
--   **broker.id**：集群中每个节点的唯一且永久的名称，**该值必须大于等于0**，我们有三台机器kk01、kk02、kk03，我们将此参数依次设置为 0、1、2
--   **log.dirs**：指定运行日志（数据）存放的地址，**可以指定多个目录，并以逗号分隔**
--   **zookeeper.connect**：指定zookeeper集群中的IP与端口号
--   **delete.topic.enable**：是否允许删除topic，如果设置为true，表示允许删除，**默认为false**，则删除topic时，会标记为delete
--   **host.name**：设置本机ip地址。
+-   `broker.id`：集群中每个节点的唯一且永久的名称，**该值必须大于等于0**，我们有三台机器kk01、kk02、kk03，我们将此参数依次设置为 0、1、2
+-   `log.dirs`：指定运行日志（数据）存放的地址，**可以指定多个目录，并以逗号分隔**
+-   `zookeeper.connect`：指定zookeeper集群中的IP与端口号
+-   `delete.topic.enable`：是否允许删除topic，如果设置为true，表示允许删除，**默认为false**，则删除topic时，会标记为delete
+-   `host.name`：设置本机ip地址。
     -   若设置错误，则客户端会抛出Producer connection to localhost:9092 unsuccessful 的异常信息
 
-## 4）分发安装包
+### 4）分发安装包
 
 ```shell
 [nhk@kk01 software]$ pwd
@@ -327,13 +333,12 @@ host.name=kk01
 [nhk@kk01 software]$ scp -r kafka_2.13-3.0.0/ kk03:/opt/software/
 ```
 
-## **5）**修改broker.id
+### 5）修改broker.id
 
 分发完成后，分别在kk02、kk03上修改配置文件 /opt/software/kafka_2.13-3.0.0/config/server.properties中的
+`broker.id`、`host.name`参数
 
-​	broker.id、host.name参数
-
-**注意：broker.id不得重复，在整个集群中唯一**
+**注意：`broker.id`不得重复，在整个集群中唯一**
 
 ```shell
 [nhk@kk02 ~]$ cd /opt/software/kafka_2.13-3.0.0/config/
@@ -354,7 +359,7 @@ broker.id=2
 host.name=kk03
 ```
 
-## 6）修改环境变量
+### 6）修改环境变量
 
 在/etc/profile 文件中新增kafka环境变量配置
 
@@ -370,7 +375,7 @@ export PATH=$PATH:$KAFKA_HOME/bin
 [nhk@kk01 config]$ source /etc/profile
 ```
 
-## 7）分发环境变量到其他节点，并source
+### 7）分发环境变量到其他节点，并source
 
 ```shell
 [nhk@kk01 config]$ scp /etc/profile kk02:/etc/profile
@@ -382,7 +387,7 @@ export PATH=$PATH:$KAFKA_HOME/bin
 
 至此，Kafka集群配置完成
 
-## 8）启动Kafka服务
+### 8）启动Kafka服务
 
 启动Kafka服务之前，需要**先启动Zookeeper集群服务**。
 
@@ -430,7 +435,7 @@ zk服务启动后，就可以**通过Kafka根目录下bin/kafka-server-start.sh 
 
 
 
-## 集群启停脚本
+### 集群启停脚本
 
 1）在/home/nhk/bin目录下（用户家目录的bin目录下，我们以nhk用户为例）**创建文件kafka.sh脚本文件**
 
@@ -493,9 +498,9 @@ kafka.sh stop
 
 
 
-# 3 Kafka 命令行操作
+## 3 Kafka 命令行操作
 
-## 3.1 主题命令行操作
+### 3.1 主题命令行操作
 
 在kafka解压包的bin目录下，有一个 kafka-topics.sh 文件，通过该脚本文件就可以操作与主题组件相关的功能（前面配置了环境变量，所以可以在任何目录下访问bin目录下的所有文件）
 
@@ -635,12 +640,11 @@ drwxr-xr-x. 2 nhk nhk 204 May  5 07:59 first-2.9372cb93fb68472fad9c5c7b86eaa0a4-
 ```
 
 
-
-## 3.2 生产者命令行操作
+### 3.2 生产者命令行操作
 
 在kafka解压包的bin目录下，有一个 kafka-console-producer.sh 文件，通过该脚本文件就可以操作与生产者组件相关的功能，如向主题发送消息数据的功能
 
-### 1）查看操作生产者命令参数
+#### 1）查看操作生产者命令参数
 
 ```shell
 [nhk@kk01 kafka_2.13-3.0.0]$ bin/kafka-console-producer.sh
@@ -653,7 +657,7 @@ drwxr-xr-x. 2 nhk nhk 204 May  5 07:59 first-2.9372cb93fb68472fad9c5c7b86eaa0a4-
 | -bootstrap-server <String: server toconnect to> | 连接的Kafka Broker主机名称和端口号 |
 | --topic <String: topic>                         | 操作的topic名称                    |
 
-### 2）发送消息
+#### 2）发送消息
 
 ```shell
 [nhk@kk01 kafka_2.13-3.0.0]$ bin/kafka-console-producer.sh --bootstrap-server kk01:9092 --topic first         # 下面这些都是输入的信息
@@ -667,7 +671,7 @@ drwxr-xr-x. 2 nhk nhk 204 May  5 07:59 first-2.9372cb93fb68472fad9c5c7b86eaa0a4-
 
 ​	执行命令行，无信息输出，并且光标一致保持等待输入状态（**输入的信息需要消费者来消费，在消费者启动之前输入的消息叫历史消息，消费者消费历史消息时需要使用参数--from-beginning**）
 
-## 3.3 消费者命令行操作
+### 3.3 消费者命令行操作
 
 ​	在kafka解压包的bin目录下，有一个 kafka-console-consumer.sh 文件，通过该脚本文件就可以操作与消费者组件相关的功能，如消费主题中的消息数据的功能
 
@@ -683,7 +687,7 @@ drwxr-xr-x. 2 nhk nhk 204 May  5 07:59 first-2.9372cb93fb68472fad9c5c7b86eaa0a4-
 
 ​	**消费者消费的位置信息，在Kafka 0.9版本之前是存储在Zookeeper中的。从0.9版本开始，存储在本地主题__comuser_offsets-* 中 。**
 
-### 1）查看操作消费者命令参数
+#### 1）查看操作消费者命令参数
 
 ```shell
 [nhk@kk01 kafka_2.13-3.0.0]$ pwd
@@ -702,7 +706,7 @@ drwxr-xr-x. 2 nhk nhk 204 May  5 07:59 first-2.9372cb93fb68472fad9c5c7b86eaa0a4-
 | --offset <Stirng: consumer offset>              | 指定消费的offset，例：latest(默认)、earliest、整型数字，**使用该参数要去指定分区参数连用** |
 | --partition <Integer: partition>                | 指定消费的分区                                               |
 
-### 2）消费消息
+#### 2）消费消息
 
 消费first主题中的数据
 
@@ -728,7 +732,7 @@ hello world
 2
 ```
 
-### 3）创建消费者组
+#### 3）创建消费者组
 
 消费者组其实就是一个容器，可以容纳若干个消费者。**每一个消费者都必须被包含在某一个消费者组里面。**
 
@@ -746,7 +750,7 @@ spark
 # 如果消费者在启动的时候没有指定分组，则会自动创建一个带有序号的分组，将消费者加入到这个分组中
 ```
 
-### 4）消费者组列表
+#### 4）消费者组列表
 
 列出当前所以的消费者组
 
@@ -757,7 +761,7 @@ console-consumer-2443
 console-consumer-24662
 ```
 
-### 5）删除消费者组
+#### 5）删除消费者组
 
 注意：
 
@@ -772,7 +776,7 @@ console-consumer-2443
 console-consumer-24662
 ```
 
-### 6）查看消费位置offset
+#### 6）查看消费位置offset
 
 ```shell
 [nhk@kk01 kafka_2.13-3.0.0]$ bin/kafka-consumer-groups.sh --bootstrap-server kk01:9092 --describe --group my-group1
@@ -793,7 +797,7 @@ my-group1       first           2          2               2               0    
 # LAG 表示偏移量
 ```
 
-### 7）消费数据详情
+#### 7）消费数据详情
 
 ​	Kafka消费者在消费数据的时候，都是分组别的。**不同组的消费不受影响，相同组内的消费，需要注意的是，如果有3个分区，消费者有3个，那么便是一个消费者消费其中的一个分区的数据，如果有2个消费者，那么一个消费者消费一个分区的数据，另一个消费者消费两个分区的数据。如果有超过3个消费者，同一时间最多只能有3个消费者得到数据。**（即对于同一个消费者组内，一个分区在同一时间最多只能由一个消费者消费，一个消费者在同一时间可以消费多个分区）
 
@@ -806,9 +810,9 @@ my-group1       first           2          2               2               0    
 # 所以如果想要提高Kafka的topic的消费能力，应该增大partition的数量 
 ```
 
-## 3.4 平衡Leader
+### 3.4 平衡Leader
 
-### 3.4.1 手动平衡Leader
+#### 3.4.1 手动平衡Leader
 
 ```shell
 bin/kafka-leader-election.sh --bootstrap-server kk01:9092,kk02:9092,kk03:9092 --election-type preferred --all-topic-partition
@@ -823,7 +827,7 @@ bin/kafka-leader-election.sh --bootstrap-server kk01:9092,kk02:9092,kk03:9092 --
 		json格式：{"partitions":[{"topic":"first","partition":1},{"topic":"first","partition":2}]}
 ```
 
-### 3.4.2 自动平衡Leader
+#### 3.4.2 自动平衡Leader
 
 ```shell
 # 如果不想每次都去手动平衡Leader，那么可以修改 server.properites 配置文件，实现Leader的自动平衡
@@ -833,7 +837,7 @@ auto.leader.rebalance.enable=true
 # 但是一般我们不会去做自动平衡Leader，真的出现了倾斜的情况，我们一般会设计定时任务，周期性的去调用手动平衡的方式去实现Leader平衡
 ```
 
-## 3.5 Kafka自动压测命令
+### 3.5 Kafka自动压测命令
 
 **压力测试的意义**
 
@@ -887,9 +891,9 @@ start.time, end.time, data.consumed.in.MB, MB.sec, data.consumed.in.nMsg, nMsg.s
 
 
 
-# 4 Kafka架构
+## 4 Kafka架构
 
-## 4.1 Kafka分布式模型
+### 4.1 Kafka分布式模型
 
 ​	在一个Kafka集群中，生产者生成的消息被写入到指定的主题中（有些Topic是多个分区的，我们这里举例就以一个分区来说），为了保证数据的完整性，Kafka会将这些主题中的消息在其他broker进行备份，最终生成由创建主题时通过 --replication-factor 指定的副本数量。
 
@@ -903,7 +907,7 @@ start.time, end.time, data.consumed.in.MB, MB.sec, data.consumed.in.nMsg, nMsg.s
 
 ​	因此每一个broker都能作为一个分区的Leader和其他分区的Follower，因此Kafka集群能很好的平衡
 
-## 4.2 Topic中的分区
+### 4.2 Topic中的分区
 
 **什么是分区**
 
@@ -950,9 +954,9 @@ log.dirs=/opt/software/kafka_2.13-3.0.0/datas
 
 
 
-## 4.3 Kafka工作流程及文件存储机制
+### 4.3 Kafka工作流程及文件存储机制
 
-### 4.3.1 工作流程
+#### 4.3.1 工作流程
 
 1 生产者生产消息过程
 
@@ -983,7 +987,7 @@ topic是逻辑上的概念，而partition是物理上的概念，每个partition
 
 producer生产的数据会被不断追加到该log文件的末端，且每条数据都有自己的offset，消费者组中的每个消费者，都会实时记录自己消费到了哪个offset，以便出错恢复时，从上次的位置继续消费（可以理解为断点续传）。
 
-### 4.3.2 Kafka文件存储机制
+#### 4.3.2 Kafka文件存储机制
 
 Kafka文件存储也是通过本地落盘的方式存储的，主要是通过相应的 **log与index** 等文件保存具体的消息文件。
 
@@ -1046,7 +1050,7 @@ s=10000
 #	3.获取到总的偏移量之后，直接定位到 .log文件即可快速获得当前消息大小。
 ```
 
-## 4.4 Kafka的Log Compaction
+### 4.4 Kafka的Log Compaction
 
 **Log Compaction简介**
 	Compaction单词的意思是压缩，但是这里的压缩并不是指的将Kafka的Log文件进行类似于gzip之类的压缩。Kafka中的Log Compaction是指在**默认的日志删除 (Log Deletion）规则之外提供的一种清理过时数据的方式**。
@@ -1117,7 +1121,7 @@ log.cleaner.min.compaction.lag.ms
 
 
 
-## 4.5 Conusmer Group架构
+### 4.5 Conusmer Group架构
 
 ​	Consumer Group是Kafka提供的可扩展的具有容错型的消费者机制。既然是一个组，那么组内必然可以有多个消费者或消费者实例（consumer instance），它们共享一个公共的ID，即Group ID。组内的所有消费者协调在一起来消费订阅主题（subscribed topics）的所有分区（partition）。当然，每个分区只能由同一消费者组内的一个消费者消费。
 
@@ -1129,7 +1133,7 @@ log.cleaner.min.compaction.lag.ms
 
 
 
-# 5 Kakfa核心API
+## 5 Kakfa核心API
 
 通过调用 Kafka API 操作 Kafka集群，其核心API主要包括一下5种：
 
@@ -1161,15 +1165,15 @@ Kafka作为流数据处理平台，在开发生产者客户端时，Producer API
 
 
 
-## 5.1 Kafka生产者
+### 5.1 Kafka生产者
 
-### 5.1.1 消息发送流程
+#### 5.1.1 消息发送流程
 
 Kafka 的 Producer 发送消息采用的是**异步发送**的方式。在消息发送的过程中，涉及到了**两个线程（main线程和 Sender 线程），以及一个线程共享变量 RecordAccumulator**。main 线程将消息发送给 RecordAccumulator（中间涉及到了 Interceptors、Serializer、Partitioner），Sender 线程不断从RecordAccumulator 中拉取消息发送到 Kafka broker。
 
 
 
-### 5.1.2 异步发送 Java API实现
+#### 5.1.2 异步发送 Java API实现
 
 1）导入依赖
 
@@ -1185,7 +1189,7 @@ Kafka 的 Producer 发送消息采用的是**异步发送**的方式。在消息
 
 2）编写代码
 
-####  异步发送 普通生产者
+#####  异步发送 普通生产者
 
 ```java
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -1281,7 +1285,7 @@ hello world - 8
 hello world - 9
 ```
 
-#### 异步发送 带回调函数的生产者
+##### 异步发送 带回调函数的生产者
 
 **回调函数会在 producer 收到 ack 时调用，为异步调用**，该方法有两个参数，分别为 RecordMetaData 和Exception，如果Exception为null，说明消息发送成功，如果Exception不为null，说明消息发送失败。
 
@@ -1394,7 +1398,7 @@ first:2:19
 
 
 
-### 5.1.3 同步发送 Java API实现(生产不建议使用)
+#### 5.1.3 同步发送 Java API实现(生产不建议使用)
 
 同步发送的意思就是，一条消息发送后，会阻塞当前线程，直至返回ack
 
@@ -1504,7 +1508,7 @@ first:1:35
 
 
 
-### 5.1.4 生产者分区写入策略
+#### 5.1.4 生产者分区写入策略
 
 **1）什么是分区**
 
@@ -1586,7 +1590,7 @@ public ProducerRecord(String topic, V value)
 
     
 
-#### 1 轮询分区
+##### 1 轮询分区
 
 **默认的策略**，也是使用最多的策略，可以**最大限度保证所有消息平均分配到一个分区**
 
@@ -1600,14 +1604,14 @@ public class RoundRobinPartitioner implements Partitioner
 
 
 
-#### 2 随机策略
+##### 2 随机策略
 
 随机策略，每次都随机地将消息分配到每个分区。在较早的版本，默认的分区策略就是随机策略，也是为了将消息均衡地写入到每个分区。但后续轮询策略表现更佳，所以基本上很少会使用随机策略。
 
 
 
 
-#### 3 按key分配策略
+##### 3 按key分配策略
 
 按key分配策略，有可能会出现「数据倾斜」，例如：某个 key 包含了大量的数据，因为key值一样，所有所有的数据将都分配到一个分区中，造成该分区的消息数量远大于其他的分区。
 
@@ -1615,7 +1619,7 @@ public class RoundRobinPartitioner implements Partitioner
 
 
 
-#### 4 自定义分区策略
+##### 4 自定义分区策略
 
 自定义分区器的步骤：
 
@@ -1796,9 +1800,9 @@ first:0:47
 
 
 
-### 5.1.5 数据可靠性保证（ack）
+#### 5.1.5 数据可靠性保证（ack）
 
-#### **1）生产者发送数据到topic partition 的可靠性保证**
+##### 1）生产者发送数据到topic partition 的可靠性保证
 
 ​	为保证producer 发送的数据，能可靠的发送到指定的topic，**topic的每个partition 收到producer 发送的数据后，都需要向 producer 发送 `ack`**（acknowledgement 确认收到），如果producer 收到 ack，就会进行下一轮的发送，否则重新发送数据。
 
@@ -1813,9 +1817,9 @@ first:0:47
 -   半数以上的follower同步完成，即可发送ack
 -   全部follwer同步完成，才可以发送ack（==Kafka采取的方案==）
 
-#### **2）topic partition 存储数据的可靠性保证**
+##### 2）topic partition 存储数据的可靠性保证
 
-#### （1**）副本数据同步策略**
+###### （1）副本数据同步策略
 
 | 方案                        | 优点                                             | 缺点                                              |
 | --------------------------- | ------------------------------------------------ | ------------------------------------------------- |
@@ -1827,7 +1831,7 @@ first:0:47
 -   同样为了容忍n台节点的故障，第一种方案需要2n+1个副本，而第二章方案只需要n+1个副本。因为Kafka的每个分区都有大量的数据，第一种方案会造成大量数据的冗余。
 -   虽然第二种网络延迟较高，但是网络延迟对于Kafka的影响较小（因为Kafka服务器之间通信依靠的是内网）。
 
-#### **（2）ISR**
+###### （2）ISR
 
 问题：
 
@@ -1837,7 +1841,7 @@ first:0:47
 
 ​	Leader中维护了一个动态的**ISR（in-sync replica set）（副本同步队列）**，即与 Leader 保持同步的 follower集合，`当 ISR 中的follower完成数据的同步之后，给 Leader 发送 ack`，**如果follower长时间没有向leader同步数据，则该follower将从ISR中被踢出**，该之间阈值由**replica.lag.time.max.ms（10s）**参数设定。**当 Leader发生故障之后，会从ISR中选举出新的Leader。**
 
-#### **（3）ack应答级别**
+###### （3）ack应答级别
 
 ​	对于某些不太重要的数据，**对数据的可靠性要求不是很高，能够容忍数据的少量丢失，所以没有必要等到ISR中所有的Follower全部接受成功。**
 
@@ -1851,7 +1855,7 @@ producer返ack，`0 无落盘直接返`，`1 只leader落盘然后返`，`-1 全
 -   **1**：producer等待broker的ack，**partition的Leader落盘成功后返回ack**，如果在follower同步成功之前Leader故障，那么将**丢失数据**。（**只是Leader落盘**）
 -   **-1（all）**：producer等待broker的ack，**partition的leader和 ISR 中的follower全部落盘成功才返回ack**，但是如果在follower同步完成后，`broker发送ack之前，如果leader发生故障，会造成数据重复`。(这里的数据重复是因为producer没有收到ack，所以继续重发导致的**数据重复**)
 
-#### 3）数据一致性问题（水位线）
+##### 3）数据一致性问题（水位线）
 
 ​	数据一致性问题 即 leader与follower故障处理细节
 
@@ -1888,7 +1892,7 @@ Log文件中的HW和LEO
 
 ​	在使用HW进行副本的同步的时候，并不能保证`数据的丢失`、`数据的一致性`
 
-### 5.1.6 Leader Epoch
+#### 5.1.6 Leader Epoch
 
 出现 数据丢失、数据不一致的根本原因就在于：HW值被用于衡量备份的成功与否，在出现失败重启的时候作为日志截断的依据。
 
@@ -1916,7 +1920,7 @@ Leader broker 中会保存这样的一个缓存，并定期地写入到一个 ch
 
 
 
-### 5.1.7 Exactly Once语义
+#### 5.1.7 Exactly Once语义
 
 -   将服务器的**ACK级别设置为-1（all）**，可以保证 Producer 到 Server 之间不会丢失数据，即At Least Once语义。相对的，将服务器ACK级别设置为0，可以保证生产者每条消息只会被发送一次，即At Most Once至多一次。
 
@@ -1934,7 +1938,7 @@ Leader broker 中会保存这样的一个缓存，并定期地写入到一个 ch
 -   但PID在重启之后会发生变化，同时不同的Partition也具有不同的主键，所以**幂等性无法保证跨分区跨会话的Exactly Once。**
     
 
-### 5.1.8 Producer事务
+#### 5.1.8 Producer事务
 
 -   kafka从0.11版本开始引入了事务的特性，事务可以保证Kafka在Exactly Once语义的基础上，生产和消费可以跨分区的会话，要么全部成功，要么全部失败。
 -   为了按**跨分区**跨会话的事务，需要**引入一个全局唯一的Transaction ID**，并将**Producer获得的 PID(可以理解为Producer ID)和 Transaction ID 进行绑定**，这样当Producer重启之后就可以通过正在进行的Transaction ID获得原来的PID。
@@ -1942,9 +1946,9 @@ Leader broker 中会保存这样的一个缓存，并定期地写入到一个 ch
 
 
 
-## 5.2 Kafka消费者
+### 5.2 Kafka消费者
 
-### 5.2.1 Kafka的 生产者 Push 与 消费者 Pull（消费方式）
+#### 5.2.1 Kafka的 生产者 Push 与 消费者 Pull（消费方式）
 
 ​	一个较早问题是我们应该考虑是消费者从broker在pull数据，还是 broker将数据push给消费者。Kafka遵守传统设计和借鉴了很多消息系统，这里**Kafka选择producer 向broker去push数据，并由consumer 从broker pull消息。**一些ogging-centric system，比如FaceBook的Scribe和Cloudera的Flume，采用采用非常不同的push模式。事实上，push模式和pull模式各有优势。（**consumer 采用 pull（拉）的方式来从 broker 中读取数据。**）
 
@@ -1956,7 +1960,7 @@ ps：timeout官方案例是100ms
 
 
 
-### 5.2.2 基础消费者 Java API实现
+#### 5.2.2 基础消费者 Java API实现
 
 注意：
 
@@ -2021,7 +2025,7 @@ public class CustomConsumer {
 }
 ```
 
-### 5.2.3 消费者组Rebalance机制
+#### 5.2.3 消费者组Rebalance机制
 
 ​	Kafka 中的 **Rebalance** 称之为**再均衡**，是 Kafka 中确保 Consumer group 下所有的 consumer 如何达成一致，分配订阅的 topic 的每个分区的机制。
 
@@ -2043,7 +2047,7 @@ Rebalance 触发的时机有：
 
 
 
-### 5.2.4 消费者分区分配策略
+#### 5.2.4 消费者分区分配策略
 
 ​	一个 consumer group 中有多个 consumer，一个topic 有多个 partition ，所以必然会涉及到 partition 分配的问题，即确定 那个 partition 由哪个 consumer 来消费。
 
@@ -2055,7 +2059,7 @@ Rebalance 触发的时机有：
 
 ​		Sticky ：中Java中可以有 StickyAssignor   CooperativeStickyAssignor 来表示
 
-#### 1 Range范围分配策略
+##### 1 Range范围分配策略
 
 Range 范围分配策略是 Kafka **默认的分配策略**，它可以确保每个消费者消费的分区数量是均衡的。
 
@@ -2095,7 +2099,7 @@ properties.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG,"org.apache.k
 
 
 
-#### 2 RoundRobin轮询策略
+##### 2 RoundRobin轮询策略
 
 RoundRobinAssignor 轮询策略是将消费组内所有消费者以及消费者所订阅的所有 topic 的 **partition 按照字典序排序（topic 和分区的 hashcode 进行排序），然后通过轮询方式逐个将分区以此分配给每个消费者**。
 
@@ -2113,7 +2117,7 @@ properties.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG,"org.apache.k
 
 
 
-#### 3 Stricky粘性分配策略
+##### 3 Stricky粘性分配策略
 
 ​	从 Kafka 0.11.x 开始，引入此类分配策略。首先会尽量均衡的放置分区到 consumer 上面，在出现同一 **consumer group 内 consumer 出现问题**时（即会发生rebalance ），会**尽量保持原有分配的分区不变化**。
 
@@ -2132,7 +2136,7 @@ properties.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG,"org.apache.k
 
 
 
-### 5.2.5 offset的维护
+#### 5.2.5 offset的维护
 
 ​	生产者生成的消息，在topic中存储的时候，每条消息都会有自己的唯一位置标记，称为offset。
 
@@ -2198,7 +2202,7 @@ exclude.internal.topics=false
 properties.put(ConsumerConfig.EXCLUDE_INTERNAL_TOPICS_CONFIG,"false");
 ```
 
-#### 自动提交offset
+##### 自动提交offset
 
 1）编写代码
 
@@ -2274,7 +2278,7 @@ public class CustomConsumerAuto {
 }
 ```
 
-#### 重置offset
+##### 重置offset
 
 ```
 auto.offset.reset = earliest | latest | none
@@ -2349,7 +2353,7 @@ public class CustomConsumerReset {
 }
 ```
 
-#### 手动提交offset
+##### 手动提交offset
 
 ​	虽然自动提交 offset 十分简洁便利，但由于其是基于时间提交的，开发人员很难把握 offset 提交的时机。因此Kafka 还提供了手动提交 offset 的API。
 
@@ -2452,7 +2456,7 @@ public class CustomConsumerManual {
 
 
 
-### 5.2.6 Consumer事务
+#### 5.2.6 Consumer事务
 
 ​	上述事务机制主要是从 Producer 方面考虑，对于 Consumer 而已，事务的保证就会相对较弱，尤其是无法保证 Commit 的信息 被精确消费。这是由于 Conusmer 可以通过 offset 访问任意信息，而且不同的 Segment File 生命周期不同，同一事务的消息可能会出现重启后删除的情况。
 
@@ -2460,13 +2464,13 @@ public class CustomConsumerManual {
 
 
 
-# 6 Kafka 高效读写数据
+## 6 Kafka 高效读写数据
 
-## 6.1 顺序写磁盘
+### 6.1 顺序写磁盘
 
 ​	Kafka 的 producer 生产数据，要写入到 log 文件，写的过程是一直追加到文件末端，为顺序写。官网有数据表明，同样的磁盘，顺序读写能到 600M/s，而随机读写只有 100K/s。这与磁盘的机械结构有关。顺序写一所以快，是因为省去了大量磁头寻址的时间。
 
-## 6.2 零拷贝技术
+### 6.2 零拷贝技术
 
 **Kafka 数据持久化是直接持久化到 Pagecache 中**，这样会产生以下几个好处：
 
@@ -2488,9 +2492,9 @@ public class CustomConsumerManual {
 
 
 
-# 7 Zookeeper在 Kafka 中的作用
+## 7 Zookeeper在 Kafka 中的作用
 
-## 7.1 Kafka在zookeeper中目录说明
+### 7.1 Kafka在zookeeper中目录说明
 
 说明：
 
@@ -2510,7 +2514,7 @@ zookeeper.connect=kk01:2181,kk02:2181,kk03:2181/kafka
 tion]
 ```
 
-### **/kafka/cluster**
+#### **/kafka/cluster**
 
 ```shell
 [zk: localhost:2181(CONNECTED) 3] ls /kafka/cluster
@@ -2521,7 +2525,7 @@ tion]
 {"version":"1","id":"2qf2nPviRZy4F859KOYwzw"}   # 表示的是一个Kafka集群包含集群的版本，和集群的id
 ```
 
-### /kafka/controller
+#### /kafka/controller
 
 ```shell
 [zk: localhost:2181(CONNECTED) 6] ls /kafka/controller
@@ -2533,7 +2537,7 @@ tion]
 # brokerid意为由其id对于的broker承担controller角色
 ```
 
-### /kafka/controller_epoch
+#### /kafka/controller_epoch
 
 ```shell
 [zk: localhost:2181(CONNECTED) 8] get /kafka/controller_epoch
@@ -2542,7 +2546,7 @@ tion]
 # 代表 controller 的纪元，换句话说代表 controller的更迭，每当controller的brokerid更换一次，controller_epoch就 +1
 ```
 
-### /kafka/brokers/ids
+#### /kafka/brokers/ids
 
 ​	**Broker是分布式部署并且相互之间相互独立，但是需要有一个注册系统能够将整个集群中的Broker管理起来**，此时就使用到了Zookeeper。在Zookeeper上会有一个专门**用来进行Broker服务器列表记录**的节点：
 
@@ -2564,7 +2568,7 @@ ion":5,"timestamp":"1687591477370"}
 
 ​	Kafka使用了全局唯一的数字来指代每个Broker服务器，不同的Broker必须使用不同的Broker ID进行注册，创建完节点后，**每个Broker就会将自己的IP地址和端口信息记录**到该节点中去。其中，Broker创建的节点类型是临时节点，一旦Broker宕机，则对应的临时节点也会被自动删除。
 
-### /kafka/brokers/topics
+#### /kafka/brokers/topics
 
 ​	在Kafka中，同一个**Topic的消息会被分成多个分区**并将其分布在多个Broker上，**这些分区信息及与Broker的对应关系**也都是由Zookeeper在维护，由专门的节点来记录，如：
 
@@ -2579,7 +2583,7 @@ ion":5,"timestamp":"1687591477370"}
 [first]   # 当前Kafka中topic列表
 ```
 
-### /kafka/brokers/seqid
+#### /kafka/brokers/seqid
 
 ```shell
 [zk: localhost:2181(CONNECTED) 18] ls /kafka/brokers/seqid
@@ -2590,7 +2594,7 @@ null
 # 系统的序列id
 ```
 
-### /kafka/consumers
+#### /kafka/consumers
 
 ​	老版本用于存储kafka消费者的信息，主要保存对应的offset，新版本基本不用，此时用户的消息，保存在一个系统的topic中：__conumser_offsets
 
@@ -2599,7 +2603,7 @@ null
 []
 ```
 
-### /kafka/config
+#### /kafka/config
 
 主要存放配置信息
 
@@ -2610,7 +2614,7 @@ null
 
 
 
-## 7.2 生产者负载均衡
+### 7.2 生产者负载均衡
 
 ​	由于同一个Topic消息会被分区并将其分布在多个Broker上，因此，**生产者需要将消息合理地发送到这些分布式的Broker上**，那么如何实现生产者的负载均衡，Kafka支持传统的四层负载均衡，也支持Zookeeper方式实现负载均衡。
 
@@ -2618,13 +2622,13 @@ null
 
 (2) 使用Zookeeper进行负载均衡，由于每个Broker启动时，都会完成Broker注册过程，生产者会通过该节点的变化来动态地感知到Broker服务器列表的变更，这样就可以实现动态的负载均衡机制。
 
-## 7.3 消费者负载均衡
+### 7.3 消费者负载均衡
 
 ​	与生产者类似，Kafka中的消费者同样需要进行负载均衡来实现多个消费者合理地从对应的Broker服务器上接收消息，每个消费者分组包含若干消费者，**每条消息都只会发送给分组中的一个消费者**，不同的消费者分组消费自己特定的Topic下面的消息，互不干扰。
 
 
 
-## 7.4 分区 与 消费者 的关系
+### 7.4 分区 与 消费者 的关系
 
 **消费组 (Consumer Group)：**
 consumer group 下有多个 Consumer（消费者）。
@@ -2639,7 +2643,7 @@ consumer group 下有多个 Consumer（消费者）。
 
 其中，[broker_id-partition_id]就是一个 消息分区 的标识，节点内容就是该 消息分区 上 消费者的Consumer ID。
 
-### 消息消费进度Offset 记录
+#### 消息消费进度Offset 记录
 
 ​	在消费者对指定消息分区进行消息消费的过程中，**需要定时地将分区消息的消费进度Offset记录到Zookeeper上**，以便在该消费者进行重启或者其他消费者重新接管该消息分区的消息消费后，能够从之前的进度开始继续进行消息消费。Offset在Zookeeper中由一个专门节点进行记录，其节点路径为:
 
@@ -2649,7 +2653,7 @@ consumer group 下有多个 Consumer（消费者）。
 
 节点内容就是Offset的值。
 
-### 消费者注册
+#### 消费者注册
 
 ​	消费者服务器在初始化启动时加入消费者分组的步骤如下
 
@@ -2661,7 +2665,7 @@ consumer group 下有多个 Consumer（消费者）。
 
 **进行消费者负载均衡**。为了让同一个Topic下不同分区的消息尽量均衡地被多个 消费者 消费而进行 消费者 与 消息 分区分配的过程，通常，对于一个消费者分组，如果组内的消费者服务器发生变更或Broker服务器发生变更，会发出消费者负载均衡。
 
-### 补充
+#### 补充
 
 ​	早期版本的 kafka 用 zk 做 meta 信息存储，consumer 的消费状态，group 的管理以及 offse t的值。考虑到zk本身的一些因素以及整个架构较大概率存在单点问题，新版本中确实逐渐弱化了zookeeper的作用。新的consumer使用了kafka内部的group coordination协议，也减少了对zookeeper的依赖
 
