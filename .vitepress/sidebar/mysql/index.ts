@@ -18,7 +18,7 @@ export default [
             { text: 'MySQL中exists和in的区别？', link: basePath + 'MySQL中exists和in的区别？' },
             { text: 'MySQL在inner join、left join、right join的区别是什么？', link: basePath + 'MySQL在inner join、left join、right join的区别是什么？' },
             { text: '为什么SQL语句不要过多的使用join？', link: basePath + '为什么SQL语句不要过多的使用join？' },
-            { text: '为什么在MySQL在不推荐使用对表join？', link: basePath + '为什么在MySQL在不推荐使用对表join？' },
+            { text: 'MySQL的Hash Join是什么？', link: basePath + 'MySQL的Hash Join是什么？' },
             { text: 'MySQL中数据排序的实现原理是什么？', link: basePath + 'MySQL中数据排序的实现原理是什么？' },
             { text: 'MySQL书写顺序与执行顺序', link: basePath + 'MySQL书写顺序与执行顺序' },
             { text: '简述一条SQL在MySQL中的执行过程？', link: basePath + '简述一条SQL在MySQL中的执行过程？' },
