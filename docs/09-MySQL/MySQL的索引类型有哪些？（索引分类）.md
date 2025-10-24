@@ -26,7 +26,9 @@ MySQL的索引包括普通索引、唯一索引、全文索引、单列索引、
 - NDB ：支持 Hash 索引，不支持 B-tree、Full-text 等索引
 - Archive ：不支持 B-tree、Hash、Full-text 等索引
 
-## 创建索引的语法
+## 索引基本语法
+
+### 创建索引
 
 可以在表创建时或者表结构修改时创建索引
 
@@ -51,7 +53,13 @@ ON table_name (col_name[length],...) [ASC | DESC]
 - `length`为可选参数，表示索引的长度，只有字符串类型的字段才能指定索引长度；
 - `ASC` 或 `DESC` 指定升序或者降序的索引值存储。
 
-删除索引
+### 查看索引
+
+```sql
+SHOW INDEX FROM table_name;
+```
+
+### 删除索引
 
 ```sql
 ALTER TABLE table_name DROP INDEX index_name

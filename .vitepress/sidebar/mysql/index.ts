@@ -63,7 +63,11 @@ export default [
             // 前缀索引
             // 复合索引
             // 索引下推
-            { text: 'MySQL的索引类型有哪些？', link: basePath + 'MySQL的索引类型有哪些？' },
+            { text: '什么是索引？有什么用？', link: basePath + '什么是索引？有什么用？' },
+            { text: 'MySQL的索引类型有哪些？（索引分类）', link: basePath + 'MySQL的索引类型有哪些？（索引分类）' },
+            { text: '索引的本质？', link: basePath + '索引的本质？' },
+            { text: '索引底层的数据结构？', link: basePath + '索引底层的数据结构？' },
+            { text: '在不同存储引擎中索引的落地方式？', link: basePath + '在不同存储引擎中索引的落地方式？' },
             { text: '什么情况下应不建或少建索引？', link: basePath + '什么情况下应不建或少建索引？' },
             { text: '在建立索引的时，需要考虑哪些因素？', link: basePath + '在建立索引的时，需要考虑哪些因素？' },
             { text: '哪些情况适合创建索引', link: basePath + '哪些情况适合创建索引' },
@@ -79,11 +83,7 @@ export default [
 
             { text: '什么是自适应hash索引？', link: basePath + '什么是自适应hash索引？' },
 
-            { text: '什么是索引？有什么用？', link: basePath + '什么是索引？有什么用？' },
-            { text: '索引的本质？', link: basePath + '索引的本质？' },
-            { text: '索引底层的数据结构？', link: basePath + '索引底层的数据结构？' },
             { text: '索引的创建和使用规则？', link: basePath + '索引的创建和使用规则？' },
-            { text: '在不同存储引擎中索引的落地方式？', link: basePath + '在不同存储引擎中索引的落地方式？' },
             { text: '什么是hash索引？', link: basePath + '什么是hash索引？' },
             { text: 'InnoDB到底支不支持哈希索引呢？', link: basePath + 'InnoDB到底支不支持哈希索引呢？' },
             { text: '什么是唯一索引？', link: basePath + '什么是唯一索引？' },
