@@ -152,7 +152,6 @@ export default [
       { text: '@Conditional及相关注解的作用？', link: '/05-Spring/Conditional及相关注解的作用？' },
       { text: '@Lazy注解的作用？', link: '/05-Spring/@Lazy注解的作用？' },
       { text: '@EventListener注解的作用？', link: '/05-Spring/@EventListener注解的作用？' },
-      { text: '@Component和@Service能不能互换', link: '/05-Spring/@Component和@Service能不能互换' },
 
     ],
   },
