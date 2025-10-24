@@ -7,7 +7,7 @@
 
 `@Configuration`注解标记的配置类不能被`Component`注解替换，因为多次调用`@Bean`方法会创建多个实例，破坏单例bean
 
-类似的问题还包括：[@Controller和@Component能不能互换](./@Component、@Controller、@Repository和@Service的区别?#@Controller和@Component能不能互换)
+类似的问题还包括：[@Controller和@Component能不能互换](./@Component、@Controller、@Repository和@Service的区别？#custom-anchor)
 :::
 
 ## 口语化
