@@ -144,7 +144,7 @@ export default [
     items: [
       { text: '什么是Java中的网络编程', link: basePath + '什么是Java中的网络编程' },
     ]
-  }
+  },
   {
     text: '异常',
     collapsed: false,
