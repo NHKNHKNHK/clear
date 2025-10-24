@@ -17,7 +17,7 @@ export default [
 
             { text: 'MySQL中exists和in的区别？', link: basePath + 'MySQL中exists和in的区别？' },
             { text: 'MySQL在inner join、left join、right join的区别是什么？', link: basePath + 'MySQL在inner join、left join、right join的区别是什么？' },
-            { text: '为什么SQL语句不要过多的使用join？', link: basePath + '为什么SQL语句不要过多的使用join？' },
+            { text: '为什么SQL语句不建议使用多表join', link: basePath + '为什么SQL语句不建议使用多表join' },
             { text: 'MySQL的Hash Join是什么？', link: basePath + 'MySQL的Hash Join是什么？' },
             { text: 'MySQL中数据排序的实现原理是什么？', link: basePath + 'MySQL中数据排序的实现原理是什么？' },
             { text: 'MySQL书写顺序与执行顺序', link: basePath + 'MySQL书写顺序与执行顺序' },
@@ -27,6 +27,9 @@ export default [
             { text: 'union和union all区别？', link: basePath + 'union和union all区别？' },
 
             { text: '多表查询分类', link: basePath + '多表查询分类' },
+
+            { text: 'Mysql语句都有哪些种类？', link: basePath + 'Mysql语句都有哪些种类？' },
+            { text: 'Mysql查询优化建议？', link: basePath + 'Mysql查询优化建议？' },
         ]
     },
     {
@@ -61,10 +64,12 @@ export default [
             // 复合索引
             // 索引下推
             { text: 'MySQL的索引类型有哪些？', link: basePath + 'MySQL的索引类型有哪些？' },
-            { text: 'MySQL常见索引失效的情况？', link: basePath + 'MySQL常见索引失效的情况？' },
             { text: '什么情况下应不建或少建索引？', link: basePath + '什么情况下应不建或少建索引？' },
             { text: '在建立索引的时，需要考虑哪些因素？', link: basePath + '在建立索引的时，需要考虑哪些因素？' },
+            { text: '哪些情况适合创建索引', link: basePath + '哪些情况适合创建索引' },
+            { text: '哪些情况不适合创建索引', link: basePath + '哪些情况不适合创建索引' },
             { text: 'MySQL中建立索引需要注意什么？', link: basePath + 'MySQL中建立索引需要注意什么？' },
+            { text: 'MySQL常见索引失效的情况？', link: basePath + 'MySQL常见索引失效的情况？' },
             { text: 'MySQL在使用索引一定有效吗？如何排查索引效果？', link: basePath + 'MySQL在使用索引一定有效吗？如何排查索引效果？' },
             { text: 'MySQL中索引数量是否越多越好？为什么？', link: basePath + 'MySQL中索引数量是否越多越好？为什么？' },
             { text: '在什么情况下，不推荐为数据库建立索引？', link: basePath + '在什么情况下，不推荐为数据库建立索引？' },
@@ -87,8 +92,7 @@ export default [
             { text: 'MySQL的explain有哪些字段？哪些是主要的？', link: basePath + 'MySQL的explain有哪些字段？哪些是主要的？' },
             { text: '如何使用MySQL中的explain语句进行查询分析？', link: basePath + '如何使用MySQL中的explain语句进行查询分析？' },
             { text: '用explain分析举一个具体的例子？', link: basePath + '用explain分析举一个具体的例子？' },
-            { text: 'Mysql语句都有哪些种类？', link: basePath + 'Mysql语句都有哪些种类？' },
-            { text: 'Mysql查询优化建议？', link: basePath + 'Mysql查询优化建议？' },
+
             { text: 'Mysql聚集索引是什么？', link: basePath + 'Mysql聚集索引是什么？' },
             { text: '为什么聚集索引，不要选择频繁更新的列？', link: basePath + '为什么聚集索引，不要选择频繁更新的列？' },
             { text: 'Mysql的非聚集索引是什么？', link: basePath + 'Mysql的非聚集索引是什么？' },
