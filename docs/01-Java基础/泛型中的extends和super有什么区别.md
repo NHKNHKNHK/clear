@@ -1,8 +1,12 @@
-# 泛型中的<? extends T>和<? super T>有什么区别？
+---
+permalink: /25/8/4/java/generic-extends-super
+---
+
+# 泛型中的<? extends T>和<? super T>有什么区别
 
 在Java泛型中，`<? extends T>`和`<? super T>`是两种通配符限制，用于更灵活的处理泛型类型。它们分别表示上界通配符和下界通配符。
 
-**上界通配符`<? extends T>`**
+## **上界通配符`<? extends T>`**
 
 -   含义：表示未知类型，但该类型是`T`或者`T`的子类型。
 -   用途：主要用于**读取数据**，让编译器知道该类型是`T`或者`T`的子类型。所以可以从该类型中安全的读取T类型的数据，但不能写入（除了`null`）
@@ -25,8 +29,7 @@ public void readNumbers(List<? extends Number> list) {
 在这个例子中，`List<? extends Number>`可以接受`List<Number>`、`List<Integer>`、`List<Double>`等类型，但不能向列表中添加新的元素（除了null），因为编译器无法确定具体的类型。
 
 
-
-**下界通配符`<? super T>`**
+## **下界通配符`<? super T>`**
 
 -   含义：表示未知类型，但该类型是`T`或者`T`的父类型。
 -   用途：主要用于**写入数据**，让编译器知道该类型是`T`或者`T`的父类型。所以可以安全地向该类型中写入数据，但不能读取（除非读取为`Object`类型）
@@ -46,7 +49,7 @@ public void writeInteger(List<? extends Integer> list) {
 
 在这个例子中，`List<? super Integer>`可以接受`List<Integer>`、`List<Number>`、`List<Object>`等类型，可以向列表中添加`Integer`类型及其子类型的数据，但不能从列表中读取数据（除非读取为Object类型）
 
-**生产者与消费者的记忆法则**
+## **生产者与消费者的记忆法则**
 
 为了更好地记住 `<? extends T>` 和 `<? super T>` 的使用场景，可以使用以下记忆法则：
 
@@ -68,7 +71,7 @@ public void writeInteger(List<? extends Integer> list) {
         public static <T> void fill(List<? super T> list, T obj)
         ```
 
-**总结**
+## **总结**
 
 | 通配符          | 含义           | 特点                     | 使用场景             |
 | :-------------- | :------------- | :----------------------- | :------------------- |
@@ -87,5 +90,4 @@ public void writeInteger(List<? extends Integer> list) {
 ```
 
 通过合理使用 `<? extends T>` 和 `<? super T>`，你可以编写更加灵活和安全的泛型代码，同时确保类型安全性和代码的可维护性
-
 
