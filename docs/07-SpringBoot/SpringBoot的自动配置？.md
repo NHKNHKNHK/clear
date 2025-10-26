@@ -1,4 +1,4 @@
-# SpringBoot的自动配置？
+# SpringBoot的自动配置（原理）？
 
 
 Spring Boot 的自动配置是其核心特性之一，它通过一系列的**条件注解**和**约定优先（convention over configuration）**的方式
@@ -184,3 +184,4 @@ logging.level.org.springframework.boot.autoconfigure=DEBUG
 启动应用时，Spring Boot 会打印出所有匹配和未匹配的自动配置类。
 
 
+todo ✅Springboot是如何实现自动配置的？

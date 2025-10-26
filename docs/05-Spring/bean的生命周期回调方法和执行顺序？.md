@@ -85,3 +85,6 @@ public class DemoApplication {
 销毁3
 ```
 
+
+
+todo SpringBean的生命周期是怎么样的？

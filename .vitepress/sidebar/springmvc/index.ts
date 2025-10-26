@@ -112,6 +112,7 @@ export default [
       { text: 'SpringMVC具体的工作原理和执行流程？', link: '/06-SpringMVC/SpringMVC具体的工作原理和执行流程？' },
       { text: '解释 Spring MVC 的工作原理？', link: '/06-SpringMVC/解释 Spring MVC 的工作原理？' },
       { text: 'Spring MVC 的生命周期？', link: '/06-SpringMVC/Spring MVC 的生命周期？' },
+      { text: 'Spring MVC是如何将不同的Request路由到不同Controller中的？', link: '/06-SpringMVC/Spring MVC是如何将不同的Request路由到不同Controller中的？' },
 
     ]
   },

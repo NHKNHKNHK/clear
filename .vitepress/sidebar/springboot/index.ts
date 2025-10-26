@@ -7,6 +7,7 @@ export default [
     items: [
       { text: 'SpringBoot', link: basePath + '' },
       { text: '什么是SpringBoot？', link: basePath + '什么是SpringBoot？' },
+      { text: 'SpringBoot与Spring的区别？', link: basePath + 'SpringBoot与Spring的区别？' },
       { text: 'SpringBoot的核心特性？', link: basePath + 'SpringBoot的核心特性？' },
       { text: 'SpringBoot1.x、2.x、3.x版本有哪些改进与区别？', link: basePath + 'SpringBoot1.x、2.x、3.x版本有哪些改进与区别？' },
       { text: '什么是Spring Initializr？', link: basePath + '什么是Spring Initializr？' },
@@ -22,6 +23,8 @@ export default [
     items: [
       // 自动配置
       // 配置文件加载顺序
+      { text: 'SpringBoot的自动配置？', link: basePath + 'SpringBoot的自动配置？' },
+      { text: 'SpringBoot自动装配原理？', link: basePath + 'SpringBoot自动装配原理？' },
       { text: 'SpringBoot中application.properties、application.yaml、application.yml的区别？', link: basePath + 'SpringBoot中application.properties、application.yaml、application.yml的区别？' },
       { text: '如何在SpringBoot在定义和读取自定义配置？', link: basePath + '如何在SpringBoot在定义和读取自定义配置？' },
       { text: 'SpringBoot配置文件加载优先级？', link: basePath + 'SpringBoot配置文件加载优先级？' },
@@ -53,6 +56,7 @@ export default [
       { text: 'SpringBoot中如何实现定时任务？', link: basePath + 'SpringBoot中如何实现定时任务？' },
       { text: 'SpringBoot中如何实现异步处理？', link: basePath + 'SpringBoot中如何实现异步处理？' },
       { text: '如何在SpringBoot应用中实现国际化（i18n）？', link: basePath + '如何在SpringBoot应用中实现国际化（i18n）？' },
+      { text: 'SpringBoot如何做优雅停机？', link: basePath + 'SpringBoot如何做优雅停机？' },
 
     ]
   },
@@ -62,7 +66,7 @@ export default [
 
       { text: 'SpringBoot支持嵌入哪些Web容器？', link: basePath + 'SpringBoot支持嵌入哪些Web容器？' },
 
-      { text: 'SpringBoot自动配置原理？', link: basePath + 'SpringBoot自动配置原理？' },
+
       { text: 'SpringBoot内置Tomcat启动原理？', link: basePath + 'SpringBoot内置Tomcat启动原理？' },
       { text: 'SpringBoot外部Tomcat启动原理？', link: basePath + 'SpringBoot外部Tomcat启动原理？' },
       { text: 'SpringBoot打成的jar包与普通jar的区别？', link: basePath + 'SpringBoot打成的jar包与普通jar的区别？' },
@@ -80,9 +84,7 @@ export default [
       { text: '在SpringBoot中如何实现多数据源配置？', link: basePath + '在SpringBoot中如何实现多数据源配置？' },
       { text: '如何在SpringBoot启动时执行特定代码？有哪些方式？', link: basePath + '如何在SpringBoot启动时执行特定代码？有哪些方式？' },
       { text: 'SpringBoot中为什么不推荐使用@Autowrited', link: basePath + 'SpringBoot中为什么不推荐使用@Autowrited' },
-      { text: 'SpringBoot的自动配置？', link: basePath + 'SpringBoot的自动配置？' },
 
-      { text: 'SpringBoot自动装配原理？', link: basePath + 'SpringBoot自动装配原理？' },
       { text: 'SpringBoot读取配置有哪些方式？', link: basePath + 'SpringBoot读取配置有哪些方式？' },
       { text: 'SpringBoot项目内部配置文件加载顺序？', link: basePath + 'SpringBoot项目内部配置文件加载顺序？' },
       { text: 'SpringBoot外部配置文件加载顺序？', link: basePath + 'SpringBoot外部配置文件加载顺序？' },

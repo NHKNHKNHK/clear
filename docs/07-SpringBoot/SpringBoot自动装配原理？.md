@@ -108,3 +108,4 @@ public class DdlAutoConfiguration {
 
 ## **SpringBoot 3.x的改进**
 
+todo ✅为什么SpringBoot3中移除了spring.factories

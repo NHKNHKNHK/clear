@@ -182,3 +182,6 @@ public class AppConfig {
     // 配置类
 }
 ```
+
+
+todo Spring中创建Bean有几种方式_

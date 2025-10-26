@@ -1,4 +1,4 @@
-# 如何控制Spring Bean的创建顺序？
+# 如何控制Bean的创建顺序？
 
 需求：我们有serviceA、serviceB，希望在serviceA中拿到serviceB的名称，但是这个名称是在serviceB创建完在初始化完成后才赋值的。现在需要在serviceA中获取的serviceB的name，因为serviceA可能会在serviceB之前创建，serviceB还没创建，此时拿到的name为null。这种场景下就要去控制Bean的创建顺序
 
@@ -78,3 +78,5 @@ public class ServiceOrderConfig implements BeanDefinitionRegistryPostProcessor, 
     }
 }
 ```
+
+todo SpringBoot如何让你的bean在其他bean之前加载

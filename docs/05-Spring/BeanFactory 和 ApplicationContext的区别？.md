@@ -4,13 +4,21 @@ permalink: /25/8/6/java/beanfactory-applicationcontext
 
 # BeanFactory 和 ApplicationContext的区别？
 
+:::tip 
+
+简单容器和复杂容器
+
+:::
+
 ## 口语化
 
 BeanFactory 和 ApplicationContext 都是用于管理和获取Bean的容器接口。
 
 BeanFactory功能相对简单。提供了Bean的创建、获取和管理功能。默认采用延迟初始化，只有在第一次访问Bean时才会创建该Bean。因为功能较为基础，BeanFactory通常用于资源受限的环境中，比如移动设备或嵌入式设备。
 
-ApplicationContext是BeanFactory的子接口，提供了更丰富的功能和更多的企业级特性。默认会在启动时创建并初始化所有单例Bean，支持自动装配Bean，可以根据配置自动注入依赖对象。有多种实现，如ClassPathXmlApplicationContext、FileSystemXmlApplicationContext、AnnotationConfigApplicationContext等。
+ApplicationContext是BeanFactory的子接口，提供了更丰富的功能和更多的企业级特性。
+默认会在启动时创建并初始化所有单例Bean，支持自动装配Bean，可以根据配置自动注入依赖对象。
+有多种实现，如ClassPathXmlApplicationContext、FileSystemXmlApplicationContext、AnnotationConfigApplicationContext等。
 
 
 
