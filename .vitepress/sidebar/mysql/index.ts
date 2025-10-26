@@ -240,9 +240,10 @@ export default [
             // 行级锁什么情况下会升级为表级锁
             // 自增锁
 
-            { text: 'MySQL中有哪些锁类型？|MySQL中有哪几种锁？', link: basePath + 'MySQL中有哪些锁类型？' },
-            { text: 'MySQL的乐观锁和悲观锁有什么区别？', link: basePath + 'MySQL的乐观锁和悲观锁有什么区别？' },
+            { text: 'MySQL中有哪些锁类型？', link: basePath + 'MySQL中有哪些锁类型？' },
+            { text: 'MySQL的乐观锁和悲观锁？如何实现', link: basePath + 'MySQL的乐观锁和悲观锁？如何实现' },
             { text: 'mysql的行锁和表锁是什么？分别在哪些情况下会出现 ？', link: basePath + 'mysql的行锁和表锁是什么？分别在哪些情况下会出现 ？' },
+            { text: 'InnoDB中的表级锁、页级锁、行级锁？', link: basePath + 'InnoDB中的表级锁、页级锁、行级锁？' },
             { text: '行锁的原理及算法？', link: basePath + '行锁的原理及算法？' },
             { text: 'MySQL的行级锁到底锁的是什么东西？', link: basePath + 'MySQL的行级锁到底锁的是什么东西？' },
             { text: 'mysql什么情况下会产生死锁？', link: basePath + 'mysql什么情况下会产生死锁？' },

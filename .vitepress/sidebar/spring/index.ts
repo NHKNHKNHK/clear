@@ -45,15 +45,15 @@ export default [
     text: 'Spring AOP',
     collapsed: true,
     items: [
-      { text: '什么是AOP？', link: '/05-Spring/什么是AOP？' },
       { text: '什么是动态代理？', link: '/05-Spring/什么是动态代理？' },
       { text: '动态代理常用的两种方式？', link: '/05-Spring/动态代理常用的两种方式？' },
       { text: 'JDK动态代理如何实现？', link: '/05-Spring/JDK动态代理如何实现？' },
       { text: 'Cglib的Enhancer类实现动态代理？', link: '/05-Spring/Cglib的Enhancer类实现动态代理？' },
+      { text: '什么是AOP？', link: '/05-Spring/什么是AOP？' },
       { text: 'Spring AOP默认用的是什么代理？两者区别？', link: '/05-Spring/Spring AOP默认用的是什么代理？两者区别？' },
       { text: 'Spring AOP在什么场景下会失效？', link: '/05-Spring/Spring AOP在什么场景下会失效？' },
-      { text: '简述Spring拦截链的实现？', link: '/05-Spring/简述Spring拦截链的实现？' },
       { text: 'Spring AOP和AspectJ有什么区别？', link: '/05-Spring/Spring AOP和AspectJ有什么区别？' },
+      { text: '简述Spring拦截链的实现？', link: '/05-Spring/简述Spring拦截链的实现？' },
       {
         text: 'Spring事务',
         collapsed: true,
@@ -120,6 +120,7 @@ export default [
           { text: '为什么不建议直接使用Spring的@Async', link: '/05-Spring/为什么不建议直接使用Spring的@Async' },
           { text: 'Spring事件监听什么情况下会失效？', link: '/05-Spring/Spring事件监听什么情况下会失效？' },
           { text: 'Spring异步发布事件的核心机制？', link: '/05-Spring/Spring异步发布事件的核心机制？' },
+          { text: 'Spring Event和MQ有什么区别？', link: '/05-Spring/Spring Event和MQ有什么区别？' },
           { text: 'Spring引入外部配置文件的方式', link: '/05-Spring/Spring引入外部配置文件的方式' },
         ]
       }
