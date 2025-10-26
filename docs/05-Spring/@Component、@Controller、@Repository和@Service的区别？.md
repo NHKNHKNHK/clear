@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/21/spring/component-controller-repository-service
+permalink: /spring/component-controller-repository-service
 ---
 
 # @Component、@Controller、@Repository和@Service的区别？

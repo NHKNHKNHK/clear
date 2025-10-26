@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/17/scala/scala-oop
+permalink: /scala/scala-oop
 ---
 
 # 面向对象编程

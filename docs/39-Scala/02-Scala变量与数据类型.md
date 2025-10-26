@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/17/scala/scala-variable-datatype
+permalink: /scala/scala-variable-datatype
 ---
 
 # Scala变量与数据类型

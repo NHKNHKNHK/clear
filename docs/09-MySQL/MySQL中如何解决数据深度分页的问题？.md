@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/22/mysql/deep-limit
+permalink: /mysql/deep-limit
 ---
 
 # MySQL中如何解决数据深度分页的问题？

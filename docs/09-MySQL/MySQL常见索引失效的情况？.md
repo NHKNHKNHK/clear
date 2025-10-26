@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/22/mysql/index-invalid
+permalink: /mysql/index-invalid
 ---
 
 # MySQL常见索引失效的情况？ :star:
@@ -38,6 +38,7 @@ EXPLAIN SELECT * FROM user WHERE UPPER(name) = 'zs';
 ```
 
 函数操作破坏索引有序性，所以导致索引失效
+
 - 索引是按照列值的原始顺序存储的
 - 对列使用函数后，MySQL无法利用索引的有序性
 - 必须扫描所有索引项，计算函数值后再比较
@@ -108,6 +109,10 @@ SELECT * FROM table WHERE column2 = 'value';  -- 不能使用索引
 ```sql
 EXPLAIN SELECT * FROM user WHERE name NOT IN ('zs', 'ls');
 ```
+
+:::tip
+IS NULL可以使用索引，IS NOT NULL无法使用索引
+:::
 
 ## 数据分布不均匀
 

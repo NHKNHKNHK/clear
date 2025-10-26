@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/6/spring/index
+permalink: /spring/index
 ---
 
 # 导读

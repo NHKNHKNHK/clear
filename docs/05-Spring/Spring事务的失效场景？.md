@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/13/spring/transaction-failure
+permalink: /spring/transaction-failure
 ---
 
 # Spring事务的失效场景？

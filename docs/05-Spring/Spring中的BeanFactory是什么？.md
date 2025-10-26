@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/6/spring/beanFactory
+permalink: /spring/beanFactory
 ---
 
 # Spring中的BeanFactory是什么？

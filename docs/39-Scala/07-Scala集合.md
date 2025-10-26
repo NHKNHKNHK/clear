@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/17/scala/scala-collection
+permalink: /scala/scala-collection
 ---
 
 # Scala集合

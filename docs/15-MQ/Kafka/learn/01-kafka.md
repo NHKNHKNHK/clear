@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/17/mq/kafka/kafka
+permalink: /mq/kafka/kafka
 ---
 
 # Kafka

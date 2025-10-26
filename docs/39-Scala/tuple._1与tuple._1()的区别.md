@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/17/scala/tuple._1-tuple._2
+permalink: /scala/tuple._1-tuple._2
 ---
 
 # tuple._1与tuple._1()的区别

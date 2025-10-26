@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/4/java/generic-type-trkve
+permalink: /java/generic-type-trkve
 ---
 
 # Java中泛型的T、R、K、V、E是什么？

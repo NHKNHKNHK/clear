@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/24/mysql/not-3-join
+permalink: /mysql/not-3-join
 ---
 
 # 为什么SQL语句不建议使用多表join

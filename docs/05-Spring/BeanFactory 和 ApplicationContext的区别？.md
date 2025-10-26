@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/6/java/beanfactory-applicationcontext
+permalink: /java/beanfactory-applicationcontext
 ---
 
 # BeanFactory 和 ApplicationContext的区别？

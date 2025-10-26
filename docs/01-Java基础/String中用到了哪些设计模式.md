@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/23/java/string-design-patterns
+permalink: /java/string-design-patterns
 ---
 
 # String中用到了哪些设计模式

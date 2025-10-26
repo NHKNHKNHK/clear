@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/13/spring/aop-failure
+permalink: /spring/aop-failure
 ---
 
 # Spring AOP在什么场景下会失效？

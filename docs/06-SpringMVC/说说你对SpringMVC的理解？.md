@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/18/springmvc/springmvc-think
+permalink: /springmvc/springmvc-think
 ---
 
 # 说说你对SpringMVC的理解？

@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/21/spring/aop
+permalink: /spring/aop
 ---
 
 # 什么是AOP？

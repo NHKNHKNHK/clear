@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/24/mysql/hash-join
+permalink: /mysql/hash-join
 ---
 
 # MySQL的Hash Join是什么？

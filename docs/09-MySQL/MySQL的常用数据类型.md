@@ -1,5 +1,5 @@
 ---
-permalink: /25/9/29/mysql/mysql-datatype
+permalink: /mysql/mysql-datatype
 ---
 
 # MySQL的常用数据类型？

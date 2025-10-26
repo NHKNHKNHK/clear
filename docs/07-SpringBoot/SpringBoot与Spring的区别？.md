@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/26/springboot/springboot-vs-spring
+permalink: /springboot/springboot-vs-spring
 ---
 
 # SpringBoot与Spring的区别？

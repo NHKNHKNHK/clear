@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/26/mysql/lock/lock
+permalink: /mysql/lock/lock
 ---
 
 # MySQL中有哪些锁类型？

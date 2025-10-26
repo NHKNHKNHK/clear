@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/22/spring/why-spring-ioc
+permalink: /spring/why-spring-ioc
 ---
 
 # 什么是SpringIOC？

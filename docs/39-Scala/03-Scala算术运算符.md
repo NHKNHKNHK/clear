@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/17/scala/scala-arithmetic-operators
+permalink: /scala/scala-arithmetic-operators
 ---
 
 # Scala算术运算符

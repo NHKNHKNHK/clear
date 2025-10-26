@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/22/spring/spring-event
+permalink: /spring/spring-event
 ---
 
 # Spring 提供的事件发布和监听机制？

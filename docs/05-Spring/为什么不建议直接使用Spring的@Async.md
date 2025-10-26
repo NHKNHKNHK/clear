@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/22/spring/async
+permalink: /spring/async
 ---
 
 # 为什么不建议直接使用Spring的@Async

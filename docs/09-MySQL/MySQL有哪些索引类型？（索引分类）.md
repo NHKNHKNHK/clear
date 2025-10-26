@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/24/mysql/index-category
+permalink: /mysql/index-category
 ---
 
 # MySQL有哪些索引类型？（索引分类）

@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/4/java/generic-extends-super
+permalink: /java/generic-extends-super
 ---
 
 # 泛型中的<? extends T>和<? super T>有什么区别

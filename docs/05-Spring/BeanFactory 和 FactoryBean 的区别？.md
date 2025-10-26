@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/22/spring/factoryBean-beanFactory
+permalink: /spring/factoryBean-beanFactory
 ---
 
 # BeanFactory 和 FactoryBean 的区别？

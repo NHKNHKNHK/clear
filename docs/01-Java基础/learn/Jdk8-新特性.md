@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/16/java/jdk8-new-features
+permalink: /java/jdk8-new-features
 ---
 
 # Java8新特性

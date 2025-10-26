@@ -1,5 +1,5 @@
 ---
-permalink: /25/9/25/spring/autowired-resource
+permalink: /spring/autowired-resource
 ---
 
 # @Autowired和@Resource的区别

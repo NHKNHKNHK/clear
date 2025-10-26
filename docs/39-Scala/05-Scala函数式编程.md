@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/17/scala/scala-functional-programming
+permalink: /scala/scala-functional-programming
 ---
 
 # 函数式编程

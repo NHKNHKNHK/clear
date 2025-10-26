@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/17/scala/scala-dev-deploy
+permalink: /scala/scala-dev-deploy
 ---
 
 # Scala开发环境搭建（Windows）

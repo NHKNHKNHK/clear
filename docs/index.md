@@ -254,29 +254,3 @@ npx vitepress init
     hahah
   </p>
 </div>
-
-线程池 【参数】
-核心线程数如何设置？
-动态线程池
-
-拒绝策略能不能重写？
-重写线程组的意义在哪？
-
-
-@Component和@Configuration能不能互换
-@Component和@Service能不能互换
-@Bean能不能单独修改
-@Controller和@Component能不能呼唤？ 本质靠的是父子容器
-
-BeanFactory和ApplicationContext的区别 （简单容器和复杂容器）
-BeanDefinition如何修改？
-Bean如何修改？
-
-
-
-
-sql优化
-
-如何控制同时只有两个线程访问
-
-

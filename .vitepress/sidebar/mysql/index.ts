@@ -64,7 +64,7 @@ export default [
             // 复合索引
             // 索引下推
             { text: '什么是索引？有什么用？', link: basePath + '什么是索引？有什么用？' },
-            { text: 'MySQL的索引类型有哪些？（索引分类）', link: basePath + 'MySQL的索引类型有哪些？（索引分类）' },
+            { text: 'MySQL有哪些索引类型？（索引分类）', link: basePath + 'MySQL有哪些索引类型？（索引分类）' },
             { text: '索引的本质？', link: basePath + '索引的本质？' },
             { text: '索引底层的数据结构？', link: basePath + '索引底层的数据结构？' },
             { text: '在不同存储引擎中索引的落地方式？', link: basePath + '在不同存储引擎中索引的落地方式？' },
@@ -100,6 +100,7 @@ export default [
             { text: '什么是联合索引（复合索引）？', link: basePath + '什么是联合索引（复合索引）？' },
             { text: 'MySQL的覆盖索引？', link: basePath + 'MySQL的覆盖索引？' },
             { text: 'A,B,C三个字段组成联合索引，AB,AC,BC三种情况下查询是否能命中索引？', link: basePath + 'A,B,C三个字段组成联合索引，AB,AC,BC三种情况下查询是否能命中索引？' },
+            { text: 'where条件的顺序影响使用索引吗？', link: basePath + 'where条件的顺序影响使用索引吗？' },
             { text: '什么是索引下推？', link: basePath + '什么是索引下推？' },
             { text: 'Mysql的回表查询是什么？', link: basePath + 'Mysql的回表查询是什么？' },
             { text: 'mysql的覆盖索引是什么？', link: basePath + 'mysql的覆盖索引是什么？' },
@@ -111,6 +112,7 @@ export default [
             { text: 'b树和b+简述MySQL的b+树查询数据的全过程？', link: basePath + '简述MySQL的b+树查询数据的全过程？' },
             { text: '为什么MySQL选择使用B+树作为索引结构？', link: basePath + '为什么MySQL选择使用B+树作为索引结构？' },
             { text: '单个索引的大小会对B+树造成什么影响？', link: basePath + '单个索引的大小会对B+树造成什么影响？' },
+            { text: '索引跳跃扫描', link: basePath + '索引跳跃扫描' },
 
         ]
     },

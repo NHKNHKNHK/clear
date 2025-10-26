@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/16/java/jdk-new-features
+permalink: /java/jdk-new-features
 ---
 
 # Jdk新特性

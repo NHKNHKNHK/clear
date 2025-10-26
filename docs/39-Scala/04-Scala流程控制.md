@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/17/scala/scala-flow-control
+permalink: /scala/scala-flow-control
 ---
 
 # 流程控制

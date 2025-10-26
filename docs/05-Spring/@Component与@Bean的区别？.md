@@ -1,5 +1,5 @@
 ---
-permalink: /25/8/6/spring/component-bean
+permalink: /spring/component-bean
 ---
 
 # @Component与@Bean的区别？
