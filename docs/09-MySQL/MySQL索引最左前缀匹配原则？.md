@@ -1,5 +1,5 @@
 ---
-permalink: /25/10/24/mysql/leftmost-match
+permalink: /mysql/leftmost-match
 ---
 
 # MySQL索引最左前缀匹配原则？
