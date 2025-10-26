@@ -51,17 +51,17 @@ Spring Event的适用场景：
 
 ## **一些Spring内置的事件**
 
-1）`ContextRefreshedEvent`：当容器被实例化 或 refreshed时发布，如调用 `refresh()`方法，此处的实例化是指所有的bean都已经加载，后置处理器都被激活，所有单例bean都已经被实例化，所有的容器对象都已经准备好可以使用了。
+- 1）`ContextRefreshedEvent`：当容器被实例化 或 refreshed时发布，如调用 `refresh()`方法，此处的实例化是指所有的bean都已经加载，后置处理器都被激活，所有单例bean都已经被实例化，所有的容器对象都已经准备好可以使用了。
 
 如果 ApplicationContext实现类支持热重载，则refresh可以被触发多次（XmlWebApplicationContext支持热刷新，而GenericApplication不支持）
 
-2）`ContextStartedEvent`：当容器启动时发布，即调用`start()`方法，已启动意味着所有的Lifecycle bean都已经显式的接收到了start信号
+- 2）`ContextStartedEvent`：当容器启动时发布，即调用`start()`方法，已启动意味着所有的Lifecycle bean都已经显式的接收到了start信号
 
-3）`ContextStoppedEvent`：当容器停止时发布，即调用`stop()`方法，即所有的Lifecycle bean都已经显式的接收到了stop信号，stopped的容器可以通过start()方法重启
+- 3）`ContextStoppedEvent`：当容器停止时发布，即调用`stop()`方法，即所有的Lifecycle bean都已经显式的接收到了stop信号，stopped的容器可以通过start()方法重启
 
-4）`ContextClosedEvent`：当容器关闭时发布，即调用`close()`方法，关闭意味着所有的单例bean都已被销毁，关闭的容器不能 restart或 refresh
+- 4）`ContextClosedEvent`：当容器关闭时发布，即调用`close()`方法，关闭意味着所有的单例bean都已被销毁，关闭的容器不能 restart或 refresh
 
-5）`RequestHandledEvent`：这只有在使用spring的DispatcherServlet时有效，当一个请求被处理完成时发布
+- 5）`RequestHandledEvent`：这只有在使用spring的DispatcherServlet时有效，当一个请求被处理完成时发布
 
 
 
@@ -180,16 +180,16 @@ public class PersonEventLister {
 
 最后别忘记了需要开启对异步的支持，需要在启动类上增加`@EnableAsync`注解
 
-但是一般情况下不建议大家直接用`@Async`，最好是自定义线程池来实现异步：
+但是一般情况下不建议大家直接用`@Async`，最好是自定义线程池来实现异步，如：`@Async("自定义的线程池")`
 
 [为什么不建议直接使用Spring的@Async](./为什么不建议直接使用Spring的@Async)
 :::
 
 ## 扩展
 
-**Spring Event带来的好处是什么**
+### **Spring Event带来的好处是什么**
 
 - **代码解耦**：通过使用事件机制，组件之间不需要直接互相依赖，从而减少了代码之间的耦合度。这使得代码更易于维护和扩展。
-- **职责单一且清晰**：事件机制有助于将应用程序拆分为更小的模块，每个模块只关心要做的事儿，和关心自己需要监听的事件就行了。 
+- **职责单一且清晰**：事件机制有助于将应用程序拆分为更小的模块，每个模块只关心要做的事儿，和关心自己需要监听的事件就行了
 - **异步处理**：Spring Event机制支持异步事件处理，这意味着可以将事件的处理分发到不同的线程，提高了系统的响应性。
-- **一对多**：Spring Event是观察者模式的一种实现，他的一个事件可以有多个监听者，所以当我们有多个模块之间需要通信时，可以直接发一个事件出去，让监听者各自监听即可。
+- **一对多**：Spring Event是观察者模式的一种实现，他的一个事件可以有多个监听者，所以当我们有多个模块之间需要通信时，可以直接发一个事件出去，让监听者各自监听即可

@@ -14,10 +14,17 @@ permalink: /25/10/13/spring/aop-failure
 
 首先就是类内部的调用
 
-比如一些**私有方法调用**，**内部类调用**，以及同一个类中**方法的自调用**等。如：
+比如一些：
+
+- 同一个类中**方法的自调用**
+- 私有方法调用
+- 内部类调用
+
+如：
+
+方法的自调用：
 
 ```java
-//1
 public class MyService {
     public void doSomething() {
         doInternal(); // 自调用方法
@@ -27,8 +34,11 @@ public class MyService {
         System.out.println("Doing internal work...");
     }
 }
+```
 
-//2
+私有方法调用：
+
+```java
 public class MyService {
     public void doSomething() {
         doInternal(); // 自调用私有方法
@@ -38,9 +48,11 @@ public class MyService {
         System.out.println("Doing internal work...");
     }
 }
+```
 
+内部类调用：
 
-//3
+```java
 public class OuterClass {
     private class InnerClass {
         public void doSomething() {
@@ -65,8 +77,7 @@ Spring AOP中，代理对象只能拦截`public`方法，如果调用的是非`p
 
 ## 调用static方法
 
-2、类似的还有一种情况，虽然不是对象的自调用，但是他也是因为没有调用到代理对象，那就是调用**static方法**，
-因为这类方法是属于这个类的，并不是对象的，所以无法被AOP。
+类似的还有一种情况，虽然不是对象的自调用，但是他也是因为没有调用到代理对象，那就是调用**static方法**，因为这类方法是属于这个类的，并不是对象的，所以无法被AOP。
 
 ```java
 public class MyService {
@@ -78,8 +89,7 @@ public class MyService {
 
 ## final方法
 
-3、还有一种方法，也无法被代理，那就是**final方法**，由于AOP是通过创建代理对象来实现的，而无法对final方法进行子类化和覆盖，
-所以无法拦截这些方法。
+还有一种方法，也无法被代理，那就是**final方法**，由于AOP是通过创建代理对象来实现的，而无法对final方法进行子类化和覆盖，所以无法拦截这些方法。
 
 ```java
 public class MyService {
@@ -91,13 +101,14 @@ public class MyService {
 
 ## 总结
 
-总结，AOP失效的场景，与声明式事务失效的场景类似，本质就是无法进行对对象进行代理：
+总结，AOP失效的场景（代理失效导致AOP失效）：
 
-- 1、私有方法调用
-- 2、类内部自调用
+- 1、类内部自调用
+- 2、私有方法调用
 - 3、内部类方法调用
 - 4、`static`静态方法调用（原因：类方法属于类本身，代理机制无法对类方法进行代理或拦截）
-- 5、`final`方法调用（原因：`final`修饰的方法无法被重写，，代理机制无法对 `final` 方法进行拦截或增强）
+- 5、`final`方法调用（原因：`final`修饰的方法无法被重写，代理机制无法对 `final` 方法进行拦截或增强）
 
-
-
+:::tip
+声明式事务失效的场景与AOP代理失效类似，本质就是无法进行对对象进行代理
+:::
