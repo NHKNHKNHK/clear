@@ -64,9 +64,14 @@ export default [
             // 复合索引
             // 索引下推
             { text: '什么是索引？有什么用？', link: basePath + '什么是索引？有什么用？' },
+            { text: 'MySQL聚簇索引与非聚簇索引', link: basePath + 'MySQL聚簇索引与非聚簇索引' },
+            { text: 'InnoDB的数据页和B+树的关系', link: basePath + 'InnoDB的数据页和B+树的关系' },
+            { text: '什么是InnoDB的页分裂和页合并', link: basePath + '什么是InnoDB的页分裂和页合并' },
+            { text: '什么是回表查询，怎么减少回表次数？', link: basePath + '什么是回表查询，怎么减少回表次数？' },
+            { text: 'InnoDB的B+树索引的注意事项', link: basePath + 'InnoDB的B+树索引的注意事项' },
+            { text: '为什么聚集索引，不要选择频繁更新的列？', link: basePath + '为什么聚集索引，不要选择频繁更新的列？' },
             { text: 'MySQL有哪些索引类型？（索引分类）', link: basePath + 'MySQL有哪些索引类型？（索引分类）' },
-            { text: '索引的本质？', link: basePath + '索引的本质？' },
-            { text: '索引底层的数据结构？', link: basePath + '索引底层的数据结构？' },
+            { text: 'InnoDB中的索引类型？', link: basePath + 'InnoDB中的索引类型？' },
             { text: '在不同存储引擎中索引的落地方式？', link: basePath + '在不同存储引擎中索引的落地方式？' },
             { text: '什么情况下应不建或少建索引？', link: basePath + '什么情况下应不建或少建索引？' },
             { text: '在建立索引的时，需要考虑哪些因素？', link: basePath + '在建立索引的时，需要考虑哪些因素？' },
@@ -77,33 +82,34 @@ export default [
             { text: 'MySQL在使用索引一定有效吗？如何排查索引效果？', link: basePath + 'MySQL在使用索引一定有效吗？如何排查索引效果？' },
             { text: 'MySQL中索引数量是否越多越好？为什么？', link: basePath + 'MySQL中索引数量是否越多越好？为什么？' },
             { text: '在什么情况下，不推荐为数据库建立索引？', link: basePath + '在什么情况下，不推荐为数据库建立索引？' },
-            { text: 'MySQL InnoDB引擎中的聚簇索引和非聚簇索引有什么区别？', link: basePath + 'MySQL InnoDB引擎中的聚簇索引和非聚簇索引有什么区别？' },
-            { text: 'MySQL中的回表是什么？', link: basePath + 'MySQL中的回表是什么？' },
+
             { text: 'MySQL索引最左前缀匹配原则？', link: basePath + 'MySQL索引最左前缀匹配原则？' },
+
+            { text: 'MySQL的主键一定是自增的吗？', link: basePath + 'MySQL的主键一定是自增的吗？' },
+            { text: 'InnoDB为什么使用B+树实现索引？', link: basePath + 'InnoDB为什么使用B+树实现索引？' },
 
             { text: '什么是自适应hash索引？', link: basePath + '什么是自适应hash索引？' },
 
             { text: '索引的创建和使用规则？', link: basePath + '索引的创建和使用规则？' },
             { text: '什么是hash索引？', link: basePath + '什么是hash索引？' },
+            { text: 'hash索引和B+树索引有什么区别？', link: basePath + 'hash索引和B+树索引有什么区别？' },
             { text: 'InnoDB到底支不支持哈希索引呢？', link: basePath + 'InnoDB到底支不支持哈希索引呢？' },
             { text: '什么是唯一索引？', link: basePath + '什么是唯一索引？' },
+            { text: '唯一索引和主键索引的区别？', link: basePath + '唯一索引和主键索引的区别？' },
+            { text: 'MySQL是如何保证唯一性索引的唯一性的？', link: basePath + 'MySQL是如何保证唯一性索引的唯一性的？' },
             { text: '唯一索引比普通索引快吗？', link: basePath + '唯一索引比普通索引快吗？' },
             { text: '什么是mysql的三星索引？', link: basePath + '什么是mysql的三星索引？' },
             { text: 'MySQL的explain有哪些字段？哪些是主要的？', link: basePath + 'MySQL的explain有哪些字段？哪些是主要的？' },
             { text: '如何使用MySQL中的explain语句进行查询分析？', link: basePath + '如何使用MySQL中的explain语句进行查询分析？' },
             { text: '用explain分析举一个具体的例子？', link: basePath + '用explain分析举一个具体的例子？' },
 
-            { text: 'Mysql聚集索引是什么？', link: basePath + 'Mysql聚集索引是什么？' },
-            { text: '为什么聚集索引，不要选择频繁更新的列？', link: basePath + '为什么聚集索引，不要选择频繁更新的列？' },
-            { text: 'Mysql的非聚集索引是什么？', link: basePath + 'Mysql的非聚集索引是什么？' },
             { text: '什么是前缀索引？', link: basePath + '什么是前缀索引？' },
             { text: '什么是联合索引（复合索引）？', link: basePath + '什么是联合索引（复合索引）？' },
             { text: 'MySQL的覆盖索引？', link: basePath + 'MySQL的覆盖索引？' },
             { text: 'A,B,C三个字段组成联合索引，AB,AC,BC三种情况下查询是否能命中索引？', link: basePath + 'A,B,C三个字段组成联合索引，AB,AC,BC三种情况下查询是否能命中索引？' },
             { text: 'where条件的顺序影响使用索引吗？', link: basePath + 'where条件的顺序影响使用索引吗？' },
             { text: '什么是索引下推？', link: basePath + '什么是索引下推？' },
-            { text: 'Mysql的回表查询是什么？', link: basePath + 'Mysql的回表查询是什么？' },
-            { text: 'mysql的覆盖索引是什么？', link: basePath + 'mysql的覆盖索引是什么？' },
+
             { text: 'B+树索引和哈希索引的区别？', link: basePath + 'B+树索引和哈希索引的区别？' },
             { text: '哈希索引的优势及不适用的场景？', link: basePath + '哈希索引的优势及不适用的场景？' },
             { text: 'B树和B+树的区别', link: basePath + 'B树和B+树的区别' },
@@ -111,7 +117,7 @@ export default [
             { text: '为什么说B+比B树更适合实际应用中作为数据库索引？', link: basePath + '为什么说B+比B树更适合实际应用中作为数据库索引？' },
             { text: 'b树和b+简述MySQL的b+树查询数据的全过程？', link: basePath + '简述MySQL的b+树查询数据的全过程？' },
             { text: '为什么MySQL选择使用B+树作为索引结构？', link: basePath + '为什么MySQL选择使用B+树作为索引结构？' },
-            { text: '单个索引的大小会对B+树造成什么影响？', link: basePath + '单个索引的大小会对B+树造成什么影响？' },
+
             { text: '索引跳跃扫描', link: basePath + '索引跳跃扫描' },
 
         ]
@@ -166,7 +172,7 @@ export default [
             { text: '慢SQL优化思路？', link: basePath + '慢SQL优化思路？' },
             { text: '如何在MySQL中监控和优化慢SQL？', link: basePath + '如何在MySQL中监控和优化慢SQL？' },
             { text: 'MySQL中如何解决数据深度分页的问题？', link: basePath + 'MySQL中如何解决数据深度分页的问题？' },
-
+            { text: '单个索引的大小会对B+树造成什么影响？', link: basePath + '单个索引的大小会对B+树造成什么影响？' },
         ]
     },
     {
