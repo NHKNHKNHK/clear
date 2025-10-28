@@ -140,7 +140,7 @@ JavaStreamingContext ssc = new JavaStreamingContext(sc, Durations.seconds(1));
 
     
 
-## DStream
+### DStream
 
 离散数据流（DStream）是Spark Streaming最基本的抽象。它代表了一种连续的数据流，要么从某种数据源提取数据，要么从其他数据流映射转换而来。
 
@@ -158,7 +158,7 @@ DStream表示连续的数据流，可以通过Kafka、Flume、Kinesis等数据�
 
 
 
-# DStream 编程模型
+## DStream 编程模型
 
 ​	在Spark Streaming中，**将实时的数据分解成一系列很小的批处理任务**（前面我们也说过Spark Straming其实是准实时、微批次的）。批处理引擎 Spark Core 把**输入的数据按照一定的时间片**（比如说1s）**分成一段一段的数据**，**每一段数据都会转换成 RDD** 输入到 Spark Core中，然后将DStream操作转换为 RDD算子的相关操作，即转换操作、窗口操作以及输出操作。RDD算子操作产生的中间结果数据会保存在内存中，也可以将中间的结果数据输出到外部存储系统中进行保存。
 

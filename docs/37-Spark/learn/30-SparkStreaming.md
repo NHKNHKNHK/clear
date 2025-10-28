@@ -4,30 +4,30 @@
 
 **数据处理的角度和方式**
 
--   流式（Streaming）数据处理
--   批量（batch）数据处理
+- 流式（Streaming）数据处理
+- 批量（batch）数据处理
 
 **数据处理延迟的长短**
 
--   实时数据处理：毫秒级别：针对海量数据进行实时计算
--   离线数据处理：小时、天级别 ：先收集数据，然后将数据存储起来，当需要时再去对数据进行操作 
+- 实时数据处理：毫秒级别：针对海量数据进行实时计算
+- 离线数据处理：小时、天级别 ：先收集数据，然后将数据存储起来，当需要时再去对数据进行操作 
 
 **常见的实时计算框架**
 
--   Apache Spark Streaming
--   Apache Strom
--   Apache Flink
--   Yahoo! S4
+- Apache Spark Streaming
+- Apache Strom
+- Apache Flink
+- Yahoo! S4
 
 在传统的数据处理过程中，我们往往先将数据存入数据库中，当需要的时候再去数据库中进行检索查询，将处理的结果返回给请求的用户；另外，MapReduce 这类大数据处理框架，更多应用在离线计算场景中。而对于一些实时性要求较高的场景，我们期望延迟在秒甚至毫秒级别，就需要引出一种新的数据计算结构——流式计算，对无边界的数据进行连续不断的处理、聚合和分析。
 
 在很多实时数据处理的场景中，都需要用到流式处理（Stream Process）框架，Spark也包含了两个完整的流式处理框架 Spark Streaming 和Structured Streaming（Spark 2.0出现）
 
-官方描述：[Spark Structured Streaming](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html) makes it easy to build streaming applications and pipelines with the same and familiar Spark APIs.（Spark结构化流使得使用相同和熟悉的Spark api构建流应用程序和管道变得容易。）
+> 官方描述：[Spark Structured Streaming](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html) makes it easy to build streaming applications and pipelines with the same and familiar Spark APIs.（Spark结构化流使得使用相同和熟悉的Spark api构建流应用程序和管道变得容易。）
 
-# SparkStreaming简介
+## SparkStreaming简介
 
-## **Lambda 架构**
+### **Lambda 架构**
 
 Lambda架构是由Storm的作者Nathan Marz提出的一个实时大数据处理框架。Marz在Twitter工作期间开发了著名的实时大数据处理框架Storm，**Lambda架构是其根据多年进行分布式大数据系统的经验总结提炼而成**
 
@@ -35,7 +35,7 @@ Lambda架构的目标是设计出一个能满足实时大数据系统关键特�
 
 Lambda架构通过分解的三层架构来解决该问题：批处理层（Batch Layer），速度层（Speed Layer）和服务层（Serving Layer）：
 
--   **批处理层（Batch Layer）** 
+- **批处理层（Batch Layer）**
 
 批处理层主用由Hadoop来实现，负责数据的存储和产生随意的视图数据； 
 
@@ -43,19 +43,19 @@ Lambda架构通过分解的三层架构来解决该问题：批处理层（Batch
 
 Batch Layer执行的是批量处理，例如Hadoop或者Spark支持的Map-Reduce方式；
 
--   **速度层（Speed Layer）** 
+- **速度层（Speed Layer）**
 
-从对数据的处理来看，speed layer与batch layer非常相似，它们之间最大的区别是前者只处理最近的数据，后者则要处理所有的数据； 
+从对数据的处理来看，speed layer与batch layer非常相似，它们之间最大的区别是前者只处理最近的数据，后者则要处理所有的数据；
 
-为了满足最小的延迟，speed layer并不会在同一时间读取所有的新数据，相反，它会在接收到新数据时，更新realtime view，而不会像batch layer那样重新运算整个view； 
+为了满足最小的延迟，speed layer并不会在同一时间读取所有的新数据，相反，它会在接收到新数据时，更新realtime view，而不会像batch layer那样重新运算整个view；
 
-speed layer是一种增量的计算，而非重新运算（recomputation）； 
+speed layer是一种增量的计算，而非重新运算（recomputation）；
 
 Speed Layer的作用包括：对更新到serving layer带来的高延迟的一种补充、快速、增量的算法和最终Batch Layer会覆盖speed layer
 
--   **服务层（Serving Layer）** 
+- **服务层（Serving Layer）** 
 
-服务层负责建立索引和呈现视图，以便于它们可以被非常好被查询到； 
+服务层负责建立索引和呈现视图，以便于它们可以被非常好被查询到；
 
 Batch Layer通过对master dataset执行查询获得了batch view，而Serving Layer就要负责对batch view进行操作，从而为最终的实时查询提供支撑； 
 
@@ -75,43 +75,40 @@ Batch Layer通过对master dataset执行查询获得了batch view，而Serving L
 
 Lambda架构中各个层常用的组件：
 
--   数据流存储可选用基于不可变日志的分布式消息系统Kafka； 
+- 数据流存储可选用基于不可变日志的分布式消息系统Kafka； 
 
--   Batch Layer数据集的存储可选用Hadoop的HDFS，或者是阿里云的ODPS；Batch View的预计算可以选用MapReduce或Spark； 
+- Batch Layer数据集的存储可选用Hadoop的HDFS，或者是阿里云的ODPS；Batch View的预计算可以选用MapReduce或Spark； 
 
--   Batch View （属于Serving Layer）自身结果数据的存储可使用MySQL（查询少量的最近结果数据），或HBase（查询大量的历史结果数据）。 
+- Batch View （属于Serving Layer）自身结果数据的存储可使用MySQL（查询少量的最近结果数据），或HBase（查询大量的历史结果数据）。 
 
--   Speed Layer 增量数据的处理可选用Storm或Spark Streaming或Flink或StructuredStreaming； 
+- Speed Layer 增量数据的处理可选用Storm或Spark Streaming或Flink或StructuredStreaming； 
 
--   Realtime View（属于Speed Layer ）增量结果数据集为了满足实时更新的效率，可选用Redis等内存NoSQL
+- Realtime View（属于Speed Layer ）增量结果数据集为了满足实时更新的效率，可选用Redis等内存NoSQL
 
 随着大数据技术的发展，Lambda架构必备架构衍生出了新的架构，**kapper架构**
 
-## **Streaming 计算模式**
+### **Streaming 计算模式**
 
 不同的流式处理框架有不同的特点，也适应不同的场景，主要有如下两种模式
 
--   模式一：**原生流处理（Native）**
-    -   所有输入记录会一条接一条地被处理，上面提到的 Storm 和 Flink都是采用这种方式；
+- 模式一：**原生流处理（Native）**
+    - 所有输入记录会一条接一条地被处理，上面提到的 Storm 和 Flink都是采用这种方式；
 
--   模式二：**微批处理（Batch）**
-    -   将输入的数据以某一时间间隔 T，切分成多个微批量数据，然后对每个批量数据进行处理， 
+- 模式二：**微批处理（Batch）**
+    - 将输入的数据以某一时间间隔 T，切分成多个微批量数据，然后对每个批量数据进行处理， 
+    - Spark Streaming 和 StructuredStreaming采用的是这种方式；
 
-    -   Spark Streaming 和 StructuredStreaming采用的是这种方式；
+### Spark Streaming是什么
 
+Spark Streaming用于**流式数据的处理**。Spark Streaming支持的数据输入源很多，例如：Kafka、Flume、Twitter、ZeroMQ和简单的TCP套接字等等。**数据输入后可以用Spark的高度抽象原语**（这里的原语和RDD的算子类似）如：map、reduce、join、window等进行运算。而结果也能保存在很多地方，如HDFS，数据库等
 
-
-## Spark Streaming是什么
-
-Spark Streaming用于**流式数据的处理**。Spark Streaming支持的数据输入源很多，例如：Kafka、Flume、Twitter、ZeroMQ和简单的TCP套接字等等。**数据输入后可以用Spark的高度抽象原语**（这里的原语和RDD的算子类似）如：map、reduce、join、window等进行运算。而结果也能保存在很多地方，如HDFS，数据库等	
-
-和Spark基于RDD的概念很相似，Spark Streaming使用**离散化流(discretized stream)作为抽象表示**，叫做**DStream**
+和Spark基于RDD的概念很相似，Spark Streaming使用**离散化流(discretized stream)作为抽象表示**，叫做`DStream`
 
 DStream是随时间推移而收到的数据的序列。在内部，每个**时间区间**收到的数据都作为RDD 存在，而DStream是由这些 RDD 所组成的序列(因此得名“离散化”)。所以简单来将，**DStream就是对RDD在实时数据处理场景的一种封装。**
 
 但是，Spark Streaming其实是**准实时**（准实时是因为它无法达到真正的毫秒级别，一般是以秒、分钟为单位）、**微批次**（微批次是因为SparkStreaming不能做到数据来一点处理一点，因为这样会浪费资源，一般以时间为单位）的数据处理框架
 
-## Spark Streaming的特点
+### Spark Streaming的特点
 
 ​	Spark Streaming 是构建在Spark上的实时计算框架，且**是对Spark Core API 的一个扩展**，它能够实现对流数据进行实时处理，并具有很好的扩展性、**高吞吐量和容错性**。
 
@@ -173,39 +170,36 @@ stream.join(historiccounts).filter{
 它的**核心是DStream**，DStream类似于RDD，它实质上一系列的RDD的集合，DStream可以按照秒、分等时间间隔将数据流进行批量的划分。首先从接收到流数据之后，将其划分为多个batch，然后提交给Spark集群进行计算，最后将结果批量输出到HDFS或者数据库以及前端页面展示等等
 
 
+## 背压机制
+
+- Spark 1.5以前版本，用户如果要**限制 Receiver的数据接收速率**，可以通过设置静态配制参数**spark.streaming.receiver.maxRate** 的值来实现，此举虽然可以通过限制接收速率，来适配当前的处理能力，防止内存溢出，但也会引入其它问题。
+    - 比如：producer数据生产高于maxRate，当前集群处理能力也高于maxRate，这就**会造成资源利用率下降**等问题。
+- 为了更好的协调数据接收速率与资源处理能力，**1.5版本**开始 Spark Streaming 可以动态控制数据接收速率来适配集群数据处理能力**。背压机制（即Spark Streaming Backpressure）**: 根据 JobScheduler 反馈作业的执行信息来**动态调整Receiver数据接收率**。
+- 通过属性 **spark.streaming.backpressure.enabled** 来控制是否启用backpressure机制，**默认值false**，即不启用。
 
 
 
-# 背压机制
-
--   Spark 1.5以前版本，用户如果要**限制 Receiver的数据接收速率**，可以通过设置静态配制参数**spark.streaming.receiver.maxRate** 的值来实现，此举虽然可以通过限制接收速率，来适配当前的处理能力，防止内存溢出，但也会引入其它问题。
-    -   比如：producer数据生产高于maxRate，当前集群处理能力也高于maxRate，这就**会造成资源利用率下降**等问题。
--   为了更好的协调数据接收速率与资源处理能力，**1.5版本**开始 Spark Streaming 可以动态控制数据接收速率来适配集群数据处理能力**。背压机制（即Spark Streaming Backpressure）**: 根据 JobScheduler 反馈作业的执行信息来**动态调整Receiver数据接收率**。
--   通过属性 **spark.streaming.backpressure.enabled** 来控制是否启用backpressure机制，**默认值false**，即不启用。
-
-
-
-# Spark Streaming的组件介绍
+## Spark Streaming的组件介绍
 
 **Spark Streaming的核心组件有2个：**
 
--   Streaming Context（在Java中用 **JavaStreamingContext**类来表示）
--   Dstream(离散流) （在Java中用 **JavaDStream**类来表示）
+- Streaming Context（在Java中用 **JavaStreamingContext**类来表示）
+- Dstream(离散流) （在Java中用 **JavaDStream**类来表示）
 
-## Streaming Context
+### Streaming Context
 
-回顾SparkCore和SparkSQL及SparkStreaming处理数据时编程： 
+回顾SparkCore和SparkSQL及SparkStreaming处理数据时编程：
 
--   **SparkCore** 
-    -   数据结构：RDD 
-    -   **SparkContext**：上下文实例对象 
--   **SparkSQL** 
-    -   数据结构：Dataset/DataFrame = RDD + Schema  
-    -   **SparkSession**：会话实例对象， 在Spark 1.x中SQLContext/HiveContext 
--   SparkStreaming 
-    -   数据结构：DStream = Seq[RDD] 
-    -   **StreamingContext**：流式上下文实例对象，==底层还是SparkContext==
-    -   参数：划分流式数据时间间隔BatchInterval：1s，5s
+- **SparkCore**
+    - 数据结构：RDD
+    - **SparkContext**：上下文实例对象
+- **SparkSQL**
+    - 数据结构：Dataset/DataFrame = RDD + Schema  
+    - **SparkSession**：会话实例对象， 在Spark 1.x中SQLContext/HiveContext
+- SparkStreaming 
+    - 数据结构：DStream = Seq[RDD]
+    - **StreamingContext**：流式上下文实例对象，==底层还是SparkContext==
+    - 参数：划分流式数据时间间隔BatchInterval：1s，5s
 
 ​	Streaming Context 是 Spark Streaming 程序的起点，生成Streaming Context之前需要生成 SparkContext，SparkContext 可以理解为申请Spark集群的计算资源，Streaming Context可以理解为申请Spark Streaming的计算资源
 
@@ -213,7 +207,7 @@ stream.join(historiccounts).filter{
 
 从官方文档可知，提供两种方式构建StreamingContext实例对象
 
--   1）**根据SparkConf创建**
+- 1）**根据SparkConf创建**
 
 A [JavaStreamingContext](https://spark.apache.org/docs/3.2.0/api/java/index.html?org/apache/spark/streaming/api/java/JavaStreamingContext.html) object can be created from a [SparkConf](https://spark.apache.org/docs/3.2.0/api/java/index.html?org/apache/spark/SparkConf.html) object.
 
@@ -244,7 +238,7 @@ SparkConf conf = new SparkConf().setAppName(appName).setMaster(master);
 JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(1000));
 ```
 
--   2）**根据SparkContext创建**
+- 2）**根据SparkContext创建**
 
 A `JavaStreamingContext` object can also be created from an existing `JavaSparkContext`.
 
@@ -304,35 +298,34 @@ JavaStreamingContext ssc = new JavaStreamingContext(sc, Durations.seconds(1));
 
 注意:
 
--   只要我们一个**StreamingContext启动之后，我们就不能再往这个Application其中添加任何计算逻辑了**。比如执行start()方法之后，还给某个DStream执行一个算子，这是不允许的
+- 只要我们一个**StreamingContext启动之后，我们就不能再往这个Application其中添加任何计算逻辑了**。比如执行start()方法之后，还给某个DStream执行一个算子，这是不允许的
 
--   一个StreamingContext停止之后，是肯定不能够重启的。调用stop()之后，不能再调用start()，否则程序报错
+- 一个StreamingContext停止之后，是肯定不能够重启的。调用stop()之后，不能再调用start()，否则程序报错
 
     ```diff
      org.apache.spark.SparkException: Only one SparkContext should be running in this JVM (see SPARK-2243).The currently running SparkContext was created at:
     org.apache.spark.api.java.JavaSparkContext.<init>(JavaSparkContext.scala:58)
     ```
 
--   **必须保证一个JVM同时只能有一个StreamingContext启动。在你的应用程序中，不能创建两个StreamingContext。**
+- **必须保证一个JVM同时只能有一个StreamingContext启动。在你的应用程序中，不能创建两个StreamingContext。**
 
--   调用 StreamingContext上的 stop()  同时停止内部的SparkContext，如果不希望如此，还希望后面继续使用SparkContext 创建其他类型的Context（比如SQLContex）。那么要只需要在StreamingContext 的 stop()方法的可选参数stopSparkContext设置为false。
+- 调用 StreamingContext上的 stop()  同时停止内部的SparkContext，如果不希望如此，还希望后面继续使用SparkContext 创建其他类型的Context（比如SQLContex）。那么要只需要在StreamingContext 的 stop()方法的可选参数stopSparkContext设置为false。
 
     ```java
      public void stop()
      public void stop(final boolean stopSparkContext)
     ```
 
--   **一个SparkContext可以被重用来创建多个StreamingContext，但是需要在创建下一个StreamingContext之前停止前一个StreamingContext(**不停止SparkContext)。
+- **一个SparkContext可以被重用来创建多个StreamingContext，但是需要在创建下一个StreamingContext之前停止前一个StreamingContext(**不停止SparkContext)。
 
--   ==一个JVM中只能有一个 SparkContext 对象==，否则程序报错
+- ==一个JVM中只能有一个 SparkContext 对象==，否则程序报错
 
     ```diff
     org.apache.spark.SparkException: Only one SparkContext should be running in this JVM (see SPARK-2243).The currently running SparkContext was created at:
     ```
 
-    
 
-## DStream
+### DStream
 
 离散数据流（DStream）是Spark Streaming最基本的抽象。它代表了一种连续的数据流，要么从某种数据源提取数据，要么从其他数据流映射转换而来。
 
@@ -342,35 +335,32 @@ DStream表示连续的数据流，可以通过Kafka、Flume、Kinesis等数据�
 
 在内部，**DStream由一系列连续的rdd表示**，这是Spark对不可变的分布式数据集的抽象。**DStream中的每个RDD都包含一定时间间隔的数据**
 
--   Dstream是Spark Streaming的数据抽象，同DataFrame，其实底层依旧是RDD。
+- Dstream是Spark Streaming的数据抽象，同DataFrame，其实底层依旧是RDD。
 
--   在DStream上应用的任何操作都转换为在底层rdd上的操作。
+- 在DStream上应用的任何操作都转换为在底层rdd上的操作。
 
--   这些底层RDD转换是由Spark引擎计算的。DStream操作隐藏了大部分细节，并为开发人员提供了更高级的API。
+- 这些底层RDD转换是由Spark引擎计算的。DStream操作隐藏了大部分细节，并为开发人员提供了更高级的API。
 
 
 
-# DStream 编程模型
+## DStream 编程模型
 
 ​	在Spark Streaming中，**将实时的数据分解成一系列很小的批处理任务**（前面我们也说过Spark Straming其实是准实时、微批次的）。批处理引擎 Spark Core 把**输入的数据按照一定的时间片**（比如说1s）**分成一段一段的数据**，**每一段数据都会转换成 RDD** 输入到 Spark Core中，然后将DStream操作转换为 RDD算子的相关操作，即转换操作、窗口操作以及输出操作。RDD算子操作产生的中间结果数据会保存在内存中，也可以将中间的结果数据输出到外部存储系统中进行保存。
 
 
-
-# 输入DStream 和 Receiver
+## 输入DStream 和 Receiver
 
 ​	输入DStream代表了来自数据源的输入数据流。比如从文件读取、从TCP、从HDFS读取等。**每个DSteam都会绑定一个Receiver对象**，该对象是一个关键的核心组件，用来从我们的各种数据源接受数据，并将其存储在Spark的内存当中，这个内存的StorageLevel，我们可以自己进行指定
 
 Spark Streaming提供了两种内置的数据源支持：
 
--   **基础数据源**：SSC API中直接提供了对这些数据源的支持，比如文件、tcp socket、Akka Actor等。
--   **高级数据源**：比如Kafka、Flume、Kinesis和Twitter等数据源，要引入第三方的JAR来完成我们的工作。
--   **自定义数据源**：比如我们的ZMQ、RabbitMQ、ActiveMQ等任何格式的自定义数据源。
+- **基础数据源**：SSC API中直接提供了对这些数据源的支持，比如文件、tcp socket、Akka Actor等。
+- **高级数据源**：比如Kafka、Flume、Kinesis和Twitter等数据源，要引入第三方的JAR来完成我们的工作。
+- **自定义数据源**：比如我们的ZMQ、RabbitMQ、ActiveMQ等任何格式的自定义数据源。
 
+### DStream 基础数据源
 
-
-## DStream 基础数据源
-
-### File Source
+#### File Source
 
 下面是WordCount案例
 
@@ -578,13 +568,12 @@ Time: 1683803640000 ms
 
 **WordCount解析**
 
--   **Discretized Stream**是Spark Streaming的基础抽象，代表持续性的数据流和经过各种Spark原语操作后的结果数据流。在**内部实现上，DStream是一系列连续的RDD来表示**。**每个RDD含有一段时间间隔内的数据**。
--   对数据的操作也是按照RDD为单位来进行的
--   计算过程由Spark Engine来完成。DStream操作隐藏了大部分细节，并为开发人员提供了更高级的API。
+- **Discretized Stream**是Spark Streaming的基础抽象，代表持续性的数据流和经过各种Spark原语操作后的结果数据流。在**内部实现上，DStream是一系列连续的RDD来表示**。**每个RDD含有一段时间间隔内的数据**。
+- 对数据的操作也是按照RDD为单位来进行的
+- 计算过程由Spark Engine来完成。DStream操作隐藏了大部分细节，并为开发人员提供了更高级的API。
 
 
-
-### TCP Source
+#### TCP Source
 
 需求：使用netcat工具向9999端口不断的发送数据，通过SparkStreaming读取端口数据并统计不同单词出现的次数
 
@@ -671,9 +660,7 @@ Time: 1683897220000 ms
 (hadoop,1)
 ```
 
-
-
-### HDFS Source
+#### HDFS Source
 
 需求：监听hdfs的某一个目录的变化（新增文件）
 
@@ -785,35 +772,31 @@ Time: 1683884416000 ms
 -------------------------------------------
 ```
 
-
-
-### Queue Source
+#### Queue Source
 
 ​	可以使用streamingContext.queueStream(queueofrdd)基于rdd队列创建DStream。推送到队列中的每个RDD将被视为DStream中的一批数据，并像流一样处理。
 
 
 
+### DStream 高级数据源
 
-
-## DStream 高级数据源
-
-### Spark与Kafka集成的方式
+#### Spark与Kafka集成的方式
 
 ​	Kafka 是一个分布式流处理平台，主要用于处理实时流数据。而 SparkStreaming 是基于 Spark 的流式处理框架，可以处理实时数据流。SparkStreaming 可以集成 Kafka，实现对 Kafka 消息的实时处理。
 
 ​	在 SparkStreaming 中，我们可以**通过 KafkaUtils 来整合 Kafka**。KafkaUtils 提供了两种方式来创建数据流：KafkaUtils.createStream 和 KafkaUtils.createDirectStream。
 
--   利用 Kafka 的Receiver方式进行集成（ **KafkaUtils.createStream**）
+- 利用 Kafka 的Receiver方式进行集成（ **KafkaUtils.createStream**）
 
--   利用 Kafka 的Direct方式进行集成（ **KafkaUtils.createDirectDstream**）
+- 利用 Kafka 的Direct方式进行集成（ **KafkaUtils.createDirectDstream**）
 
     
 
 Spark Streaming获取kafka数据的两种方式 Receiver 与Direct 的方式，可以从代码中简单理解成**Receiver方式是通过zookeeper来连接kafka队列**，**Direct方式是直接连接到kafka的节点上获取数据**了。
 
--   **Receiver API**：需要一个专门的Executor去接收数据，然后发送给其他的Executor做计算。存在的问题，接收数据的Executor和计算的Executor速度会有所不同，特别在接收数据的Executor速度大于计算的Executor速度，会导致计算数据的节点内存溢出。**早期版本中提供此方式，当前版本不适用**
+- **Receiver API**：需要一个专门的Executor去接收数据，然后发送给其他的Executor做计算。存在的问题，接收数据的Executor和计算的Executor速度会有所不同，特别在接收数据的Executor速度大于计算的Executor速度，会导致计算数据的节点内存溢出。**早期版本中提供此方式，当前版本不适用**
 
--   **Direct API**：是由计算的Executor 来主动消费Kafka的数据，速度由自身控制。
+- **Direct API**：是由计算的Executor 来主动消费Kafka的数据，速度由自身控制。
 
     
 
@@ -902,9 +885,7 @@ public class SparkStreaming_Kafka_createStream {
 
 ```
 
-
-
-#### 基于Kafka 0-8 Direct模式（弃用）
+##### 基于Kafka 0-8 Direct模式（弃用）
 
 需要注意：当前版本不适用
 
@@ -912,7 +893,7 @@ public class SparkStreaming_Kafka_createStream {
 
 ```xml
 <dependency>
-	<groupId>org.apache.spark</groupId>
+    <groupId>org.apache.spark</groupId>
     <artifactId>spark-streaming-kafka-0-8_2.11</artifactId>
     <version>2.3.2</version>
 </dependency>
@@ -985,9 +966,7 @@ public class SparkStreaming_Kafka_createDirectStream {
 }
 ```
 
-
-
-####  Kafka 0-10 Direct模式（推荐使用）
+##### Kafka 0-10 Direct模式（推荐使用）
 
 ​	Kafka 0.10的Spark Streaming集成提供了简单的并行性，Kafka分区和Spark分区之间的1:1对应，以及对偏移量和元数据的访问。然而，由于新的集成使用了新的Kafka消费者API而不是简单的API，所以在使用上有明显的差异。
 
@@ -1217,21 +1196,19 @@ ConsumerStrategy<K, V> var2
 )
 ```
 
+##### 总结 Receiver 与 Direct 方式
 
+###### **Receiver 方式**
 
-#### 总结 Receiver 与 Direct 方式
+- receiver模式采用了Received接收器模式，需要一个线程一直接收数据，将数据接收到Executor中默认存储级别为 **MEMORY_AND_DISK_SER_2。**
 
-**Receiver 方式**
+- receiver模式自动使用zookeeper管理消费数据offset
 
--   receiver模式采用了Received接收器模式，需要一个线程一直接收数据，将数据接收到Executor中默认存储级别为 **MEMORY_AND_DISK_SER_2。**
+- receiver模式底层读取Kafka 采用 **High Lever Consumer API**实现，这种模式不关心offset，只要数据
 
--   receiver模式自动使用zookeeper管理消费数据offset
+- receiver模式当Driver挂掉时，有丢失数据的风险，可以开启 **WAL 机制**避免丢失数据，但是开启后加大了数据处理延迟，并且存在数据重复消费的风险。
 
--   receiver模式底层读取Kafka 采用 **High Lever Consumer API**实现，这种模式不关心offset，只要数据
-
--   receiver模式当Driver挂掉时，有丢失数据的风险，可以开启 **WAL 机制**避免丢失数据，但是开启后加大了数据处理延迟，并且存在数据重复消费的风险。
-
--   receiver模式**并行度由 spark.streaming.blockInterval = 200ms** ,可以减少这个参数增大并行度，最小不能低于50ms
+- receiver模式**并行度由 spark.streaming.blockInterval = 200ms** ,可以减少这个参数增大并行度，最小不能低于50ms
 
 缺点：
 
@@ -1249,31 +1226,30 @@ ConsumerStrategy<K, V> var2
 
 小结：
 
--   被动将数据接收到 Executor，当有任务堆积时，数据存储问题
--   这种模式不能手动维护消费者offset
--   开启WAL机制之后，流计算性能会下降，并且还有可能导致数据的重复消费问题，但是不开启的话又可能出现数据丢失的问题
+- 被动将数据接收到 Executor，当有任务堆积时，数据存储问题
+- 这种模式不能手动维护消费者offset
+- 开启WAL机制之后，流计算性能会下降，并且还有可能导致数据的重复消费问题，但是不开启的话又可能出现数据丢失的问题
 
 
+###### **Direct 方式**
 
-**Direct 方式**
-
--   周期性地查询kafka，来获得每个topic+partition的最新的offset，并且主动的进行数据获取。（因为direct模式没有使用receiver接收器模式，每批次处理数据直接获取当前批次数据处理）
-
-
--   可以简化并行读取：spark会创建跟kafka partition一样多的RDD partition，并且会并行从kafka中读取数据。（即**direct模式并行度与读取的topic的partition一一对应**）
+- 周期性地查询kafka，来获得每个topic+partition的最新的offset，并且主动的进行数据获取。（因为direct模式没有使用receiver接收器模式，每批次处理数据直接获取当前批次数据处理）
 
 
--   高性能：kafka中做了数据复制，可以通过kafka的副本进行恢复。
+- 可以简化并行读取：spark会创建跟kafka partition一样多的RDD partition，并且会并行从kafka中读取数据。（即**direct模式并行度与读取的topic的partition一一对应**）
 
 
--   缺点是成本提高且无法通过zookeeper来监控消费者消费情况。
+- 高性能：kafka中做了数据复制，可以通过kafka的副本进行恢复。
 
 
--   这种新的不基于 Receiver 的直接方式，**是在 Spark 1.3 中引入的**。替代掉使用 Receiver 来接收数据后，这种方式会周期性地查询 Kafka，来获得每个 topic + partition 的最新的 offset，从而定义每个 batch 的 offset 的范围。当处理数据的 job 启动时，就会**使用 Kafka 的 Simple Consumer API**来获取 Kafka指定offset范围的数据，**可以手动维护消费者offset**。
+- 缺点是成本提高且无法通过zookeeper来监控消费者消费情况。
 
 
--   使用 kafka 的简单 API，**Spark Streaming 自己就负责追踪消费的offset，并保存在checkpoint中**。Spark自己一定是同步的，因此**可以保证数据是消费一次且仅消费一次**。
--   可以使用设置checkpoint的方式管理消费offset，使用 StreamingContext.getOrCreate(ckDIR, CreateStreamingContext) 恢复
+- 这种新的不基于 Receiver 的直接方式，**是在 Spark 1.3 中引入的**。替代掉使用 Receiver 来接收数据后，这种方式会周期性地查询 Kafka，来获得每个 topic + partition 的最新的 offset，从而定义每个 batch 的 offset 的范围。当处理数据的 job 启动时，就会**使用 Kafka 的 Simple Consumer API**来获取 Kafka指定offset范围的数据，**可以手动维护消费者offset**。
+
+
+- 使用 kafka 的简单 API，**Spark Streaming 自己就负责追踪消费的offset，并保存在checkpoint中**。Spark自己一定是同步的，因此**可以保证数据是消费一次且仅消费一次**。
+- 可以使用设置checkpoint的方式管理消费offset，使用 StreamingContext.getOrCreate(ckDIR, CreateStreamingContext) 恢复
 
 **这种方法相较于Receiver方式的优势在于：**
 
@@ -1293,11 +1269,9 @@ ConsumerStrategy<K, V> var2
 
 
 
+### DStream与Kafka集成（基于Direct方式）
 
-
-## DStream与Kafka集成（基于Direct方式）
-
-### Spark和Kafka集成Direct的特点
+#### Spark和Kafka集成Direct的特点
 
 （1）Direct的方式是会直接操作kafka底层的元数据信息，这样如果计算失败了，可以把数据重新读一下，重新处理。即数据一定会被处理。拉数据，是RDD在执行的时候直接去拉数据。
 
@@ -1307,7 +1281,7 @@ ConsumerStrategy<K, V> var2
 
 （4）不需要开启wal机制，从数据零丢失的角度来看，极大的提升了效率，还至少能节省一倍的磁盘空间。从kafka获取数据，比从hdfs获取数据，因为zero copy的方式，速度肯定更快。
 
-### Kafka Direct VS Receiver
+#### Kafka Direct VS Receiver
 
 从高层次的角度看，之前的和Kafka集成方案（reciever方法）使用WAL工作方式如下：
 
@@ -1321,15 +1295,15 @@ ConsumerStrategy<K, V> var2
 
 
 
--   这个方法可以保证从Kafka接收的数据不被丢失。但是在失败的情况下，有些数据很有可能会被处理不止一次！这种情况在一些接收到的数据被可靠地保存到WAL中，但是还没有来得及更新Zookeeper中Kafka偏移量，系统出现故障的情况下发生。这导致数据出现不一致性：**Spark Streaming知道数据被接收，但是Kafka那边认为数据还没有被接收，这样在系统恢复正常时，Kafka会再一次发送这些数据**。
--   这种不一致产生的原因是因为两个系统无法对那些已经接收到的数据信息保存进行原子操作。为了解决这个问题，只需要一个系统来维护那些已经发送或接收的一致性视图，而且，这个系统需要拥有从失败中恢复的一切控制权利。基于这些考虑，**社区决定将所有的消费偏移量信息只存储在Spark Streaming中，并且使用Kafka的低层次消费者API来从任意位置恢复数据**。
+- 这个方法可以保证从Kafka接收的数据不被丢失。但是在失败的情况下，有些数据很有可能会被处理不止一次！这种情况在一些接收到的数据被可靠地保存到WAL中，但是还没有来得及更新Zookeeper中Kafka偏移量，系统出现故障的情况下发生。这导致数据出现不一致性：**Spark Streaming知道数据被接收，但是Kafka那边认为数据还没有被接收，这样在系统恢复正常时，Kafka会再一次发送这些数据**。
+- 这种不一致产生的原因是因为两个系统无法对那些已经接收到的数据信息保存进行原子操作。为了解决这个问题，只需要一个系统来维护那些已经发送或接收的一致性视图，而且，这个系统需要拥有从失败中恢复的一切控制权利。基于这些考虑，**社区决定将所有的消费偏移量信息只存储在Spark Streaming中，并且使用Kafka的低层次消费者API来从任意位置恢复数据**。
 
 为了构建这个系统，新引入的Direct API采用完全不同于Receivers和WALs的处理方式。它不是启动一个Receivers来连续不断地从Kafka中接收数据并写入到WAL中，而是简单地给出每个batch区间需要读取的偏移量位置，最后，每个batch的Job被运行，那些对应偏移量的数据在Kafka中已经准备好了。这些偏移量信息也被可靠地存储（checkpoint），在从失败中恢复
 
 
 
--   需要注意的是，Spark Streaming可以在失败以后重新从Kafka中读取并处理那些数据段。然而，由于仅处理一次的语义，最后重新处理的结果和没有失败处理的结果是一致的。
--   因此，Direct API消除了需要使用WAL和Receivers的情况，而且确保每个Kafka记录仅被接收一次并被高效地接收。这就使得我们可以将Spark Streaming和Kafka很好地整合在一起。总体来说，这些特性使得流处理管道拥有高容错性，高效性，而且很容易地被使用。
+- 需要注意的是，Spark Streaming可以在失败以后重新从Kafka中读取并处理那些数据段。然而，由于仅处理一次的语义，最后重新处理的结果和没有失败处理的结果是一致的。
+- 因此，Direct API消除了需要使用WAL和Receivers的情况，而且确保每个Kafka记录仅被接收一次并被高效地接收。这就使得我们可以将Spark Streaming和Kafka很好地整合在一起。总体来说，这些特性使得流处理管道拥有高容错性，高效性，而且很容易地被使用。
 
 
 
@@ -1338,18 +1312,13 @@ ConsumerStrategy<K, V> var2
 
 
 
-
-
-
-
-
-## DStream 自定义Receiver
+### DStream 自定义Receiver
 
 自定义Receiver步骤如下：
 
--   需要继承Receiver
--   定义泛型
--   实现onStart、onStop方法来自定义数据源采集。
+- 需要继承Receiver
+- 定义泛型
+- 实现onStart、onStop方法来自定义数据源采集。
 
 演示1：
 
@@ -1573,17 +1542,18 @@ Time: 1683896435000 ms
 
 
 
-# 可靠性
+## 可靠性
 
 根据数据源的可靠性，可以有两种数据源。源(如Kafka)允许传输的数据被确认。如果从这些可靠来源接收数据的系统正确地确认了接收的数据，就可以确保不会由于任何类型的故障而丢失数据。这就产生了两种接收者:
+
 1). 可靠的接收端—当数据被接收到并存储在Spark中并进行复制时，一个可靠的接收端会正确地向一个可靠的源发送确认。
+
 2), 不可靠的接收者——不可靠的接收者不向源发送确认。这可以用于不支持确认的来源，甚至当一个人不想或需要进入确认的复杂性时，用于可靠的来源。
 
 对于不可靠的接收者，Spark streaming有自己的可靠机制，来保证数据的可靠性。
 
 
-
-# Caching / Persistence 缓存/持久化
+## Caching / Persistence 缓存/持久化
 
 ​	与rdd类似，DStreams也允许开发人员在内存中持久化流的数据。也就是说，在DStream上使用persist()方法将自动在内存中持久化该DStream的每个RDD。如果DStream中的数据将被多次计算(例如，对同一数据进行多次操作)，这是有用的。对于基于窗口的操作，如reduceByWindow和reduceByKeyAndWindow，以及基于状态的操作，如updateStateByKey，这是隐式正确的。因此，由基于**窗口的操作生成的DStreams会自动保存在内存中，而不需要开发人员调用persist()。**
 
@@ -1591,16 +1561,16 @@ Time: 1683896435000 ms
 
 请注意，与rdd不同，DStreams的默认持久化级别将数据序列化在内存中。
 
-# Checkpointing 检查点
+## Checkpointing 检查点
 
 ​	流应用程序必须全天候运行，因此必须能够适应与应用程序逻辑无关的故障(例如，系统故障、JVM崩溃等)。为了实现这一点，Spark Streaming需要将足够的信息检查点到容错存储系统，以便它可以从故障中恢复。有两种类型的数据被检查点。
 
--   元数据检查点——将定义流计算的信息保存到容错存储中，如HDFS。这用于从运行流应用程序驱动程序的节点的故障中恢复(稍后将详细讨论)。元数据包括:
-    -   配置——用于创建流应用程序的配置。
-    -   DStream操作——定义流应用程序的一组DStream操作。
-    -   未完成批—作业已进入队列但尚未完成的批。
+- 元数据检查点——将定义流计算的信息保存到容错存储中，如HDFS。这用于从运行流应用程序驱动程序的节点的故障中恢复(稍后将详细讨论)。元数据包括:
+    - 配置——用于创建流应用程序的配置。
+    - DStream操作——定义流应用程序的一组DStream操作。
+    - 未完成批—作业已进入队列但尚未完成的批。
 
--   **数据检查点—将生成的rdd保存到可靠的存储中**。这在跨多个批合并数据的一些有状态转换中是必要的。在这样的转换中，生成的rdd依赖于以前批次的rdd，这导致依赖链的长度随着时间的推移而不断增加。为了避免恢复时间的无限增加(与依赖链成正比)，有状态转换的中间rdd定期检查点到可靠的存储(例如HDFS)以切断依赖链。
+- **数据检查点—将生成的rdd保存到可靠的存储中**。这在跨多个批合并数据的一些有状态转换中是必要的。在这样的转换中，生成的rdd依赖于以前批次的rdd，这导致依赖链的长度随着时间的推移而不断增加。为了避免恢复时间的无限增加(与依赖链成正比)，有状态转换的中间rdd定期检查点到可靠的存储(例如HDFS)以切断依赖链。
 
 总而言之，元数据检查点主要用于从驱动程序故障中恢复，而如果使用有状态转换，则数据或RDD检查点甚至对于基本功能也是必要的。
 
@@ -1608,8 +1578,8 @@ Time: 1683896435000 ms
 
 对于具有以下任何要求的应用程序，必须启用检查点:
 
--   有状态转换的使用——如果在应用程序中使用updateStateByKey或reduceByKeyAndWindow(带逆函数)，则必须提供检查点目录以允许定期的RDD检查点。
--   从运行应用程序的驱动程序的故障中恢复-元数据检查点用于使用进度信息进行恢复。
+- 有状态转换的使用——如果在应用程序中使用updateStateByKey或reduceByKeyAndWindow(带逆函数)，则必须提供检查点目录以允许定期的RDD检查点。
+- 从运行应用程序的驱动程序的故障中恢复-元数据检查点用于使用进度信息进行恢复。
 
 注意，没有上述有状态转换的简单流应用程序可以在不启用检查点的情况下运行。在这种情况下，从驱动程序故障中恢复也将是部分的(一些接收到但未处理的数据可能会丢失)。这通常是可以接受的，许多Spark Streaming应用程序都是以这种方式运行的。对非hadoop环境的支持有望在未来得到改进。
 
@@ -1617,9 +1587,9 @@ Time: 1683896435000 ms
 
 检查点可以通过在容错、可靠的文件系统(例如HDFS、S3等)中设置一个目录来启用，检查点信息将保存到该目录中。这是通过使用 **streamingContext.checkpoint(checkpointDirectory)**完成的。这将允许您使用前面提到的有状态转换。此外，如果您想让应用程序从驱动程序故障中恢复，您应该重写您的流应用程序，使其具有以下行为。
 
--   当程序第一次启动时，它将创建一个新的StreamingContext，设置所有的流，然后调用start()。
+- 当程序第一次启动时，它将创建一个新的StreamingContext，设置所有的流，然后调用start()。
 
--   当程序在失败后重新启动时，它将从检查点目录中的检查点数据重新创建StreamingContext。
+- 当程序在失败后重新启动时，它将从检查点目录中的检查点数据重新创建StreamingContext。
 
 这个行为通过使用JavaStreamingContext.getOrCreate变得简单。它的用法如下。
 
@@ -1654,17 +1624,15 @@ context.awaitTermination();
 ​	注意，rdd的检查点会产生节省可靠存储的成本。这可能会导致rdd检查点所在批次的处理时间增加。因此，检查点的间隔需要仔细设置。对于小批处理(比如1秒)，每批检查点可以显著降低操作吞吐量。相反，检查点过少会导致沿袭和任务大小的增长，这可能会产生有害的影响。对于需要RDD检查点的有状态转换，默认间隔是批处理间隔的倍数，至少为10秒。它可以通过使用 dstream.checkpoint(checkpointInterval)来设置。通常，检查点间隔为5 - 10个DStream滑动间隔是一个很好的尝试设置。
 
 
-
-
-# DStream 转换
+## DStream 转换
 
 ​	DStream上的操作与 RDD 的类似（可以简单理解为，在不引入窗口时，DStream与RDD是很像的），分为Transformations（转换）和Output Operations（输出）两种，此外转换操作中还有一些比较特殊的原语，如：updateStateByKey()、transform()以及各种Window相关的原语。
 
-## 怎样理解 DStream算子的无状态与有状态
+### 怎样理解 DStream算子的无状态与有状态
 
 **无状态的 转换算子**
 
--   在每个采集周期内,都会将采集的数据生成一个RDD
+- 在每个采集周期内,都会将采集的数据生成一个RDD
 
 *         无状态是指 只操作采集当前周期内的RDD
 *         示例:
@@ -1672,13 +1640,13 @@ context.awaitTermination();
 
 **有状态的 转换算子**
 
--   有状态是指 会将之前采集周期内采集的数据 与当前采集周期的数据做聚合操作
+- 有状态是指 会将之前采集周期内采集的数据 与当前采集周期的数据做聚合操作
 
 ​    
 
-## 常用状态转换操作
+### 常用状态转换操作
 
-### map
+#### map
 
 ```java
 public <U> JavaDStream<U> map(final Function<T, U> f)
@@ -1686,7 +1654,7 @@ public <U> JavaDStream<U> map(final Function<T, U> f)
 // 将源 DStream 的每个元素，传递到函数 f 中进行转换操作，得到一个新的DStream
 ```
 
-### flatMap
+#### flatMap
 
 ```java
 public <K2, V2> JavaPairDStream<K2, V2> mapToPair(final PairFunction<T, K2, V2> f)
@@ -1694,13 +1662,13 @@ public <K2, V2> JavaPairDStream<K2, V2> mapToPair(final PairFunction<T, K2, V2> 
 // 与map()相似，对 DStream 中的每个元素应用给定函数 f，返回由各元素输出的迭代器组成的DStream    
 ```
 
-### mapToPair
+#### mapToPair
 
 ```java
 public <K2, V2> JavaPairDStream<K2, V2> mapToPair(final PairFunction<T, K2, V2> f)
 ```
 
-### flatMapToPair
+#### flatMapToPair
 
 ```java
 public <K2, V2> JavaPairDStream<K2, V2> flatMapToPair(final PairFlatMapFunction<T, K2, V2> f)
@@ -1708,7 +1676,7 @@ public <K2, V2> JavaPairDStream<K2, V2> flatMapToPair(final PairFlatMapFunction<
 // 可以看成是先flatMap以后，再进行mapTopair
 ```
 
-### filter
+#### filter
 
 ```java
 public JavaDStream<T> filter(final Function<T, Boolean> f)
@@ -1716,7 +1684,7 @@ public JavaDStream<T> filter(final Function<T, Boolean> f)
 // 返回一个新的 DStream，仅包含源 DStream中经过 f 函数计算结果为true的元素
 ```
 
-### repartition
+#### repartition
 
 ```java
 public JavaDStream<T> repartition(final int numPartitions)
@@ -1724,7 +1692,7 @@ public JavaDStream<T> repartition(final int numPartitions)
 // 用于指定 DStream的分区数 
 ```
 
-### union
+#### union
 
 ```java
 public JavaDStream<T> union(final JavaDStream<T> that)
@@ -1732,7 +1700,7 @@ public JavaDStream<T> union(final JavaDStream<T> that)
 // 返回一个新的 DStream，包含源DStream和其他DStream中的所有元素
 ```
 
-### count
+#### count
 
 ```java
 public JavaDStream<Long> count()
@@ -1740,7 +1708,7 @@ public JavaDStream<Long> count()
 // 统计源DStream 中每个RDD包含的元素个数，返回一个新的DStream
 ```
 
-### reduce
+#### reduce
 
 ```java
 public JavaDStream<T> reduce(final Function2<T, T, T> f)
@@ -1748,7 +1716,7 @@ public JavaDStream<T> reduce(final Function2<T, T, T> f)
 // 使用函数 f 将源DStream中的每个RDD的元素进行聚合操作，返回一个新DStream
 ```
 
-### countByValue
+#### countByValue
 
 ```java
 public JavaPairDStream<T, Long> countByValue()
@@ -1758,7 +1726,7 @@ public JavaPairDStream<T, Long> countByValue(final int numPartitions)
 // 其中T是RDD中每个元素的类型，Long是元素出现的频次
 ```
 
-### reduceByKey
+#### reduceByKey
 
 ```java
 public JavaPairDStream<K, V> reduceByKey(final Function2<V, V, V> func)
@@ -1774,7 +1742,7 @@ public JavaPairDStream<K, V> reduceByKey(final Function2<V, V, V> func, final Pa
 //		可以通过配置参数 来设置不同的并行任务数    
 ```
 
-### groupByKey
+#### groupByKey
 
 ```java
 public JavaPairDStream<K, Iterable<V>> groupByKey()
@@ -1784,7 +1752,7 @@ public JavaPairDStream<K, Iterable<V>> groupByKey(final Partitioner partitioner)
 // 简单来说，就是将每个批次中的记录根据键进行分组
 ```
 
-### join
+#### join
 
 ```java
 public <W> JavaPairDStream<K, Tuple2<V, W>> join(final JavaPairDStream<K, W> other)
@@ -1795,7 +1763,7 @@ public <W> JavaPairDStream<K, Tuple2<V, W>> join(final JavaPairDStream<K, W> oth
 // 注意：两个流之间的join需要两个流的批次大小一致（即采集周期一致）**，这样才能做到同时触发计算    
 ```
 
-### cogroup
+#### cogroup
 
 ```java
 public <W> JavaPairDStream<K, Tuple2<Iterable<V>, Iterable<W>>> cogroup(final JavaPairDStream<K, W> other)
@@ -1807,7 +1775,7 @@ public <W> JavaPairDStream<K, Tuple2<Iterable<V>, Iterable<W>>> cogroup(final Ja
 // 当被调用的两个DStream 类型为(K,V)和(K,W)键值对的两个DStream时，则返回类型为(K,(Iterable(V),Iterable(W))的新的DStream
 ```
 
-### transform
+#### transform
 
 ```java
 public <U> JavaDStream<U> transform(final Function<R, JavaRDD<U>> transformFunc)
@@ -1819,7 +1787,7 @@ public <U> JavaDStream<U> transform(final Function2<R, Time, JavaRDD<U>> transfo
 //     2.需要代码周期性执行
 ```
 
-### updateStateByKey
+#### updateStateByKey
 
 ```java
 public <S> JavaPairDStream<K, S> updateStateByKey(final Function2<List<V>, Optional<S>, Optional<S>> updateFunc)
@@ -1840,13 +1808,13 @@ public <S> JavaPairDStream<K, S> updateStateByKey(final Function2<List<V>, Optio
 
 例如：reduceByKey()会归约每个时间区间中的数据，但不会归约不同区间之间的数据。
 
-## 无状态转化操作
+### 无状态转化操作
 
 ​	无状态转化操作就是**把简单的RDD转化操作应用到每个批次上**，也就是**转化DStream中的每一个RDD**。部分无状态转化操作列在了下表中。
 
 ​	注意，针对键值对的DStream转化操作(比如 reduceByKey())要添加import StreamingContext._才能在Scala中使用，但是**在Java中不存在隐式转换**。	
 
-#### Transform演示
+##### Transform演示
 
 ​	通过对源 DStream中的每个RDD应用 RDD-to-RDD 函数返回一个新 DStream，这样就**可以在DStream 中做任意的RDD操作。**
 
@@ -1942,7 +1910,7 @@ now
 
 
 
-#### join演示
+##### join演示
 
 ​	**两个流之间的join需要两个流的批次大小一致（即采集周期一致）**，这样才能做到同时触发计算。计算过程就是对当前批次的两个流中各自的RDD进行join，**与两个RDD的join效果相同**
 
@@ -2009,9 +1977,9 @@ Time: 1684045595000 ms
 
 
 
-## 有状态转换操作
+### 有状态转换操作
 
--   使用有状态操作时，并行设置检查点
+- 使用有状态操作时，并行设置检查点
 
 ```java
 public void checkpoint(final String directory)
@@ -2019,7 +1987,7 @@ public void checkpoint(final String directory)
 
 
 
-### updateStateByKey演示
+#### updateStateByKey演示
 
 ​	**UpdateStateByKey原语用于记录历史记录**，有时，我们需要在DStream中跨批次维护状态(例如流计算中累加wordcount)。针对这种情况，updateStateByKey()为我们提供了对一个状态变量的访问，用于键值对形式的DStream。给定一个由(键，事件)对构成的 DStream，并传递一个指定如何根据新的事件更新每个键对应状态的函数，它可以构建出一个新的 DStream，其内部数据为(键，状态) 对。
 
@@ -2143,7 +2111,7 @@ a
 
 
 
-### WindowOperations 窗口操作
+#### WindowOperations 窗口操作
 
 ​	在Spark Streaming中，为DStream提供了窗口操作，即在DStream上，将一个可配置的长度设置为窗口，以一个可配置的速率向前移动窗口。
 
@@ -2151,12 +2119,12 @@ a
 
 ​	Window Operations可以设置窗口的大小和滑动窗口的间隔来动态的获取当前Steaming的允许状态。所有基于窗口的操作都需要两个参数，分别为 **窗口时长** 以及 **滑动步长**。
 
--   窗口时长：计算内容的时间范围；
--   滑动步长：隔多久触发一次计算。
+- 窗口时长：计算内容的时间范围；
+- 滑动步长：隔多久触发一次计算。
 
 注意：**这两者都必须为采集周期大小的整数倍。**
 
-#### window()演示
+##### window()演示
 
 下面是基于窗口操作的WordCount：3秒一个批次，窗口12秒，滑步6秒。
 
@@ -2257,7 +2225,7 @@ Time: 1684046946000 ms
 
 
 
-#### rudeceByKeyAndWindow()演示
+##### rudeceByKeyAndWindow()演示
 
 演示使用 reduceByKeyAndWindow()方法统计3个时间内不同字母出现的次数
 
@@ -2364,7 +2332,7 @@ Time: 1684049369000 ms
 (a,1)
 (b,2)
 
--------------------------------------------		# 第五秒时，a已经不见了
+-------------------------------------------      # 第五秒时，a已经不见了
 Time: 1684049370000 ms
 -------------------------------------------
 (a,0)
@@ -2395,7 +2363,7 @@ Time: 1684049373000 ms
 
 
 
-#### 常用窗口操作方法
+##### 常用窗口操作方法
 
 常用的DStream API 与 WindowOperations 方法如下
 
@@ -2470,7 +2438,7 @@ public JavaPairDStream<T, Long> countByValueAndWindow(final Duration windowDurat
 
 
 
-# DStream 输出
+## DStream 输出
 
 ​	在Spark Streaming中，**DStream输出操作是真正触发DStream上所有转换操作进行计算**（与RDD中的惰性求值类似，类似于RDD中的Action算子操作）**的操作**，然后进过输出操作，DStream 中的数据才会进行交互，如将数据写入到分布式文件系统、数据库以及其他应用中。
 
@@ -2484,9 +2452,9 @@ java.lang.IllegalArgumentException: requirement failed: No output operations reg
 
 
 
-## 常用输出操作方法
+### 常用输出操作方法
 
-### print
+#### print
 
 ```java
 public void print()
@@ -2514,7 +2482,7 @@ public void print(final int num)
 *       使用 foreachRDD 将每个RDD保存到HDFS
 ```
 
-### saveAsHadoopFiles
+#### saveAsHadoopFiles
 
 ```java
 public void saveAsHadoopFiles(final String prefix, final String suffix)
@@ -2528,7 +2496,7 @@ public <F extends OutputFormat<?, ?>> void saveAsHadoopFiles(final String prefix
 //    Python API 中目前不可用
 ```
 
-### foreachRDD
+#### foreachRDD
 
 ```java
 public void foreachRDD(final VoidFunction<R> foreachFunc)
@@ -2557,11 +2525,11 @@ public void foreachRDD(final VoidFunction2<R, Time> foreachFunc)
 
 
 
-# 优雅的关闭
+## 优雅的关闭
 
 ​	流式任务需要 7*24 小时执行，但是有时涉及到 **升级代码需要主动停止程序**，但是分布式程序，没办法做到一个个进程去杀死，所有配置优雅的关闭就显得至关重要了。
 
-## 1）为什么需要优雅关闭
+### 1）为什么需要优雅关闭
 
 ​	基于前面提到的，当我们的场景需要**保证数据准确，不允许数据丢失**，那么这个时候我们就得考虑优雅关闭了。说到关闭，那么非优雅关闭就是通过 kill -9 processId 的方式或者 yarn -kill applicationId 的方式进行暴力关闭，为什么说这种方式是属于暴力关闭呢？由于Spark Streaming是基于**micro-batch机制**工作的，按照间隔时间生成RDD，如果在间隔期间执行了暴力关闭，那么就会导致这段时间的数据丢失，虽然提供了checkpoin机制，可以使程序启动的时候进行恢复，但是当出现程序发生变更的场景，必须要删除掉checkpoint，因此这里就会有丢失的风险。
 
@@ -2569,7 +2537,7 @@ public void foreachRDD(final VoidFunction2<R, Time> foreachFunc)
 
 
 
-## 2）什么时候触发关闭
+### 2）什么时候触发关闭
 
 ​	既然我们知道了需要优雅关闭，那么就需要知道什么会触发关闭，这样才能有针对性的策略实现优雅关闭。
 
@@ -2739,9 +2707,9 @@ private class SparkShutdownHook(private val priority: Int, hook: () => Unit)
 
 
 
-## 3）采用什么策略关闭？
+### 3）采用什么策略关闭？
 
-### 配置策略
+#### 配置策略
 
 ​	根据刚才梳理的触发关闭流程中，其实可以通过配置**spark.streaming.stopGracefullyOnShutdown=true**来实现优雅关闭，但是需要发送 SIGTERM 信号给driver端，这里有两种方案
 
@@ -2786,7 +2754,7 @@ INFO streaming.StreamingContext: Invoking stop(stopGracefully=true) from shutdow
 
 
 
-### 标记策略（常用）
+#### 标记策略（常用）
 
 ​	该种策略通过**借助于三方系统来标记状态**， 一种方法是将标记HDFS文件，如果标记文件存在，则调用jscc.stop(true,true); 或者是借助于redis的key是否存在等方式，此外，还可以借助比mysql、zookeeper等
 
@@ -2965,7 +2933,7 @@ Exception in thread "main" org.apache.spark.SparkException: org.apache.spark.str
 
 
 
-### 服务策略
+#### 服务策略
 
 即提供一个restful服务，暴露出一个接口提供关闭功能。
 
@@ -2989,14 +2957,12 @@ class CloseStreamHandler(ssc:StreamingContext) extends AbstractHandler {
   }
 ```
 
+## Spark Streaming性能调优
 
+- 对于receiver模式的处理，可以调高receiver的数量，提高并行度
 
-# Spark Streaming性能调优 
+- 对于每一批的RDD进行调优，因为RDD的分区和每一个batch里面的block有关，比如batch的间隔是2s,也就是JavaStreamingContext(sparkConf, Durations.seconds(2))，这里就是设置拉去batch的时间，每一批batch里面有若干的block，每一个block产生的时间是200毫秒，每一个block对应RDD的一个分区，这里调优的地方就是如果你的CPU有8核，但是如果你每一批的数据就是5个block的话，那么就是没有充分的利用cpu我们这个时候就可以对于block产生的时间减少
 
--   对于receiver模式的处理，可以调高receiver的数量，提高并行度
-
--   对于每一批的RDD进行调优，因为RDD的分区和每一个batch里面的block有关，比如batch的间隔是2s,也就是JavaStreamingContext(sparkConf, Durations.seconds(2))，这里就是设置拉去batch的时间，每一批batch里面有若干的block，每一个block产生的时间是200毫秒，每一个block对应RDD的一个分区，这里调优的地方就是如果你的CPU有8核，但是如果你每一批的数据就是5个block的话，那么就是没有充分的利用cpu我们这个时候就可以对于block产生的时间减少
-
--   对于Kafka的Direct模式的话，我们只要设置的并行度和分区一样就可以了
-    -   使用CMS垃圾回收器，减少gc的时间，提高batch的处理速度
+- 对于Kafka的Direct模式的话，我们只要设置的并行度和分区一样就可以了
+    - 使用CMS垃圾回收器，减少gc的时间，提高batch的处理速度
         

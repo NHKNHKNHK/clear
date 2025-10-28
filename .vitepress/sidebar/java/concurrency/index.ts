@@ -184,10 +184,11 @@ export default [
     text: '并发工具',
     collapsed: false,
     items: [
-      { text: '你使用过哪些Java并发工具？', link: '/04-Java并发篇/你使用过哪些Java并发工具？' },
-      { text: '什么是Java的Semaphore？', link: '/04-Java并发篇/什么是Java的Semaphore？' },
       { text: '什么是Java的CountDownLatch？', link: '/04-Java并发篇/什么是Java的CountDownLatch？' },
       { text: '什么是Java的CyclicBarrier？', link: '/04-Java并发篇/什么是Java的CyclicBarrier？' },
+      { text: 'CountDownLatch与CyclicBarrier的区别', link: '/04-Java并发篇/CountDownLatch与CyclicBarrier的区别' },
+      { text: '什么是Java的Semaphore？', link: '/04-Java并发篇/什么是Java的Semaphore？' },
+      { text: '什么是Java的Exchanger？', link: '/04-Java并发篇/什么是Java的Exchanger？' },
       { text: '什么是Java的StampedLock？', link: '/04-Java并发篇/什么是Java的StampedLock？' },
       { text: '什么是FutureTask？', link: '/04-Java并发篇/什么是FutureTask？' },
       { text: '什么是Java的CompletableFuture？', link: '/04-Java并发篇/什么是Java的CompletableFuture？' },

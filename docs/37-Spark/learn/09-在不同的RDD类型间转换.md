@@ -1,3 +1,5 @@
+# RDD的转换
+
 有些函数只能用于特定类型的RDD，比如，`maen()` 、`variance()` 等RDD只能用于数值RDD上，而 `join()` 只能用与 键值对RDD上。
 
 在Scala、Java中，这些函数没有定义在标准的RDD类中，所以要访问这些函数，必须确保获取了正确的专用RDD类。
@@ -41,6 +43,10 @@ extends AbstractJavaRDDLike[JDouble, JavaDoubleRDD]
 | `DoubleFunction<T>`          | `Function<T,Double>`                | 用于`mapToDouble`，以生成`JavaDoubleRDD`      |
 | `PairFlatMapFunction<T,K,V>` | `Function<T,Iterable<Tuple2<K,V>>>` | 用于`flatMapToPair`，以生成`JavaPairRDD<K,V>` |
 | `PairFunction<T,K,V>`        | `Function<T,Tuple2<K,V>>`           | 用于`mapToPair`，以生成`JavaPairRDD<K,V>`     |
+
+:::warning 注意
+Java中的不管是啥类型的RDD，它的本质都是RDD，只不过是为了适配Java的特性而封装了一层。
+:::
 
 ### 声明
 

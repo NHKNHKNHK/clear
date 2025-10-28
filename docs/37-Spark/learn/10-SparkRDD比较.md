@@ -1,4 +1,6 @@
-# map 与 mapPartitions 区别
+# SparkRDD比较
+
+## map 与 mapPartitions 区别
 
 **数据处理角度**
 
@@ -18,10 +20,9 @@
 **完成比完美更重要**
 
 
+## partitionBy 、coalesce 与 reparation 区别
 
-# partitionBy 、coalesce 与 reparation 区别
-
-## coalesce
+### coalesce
 
 ```java
 public JavaRDD<T> coalesce(final int numPartitions)
@@ -35,7 +36,7 @@ coalesce可以用于扩大分区和缩小分区，扩大分区时需指定shuffl
 
 **缩小分区时使用 coalesce 可以避免 shuffle**
 
-## repatriation
+### repatriation
 
 ```java
 public JavaRDD<T> repartition(final int numPartitions)
@@ -51,13 +52,13 @@ coalesce(numPartition, shuffle = true)
 
 reparation 默认就**存在 shuffle** 操作，保证了数据在分区时数据均匀。
 
-## 小结
+### 小结
 
 -   ​	**缩减分区首选 coalesce 算子（不产生shuffle）。**
 -   ​	如果要**扩大分区**，可以令 shuffle参数为true。但是这样还不如直接**使用repartition算子（会产生shuffle）**
 -   ​	repartition 无论增大、缩减分区都会产生shuffle
 
-## partitionBy
+### partitionBy
 
 ```java
 public JavaPairRDD<K, V> partitionBy(final Partitioner partitioner)
@@ -68,8 +69,7 @@ partitionBy针对的是 key-value类型，如果分区数等于原来的分区�
 如果分区数与原来分区数不一致，则会根据指定的分区规则对数据进行重新分区，**存在 shuffle**
 
 
-
-# reduceByKey 与 groupByKey
+## reduceByKey 与 groupByKey
 
 **从shuffle的角度**
 
@@ -87,7 +87,7 @@ partitionBy针对的是 key-value类型，如果分区数等于原来的分区�
 
 
 
-# reduceByKey、foldByKey、aggregateByKey、combineByKey
+## reduceByKey、foldByKey、aggregateByKey、combineByKey
 
 **reduceByKey**
 
