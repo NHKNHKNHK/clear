@@ -4,7 +4,7 @@ const basePath = '/09-MySQL/'
 export default [
     {
         text: 'SQL基本语法',
-        collapsed: true,
+        collapsed: false,
         items: [
             { text: 'MySQL', link: basePath + '' },
 
@@ -34,7 +34,7 @@ export default [
     },
     {
         text: '事务',
-        collapsed: true,
+        collapsed: false,
         items: [
             { text: 'MySQL事务的四大特性', link: basePath + 'MySQL事务的四大特性' },
             { text: '什么是脏读、幻读、不可重复读？', link: basePath + '什么是脏读、幻读、不可重复读？' },
@@ -54,7 +54,7 @@ export default [
 
     {
         text: '索引',
-        collapsed: true,
+        collapsed: false,
         items: [
             // 聚集索引
             // 非聚集索引
@@ -70,6 +70,8 @@ export default [
             { text: '什么是回表查询，怎么减少回表次数？', link: basePath + '什么是回表查询，怎么减少回表次数？' },
             { text: 'InnoDB的B+树索引的注意事项', link: basePath + 'InnoDB的B+树索引的注意事项' },
             { text: '为什么聚集索引，不要选择频繁更新的列？', link: basePath + '为什么聚集索引，不要选择频繁更新的列？' },
+            { text: 'MySQL数据结构选择的合理性', link: basePath + 'MySQL数据结构选择的合理性' },
+            { text: 'MyIASM的索引方案', link: basePath + 'MyIASM的索引方案' },
             { text: 'MySQL有哪些索引类型？（索引分类）', link: basePath + 'MySQL有哪些索引类型？（索引分类）' },
             { text: 'InnoDB中的索引类型？', link: basePath + 'InnoDB中的索引类型？' },
             { text: '在不同存储引擎中索引的落地方式？', link: basePath + '在不同存储引擎中索引的落地方式？' },
@@ -124,7 +126,7 @@ export default [
     },
     {
         text: '数据类型与函数',
-        collapsed: true,
+        collapsed: false,
         items: [
             { text: 'MySQL的常用数据类型', link: basePath + 'MySQL的常用数据类型' },
             { text: 'Mysql的char和varchar的区别？', link: basePath + 'Mysql的char和varchar的区别？' },
@@ -161,7 +163,7 @@ export default [
     },
     {
         text: '场景',
-        collapsed: true,
+        collapsed: false,
         items: [
             // 冷热分离怎么做
             // 索引失效场景？
@@ -297,4 +299,11 @@ export default [
             { text: 'MySQL的Long Buffer是什么？有什么用？', link: basePath + 'MySQL的Long Buffer是什么？有什么用？' },
         ]
     },
+    {
+        text: '进阶',
+        collapsed: false,
+        items: [
+            { text: 'MySQL逻辑架构', link: basePath + 'MySQL逻辑架构' },
+        ],
+    }
 ]
