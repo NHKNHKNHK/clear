@@ -7,8 +7,10 @@ export default [
       { text: '串行、并行和并发有什么区别？', link: '/04-Java并发篇/串行、并行和并发有什么区别？' },
       { text: '程序、进程、线程？', link: '/04-Java并发篇/程序、进程、线程？' },
       { text: '进程、线程、管程、协程、虚拟线程区别？', link: '/04-Java并发篇/进程、线程、管程、协程、虚拟线程区别？' },
+      { text: '什么是协程？Java支持协程吗？', link: '/04-Java并发篇/什么是协程？Java支持协程吗？' },
       { text: '线程调度？', link: '/04-Java并发篇/线程调度？' },
       { text: '并发与并行', link: '/04-Java并发篇/并发与并行' },
+      { text: '什么是守护线程？他有什么特点？', link: '/04-Java并发篇/什么是守护线程？他有什么特点？' },
       { text: '用户线程与守护线程区别', link: '/04-Java并发篇/用户线程与守护线程区别' },
       { text: '线程的基本方法（Thread类的方法）', link: '/04-Java并发篇/线程的基本方法（Thread类的方法）' },
       { text: 'Thread类的特性？', link: '/04-Java并发篇/Thread类的特性？' },
@@ -67,6 +69,17 @@ export default [
       { text: '利用线程池批量删除数据，数据量突然增大怎么办？', link: '/04-Java并发篇/利用线程池批量删除数据，数据量突然增大怎么办？' },
       { text: 'Java中有哪些队列？', link: '/04-Java并发篇/Java中有哪些队列？' },
       { text: '阻塞队列原理？', link: '/04-Java并发篇/阻塞队列原理？' },
+      { text: '线程池的异步任务执行完后，如何回调', link: '/04-Java并发篇/线程池的异步任务执行完后，如何回调' },
+      { text: '你理解Java线程池原理吗？', link: '/04-Java并发篇/你理解Java线程池原理吗？' },
+      { text: '你的项目中是如何使用线程池的？', link: '/04-Java并发篇/你的项目中是如何使用线程池的？' },
+      { text: '如何设置Java线程池的线程数（实际工作中）？', link: '/04-Java并发篇/如何设置Java线程池的线程数（实际工作中）？' },
+
+      { text: '线程池如何知道一个线程的任务已经执行完毕了？（小米）', link: '/04-Java并发篇/线程池如何知道一个线程的任务已经执行完毕了？（小米）' },
+      { text: 'Java并发库中提供了哪些线程池实现？它们有什么区别？', link: '/04-Java并发篇/Java并发库中提供了哪些线程池实现？它们有什么区别？' },
+      { text: 'Java中的Delay和ScheduledThreadPool有什么区别？', link: '/04-Java并发篇/Java中的Delay和ScheduledThreadPool有什么区别？' },
+      { text: '什么是Java的Timer？', link: '/04-Java并发篇/什么是Java的Timer？' },
+      { text: '什么叫做阻塞队列的有界和无解？', link: '/04-Java并发篇/什么叫做阻塞队列的有界和无解？' },
+
 
     ]
   },
@@ -74,7 +87,38 @@ export default [
     text: '锁',
     collapsed: false,
     items: [
+      { text: '一道题搞懂所有锁', link: '/04-Java并发篇/一道题搞懂所有锁' },
       { text: '如何优化Java中的锁？', link: '/04-Java并发篇/如何优化Java中的锁？' },
+      { text: 'reentrantLock是如何实现公平锁和非公平锁？', link: '/04-Java并发篇/reentrantLock是如何实现公平锁和非公平锁？' },
+      { text: 'reentrantLock的实现原理？', link: '/04-Java并发篇/reentrantLock的实现原理？' },
+      { text: '你了解Java中的读写锁吗？', link: '/04-Java并发篇/你了解Java中的读写锁吗？' },
+      { text: '乐观锁如果通过数据库实现，并发情况下，数据库如何保证一致', link: '/04-Java并发篇/乐观锁如果通过数据库实现，并发情况下，数据库如何保证一致' },
+      { text: '什么是自旋锁？自旋锁的优缺点', link: '/04-Java并发篇/什么是自旋锁？自旋锁的优缺点' },
+      { text: '自旋锁时间阈值', link: '/04-Java并发篇/自旋锁时间阈值' },
+      { text: '什么是可重入锁（递归锁）？', link: '/04-Java并发篇/什么是可重入锁（递归锁）？' },
+      { text: 'ReentrantLock和synchronized的区别？', link: '/04-Java并发篇/ReentrantLock和synchronized的区别？' },
+      { text: '什么是可重入锁及使用场景？', link: '/04-Java并发篇/什么是可重入锁及使用场景？' },
+      { text: '可重入锁实现原理', link: '/04-Java并发篇/可重入锁实现原理' },
+      { text: '锁升级机制是怎样的', link: '/04-Java并发篇/锁升级机制是怎样的' },
+      { text: '常用的锁都有哪些，适用的场景', link: '/04-Java并发篇/常用的锁都有哪些，适用的场景' },
+      { text: 'Lock常用的实现类？', link: '/04-Java并发篇/Lock常用的实现类？' },
+      { text: 'Locak的实现方法？', link: '/04-Java并发篇/Locak的实现方法？' },
+      { text: 'ReentrantLock的实现', link: '/04-Java并发篇/ReentrantLock的实现' },
+      { text: 'ReadWriteLock的整体实现', link: '/04-Java并发篇/ReadWriteLock的整体实现' },
+      { text: 'synchronized同步锁有哪几种方法？', link: '/04-Java并发篇/synchronized同步锁有哪几种方法？' },
+      { text: '如何选择同步锁对象？如何设定同步代码访问？', link: '/04-Java并发篇/如何选择同步锁对象？如何设定同步代码访问？' },
+      { text: 'Java中的synchronized是怎么实现的？（底层原理）', link: '/04-Java并发篇/Java中的synchronized是怎么实现的？（底层原理）' },
+      { text: 'synchronized是可重入锁吗？它的重入实现原理？', link: '/04-Java并发篇/synchronized是可重入锁吗？它的重入实现原理？' },
+      { text: 'synchronized能否被打断，什么情况下打断', link: '/04-Java并发篇/synchronized能否被打断，什么情况下打断' },
+      { text: 'synchronized的不同作用范围有什么区别', link: '/04-Java并发篇/synchronized的不同作用范围有什么区别' },
+      { text: '为什么wait和notify必须要在synchronized代码块使用？', link: '/04-Java并发篇/为什么wait和notify必须要在synchronized代码块使用？' },
+      { text: 'Java中的synchronized轻量级锁是否会进行自旋？', link: '/04-Java并发篇/Java中的synchronized轻量级锁是否会进行自旋？' },
+      { text: 'Java中的synchronized升级到重量级锁时，会发生什么？', link: '/04-Java并发篇/Java中的synchronizeds升级到重量级锁时，会发生什么？' },
+      { text: '什么是Java中的锁自适应自旋？', link: '/04-Java并发篇/什么是Java中的锁自适应自旋？' },
+      { text: 'lock和synchronized的区别？', link: '/04-Java并发篇/lock和synchronized的区别？' },
+      { text: 'Lock的公平锁与非公平锁', link: '/04-Java并发篇/Lock的公平锁与非公平锁' },
+      { text: '为什么会有公平锁与非公平锁的设计？为什么要默认非公平？', link: '/04-Java并发篇/为什么会有公平锁与非公平锁的设计？为什么要默认非公平？' },
+      { text: '什么时候用公平锁？什么时候用非公平锁？', link: '/04-Java并发篇/什么时候用公平锁？什么时候用非公平锁？' },
 
     ]
   },
@@ -82,7 +126,9 @@ export default [
     text: '并发工具',
     collapsed: false,
     items: [
+      { text: '你使用过哪些Java并发工具？', link: '/04-Java并发篇/你使用过哪些Java并发工具？' },
       { text: '什么是Java的Semaphore？', link: '/04-Java并发篇/什么是Java的Semaphore？' },
+      { text: 'Semaphore信号量的使用', link: '/04-Java并发篇/Semaphore信号量的使用' },
       { text: '什么是Java的CycliBarrier？', link: '/04-Java并发篇/什么是Java的CycliBarrier？' },
       { text: '什么是Java的CountDownLatch？countdownLatch用法', link: '/04-Java并发篇/什么是Java的CountDownLatch？countdownLatch用法' },
       { text: '什么是Java的CyclicBarrier？CyclicBarrier用法？', link: '/04-Java并发篇/什么是Java的CyclicBarrier？CyclicBarrier用法？' },
@@ -90,13 +136,6 @@ export default [
       { text: '什么是FutureTask？', link: '/04-Java并发篇/什么是FutureTask？' },
       { text: '什么是Java的CompletableFuture？', link: '/04-Java并发篇/什么是Java的CompletableFuture？' },
 
-    ]
-  },
-  {
-    text: '实战',
-    collapsed: false,
-    items: [
-      { text: '怎么让3个线程按顺序执行？', link: '/04-Java并发篇/怎么让3个线程按顺序执行？' },
     ]
   },
   {
@@ -115,7 +154,7 @@ export default [
 
       { text: '死锁的发生原因？怎么避免？', link: '/04-Java并发篇/死锁的发生原因？怎么避免？' },
       { text: '排除死锁的方式有哪些？', link: '/04-Java并发篇/排除死锁的方式有哪些？' },
-      { text: '什么是协程？Java支持协程吗？', link: '/04-Java并发篇/什么是协程？Java支持协程吗？' },
+
       { text: '什么是Java中的线程同步？', link: '/04-Java并发篇/什么是Java中的线程同步？' },
       { text: '什么是Java中的ABA问题？', link: '/04-Java并发篇/什么是Java中的ABA问题？' },
       { text: 'Java内存模型（JMM）？', link: '/04-Java并发篇/Java内存模型（JMM）？' },
@@ -150,58 +189,16 @@ export default [
       { text: 'CAS的缺点？', link: '/04-Java并发篇/CAS的缺点？' },
       { text: '说说Java中的原子类？', link: '/04-Java并发篇/说说Java中的原子类？' },
       { text: '说说JUC中的累加器？', link: '/04-Java并发篇/说说JUC中的累加器？' },
-      { text: '什么是自旋锁？自旋锁的优缺点', link: '/04-Java并发篇/什么是自旋锁？自旋锁的优缺点' },
-      { text: '自旋锁时间阈值', link: '/04-Java并发篇/自旋锁时间阈值' },
-      { text: '什么是可重入锁（递归锁）？', link: '/04-Java并发篇/什么是可重入锁（递归锁）？' },
-      { text: 'ReentrantLock和synchronized的区别？', link: '/04-Java并发篇/ReentrantLock和synchronized的区别？' },
-      { text: '什么是可重入锁及使用场景？', link: '/04-Java并发篇/什么是可重入锁及使用场景？' },
-      { text: '可重入锁实现原理', link: '/04-Java并发篇/可重入锁实现原理' },
-      { text: '锁升级机制是怎样的', link: '/04-Java并发篇/锁升级机制是怎样的' },
-      { text: '常用的锁都有哪些，适用的场景', link: '/04-Java并发篇/常用的锁都有哪些，适用的场景' },
-      { text: 'Lock常用的实现类？', link: '/04-Java并发篇/Lock常用的实现类？' },
-      { text: 'Locak的实现方法？', link: '/04-Java并发篇/Locak的实现方法？' },
-      { text: 'ReentrantLock的实现', link: '/04-Java并发篇/ReentrantLock的实现' },
-      { text: 'Semaphore信号量的使用', link: '/04-Java并发篇/Semaphore信号量的使用' },
-      { text: 'Semaphore类', link: '/04-Java并发篇/Semaphore类' },
-      { text: 'synchronized同步锁有哪几种方法？', link: '/04-Java并发篇/synchronized同步锁有哪几种方法？' },
-      { text: '如何选择同步锁对象？如何设定同步代码访问？', link: '/04-Java并发篇/如何选择同步锁对象？如何设定同步代码访问？' },
-      { text: 'Java中的synchronized是怎么实现的？（底层原理）', link: '/04-Java并发篇/Java中的synchronized是怎么实现的？（底层原理）' },
-      { text: 'synchronized是可重入锁吗？它的重入实现原理？', link: '/04-Java并发篇/synchronized是可重入锁吗？它的重入实现原理？' },
-      { text: 'synchronized能否被打断，什么情况下打断', link: '/04-Java并发篇/synchronized能否被打断，什么情况下打断' },
-      { text: 'synchronized的不同作用范围有什么区别', link: '/04-Java并发篇/synchronized的不同作用范围有什么区别' },
-      { text: '为什么wait和notify必须要在synchronized代码块使用？', link: '/04-Java并发篇/为什么wait和notify必须要在synchronized代码块使用？' },
-      { text: 'Java中的synchronized轻量级锁是否会进行自旋？', link: '/04-Java并发篇/Java中的synchronized轻量级锁是否会进行自旋？' },
-      { text: 'Java中的synchronized升级到重量级锁时，会发生什么？', link: '/04-Java并发篇/Java中的synchronizeds升级到重量级锁时，会发生什么？' },
-      { text: '什么是Java中的锁自适应自旋？', link: '/04-Java并发篇/什么是Java中的锁自适应自旋？' },
-      { text: 'lock和synchronized的区别？', link: '/04-Java并发篇/lock和synchronized的区别？' },
-      { text: '线程池的异步任务执行完后，如何回调', link: '/04-Java并发篇/线程池的异步任务执行完后，如何回调' },
-      { text: '你理解Java线程池原理吗？', link: '/04-Java并发篇/你理解Java线程池原理吗？' },
-      { text: '你的项目中是如何使用线程池的？', link: '/04-Java并发篇/你的项目中是如何使用线程池的？' },
-      { text: '如何设置Java线程池的线程数（实际工作中）？', link: '/04-Java并发篇/如何设置Java线程池的线程数（实际工作中）？' },
 
-      { text: '线程池如何知道一个线程的任务已经执行完毕了？（小米）', link: '/04-Java并发篇/线程池如何知道一个线程的任务已经执行完毕了？（小米）' },
-      { text: 'Java并发库中提供了哪些线程池实现？它们有什么区别？', link: '/04-Java并发篇/Java并发库中提供了哪些线程池实现？它们有什么区别？' },
-      { text: 'Java中的Delay和ScheduledThreadPool有什么区别？', link: '/04-Java并发篇/Java中的Delay和ScheduledThreadPool有什么区别？' },
-      { text: '什么是Java的Timer？', link: '/04-Java并发篇/什么是Java的Timer？' },
-      { text: '什么叫做阻塞队列的有界和无解？', link: '/04-Java并发篇/什么叫做阻塞队列的有界和无解？' },
-      { text: 'ReadWriteLock的整体实现', link: '/04-Java并发篇/ReadWriteLock的整体实现' },
-      { text: 'Lock的公平锁与非公平锁', link: '/04-Java并发篇/Lock的公平锁与非公平锁' },
-      { text: '为什么会有公平锁与非公平锁的设计？为什么要默认非公平？', link: '/04-Java并发篇/为什么会有公平锁与非公平锁的设计？为什么要默认非公平？' },
-      { text: '什么时候用公平锁？什么时候用非公平锁？', link: '/04-Java并发篇/什么时候用公平锁？什么时候用非公平锁？' },
+
+
       { text: '你使用过Java中哪些原子类？', link: '/04-Java并发篇/你使用过Java中哪些原子类？' },
       { text: 'AtomicInteger的实现方式及场景', link: '/04-Java并发篇/AtomicInteger的实现方式及场景' },
       { text: '你使用过Java中的累加器吗？', link: '/04-Java并发篇/你使用过Java中的累加器吗？' },
       { text: '你了解时间轮（Time Wheel）吗？他在Java中有哪些应用场景？', link: '/04-Java并发篇/你了解时间轮（Time Wheel）吗？他在Java中有哪些应用场景？' },
-      { text: '你使用过哪些Java并发工具？', link: '/04-Java并发篇/你使用过哪些Java并发工具？' },
-      { text: '什么是守护线程？他有什么特点？', link: '/04-Java并发篇/什么是守护线程？他有什么特点？' },
-      { text: 'reentrantLock是如何实现公平锁和非公平锁？', link: '/04-Java并发篇/reentrantLock是如何实现公平锁和非公平锁？' },
-      { text: 'reentrantLock的实现原理？', link: '/04-Java并发篇/reentrantLock的实现原理？' },
-      { text: '你了解Java中的读写锁吗？', link: '/04-Java并发篇/你了解Java中的读写锁吗？' },
-
 
       { text: '什么是Java的ForkJoinPool？', link: '/04-Java并发篇/什么是Java的ForkJoinPool？' },
-      { text: '乐观锁如果通过数据库实现，并发情况下，数据库如何保证一致', link: '/04-Java并发篇/乐观锁如果通过数据库实现，并发情况下，数据库如何保证一致' },
-      { text: '一道题搞懂所有锁', link: '/04-Java并发篇/一道题搞懂所有锁' },
+
 
 
     ]
@@ -210,6 +207,7 @@ export default [
     text: '实战',
     collapsed: false,
     items: [
+      { text: '怎么让3个线程按顺序执行？', link: '/04-Java并发篇/怎么让3个线程按顺序执行？' },
       { text: '如何控制同时只有两个线程访问', link: '/04-Java并发篇/如何控制同时只有两个线程访问' },
     ]
   },
