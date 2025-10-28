@@ -32,7 +32,6 @@ export default [
       { text: 'Java的线程的优先级是什么？有什么用？', link: '/04-Java并发篇/Java的线程的优先级是什么？有什么用？' },
       { text: 'join方法有什么用？什么原理？', link: '/04-Java并发篇/join方法有什么用？什么原理？' },
 
-
       { text: 'sleep和wait的主要区别？', link: '/04-Java并发篇/sleep和wait的主要区别？' },
       { text: 'sleep和wait、yield方法有什么区别？', link: '/04-Java并发篇/sleep和wait、yield方法有什么区别？' },
       { text: 'Thread.sleep(0)有意义吗？有什么用？', link: '/04-Java并发篇/Thread.sleep(0)有意义吗？有什么用？' },
@@ -45,6 +44,48 @@ export default [
       { text: 'wait和notify的虚假唤醒的产生原因及如何解决', link: '/04-Java并发篇/wait和notify的虚假唤醒的产生原因及如何解决' },
       { text: '怎么理解wait、notify、notifyAll方法？', link: '/04-Java并发篇/怎么理解wait、notify、notifyAll方法？' },
 
+      {
+        text: '三大特性',
+        collapsed: false,
+        items: [
+          { text: 'Java内存模型（JMM）？', link: '/04-Java并发篇/Java内存模型（JMM）？' },
+          { text: '线程的安全三大特性', link: '/04-Java并发篇/线程的安全三大特性' },
+          { text: 'JMM规范下，三大特性？ ', link: '/04-Java并发篇/JMM规范下，三大特性？ ' },
+          { text: '什么是Java的happens-before规则？（JMM规范）', link: '/04-Java并发篇/什么是Java的happens-before规则？（JMM规范）' },
+          { text: 'volatile关键字的作用？', link: '/04-Java并发篇/volatile关键字的作用？' },
+          { text: '什么是Java中的指令重排？', link: '/04-Java并发篇/什么是Java中的指令重排？' },
+          { text: '为什么指令重排能够提高性能？', link: '/04-Java并发篇/为什么指令重排能够提高性能？' },
+          { text: 'volatile如何防止指令重排？', link: '/04-Java并发篇/volatile如何防止指令重排？' },
+          { text: 'volatile保证线程的可见性和有序性，不保证原子性是为什么？', link: '/04-Java并发篇/volatile保证线程的可见性和有序性，不保证原子性是为什么？' },
+          { text: '什么是内存屏障？', link: '/04-Java并发篇/什么是内存屏障' },
+          { text: 'final关键字能否保证变量的可见性？', link: '/04-Java并发篇/final关键字能否保证变量的可见性？' },
+        ]
+      },
+
+      { text: '线程间的通信方式？', link: '/04-Java并发篇/线程间的通信方式？' },
+      { text: 'JVM的线程调度是什么？', link: '/04-Java并发篇/JVM的线程调度是什么？' },
+      { text: '引起CPU进行上下文切换的原因', link: '/04-Java并发篇/引起CPU进行上下文切换的原因' },
+      { text: '线程什么时候主动放弃CPU', link: '/04-Java并发篇/线程什么时候主动放弃CPU' },
+
+
+      { text: '死锁的发生原因？怎么避免？', link: '/04-Java并发篇/死锁的发生原因？怎么避免？' },
+      { text: '排除死锁的方式有哪些？', link: '/04-Java并发篇/排除死锁的方式有哪些？' },
+
+      { text: '什么是Java中的线程同步？', link: '/04-Java并发篇/什么是Java中的线程同步？' },
+      { text: '什么是Java中的ABA问题？', link: '/04-Java并发篇/什么是Java中的ABA问题？' },
+
+
+      { text: 'Java中线程安全是什么意思？', link: '/04-Java并发篇/Java中线程安全是什么意思？' },
+      { text: '你是怎么理解线程安全问题的？', link: '/04-Java并发篇/你是怎么理解线程安全问题的？' },
+      { text: 'Java中线程之间是如何通信的？', link: '/04-Java并发篇/Java中线程之间是如何通信的？' },
+      { text: '谈谈你对AQS的理解？', link: '/04-Java并发篇/谈谈你对AQS的理解' },
+      { text: '谈谈你对CAS的理解？Compare-And-Swap', link: '/04-Java并发篇/谈谈你对CAS的理解？Compare-And-Swap' },
+      { text: 'Unsafe', link: '/04-Java并发篇/Unsafe' },
+      { text: 'CAS的缺点？', link: '/04-Java并发篇/CAS的缺点？' },
+
+      { text: '你了解时间轮（Time Wheel）吗？他在Java中有哪些应用场景？', link: '/04-Java并发篇/你了解时间轮（Time Wheel）吗？他在Java中有哪些应用场景？' },
+
+      { text: '什么是Java的ForkJoinPool？', link: '/04-Java并发篇/什么是Java的ForkJoinPool？' },
     ]
   },
   {
@@ -120,6 +161,23 @@ export default [
       { text: '为什么会有公平锁与非公平锁的设计？为什么要默认非公平？', link: '/04-Java并发篇/为什么会有公平锁与非公平锁的设计？为什么要默认非公平？' },
       { text: '什么时候用公平锁？什么时候用非公平锁？', link: '/04-Java并发篇/什么时候用公平锁？什么时候用非公平锁？' },
 
+      { text: '什么是LockSupport类？Park和unPark的使用', link: '/04-Java并发篇/什么是LockSupport类？Park和unPark的使用' },
+      { text: 'LockSupport的park/unpark为什么可以突破wait/notify的原有调用顺序？', link: '/04-Java并发篇/LockSupport的park、unpark为什么可以突破wait、notify的原有调用顺序？' },
+      { text: 'LockSupport的park/unpark为什么唤醒两次后阻塞两次，但最终结果还是会阻塞线程？', link: '/04-Java并发篇/LockSupport的park、unpark为什么唤醒两次后阻塞两次，但最终结果还是会阻塞线程？' },
+
+    ]
+  },
+  {
+    text: '原子类',
+    collapsed: false,
+    items: [
+      { text: '说说Java中的原子类？', link: '/04-Java并发篇/说说Java中的原子类？' },
+      { text: '说说JUC中的累加器？', link: '/04-Java并发篇/说说JUC中的累加器？' },
+
+
+      { text: '你使用过Java中哪些原子类？', link: '/04-Java并发篇/你使用过Java中哪些原子类？' },
+      { text: 'AtomicInteger的实现方式及场景', link: '/04-Java并发篇/AtomicInteger的实现方式及场景' },
+      { text: '你使用过Java中的累加器吗？', link: '/04-Java并发篇/你使用过Java中的累加器吗？' },
     ]
   },
   {
@@ -128,10 +186,8 @@ export default [
     items: [
       { text: '你使用过哪些Java并发工具？', link: '/04-Java并发篇/你使用过哪些Java并发工具？' },
       { text: '什么是Java的Semaphore？', link: '/04-Java并发篇/什么是Java的Semaphore？' },
-      { text: 'Semaphore信号量的使用', link: '/04-Java并发篇/Semaphore信号量的使用' },
-      { text: '什么是Java的CycliBarrier？', link: '/04-Java并发篇/什么是Java的CycliBarrier？' },
-      { text: '什么是Java的CountDownLatch？countdownLatch用法', link: '/04-Java并发篇/什么是Java的CountDownLatch？countdownLatch用法' },
-      { text: '什么是Java的CyclicBarrier？CyclicBarrier用法？', link: '/04-Java并发篇/什么是Java的CyclicBarrier？CyclicBarrier用法？' },
+      { text: '什么是Java的CountDownLatch？', link: '/04-Java并发篇/什么是Java的CountDownLatch？' },
+      { text: '什么是Java的CyclicBarrier？', link: '/04-Java并发篇/什么是Java的CyclicBarrier？' },
       { text: '什么是Java的StampedLock？', link: '/04-Java并发篇/什么是Java的StampedLock？' },
       { text: '什么是FutureTask？', link: '/04-Java并发篇/什么是FutureTask？' },
       { text: '什么是Java的CompletableFuture？', link: '/04-Java并发篇/什么是Java的CompletableFuture？' },
@@ -139,35 +195,9 @@ export default [
     ]
   },
   {
-    text: 'Java并发篇',
+    text: '并发容器',
+    collapsed: false,
     items: [
-
-
-      { text: '线程间的通信方式？', link: '/04-Java并发篇/线程间的通信方式？' },
-      { text: 'JVM的线程调度是什么？', link: '/04-Java并发篇/JVM的线程调度是什么？' },
-      { text: '引起CPU进行上下文切换的原因', link: '/04-Java并发篇/引起CPU进行上下文切换的原因' },
-      { text: '线程什么时候主动放弃CPU', link: '/04-Java并发篇/线程什么时候主动放弃CPU' },
-      { text: '什么是LockSupport类？Park和unPark的使用', link: '/04-Java并发篇/什么是LockSupport类？Park和unPark的使用' },
-      { text: 'LockSupport的park/unpark为什么可以突破wait/notify的原有调用顺序？', link: '/04-Java并发篇/LockSupport的park、unpark为什么可以突破wait、notify的原有调用顺序？' },
-      { text: 'LockSupport的park/unpark为什么唤醒两次后阻塞两次，但最终结果还是会阻塞线程？', link: '/04-Java并发篇/LockSupport的park、unpark为什么唤醒两次后阻塞两次，但最终结果还是会阻塞线程？' },
-
-
-      { text: '死锁的发生原因？怎么避免？', link: '/04-Java并发篇/死锁的发生原因？怎么避免？' },
-      { text: '排除死锁的方式有哪些？', link: '/04-Java并发篇/排除死锁的方式有哪些？' },
-
-      { text: '什么是Java中的线程同步？', link: '/04-Java并发篇/什么是Java中的线程同步？' },
-      { text: '什么是Java中的ABA问题？', link: '/04-Java并发篇/什么是Java中的ABA问题？' },
-      { text: 'Java内存模型（JMM）？', link: '/04-Java并发篇/Java内存模型（JMM）？' },
-      { text: '线程的安全三大特性', link: '/04-Java并发篇/线程的安全三大特性' },
-      { text: 'JMM规范下，三大特性？ ', link: '/04-Java并发篇/JMM规范下，三大特性？ ' },
-      { text: '什么是Java的happens-before规则？（JMM规范）', link: '/04-Java并发篇/什么是Java的happens-before规则？（JMM规范）' },
-      { text: 'volatile关键字的作用？', link: '/04-Java并发篇/volatile关键字的作用？' },
-      { text: '什么是Java中的指令重排？', link: '/04-Java并发篇/什么是Java中的指令重排？' },
-      { text: '为什么指令重排能够提高性能？', link: '/04-Java并发篇/为什么指令重排能够提高性能？' },
-      { text: 'volatile如何防止指令重排？', link: '/04-Java并发篇/volatile如何防止指令重排？' },
-      { text: 'volatile保证线程的可见性和有序性，不保证原子性是为什么？', link: '/04-Java并发篇/volatile保证线程的可见性和有序性，不保证原子性是为什么？' },
-      { text: '什么是内存屏障？', link: '/04-Java并发篇/什么是内存屏障' },
-      { text: 'final关键字能否保证变量的可见性？', link: '/04-Java并发篇/final关键字能否保证变量的可见性？' },
       { text: 'Java中为什么需要使用ThreadLocal？ThreadLocal原理', link: '/04-Java并发篇/Java中为什么需要使用ThreadLocal？ThreadLocal原理' },
       { text: 'ThreadLocal有哪些使用场景？', link: '/04-Java并发篇/ThreadLocal有哪些使用场景？' },
       { text: 'ThreadLocal慎用的场景', link: '/04-Java并发篇/ThreadLocal慎用的场景' },
@@ -180,29 +210,10 @@ export default [
       { text: '什么是Java中的InheritableThreadLocal？', link: '/04-Java并发篇/什么是Java中的InheritableThreadLocal？' },
       { text: '什么是Java中的TransmittableThreadLocal？', link: '/04-Java并发篇/什么是Java中的TransmittableThreadLocal？' },
       { text: '为什么Netty不适用ThreadLocal而是自定义FastThreadLocal？', link: '/04-Java并发篇/为什么Netty不适用ThreadLocal而是自定义FastThreadLocal？' },
-      { text: 'Java中线程安全是什么意思？', link: '/04-Java并发篇/Java中线程安全是什么意思？' },
-      { text: '你是怎么理解线程安全问题的？', link: '/04-Java并发篇/你是怎么理解线程安全问题的？' },
-      { text: 'Java中线程之间是如何通信的？', link: '/04-Java并发篇/Java中线程之间是如何通信的？' },
-      { text: '谈谈你对AQS的理解？', link: '/04-Java并发篇/谈谈你对AQS的理解' },
-      { text: '谈谈你对CAS的理解？Compare-And-Swap', link: '/04-Java并发篇/谈谈你对CAS的理解？Compare-And-Swap' },
-      { text: 'Unsafe', link: '/04-Java并发篇/Unsafe' },
-      { text: 'CAS的缺点？', link: '/04-Java并发篇/CAS的缺点？' },
-      { text: '说说Java中的原子类？', link: '/04-Java并发篇/说说Java中的原子类？' },
-      { text: '说说JUC中的累加器？', link: '/04-Java并发篇/说说JUC中的累加器？' },
-
-
-
-      { text: '你使用过Java中哪些原子类？', link: '/04-Java并发篇/你使用过Java中哪些原子类？' },
-      { text: 'AtomicInteger的实现方式及场景', link: '/04-Java并发篇/AtomicInteger的实现方式及场景' },
-      { text: '你使用过Java中的累加器吗？', link: '/04-Java并发篇/你使用过Java中的累加器吗？' },
-      { text: '你了解时间轮（Time Wheel）吗？他在Java中有哪些应用场景？', link: '/04-Java并发篇/你了解时间轮（Time Wheel）吗？他在Java中有哪些应用场景？' },
-
-      { text: '什么是Java的ForkJoinPool？', link: '/04-Java并发篇/什么是Java的ForkJoinPool？' },
-
-
-
     ]
+
   },
+
   {
     text: '实战',
     collapsed: false,
@@ -211,4 +222,12 @@ export default [
       { text: '如何控制同时只有两个线程访问', link: '/04-Java并发篇/如何控制同时只有两个线程访问' },
     ]
   },
+  {
+    text: '参考',
+    collapsed: false,
+    items: [
+      { text: 'Java-concurrency', link: 'https://github.com/NHKNHKNHK/Java-concurrency/blob/master' },
+    
+    ]
+  }
 ]
