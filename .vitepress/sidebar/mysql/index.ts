@@ -175,6 +175,7 @@ export default [
             { text: '如何在MySQL中监控和优化慢SQL？', link: basePath + '如何在MySQL中监控和优化慢SQL？' },
             { text: 'MySQL中如何解决数据深度分页的问题？', link: basePath + 'MySQL中如何解决数据深度分页的问题？' },
             { text: '单个索引的大小会对B+树造成什么影响？', link: basePath + '单个索引的大小会对B+树造成什么影响？' },
+            { text: 'MySQL是否支持存储emoji', link: basePath + 'MySQL是否支持存储emoji' },
         ]
     },
     {
