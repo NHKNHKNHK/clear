@@ -172,9 +172,10 @@ mysql> show profile cpu,block io for query 6;
 
 ![MySQL8执行原理](./assets/MySQL8执行原理-3.png)
 
-
 :::tip
+
 profile 与 profiles 都是MySQL中的提供的性能分析工具
+
 :::
 
 ## MySQL5.7中SQL执行原理
@@ -186,7 +187,6 @@ profile 与 profiles 都是MySQL中的提供的性能分析工具
 其实，在MySQL5.7中，查询缓存的默认状态是关闭的。
 
 这里我们需要 `显式开启查询缓存模式`。在MySQL5.7中如下设置：
-
 
 ### 1、配置文件中开启查询缓存
 
@@ -298,7 +298,7 @@ SQL> select * from player where player_id = :player_id;
 
 因此，**我们可以通过使用绑定变量来减少硬解析，减少 Oracle 的解析工作量**。但是这种方式也有缺点，使用动态 SQL 的方式，因为参数不同，会导致 SQL 的执行效率不同，同时 SQL 优化也会比较困难。
 
-**Oracle的架构图**：
+#### Oracle的架构图
 
 ![Oracle架构图](./assets/Oracle架构图.png)
 
@@ -306,6 +306,6 @@ SQL> select * from player where player_id = :player_id;
 
 ![Oracle架构简图](./assets/Oracle架构简图.png)
 
-**小结**：
+#### 小结
 
 Oracle 和 MySQL 在进行 SQL 的查询上面有软件实现层面的差异。Oracle 提出了共享池的概念，通过共享池来判断是进行软解析，还是硬解析。
