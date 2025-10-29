@@ -33,19 +33,21 @@ export default [
       { text: '静态（类）变量和实例变量的区别', link: basePath + '静态（类）变量和实例变量的区别' },
       { text: '静态（类）方法和实例方法的区别', link: basePath + '静态（类）方法和实例方法的区别' },
       { text: '什么是Java的迭代器', link: basePath + '什么是Java的迭代器' },
-      { text: '怎么判断一个链条是不是环形链表', link: basePath + '怎么判断一个链条是不是环形链表' },
-      ,
+      { text: '怎么判断一个链表是不是环形链表', link: basePath + '怎么判断一个链表是不是环形链表' },
+
       { text: 'Java中的参数传递是按值还是按引用', link: basePath + 'Java中的参数传递是按值还是按引用' },
       { text: 'Java中方法参数传值还是传引用', link: basePath + 'Java中方法参数传值还是传引用' },
       { text: 'Java中的可变类与不可变类', link: basePath + 'Java中的可变类与不可变类' },
       { text: 'String对象真的不可变吗', link: basePath + 'String对象真的不可变吗' },
       { text: 'Stream流中的map和flatMap方法的区别', link: basePath + 'Stream流中的map和flatMap方法的区别' },
+      { text: 'Stream中map、peek、forEach方法的区别', link: basePath + 'Stream中map、peek、forEach方法的区别' },
       { text: 'Java中包装类与基础类型的区别', link: basePath + 'Java中包装类与基础类型的区别' },
       { text: '什么是自动装箱和拆箱', link: basePath + '什么是自动装箱和拆箱' },
       { text: 'int和Integer装箱是怎么实现的', link: basePath + 'int和Integer装箱是怎么实现的' },
       { text: 'Integer的构造器在Java8后有变动', link: basePath + 'Integer的构造器在Java8后有变动' },
       { text: 'Integer类型的数值比较', link: basePath + 'Integer类型的数值比较' },
       { text: '什么是Java中的Integer缓存池', link: basePath + '什么是Java中的Integer缓存池' },
+
       { text: 'hashCode和equal方法是什么', link: basePath + 'hashCode和equal方法是什么' },
       { text: '重写hashCode()、equals()方法的基本原则', link: basePath + '重写hashCode()、equals()方法的基本原则' },
       { text: '为什么重写equals时也需要重写hashCode', link: basePath + '为什么重写equals时也需要重写hashCode' },
@@ -72,7 +74,7 @@ export default [
       { text: '父类的静态方法能否被子类重写', link: basePath + '父类的静态方法能否被子类重写' },
       { text: 'Java中一个类可以继承多个类吗', link: basePath + 'Java中一个类可以继承多个类吗' },
       { text: 'Java为什么不支持多继承', link: basePath + 'Java为什么不支持多继承' },
-      { text: '什么是内部类？与普通的区别？有什么用', link: basePath + '什么是内部类？与普通的区别？有什么用' },
+      { text: '什么是内部类？与普通的区别？有什么用？', link: basePath + '什么是内部类？与普通的区别？有什么用？' },
     ],
   },
   {
@@ -83,7 +85,7 @@ export default [
       { text: '什么是Java的反射', link: basePath + '什么是Java的反射' },
       { text: 'Java反射机制如何获取Class类的实例，Class类有哪些常用方法', link: basePath + 'Java反射机制如何获取Class类的实例，Class类有哪些常用方法' },
       { text: 'Java反射机制可以访问父类的私有方法吗', link: basePath + 'Java反射机制可以访问父类的私有方法吗' },
-      { text: 'Java反射有没有性能影响|反射到底慢在哪里', link: basePath + 'Java反射有没有性能影响、反射到底慢在哪里' },
+      { text: 'Java反射有没有性能影响、反射到底慢在哪里', link: basePath + 'Java反射有没有性能影响、反射到底慢在哪里' },
     ]
   },
   {
@@ -92,7 +94,7 @@ export default [
     items: [
       { text: '什么是接口', link: basePath + '什么是接口' },
       { text: '什么是抽象类', link: basePath + '什么是抽象类' },
-      { text: '接口和抽象类有什么区别', link: basePath + '接口和抽象类有什么区别？' }
+      { text: '接口和抽象类有什么区别', link: basePath + '接口和抽象类有什么区别' }
     ]
   },
   {

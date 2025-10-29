@@ -1,4 +1,4 @@
-# finally块一定会执行吗？
+# finally块一定会执行吗
 
 正常情况下，任何执行`try` 或者 `catch` 中的`return`语句之前，都会先执行`finally`语句，因此我们通常会将资源释放操作、业务日志的对应等操作放在finally块中。
 

@@ -1,1 +1,1 @@
-# 为什么重写equals时也需要重写hashCode？
+# 为什么重写equals时也需要重写hashCode

@@ -1,4 +1,4 @@
-# Integer类型的数值比较？
+# Integer类型的数值比较
 
 在 Java 中，Integer 是一个包装类（wrapper class），用于将基本数据类型 int 封装为对象。由于 Integer 是引用类型，因此在进行数值比较时需要注意一些细节，尤其是自动装箱（autoboxing）和缓存机制的影响
 
@@ -19,7 +19,7 @@ System.out.println(x == y); 			// true，因为存在缓存机制
 System.out.println(x.equals(y)); 		// true
 ```
 
-**基本数值比较**
+## **基本数值比较**
 
 1）使用 == 比较 Integer 对象
 
@@ -49,7 +49,7 @@ System.out.println(a.equals(b)); // 输出: true
 
 ​	**推荐使用equals方法来比较两个Integer对象**
 
-**自动装箱与缓存机制**
+## **自动装箱与缓存机制**
 
 Java 为了优化性能，在 -128 到 127 之间的 Integer 对象会被缓存（通过 Integer.valueOf() 实现）。
 
@@ -65,7 +65,7 @@ Integer n = 150; // 自动装箱
 System.out.println(m == n); // 输出: false (因为 150 不在缓存范围内)
 ```
 
-**总结**
+## **总结**
 
 ​	为了避免因自动装箱和缓存机制导致的意外行为，==始终使用 .equals() 方法 来比较 Integer 对象的值==。
 

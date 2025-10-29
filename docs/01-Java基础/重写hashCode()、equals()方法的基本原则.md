@@ -1,12 +1,12 @@
 # 重写hashCode()、equals()方法的基本原则
 
-## 重写 hashCode() 方法的基本原则？
+## 重写 hashCode() 方法的基本原则
 
 -   在程序运行时，同一个对象多次调用 hashCode() 方法应该返回相同的值。 
 -   当两个对象的 equals() 方法比较返回 true 时，这两个对象的 hashCode() 方法的返回值也应相等。 
 -   对象中用作 equals() 方法比较的 Field，都应该用来计算 hashCode 值。
 
-## 重写 equals()方法的基本原则？
+## 重写 equals()方法的基本原则
 
 -   重写 equals 方法的时候一般都需要同时复写 hashCode 方法。通常参与计算hashCode 的对象的属性也应该参与到 equals()中进行计算。 
 -   推荐：开发中直接调用 Eclipse/IDEA 里的快捷键自动重写 equals()和 hashCode()方法即可。 

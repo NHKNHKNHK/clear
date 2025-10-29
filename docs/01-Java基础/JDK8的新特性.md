@@ -1,6 +1,6 @@
-## JDK8的新特性？
+# JDK8的新特性
 
-### Java8新增了哪些新特性？
+## Java8新增了哪些新特性？
 
 -   接口的默认方法和静态方法
     -   默认方法：接口中可以定义默认方法，子类可以选择性地重写这些方法。
@@ -12,7 +12,7 @@
 -   方法引用：方法引用允许你直接引用已有的方法或构造器，而无需显式地创建Lambda表达式。
 -   移除PermGen空间：Java8移除了PermGen（永久代）空间，取而代之的是Metaspace（元空间）
 
-### 接口中的默认方法和静态方法
+## 接口中的默认方法和静态方法
 
 在jdk8之前，interface之中可以定义变量和方法，**变量必须是`public`、`static`、`final`的**，**方法必须是`public`、`abstract`的**，由于这些修饰符都是默认的，所以在书写的时候可以省略不写。
 
@@ -64,23 +64,23 @@ public class MyInterfaceImpl implements MyInterface{
 
 
 
-### Option
+## Option
 
 
 
-### HashMap底层数据结构的改变
+## HashMap底层数据结构的改变
 
 
 
-### 日期类
+## 日期类
 
 
 
-### CompletableFuture
+## CompletableFuture
 
 
 
-### Lambda
+## Lambda
 
 Java中使用Lambda表达式（Lambda expression）是为了**简化匿名内部类的代码形式**
 
@@ -131,7 +131,7 @@ lambda形参列表 -> lambda体
 
 
 
-### 函数式接口
+## 函数式接口
 
 **什么是函数式接口**
 
@@ -166,8 +166,7 @@ lambda形参列表 -> lambda体
 | 比较型接口 | Comparator\<T>  | int compare(T t1, T t2) | 有参有返回值，int     |
 
 
-
-### 方法引用
+## 方法引用
 
 方法引用是 Java 8 引入的一种简洁语法，用于直接引用已有方法或构造函数，而无需显式地使用 Lambda 表达式。它使得代码更加简洁和易读。
 
@@ -200,9 +199,7 @@ lambda形参列表 -> lambda体
     -   引用类的构造方法来创建新对象。
     -   格式：ClassName::new
 
-
-
-**静态方法引用**
+### **静态方法引用**
 
 **要求**
 
@@ -277,7 +274,7 @@ public class MethodRefTest {
 
 
 
-**实例方法引用**
+### **实例方法引用**
 
 **要求**
 
@@ -351,9 +348,7 @@ public class MethodRefTest {
 }
 ```
 
-
-
-**类 :: 实例方法** （难点）
+### **类 :: 实例方法** （难点）
 
 **要求**
 
@@ -459,9 +454,7 @@ public class MethodRefTest3 {
 }
 ```
 
-
-
-**构造器引用**
+### **构造器引用**
 
 当 Lambda 表达式是创建一个对象，并且满足 Lambda 表达式形参，正好是给创建这个对象的构造器的实参列表，就可以使用构造器引用
 
@@ -567,7 +560,7 @@ public class ConstructorRefTest {
 
 
 
-### Stream
+## Stream
 
 **Stream流是什么？**
 
@@ -582,7 +575,7 @@ Stream的主要特点
 
 
 
-**Stream 和 Collection 集合的区别**
+### **Stream 和 Collection 集合的区别**
 
 **Collection 是一种静态的内存数据结构， 讲的是数据，而 Stream 是有关计算的，讲的是计算。**前者是主要面向内存，存储在内存中，后者主要是面向 CPU，通过 CPU 实现计算
 
@@ -595,7 +588,7 @@ Stream的主要特点
 
 
 
-**操作流的典型流程**
+### **操作流的典型流程**
 
 1.  **创建一个流** 一个数据源（如：集合、数组），获取一个流
 
@@ -609,7 +602,7 @@ Stream的主要特点
 
 
 
-**Stream流分为哪几类？怎么创建？**
+### **Stream流分为哪几类？怎么创建？**
 
 ​	Stream流在Java8中主要分为两类：顺序流（Sequential Stream）和并行流（Perallel Stream）。这两类流的主要区别在于处理数据的方式和性能表现。
 
@@ -634,4 +627,3 @@ Stream的主要特点
 -   使用`Collection`接口的parallerStream()方法
 
 -   使用`Stream`类的parallel()方法将顺序流转化为并行流
-

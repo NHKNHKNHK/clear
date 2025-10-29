@@ -1,4 +1,4 @@
-# Java运行时异常和编译时异常的区别是什么？
+# Java运行时异常和编译时异常的区别是什么
 
 >   首先明确
 >
@@ -7,10 +7,11 @@
 >   ​	非运行异常 == 受检异常 == 编译时异常
 
 在 Java 中，异常分为两大类：受检异常（Checked Exceptions） 和 非受检异常（Unchecked Exceptions）
+
 -   **受检异常（Checked Exception）**：这些异常在**编译时必须被捕获或声明抛出，否则编译器会报错**。例如`IOException`、`SQLException`等。
 -   **非受检异常（Unchecked Exception）**：这些异常不需要在编译时捕获或声明抛出，编译器不会强制要求处理它们。通常是由于编程错误导致的，例如`NullPointerException`、`ArrayIndexOutOfBoundsException`等。
 
-**受检异常（Checked Exception）**
+## **受检异常（Checked Exception）**
 
 受检异常是指那些在**编译阶段**就必须处理的异常。编译器会强制要求程序员处理这些异常，否则代码无法通过编译。
 
@@ -19,7 +20,7 @@
 -   必须处理：如果方法中抛出了编译时异常，调用者**必须通过 try-catch 块捕获异常或通过 throws 关键字声明**该方法可能抛出此异常。
 -   常见类型：`IOException`、`SQLException`、`ClassNotFoundException` 、`FileNotFoundException`等。
 
-**非受检异常（Unchecked Exception）**
+## **非受检异常（Unchecked Exception）**
 
 非受检异常是指那些在**运行时**才发生的异常，编译器不会强制要求程序员处理这些异常。它们**通常是由于程序中的逻辑错误引起的**。
 

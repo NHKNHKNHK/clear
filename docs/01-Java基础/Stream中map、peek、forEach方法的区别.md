@@ -1,55 +1,5 @@
-# Stream流中的map和flatMap方法的区别
+# Stream中map、peek、forEach方法的区别
 
-map方法不会影响流中元素的个数，但是流中元素的类型、元素值可能发生变化。它的原理是按照统一的规则将现在的流中每一个元素改造为另一个对象。
-
-map方法会影响流中元素的个数，同时流中元素的类型、元素值可能发生变化。它的原理是按照某个规则将现在的流中每一个元素计算为一个新的Stream，然后最后将所有Stream合并为一个大的Stream
-
-`map` 方法
-
--   **作用**：将每个元素通过给定的函数进行转换，并生成一个新的流。
--   **返回值**：返回一个与原始流大小相同的新流，其中每个元素都是经过转换后的结果。
--   **适用场景**：当你需要对每个元素进行一对一的转换时使用
-
-```java
-List<String> words = Arrays.asList("hello", "world");
-
-List<Integer> wordLengths = words.stream()
-    .map(String::length)
-    .collect(Collectors.toList());
-
-System.out.println(wordLengths); // 输出: [5, 5]
-```
-
-`flatMap` 方法
-
--   **作用**：将每个元素通过给定的函数进行转换，并将结果流展平（flatten）为一个单一的流。
--   **返回值**：返回一个包含所有转换后元素的新流，可能会比原始流更长或更短，具体取决于转换函数的输出。
--   **适用场景**：当你需要对每个元素进行一对多的转换，或者将嵌套的流展平为一个单一的流时使用。
-
-```java
-List<List<Integer>> nestedLists = Arrays.asList(
-    Arrays.asList(1, 2),
-    Arrays.asList(3, 4)
-);
-
-List<Integer> flatList = nestedLists.stream()
-    .flatMap(List::stream)
-    .collect(Collectors.toList());
-
-System.out.println(flatList); // 输出: [1, 2, 3, 4]
-```
-
-**关键区别**
-
-| 特性         | `map`                    | `flatMap`                            |
-| :----------- | :----------------------- | :----------------------------------- |
-| **转换方式** | 一对一转换               | 一对多转换或展平嵌套流               |
-| **返回结果** | 每个元素转换为一个新元素 | 每个元素转换为多个元素或展平为单一流 |
-| **流的结构** | 维持原有的流结构         | 展平嵌套的流结构                     |
-
-
-
-## Stream中map、peek、forEach方法的区别？
 
 `map`
 
@@ -122,4 +72,3 @@ words.stream()
 -   **map**：用于转换流中的元素，生成新流。
 -   **peek**：用于调试或查看流中元素的状态，不影响流的结构。
 -   **forEach**：用于对每个元素执行副作用操作，终止流
-

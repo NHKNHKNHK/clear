@@ -1,4 +1,4 @@
-# hashCode和equal方法是什么？
+# hashCode和equal方法是什么
 
 equals方法用于比较两个对象是否相等，hashCode方法用于返回对象的哈希值，这两个方法必须一起重写，而且选择的属性必须一致，因为：
 

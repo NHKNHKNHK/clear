@@ -1,4 +1,4 @@
-# 常见的Error？
+# 常见的Error
 
 最常见的就是 `VirtualMachineError`，它有两个经典的子类：`StackOverflowError`、`OutOfMemoryError`
 

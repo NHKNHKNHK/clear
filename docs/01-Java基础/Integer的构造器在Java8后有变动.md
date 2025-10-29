@@ -1,4 +1,4 @@
-# Integer的构造器在Java8后有变动？
+# Integer的构造器在Java8后有变动
 
 ```java
 public Integer(int value) {

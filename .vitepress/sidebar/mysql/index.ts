@@ -150,14 +150,14 @@ export default [
         text: '存储引擎',
         collapsed: true,
         items: [
-
             { text: 'MySQL的存储引擎有哪些？有什么区别？', link: basePath + 'MySQL的存储引擎有哪些？有什么区别？' },
             { text: 'MySQL中InnoDB和MyISAM的区别？', link: basePath + 'MySQL中InnoDB和MyISAM的区别？' },
+            { text: 'MySQL的innodb和myisam索引的区别', link: basePath + 'MySQL的innodb和myisam索引的区别' },
             { text: '存储引擎应该如何选择？', link: basePath + '存储引擎应该如何选择？' },
             { text: 'InnoDB引擎的4大特性？', link: basePath + 'InnoDB引擎的4大特性？' },
             { text: 'InnoDB 的双写缓冲是什么？', link: basePath + 'InnoDB 的双写缓冲是什么？' },
             { text: 'MyISAM Static 和 MyISAM Dynamic 有什么区别？', link: basePath + 'MyISAM Static 和 MyISAM Dynamic 有什么区别？' },
-            { text: 'MySQL的innodb和myisam索引的区别', link: basePath + 'MySQL的innodb和myisam索引的区别' },
+            { text: 'InnoDB的一次更新事务是怎么实现的？', link: basePath + 'InnoDB的一次更新事务是怎么实现的？' },
 
         ]
     },
@@ -287,9 +287,10 @@ export default [
 
             { text: 'MySQL在如何解决数据深度分页的问题？', link: basePath + 'MySQL在如何解决数据深度分页的问题？' },
             { text: '什么是数据库脏页？', link: basePath + '什么是数据库脏页？' },
-            { text: 'mysql的redolog是什么？', link: basePath + 'mysql的redolog是什么？' },
             { text: 'mysql的binlog是什么？', link: basePath + 'mysql的binlog是什么？' },
+            { text: 'mysql的redolog是什么？', link: basePath + 'mysql的redolog是什么？' },
             { text: 'mysql的除了binlog和redolog，还有其他的什么log吗', link: basePath + 'mysql的除了binlog和redolog，还有其他的什么log吗' },
+            { text: 'binlog、redolog和undolog区别', link: basePath + 'binlog、redolog和undolog区别' },
             { text: 'Mysql的binlog有哪几种格式？', link: basePath + 'Mysql的binlog有哪几种格式？' },
             { text: 'mysql的持久性是如何保证的(Redolog)？', link: basePath + 'mysql的持久性是如何保证的(Redolog)？' },
             { text: 'InnoDB存储引擎的架构？', link: basePath + 'InnoDB存储引擎的架构？' },
@@ -306,6 +307,10 @@ export default [
         items: [
             { text: 'MySQL逻辑架构', link: basePath + 'MySQL逻辑架构' },
             { text: '数据库缓冲池（buffer pool）', link: basePath + '数据库缓冲池（buffer pool）' },
+            { text: '什么是buffer pool', link: basePath + '什么是bufferpool' },
+            { text: 'buffer pool的读写流程', link: basePath + 'bufferpool的读写流程' },
+            { text: '多个buffer pool实例是否引发并发问题', link: basePath + '多个bufferpool实例是否引发并发问题' },
+            { text: 'buffer pool与query cache的区别', link: basePath + 'bufferpool与querycache的区别' },
         ],
     }
 ]

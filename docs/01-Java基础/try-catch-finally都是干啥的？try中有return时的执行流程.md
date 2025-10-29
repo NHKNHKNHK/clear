@@ -1,10 +1,10 @@
-# try-catch-finally都是干啥的？try中有return时的执行流程？
+# try-catch-finally都是干啥的？try中有return时的执行流程
 
 `try`：用来捕获异常
 `catch`：用于处理try中捕获的异常
 `finally`：无论是否捕获或处理异常，fianlly块中的代码都会被执行。
 
-**基本结构**
+## 基本结构
 
 ```java
 try {
@@ -18,7 +18,7 @@ try {
 }
 ```
 
-**语法规则**
+## 语法规则
 
 -   try必须有
 -   finally可以无
@@ -27,7 +27,7 @@ try {
 -   若try后面没有catch，则必须有一个finally
 -   只要try里面出现异常，无论try里是否含return，出现异常下面的程序都不会再执行了
 
-**使用细节**
+## 使用细节
 
 -   将可能出现异常的代码声明在try语句中，一旦代码发现异常，就会自动生成对应的异常类对象，并将此对象抛出
 -   针对try语句抛出的异常类对象，使用catch语句进行匹配。
@@ -139,7 +139,7 @@ try{
 
 程序执行try块中return之前（包括return语句中的表达式运算）代码；有异常：执行catch块中return之前（包括return语句中的表达式运算）代码；则再执行finally块，因为finally块中有return所以提前退出。无异常：则再执行finally块，因为finally块中有return所以提前退出。
 
-**结论：**
+## 结论
 
 ​    任何执行try 或者catch中的return语句之前，都会先执行finally语句，如果finally存在的话。如果finally中有return语句，那么程序就return了，所以finally中的return是一定会被return的
 

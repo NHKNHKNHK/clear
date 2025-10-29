@@ -1,4 +1,4 @@
-# Java中Exception和Error有什么区别？
+# Java中Exception和Error有什么区别
 
 `Error` 和 `Exception` 都是`Throwable` 类的子类
 

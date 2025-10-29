@@ -1,6 +1,6 @@
-# Java反射机制如何获取Class类的实例，Class类有哪些常用方法？
+# Java反射机制如何获取Class类的实例，Class类有哪些常用方法
 
-**获取Class类的实例的四种方式**
+## **获取Class类的实例的四种方式**
 
 -   类型名.class
 -   Java对象.getClass()
@@ -46,7 +46,7 @@ Class clazz4 = cl.loadClass("类的全类名")
 
 
 
-**哪些类型可以有 Class 对象**
+## **哪些类型可以有 Class 对象**
 
 Class的实例都可以指向哪些结构呢？
 
@@ -67,8 +67,7 @@ Class的实例都可以指向哪些结构呢？
 （7）void
 
 
-
-**Class类的常用方法**
+## **Class类的常用方法**
 
 （1）获取类信息
 
