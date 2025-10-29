@@ -23,7 +23,7 @@ export default [
       { text: 'short s1 = 1; s1 = s1 + 1;有错吗?short s1 = 1; s1 += 1;有错吗', link: basePath + 'short s1 = 1 s1 = s1 + 1 有错吗 short s1 = 1  s1 += 1' },
       { text: 'Java中有哪些访问修饰符', link: basePath + 'Java中有哪些访问修饰符' },
       { text: 'private、public、protected以及不写的区别', link: basePath + 'private、public、protected以及不写的区别' },
-      { text: 'final关键字有什么用？', link: basePath + 'final关键字有什么用' },
+      { text: 'final关键字有什么用', link: basePath + 'final关键字有什么用' },
       { text: 'final、finally、finalize的区别', link: basePath + 'final、finally、finalize的区别' },
       { text: 'if-else和switch-case的区别', link: basePath + 'if-else和switch-case的区别' },
       { text: '&和&&、|和||的区别', link: basePath + '与和短路与、或和短路或的区别' },

@@ -1,4 +1,4 @@
-# if-else和switch-case的区别？
+# if-else和switch-case的区别
 
 -   适用性：
 
