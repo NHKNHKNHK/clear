@@ -150,8 +150,11 @@ export default [
         text: '存储引擎',
         collapsed: true,
         items: [
+
+            { text: 'MySQL的存储引擎', link: basePath + 'MySQL的存储引擎' },
             { text: 'MySQL的存储引擎有哪些？有什么区别？', link: basePath + 'MySQL的存储引擎有哪些？有什么区别？' },
             { text: 'MySQL中InnoDB和MyISAM的区别？', link: basePath + 'MySQL中InnoDB和MyISAM的区别？' },
+            { text: 'MySQL中InnoDB和MyISAM的如何选择？', link: basePath + 'MySQL中InnoDB和MyISAM的如何选择？' },
             { text: 'MySQL的innodb和myisam索引的区别', link: basePath + 'MySQL的innodb和myisam索引的区别' },
             { text: '存储引擎应该如何选择？', link: basePath + '存储引擎应该如何选择？' },
             { text: 'InnoDB引擎的4大特性？', link: basePath + 'InnoDB引擎的4大特性？' },
@@ -271,6 +274,7 @@ export default [
         collapsed: true,
         items: [
 
+            { text: 'MySQL的数据目录', link: basePath + 'MySQL的数据目录' },
             { text: 'MySQL 有关权限的表都有哪几个？', link: basePath + 'MySQL 有关权限的表都有哪几个？' },
 
             { text: 'MySQL的查询优化器如何选择执行计划？', link: basePath + 'MySQL的查询优化器如何选择执行计划？' },
@@ -281,9 +285,6 @@ export default [
             { text: '为什么阿里手册不推荐使用存储过程？', link: basePath + '为什么阿里手册不推荐使用存储过程？' },
             { text: '什么是视图？为什么要使用视图？', link: basePath + '什么是视图？为什么要使用视图？' },
             { text: '什么是游标？', link: basePath + '什么是游标？' },
-
-
-            { text: 'MySQL的存储引擎都有哪些？', link: basePath + 'MySQL的存储引擎都有哪些？' },
 
             { text: 'MySQL在如何解决数据深度分页的问题？', link: basePath + 'MySQL在如何解决数据深度分页的问题？' },
             { text: '什么是数据库脏页？', link: basePath + '什么是数据库脏页？' },
