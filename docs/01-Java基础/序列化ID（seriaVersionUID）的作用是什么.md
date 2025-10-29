@@ -1,4 +1,4 @@
-# 序列化ID（seriaVersionUID）的作用是什么？
+# 序列化ID（seriaVersionUID）的作用是什么
 
 在Java中，`serialVersionUID`是一个`private static final long`修饰的长整型变量，用于唯一标识一个可序列化的类。它的主要作用是在序列化和反序列化过程中确保类的版本一致性。当类的结构发生变化时（如添加、删除或修改字段），**serialVersionUID可以帮助确保旧版本的序列化数据能够与新版本的类兼容**。
 

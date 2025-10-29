@@ -1,4 +1,4 @@
-# String类的isEmpty和isBlank的区别？
+# String类的isEmpty和isBlank的区别
 
 `String` 类提供了两个方法来检查字符串是否为空或空白：`isEmpty()` 和 `isBlank()`。这两个方法的主要区别在于它们对“空白”的定义不同。
 

@@ -1,4 +1,4 @@
-# IO中的输入流和输出流有什么区别？
+# IO中的输入流和输出流有什么区别
 
 在 Java 的 I/O 流中，输入流（InputStream/Reader）和输出流（OutputStream/Writer）有明确的区别，主要体现在它们的**功能**和**数据流向**。
 

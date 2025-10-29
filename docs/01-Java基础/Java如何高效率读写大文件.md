@@ -1,4 +1,4 @@
-# Java如何高效率读写大文件？
+# Java如何高效率读写大文件
 
 -   **使用缓冲流和文件流**：简单易用，适合大多数常规文件操作，特别是当需要逐行处理时
 -   **使用Files工具类的方法**：提供了便捷的 API，代码简洁，适用于不需要复杂逻辑的文件操作。
@@ -40,7 +40,7 @@ public class BufferedStreamExample {
 }
 ```
 
-**使用 Files 工具类的方法**
+## **使用 Files 工具类的方法**
 
 Java 7 引入了 `java.nio.file.Files` 类，提供了许多便捷的方法来处理文件操作，包括读取和写入大文件。这些方法通常更简洁，并且内部已经优化了性能
 
@@ -95,7 +95,7 @@ public class FilesLineByLineExample {
 }
 ```
 
-**使用 NIO 的 FileChannel 和 Buffer**
+## **使用 NIO 的 FileChannel 和 Buffer**
 
 NIO（New Input/Output）提供了非阻塞 I/O 操作和更高效的缓冲机制，特别适合处理大文件。FileChannel 可以直接与操作系统交互，提供更高的性能。
 

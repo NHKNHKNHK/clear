@@ -1,4 +1,4 @@
-# transient关键字有什么作用？
+# transient关键字有什么作用
 
 在Java中，`transient`关键字用于标记类的成员变量，使其在序列化的过程中被忽略。
 

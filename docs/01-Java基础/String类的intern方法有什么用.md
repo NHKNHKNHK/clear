@@ -1,4 +1,4 @@
-# String类的intern方法有什么用？
+# String类的intern方法有什么用
 
 1、**查找字符串常量池**
 

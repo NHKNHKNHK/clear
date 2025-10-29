@@ -1,8 +1,8 @@
-# Java序列化是什么？
+# Java序列化是什么
 
 Java 序列化（Serialization）是将对象的状态转换为字节流的过程，以便将其保存到文件、内存或通过网络传输。反序列化（Deserialization）则是将字节流恢复为对象的过程。序列化和反序列化是 Java 中实现对象持久化和远程通信的重要机制。
 
-**主要用途**
+## **主要用途**
 
 -   **对象持久化**：将对象状态保存到磁盘，以便稍后可以恢复。
 
@@ -10,7 +10,7 @@ Java 序列化（Serialization）是将对象的状态转换为字节流的过�
 
 -   **分布式系统**：在分布式系统中，对象可以在不同的 JVM 之间传递。
 
-**实现序列化的步骤**
+## **实现序列化的步骤**
 
 要使一个类的对象可序列化，该类必须实现 `java.io.Serializable` 接口。Serializable 是一个**标记接口**，它不包含任何方法，只是用来标识该类的对象可以被序列化。
 
@@ -41,7 +41,7 @@ public class Person implements Serializable {
 }
 ```
 
-**序列化对象**
+## **序列化对象**
 
 使用 `ObjectOutputStream` 将对象写入文件或输出流。
 
@@ -63,7 +63,7 @@ public class SerializeExample {
 }
 ```
 
-**反序列化对象**
+## **反序列化对象**
 
 使用 `ObjectInputStream` 从文件或输入流读取对象。
 
@@ -87,7 +87,7 @@ public class DeserializeExample {
 
 
 
-**反序列化失败问题**
+## **反序列化失败问题**
 
 **问题1：**
 

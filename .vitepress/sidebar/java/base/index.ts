@@ -118,24 +118,32 @@ export default [
     text: 'IO流',
     collapsed: false,
     items: [
-      { text: 'Java中的I/O流是什么', link: basePath + 'Java中的IO流是什么' },
+      { text: 'Java中的IO流是什么', link: basePath + 'Java中的IO流是什么' },
       { text: 'IO中的输入流和输出流有什么区别', link: basePath + 'IO中的输入流和输出流有什么区别' },
       { text: '字节流和字符流的区别', link: basePath + '字节流和字符流的区别' },
       { text: '缓冲区和缓存的区别', link: basePath + '缓冲区和缓存的区别' },
       { text: '字节流怎么转化为字符流', link: basePath + '字节流怎么转化为字符流' },
       { text: '读写文本文件时如何处理字符编码', link: basePath + '读写文本文件时如何处理字符编码' },
-      { text: 'Java序列化是什么', link: basePath + 'Java序列化是什么' },
-      { text: '序列化ID（seriaVersionUID）的作用是什么', link: basePath + '序列化ID（seriaVersionUID）的作用是什么' },
-      { text: 'Java有哪两种序列化方式', link: basePath + 'Java有哪两种序列化方式' },
-      { text: '静态变量能不能被序列化', link: basePath + '静态变量能不能被序列化' },
-      { text: 'transient关键字有什么作用', link: basePath + 'transient关键字有什么作用' },
-      { text: 'ArrayList集合中的elementData数组为什么要加transient修饰', link: basePath + 'ArrayList集合中的elementData数组为什么要加transient修饰' },
-      { text: '序列化一个对象时，有哪些需要注意的', link: basePath + '序列化一个对象时，有哪些需要注意的' },
-      { text: '序列化中@Serial注解的作用', link: basePath + '序列化中@Serial注解的作用' },
-      { text: 'Java序列化中如果有些字段不想进行序列化如何处理', link: basePath + 'Java序列化中如果有些字段不想进行序列化如何处理' },
+
       { text: '什么是BIO、NIO、AIO', link: basePath + '什么是BIO、NIO、AIO' },
       { text: 'Java如何高效率读写大文件', link: basePath + 'Java如何高效率读写大文件' },
       { text: '如何比较两个文件的内容是否相等', link: basePath + '如何比较两个文件的内容是否相等' },
+      {
+        text: '序列化与反序列化',
+        collapsed: false,
+        items: [
+          { text: 'Java序列化是什么', link: basePath + 'Java序列化是什么' },
+          { text: '序列化ID（seriaVersionUID）的作用是什么', link: basePath + '序列化ID（seriaVersionUID）的作用是什么' },
+          { text: 'Java有哪两种序列化方式', link: basePath + 'Java有哪两种序列化方式' },
+          { text: '静态变量能不能被序列化', link: basePath + '静态变量能不能被序列化' },
+          { text: 'transient关键字有什么作用', link: basePath + 'transient关键字有什么作用' },
+          { text: 'ArrayList集合中的elementData数组为什么要加transient修饰', link: basePath + 'ArrayList集合中的elementData数组为什么要加transient修饰' },
+          { text: '序列化一个对象时，有哪些需要注意的', link: basePath + '序列化一个对象时，有哪些需要注意的' },
+          { text: '序列化中@Serial注解的作用', link: basePath + '序列化中@Serial注解的作用' },
+          { text: 'Java序列化中如果有些字段不想进行序列化如何处理', link: basePath + 'Java序列化中如果有些字段不想进行序列化如何处理' },
+
+        ]
+      }
     ]
   },
   {

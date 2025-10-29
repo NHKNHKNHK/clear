@@ -1,4 +1,4 @@
-# String、StringBuffer、StringBuilder、StringJoiner的区别？
+# String、StringBuffer、StringBuilder、StringJoiner的区别
 
 String、StringBuffer、StringBuilder是用于表示一串字符，即字符序列。StringJoiner是JDK8引入的一个String拼接工具。
 
