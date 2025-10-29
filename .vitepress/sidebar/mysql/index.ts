@@ -304,6 +304,7 @@ export default [
         collapsed: false,
         items: [
             { text: 'MySQL逻辑架构', link: basePath + 'MySQL逻辑架构' },
+            { text: '数据库缓冲池（buffer pool）', link: basePath + '数据库缓冲池（buffer pool）' },
         ],
     }
 ]
