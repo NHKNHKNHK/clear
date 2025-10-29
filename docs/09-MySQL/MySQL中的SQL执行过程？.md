@@ -99,3 +99,143 @@ SQL语句在MySQL中的执行流程是：`SQL语句 ==> 查询缓存 ==> 解析�
 
 ![1741702869474](assets/1741702869474.png)
 
+
+## MySQL8中SQL执行原理
+
+前面的结构图很复杂，我们需要抓取最核心的部分：SQL的执行原理。
+
+不同的 DBMS 的 SQL 的执行原理是相通的，只是在不同的软件中，各有各的实现路径。
+
+既然一条 SQL 语句会经历不同的模块，那我们就来看下，在不同的模块中，SQL 执行所使用的资源（时间）是怎样的。
+
+如何在 MySQL 中对一条 SQL 语句的执行时间进行分析。
+
+### 1、确认 profiling 是否开启
+
+了解查询语句底层执行的过程：`select @@profiling;` 或者 `show variables like '%profiling%'` 查看是否开启计划。
+
+开启它可以让 MySQL 收集在 SQL 执行时所使用的资源情况，命令如下：
+
+```sql
+mysql> select @@profiling;
+
+mysql> show variables like 'profiling';
+```
+
+`profiling=0` 代表关闭，我们需要把 profiling 打开，即设置为 1：
+
+```sql
+mysql> set profiling=1;
+```
+
+### 2、多次执行相同SQL查询
+
+然后我们执行一个 SQL 查询（说明：你可以执行任何一个 SQL 查询）：
+
+```sql
+mysql> select * from employees;
+```
+
+### 3、查看profiles
+
+查看当前会话所产生的所有 profiles：
+
+```sql
+mysql> show profiles; # 显示最近的几次查询
+```
+
+![MySQL8执行原理](./assets/MySQL8执行原理-1.png)
+
+### 4、查看profile
+
+显示执行计划，查看程序的执行步骤：
+
+```sql
+mysql> show profile;
+```
+
+![MySQL8执行原理](./assets/MySQL8执行原理-2.png)
+
+当然你也可以查询指定的 Query ID，比如：
+
+```sql
+mysql> show profile for query 7;
+```
+
+查询 SQL 的执行时间结果和上面是一样的。
+
+此外，还可以查询更丰富的内容：
+
+```sql
+mysql> show profile cpu,block io for query 6;
+```
+
+![MySQL8执行原理](./assets/MySQL8执行原理-3.png)
+
+
+:::tip
+profile 与 profiles 都是MySQL中的提供的性能分析工具
+:::
+
+## MySQL5.7中SQL执行原理
+
+上述操作在MySQL5.7中测试，发现前后两次相同的sql语句，执行的查询过程仍然是相同的。
+
+那这就很奇怪了，我们都知道，MySQL5.7中有查询缓存，但是为什么没有生效呢？
+
+其实，在MySQL5.7中，查询缓存的默认状态是关闭的。
+
+这里我们需要 `显式开启查询缓存模式`。在MySQL5.7中如下设置：
+
+
+### 1、配置文件中开启查询缓存
+
+在 /etc/my.cnf 中新增一行：
+
+```sql
+query_cache_type=1
+```
+
+### 2、重启mysql服务
+
+```shell
+systemctl restart mysqld
+```
+
+### 3、开启查询执行计划
+
+由于重启过服务，需要重新执行如下指令，开启profiling。
+
+```sql
+mysql> set profiling=1;
+```
+
+### 4、执行语句两次
+
+```sql
+mysql> select * from locations;
+
+mysql> select * from locations;
+```
+
+### 5、查看profiles
+
+![MySQL5.7执行原理](./assets/MySQL5.7执行原理-1.png)
+
+### 6、查看profile
+
+显示执行计划，查看程序的执行步骤：
+
+```sql
+mysql> show profile for query 1;
+```
+
+![MySQL5.7执行原理](./assets/MySQL5.7执行原理-2.png)
+
+```sql
+mysql> show profile for query 2;
+```
+
+![MySQL5.7执行原理](./assets/MySQL5.7执行原理-3.png)
+
+结论不言而喻。执行编号2时，比执行编号1时少了很多信息，从截图中可以看出查询语句直接从缓存中获取数据。
