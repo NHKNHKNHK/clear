@@ -95,6 +95,8 @@ export default [
             { text: 'MySQL数据结构选择的合理性', link: basePath + 'MySQL数据结构选择的合理性' },
             { text: 'MyIASM的索引方案', link: basePath + 'MyIASM的索引方案' },
             { text: 'MySQL有哪些索引类型？（索引分类）', link: basePath + 'MySQL有哪些索引类型？（索引分类）' },
+            { text: '创建、查看、删除索引', link: basePath + '创建、查看、删除索引' },
+            { text: 'MySQL8.0索引新特性', link: basePath + 'MySQL8.0索引新特性' },
             { text: 'InnoDB中的索引类型？', link: basePath + 'InnoDB中的索引类型？' },
             { text: '在不同存储引擎中索引的落地方式？', link: basePath + '在不同存储引擎中索引的落地方式？' },
             { text: '什么情况下应不建或少建索引？', link: basePath + '什么情况下应不建或少建索引？' },
@@ -109,6 +111,7 @@ export default [
             { text: '在什么情况下，不推荐为数据库建立索引？', link: basePath + '在什么情况下，不推荐为数据库建立索引？' },
 
             { text: 'MySQL索引最左前缀匹配原则？', link: basePath + 'MySQL索引最左前缀匹配原则？' },
+            { text: 'MySQL索引一定遵循最左前缀匹配吗？', link: basePath + 'MySQL索引一定遵循最左前缀匹配吗？' },
 
             { text: 'MySQL的主键一定是自增的吗？', link: basePath + 'MySQL的主键一定是自增的吗？' },
             { text: 'InnoDB为什么使用B+树实现索引？', link: basePath + 'InnoDB为什么使用B+树实现索引？' },
