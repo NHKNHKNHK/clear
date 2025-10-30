@@ -1,3 +1,7 @@
+---
+permalink: /mysql/index-category
+---
+
 # MySQL有哪些索引类型？（索引分类）
 
 MySQL的索引包括普通索引、唯一索引、全文索引、单列索引、多列索引和空间索引等。
