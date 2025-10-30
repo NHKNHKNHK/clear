@@ -33,6 +33,28 @@ export default [
         ]
     },
     {
+        text: '数据类型与函数',
+        collapsed: false,
+        items: [
+            { text: 'MySQL的常用数据类型', link: basePath + 'MySQL的常用数据类型' },
+            { text: 'Mysql的char和varchar的区别？', link: basePath + 'Mysql的char和varchar的区别？' },
+            { text: 'MySQL中varchar(100)和varchar(10)的区别？', link: basePath + 'MySQL中varchar(100)和varchar(10)的区别？' },
+            { text: 'MySQL中text类型最大可以存储多长的文本？', link: basePath + 'MySQL中text类型最大可以存储多长的文本？' },
+            { text: 'mysql的blob和text有什么区别', link: basePath + 'mysql的blob和text有什么区别' },
+            { text: 'MySQL中int(1)和int(10)的区别？', link: basePath + 'MySQL中int(1)和int(10)的区别？' },
+            { text: 'MySQL中int(11)的11表示什么？', link: basePath + 'MySQL中int(11)的11表示什么？' },
+            { text: 'MySQL中tinyint的默认位数', link: basePath + 'MySQL中tinyint的默认位数' },
+            { text: 'Mysql的常用函数有哪些？', link: basePath + 'Mysql的常用函数有哪些？' },
+            { text: 'MySQL中count(*)、count(1)和count(字段名)有什么区别？', link: basePath + 'MySQL中countx、count1和count字段名有什么区别？' },
+            { text: 'drop、delete与truncate的区别？', link: basePath + 'drop、delete与truncate的区别？' },
+            { text: 'MySQL中`limit 1000000,10`和`limit 10`的执行速度是否相同？', link: basePath + 'MySQL中`limit 1000000,10`和`limit 10`的执行速度是否相同？' },
+            { text: 'MySQL中datetime和timestamp类型的区别？', link: basePath + 'MySQL中datetime和timestamp类型的区别？' },
+            { text: '在MySQL中，你使用过哪些函数？常用函数？', link: basePath + '在MySQL中，你使用过哪些函数？常用函数？' },
+            { text: '在MySQL存储金额数据，应该使用什么数据类型？', link: basePath + '在MySQL存储金额数据，应该使用什么数据类型？' },
+
+        ]
+    },
+    {
         text: '事务',
         collapsed: false,
         items: [
@@ -77,6 +99,7 @@ export default [
             { text: '在不同存储引擎中索引的落地方式？', link: basePath + '在不同存储引擎中索引的落地方式？' },
             { text: '什么情况下应不建或少建索引？', link: basePath + '什么情况下应不建或少建索引？' },
             { text: '在建立索引的时，需要考虑哪些因素？', link: basePath + '在建立索引的时，需要考虑哪些因素？' },
+            { text: '索引设计原则', link: basePath + '索引设计原则' },
             { text: '哪些情况适合创建索引', link: basePath + '哪些情况适合创建索引' },
             { text: '哪些情况不适合创建索引', link: basePath + '哪些情况不适合创建索引' },
             { text: 'MySQL中建立索引需要注意什么？', link: basePath + 'MySQL中建立索引需要注意什么？' },
@@ -124,28 +147,7 @@ export default [
 
         ]
     },
-    {
-        text: '数据类型与函数',
-        collapsed: false,
-        items: [
-            { text: 'MySQL的常用数据类型', link: basePath + 'MySQL的常用数据类型' },
-            { text: 'Mysql的char和varchar的区别？', link: basePath + 'Mysql的char和varchar的区别？' },
-            { text: 'MySQL中varchar(100)和varchar(10)的区别？', link: basePath + 'MySQL中varchar(100)和varchar(10)的区别？' },
-            { text: 'MySQL中text类型最大可以存储多长的文本？', link: basePath + 'MySQL中text类型最大可以存储多长的文本？' },
-            { text: 'mysql的blob和text有什么区别', link: basePath + 'mysql的blob和text有什么区别' },
-            { text: 'MySQL中int(1)和int(10)的区别？', link: basePath + 'MySQL中int(1)和int(10)的区别？' },
-            { text: 'MySQL中int(11)的11表示什么？', link: basePath + 'MySQL中int(11)的11表示什么？' },
-            { text: 'MySQL中tinyint的默认位数', link: basePath + 'MySQL中tinyint的默认位数' },
-            { text: 'Mysql的常用函数有哪些？', link: basePath + 'Mysql的常用函数有哪些？' },
-            { text: 'MySQL中count(*)、count(1)和count(字段名)有什么区别？', link: basePath + 'MySQL中countx、count1和count字段名有什么区别？' },
-            { text: 'drop、delete与truncate的区别？', link: basePath + 'drop、delete与truncate的区别？' },
-            { text: 'MySQL中`limit 1000000,10`和`limit 10`的执行速度是否相同？', link: basePath + 'MySQL中`limit 1000000,10`和`limit 10`的执行速度是否相同？' },
-            { text: 'MySQL中datetime和timestamp类型的区别？', link: basePath + 'MySQL中datetime和timestamp类型的区别？' },
-            { text: '在MySQL中，你使用过哪些函数？常用函数？', link: basePath + '在MySQL中，你使用过哪些函数？常用函数？' },
-            { text: '在MySQL存储金额数据，应该使用什么数据类型？', link: basePath + '在MySQL存储金额数据，应该使用什么数据类型？' },
 
-        ]
-    },
     {
         text: '存储引擎',
         collapsed: true,
