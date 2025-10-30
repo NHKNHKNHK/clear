@@ -89,9 +89,9 @@ MySQL是使用了嵌套循环（Nested-Loop Join）的方式来实现关联查�
 
 ## 阿里规约
 
-<span style="color: rgb(175, 54 ,40);">【强制】</span> 超过三个表禁止 join。需要 join 的字段，数据类型保持绝对一致；多表关联查询时，保证被关联的字段需要有索引。
+<span style="color: var(--alibaba-qiangzhi-text-color);">【强制】</span> 超过三个表禁止 join。需要 join 的字段，数据类型保持绝对一致；多表关联查询时，保证被关联的字段需要有索引。
 
-<span style="color: rgb(126, 119 ,45);">说明：</span>即使双表 join 也要注意表索引、SQL 性能
+<span style="color: var(--alibaba-shuoming-text-color);">说明：</span>即使双表 join 也要注意表索引、SQL 性能
 
 解释：
 
