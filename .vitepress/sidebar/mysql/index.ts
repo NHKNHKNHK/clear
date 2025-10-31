@@ -37,7 +37,7 @@ export default [
         collapsed: false,
         items: [
             { text: 'MySQL的常用数据类型', link: basePath + 'MySQL的常用数据类型' },
-            { text: 'Mysql的char和varchar的区别？', link: basePath + 'Mysql的char和varchar的区别？' },
+            { text: 'char和varchar的区别？', link: basePath + 'char和varchar的区别？' },
             { text: 'MySQL中varchar(100)和varchar(10)的区别？', link: basePath + 'MySQL中varchar(100)和varchar(10)的区别？' },
             { text: 'MySQL中text类型最大可以存储多长的文本？', link: basePath + 'MySQL中text类型最大可以存储多长的文本？' },
             { text: 'mysql的blob和text有什么区别', link: basePath + 'mysql的blob和text有什么区别' },
@@ -318,6 +318,7 @@ export default [
             { text: 'buffer pool的读写流程', link: basePath + 'bufferpool的读写流程' },
             { text: '多个buffer pool实例是否引发并发问题', link: basePath + '多个bufferpool实例是否引发并发问题' },
             { text: 'buffer pool与query cache的区别', link: basePath + 'bufferpool与querycache的区别' },
+            { text: 'MySQL为什么会有存储碎片？有什么危害？', link: basePath + 'MySQL为什么会有存储碎片？有什么危害？' },
         ],
     },
     {

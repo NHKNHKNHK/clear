@@ -86,11 +86,11 @@ permalink: /mysql/mysql-datatype
 关于字符串的选择，建议参考如下阿里巴巴的《Java开发手册》规范：
 
 - 任何字段如果为非负数，必须是 `UNSIGNED` 
-- 【 强制 】小数类型为 `DECIMAL`，禁止使用 FLOAT 和 DOUBLE。
+- <span style="color: var(--alibaba-qiangzhi-text-color);">【强制】</span>小数类型为 `DECIMAL`，禁止使用 FLOAT 和 DOUBLE。
     - 说明：在存储的时候，FLOAT 和 DOUBLE 都存在精度损失的问题，很可能在比较值的时候，得到不正确的结果。如果存储的数据范围超过 DECIMAL 的范围，建议将数据拆成整数和小数并分开存储。
 
-- 【 强制 】如果存储的字符串长度几乎相等，使用 CHAR 定长字符串类型
-- 【 强制 】VARCHAR 是可变长字符串，不预先分配存储空间，长度不要超过 5000。如果存储长度大于此值，定义字段类型为 TEXT，独立出来一张表，用主键来对应，避免影响其它字段索引效率。
+- <span style="color: var(--alibaba-qiangzhi-text-color);">【强制】</span>如果存储的字符串长度几乎相等，使用 CHAR 定长字符串类型
+- <span style="color: var(--alibaba-qiangzhi-text-color);">【强制】</span>VARCHAR 是可变长字符串，不预先分配存储空间，长度不要超过 5000。如果存储长度大于此值，定义字段类型为 TEXT，独立出来一张表，用主键来对应，避免影响其它字段索引效率。
 
 
 
