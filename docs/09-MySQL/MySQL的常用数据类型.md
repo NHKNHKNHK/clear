@@ -2,7 +2,7 @@
 permalink: /mysql/mysql-datatype
 ---
 
-# MySQL的常用数据类型？
+# MySQL的常用数据类型
 
 ```markmap
 # 
