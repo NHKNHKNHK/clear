@@ -54,25 +54,7 @@ export default [
 
         ]
     },
-    {
-        text: '事务',
-        collapsed: false,
-        items: [
-            { text: 'MySQL事务的四大特性', link: basePath + 'MySQL事务的四大特性' },
-            { text: '什么是脏读、幻读、不可重复读？', link: basePath + '什么是脏读、幻读、不可重复读？' },
-            { text: '不可重复读和幻读有什么区别', link: basePath + '不可重复读和幻读有什么区别' },
-            { text: 'innoDB如何解决幻读？', link: basePath + 'innoDB如何解决幻读？' },
-            { text: 'MySQL的事务隔离级别？', link: basePath + 'MySQL的事务隔离级别？' },
-            { text: 'MySQL默认事务隔离级别是什么？为什么选这个级别？', link: basePath + 'MySQL默认事务隔离级别是什么？为什么选这个级别？' },
-            { text: '你们生产环境的MySQL中使用了什么事务隔离级别？为什么？', link: basePath + '你们生产环境的MySQL中使用了什么事务隔离级别？为什么？' },
 
-
-            { text: 'MySQL是如何实现事务的？', link: basePath + 'MySQL是如何实现事务的？' },
-            { text: 'MySQL中大事务会有哪些影响？', link: basePath + 'MySQL中大事务会有哪些影响？' },
-            { text: 'MySQL中长事务可能会导致哪些问题？', link: basePath + 'MySQL中长事务可能会导致哪些问题？' },
-
-        ]
-    },
 
     {
         text: '索引',
@@ -166,6 +148,25 @@ export default [
             { text: 'InnoDB 的双写缓冲是什么？', link: basePath + 'InnoDB 的双写缓冲是什么？' },
             { text: 'MyISAM Static 和 MyISAM Dynamic 有什么区别？', link: basePath + 'MyISAM Static 和 MyISAM Dynamic 有什么区别？' },
             { text: 'InnoDB的一次更新事务是怎么实现的？', link: basePath + 'InnoDB的一次更新事务是怎么实现的？' },
+
+        ]
+    },
+    {
+        text: '事务',
+        collapsed: false,
+        items: [
+            { text: 'MySQL事务的四大特性', link: basePath + 'MySQL事务的四大特性' },
+            { text: '什么是脏读、幻读、不可重复读？', link: basePath + '什么是脏读、幻读、不可重复读？' },
+            { text: '不可重复读和幻读有什么区别', link: basePath + '不可重复读和幻读有什么区别' },
+            { text: 'innoDB如何解决幻读？', link: basePath + 'innoDB如何解决幻读？' },
+            { text: 'MySQL的事务隔离级别？', link: basePath + 'MySQL的事务隔离级别？' },
+            { text: 'MySQL默认事务隔离级别是什么？为什么选这个级别？', link: basePath + 'MySQL默认事务隔离级别是什么？为什么选这个级别？' },
+            { text: '你们生产环境的MySQL中使用了什么事务隔离级别？为什么？', link: basePath + '你们生产环境的MySQL中使用了什么事务隔离级别？为什么？' },
+
+
+            { text: 'MySQL是如何实现事务的？', link: basePath + 'MySQL是如何实现事务的？' },
+            { text: 'MySQL中大事务会有哪些影响？', link: basePath + 'MySQL中大事务会有哪些影响？' },
+            { text: 'MySQL中长事务可能会导致哪些问题？', link: basePath + 'MySQL中长事务可能会导致哪些问题？' },
 
         ]
     },
