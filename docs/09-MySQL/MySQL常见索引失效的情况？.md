@@ -9,6 +9,7 @@ permalink: /mysql/index-invalid
 :::
 
 :::details 测试表
+
 ```sql
 CREATE TABLE user (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -21,6 +22,7 @@ CREATE TABLE user (
     INDEX idx_created_time (created_time)
 );
 ```
+
 :::
 
 ## 对索引列使用函数或表达式
@@ -42,7 +44,6 @@ EXPLAIN SELECT * FROM user WHERE UPPER(name) = 'zs';
 - 索引是按照列值的原始顺序存储的
 - 对列使用函数后，MySQL无法利用索引的有序性
 - 必须扫描所有索引项，计算函数值后再比较
-
 
 ## 隐式类型转换
 

@@ -319,5 +319,15 @@ export default [
             { text: '多个buffer pool实例是否引发并发问题', link: basePath + '多个bufferpool实例是否引发并发问题' },
             { text: 'buffer pool与query cache的区别', link: basePath + 'bufferpool与querycache的区别' },
         ],
+    },
+    {
+        text: '优化',
+        collapsed: false,
+        items: [
+            { text: '索引优化与查询优化', link: basePath + '索引优化与查询优化' },
+            { text: '数据库的设计规范', link: basePath + '数据库的设计规范' },
+            { text: '数据库其他调优策略', link: basePath + '数据库其他调优策略' },
+
+        ]
     }
 ]
