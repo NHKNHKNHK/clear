@@ -5,17 +5,33 @@ lang: en-US
 
 # Markdown 扩展语法
 
-
-
 This page demonstrates some of the built-in markdown extensions provided by VitePress.
 
 > 这是引用
 
-
 ## 标题锚点{#my-anchor .text-center}
 
-- 标题会自动应用锚点。可以使用 markdown.anchor 选项配置锚点的渲染
+- 标题会自动应用锚点。可以使用 `markdown.anchor` 选项配置锚点的渲染
+
+### 自定义锚点
+
 - 这里还可以配合TailwindCSS等框架进行样式控制
+
+例如：
+
+上面标题使用了自定义的锚点 `{#my-anchor}` 以及样式类 `.text-center`
+
+```txt
+## 标题锚点{#my-anchor .text-center}
+```
+
+标题链接就会渲染为为 `#my-anchor`，而不是默认的 `#标题锚点`
+
+其他地方就可以通过锚点跳转，如下：
+
+```txt
+[标题锚点](./markdown-examples.md#my-anchor)
+```
 
 <style>
   .text-center {
@@ -969,6 +985,10 @@ export default defineConfig({
   }
 })
 ```
+
+## 测试锚点
+
+点击跳回跳转到锚点处：[标题锚点](./markdown-examples#my-anchor)
 
 ## More
 

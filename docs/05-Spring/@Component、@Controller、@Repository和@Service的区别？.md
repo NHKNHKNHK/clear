@@ -39,7 +39,7 @@ protected boolean isHandler(Class<?> beanType) {
 
 ## 扩展
 
-### @Component和@Service能不能互换
+### @Component和@Service能不能互换 {#component-service-anchor}
 
 能
 
@@ -47,8 +47,7 @@ protected boolean isHandler(Class<?> beanType) {
 
 虽然本质上`@Service`也是`@Component`的特化形式，但`@Service`这个注解表示该类属于服务层，这样子做更好的分层管理，提高代码的可读性和可维护性。
 
-## @Controller和@Component能不能互换
-<a id="custom-anchor"></a>
+### @Controller和@Component能不能互换 {#controller-component-anchor}
 
 不能
 

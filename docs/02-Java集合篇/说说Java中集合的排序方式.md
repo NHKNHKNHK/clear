@@ -99,6 +99,6 @@ equals则是常用于业务语义中两个对象是否相同，如String常常�
 
 :::warning 注意
 
-这里指的无序性，不是随机性，与随机性有本质区别，具体查看：[Java-集合框架-Set 主要实现类：HashSet](../01-Java基础/learn/Java-集合框架.md#set-anchor)
+这里指的无序性，不是随机性，与随机性有本质区别，具体查看：[Java-集合框架-Set 主要实现类：HashSet](../01-Java基础/learn/Java-集合框架#set-anchor)
 
 :::

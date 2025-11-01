@@ -1,13 +1,18 @@
 # @Component和@Configuration能不能互换
 
 :::tip
+
 首先亮明观点：
 
 `@Component`注解标记的组件可以被`Configuration`注解替换，但是不建议这么做
 
 `@Configuration`注解标记的配置类不能被`Component`注解替换，因为多次调用`@Bean`方法会创建多个实例，破坏单例bean
 
-类似的问题还包括：[@Controller和@Component能不能互换](./@Component、@Controller、@Repository和@Service的区别？#custom-anchor)
+类似的问题还包括：
+
+- [@Controller和@Component能不能互换](./@Component、@Controller、@Repository和@Service的区别？#controller-component-anchor)
+- [@Component和@Service能不能互换](./@Component、@Controller、@Repository和@Service的区别？#component-service-anchor)
+
 :::
 
 ## 口语化
