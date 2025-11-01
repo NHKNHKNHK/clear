@@ -10,6 +10,14 @@
 
 从实现上讲，`List`可以有链表实现或者数组实现，两者各有优劣，链表增删快，数组查询快。Queue则可以分为优先队列，双端队列等等。Map则可以分为普通的HashMap和可以排序的TreeMap等等。
 
+:::info 思考
+
+**为什么Map接口不继承Collection接口？**
+
+[为什么Map接口不继承Collection接口？](./为什么Map接口不继承Collection接口？.md)
+
+:::
+
 ## Java集合框架体系（java.util）
 
 Java 集合可分为 `Collection` 和 `Map` 两大体系：

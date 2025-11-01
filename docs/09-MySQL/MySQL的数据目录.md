@@ -9,7 +9,7 @@ find / -name mysql
 
 ### 数据库文件的存放路径
 
-```mysql
+```sql
 show variables like 'datadir'; # /var/lib/mysql/
 ```
 
