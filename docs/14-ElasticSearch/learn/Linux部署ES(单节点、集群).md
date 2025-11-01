@@ -88,7 +88,7 @@ cluster.initial_master_nodes: ["node-1"]
 
 在文件末尾中增加下面内容
 
-```conf
+```shell
 # 每个进程可以打开的文件数的限制
 es soft nofile 65536
 es hard nofile 65536
@@ -284,7 +284,7 @@ cluster.routing.allocation.node_initial_primaries_recoveries: 16
 
 在文件末尾中增加下面内容
 
-```conf
+```shell
 # 每个进程可以打开的文件数的限制
 es soft nofile 65536
 es hard nofile 65536

@@ -18,7 +18,7 @@ export default {
     { text: 'Java基础-interface关键字', link: basePath + 'Java基础-interface关键字' },
     { text: 'Java基础-native关键字', link: basePath + 'Java基础-native关键字' },
     { text: 'Java基础-foreach', link: basePath + 'Java基础-foreach' },
-    { text: 'Java基础-Iterator 与 Iterable', link: basePath + 'Java基础-Iterator 与 Iterable' },
+    { text: 'Java基础-Iterator与Iterable', link: basePath + 'Java基础-Iterator与Iterable' },
     { text: 'Java基础-Junit单元测试', link: basePath + 'Java基础-Junit单元测试' },
     { text: 'Java基础-泛型', link: basePath + 'Java基础-泛型' },
     { text: 'Java基础-枚举类', link: basePath + 'Java基础-枚举类' },

@@ -6,9 +6,8 @@ export default [
     collapsed: false,
     items: [
       { text: '导航', link: '/02-Java集合篇/index' },
-      { text: '集合篇', link: '/02-Java集合篇/Java集合篇' },
-      { text: '数组和链表在Java中的区别？', link: '/02-Java集合篇/数组和链表在Java中的区别？' },
       { text: 'Java中有哪些集合类？概述Java集合体系？', link: '/02-Java集合篇/Java中有哪些集合类？概述Java集合体系？' },
+      { text: '数组和链表在Java中的区别？', link: '/02-Java集合篇/数组和链表在Java中的区别？' },
       { text: 'List、Set、Map之间的区别是什么？', link: '/02-Java集合篇/List、Set、Map之间的区别是什么？' },
       { text: 'Collection和Collections的区别？', link: '/02-Java集合篇/Collection和Collections的区别？' },
       { text: '为什么Map接口不继承Collection接口？', link: '/02-Java集合篇/为什么Map接口不继承Collection接口？' },
@@ -16,8 +15,9 @@ export default [
       { text: 'List和Array之间如何互相转换？', link: '/02-Java集合篇/List和Array之间如何互相转换？' },
       { text: '集合遍历时remove或add操作注意事项？', link: '/02-Java集合篇/集合遍历时remove或add操作注意事项？' },
       { text: 'Comparable 和 Comparator的区别', link: '/02-Java集合篇/Comparable和Comparator的区别' },
-      { text: 'Iterable接口与Iterator接口', link: '/02-Java集合篇/Iterable接口与Iterator接口' },
-      { text: 'Enumeration和Iterator接口的区别？', link: '/02-Java集合篇/Enumeration和Iterator接口的区别？' },
+      { text: 'Iterable接口与Iterator接口的区别', link: '/02-Java集合篇/Iterable接口与Iterator接口的区别' },
+      { text: 'Enumeration和Iterator接口的区别', link: '/02-Java集合篇/Enumeration和Iterator接口的区别' },
+      { text: '为什么不把Iterable和Iterator合成一个使用', link: '/02-Java集合篇/为什么不把Iterable和Iterator合成一个使用' },
       { text: '什么是fail-fast机制（快速失败）？', link: '/02-Java集合篇/什么是fail-fast机制（快速失败）？' },
       { text: '什么是fail-safe机制（副本机制）？', link: '/02-Java集合篇/什么是fail-safe机制（副本机制）？' },
       { text: 'fail-fast和fail-safe有什么区别？', link: '/02-Java集合篇/fail-fast和fail-safe有什么区别？' },
@@ -60,7 +60,6 @@ export default [
       { text: 'HashSet 中添加元素的过程？', link: '/02-Java集合篇/Set/HashSet 中添加元素的过程？' },
       { text: 'HashSet如何实现线程安全？', link: '/02-Java集合篇/Set/HashSet如何实现线程安全？' },
       { text: 'HashSet、LinkedHashSet、TreeSet的区别？', link: '/02-Java集合篇/Set/HashSet、LinkedHashSet、TreeSet的区别？' },
-
 
       { text: 'HashSet和HashMap的区别是什么？', link: '/02-Java集合篇/Set/HashSet和HashMap的区别是什么？' },
       { text: 'HashSet是如何保证元素唯一性的？', link: '/02-Java集合篇/Set/HashSet是如何保证元素唯一性的？' },
