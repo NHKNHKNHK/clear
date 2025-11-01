@@ -16,4 +16,4 @@
 
 ### Enumeration和Iterator接口的区别？
 
-> [Enumeration和Iterator接口的区别？](./Enumeration和Iterator接口的区别？.md)
+> [Enumeration和Iterator接口的区别？](./Enumeration和Iterator接口的区别.md)

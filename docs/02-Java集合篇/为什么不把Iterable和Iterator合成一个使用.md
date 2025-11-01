@@ -4,4 +4,4 @@
 
 - 将`是否可以迭代`和`迭代方式`抽出来，更符合**单一职责原则**，如果抽出来，迭代方式就可以被多个可迭代的集合复用，更符合面向对象的特点。
 
-> [Enumeration和Iterator接口的区别？](./Enumeration和Iterator接口的区别？.md)
+> [Enumeration和Iterator接口的区别？](./Enumeration和Iterator接口的区别.md)

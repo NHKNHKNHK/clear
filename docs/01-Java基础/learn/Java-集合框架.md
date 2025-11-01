@@ -710,7 +710,7 @@ public class VectorDemo {
 -   **如果compareTo() 或 compare() 的返回值为0，则认为两个对象是相等的。**由于TreeSet中不能存放相同的元素，则后一个元素就无法成功添加到 TreeSet中。
 
 
-### Set 主要实现类：HashSet
+### Set 主要实现类：HashSet {#set-anchor}
 
 -   HashSet 是 Java 中的一个集合实现，它实现了 Set 接口。**HashSet 是基于哈希表实现的（底层使用的是HashMap）**，大多数时候使用 Set 集合时都使用这个实现类。 （主要是应用场景是用于过滤数据）
 

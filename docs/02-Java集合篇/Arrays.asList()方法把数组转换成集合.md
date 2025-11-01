@@ -1,4 +1,4 @@
-# Arrays.asList() 方法把数组转换成集合
+# Arrays.asList()方法把数组转换成集合
 
 **说明：**
 
@@ -6,7 +6,7 @@
 
 **原因：**
 
-​	Arrays.ArrayList类继承自**AbstractList**，实现了List接口。它**重写了add()、remove()**等修改List结构的方法，并将它们**直接抛出UnsupportedOperationException异常**，从而禁止了对List结构的修改。具体来说，Arrays.asList()方法返回的是Arrays类中的一个私有静态内部类ArrayList，它继承自AbstractList类，实现了List接口。
+​	Arrays.ArrayList类继承自`AbstractList`，实现了List接口。它**重写了add()、remove()**等修改List结构的方法，并将它们**直接抛出UnsupportedOperationException异常**，从而禁止了对List结构的修改。具体来说，Arrays.asList()方法返回的是Arrays类中的一个私有静态内部类ArrayList，它继承自AbstractList类，实现了List接口。
 
 ## **源码**
 

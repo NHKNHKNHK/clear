@@ -1,0 +1,7 @@
+# 有了Comparable为什么还需要Comparator
+
+Comparable用于使某个类具备可排序能力。例如String类，实现该接口后覆盖其`compareTo`方法，即可具备可排序的能力。
+
+但是仍然存在一些二方库的类没有实现Comparable，但是调用方也需要比较的，此时就需要使用Comparator接口。
+
+Comparator是一个比较器接口，可以用来给不具备排序能力的对象进行排序（即自定义类的排序规则）
