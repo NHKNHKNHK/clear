@@ -1,5 +1,3 @@
-import { it } from "node:test"
-
 const basePath = '/14-ElasticSearch/'
 const learnPath = '/14-ElasticSearch/learn/'
 

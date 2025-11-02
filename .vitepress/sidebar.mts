@@ -10,6 +10,7 @@ import springBootSidebar from './sidebar/springboot/index'
 import ormSidebar from './sidebar/orm/index'
 import mysqlSidebar from './sidebar/mysql/index'
 import designPatternSidebar from "./sidebar/design-pattern";
+import gitSidebar from "./sidebar/git/index";
 
 export default {
   '/01-Java基础/': javaBaseSidebar,
@@ -417,15 +418,7 @@ export default {
     },
 
   ],
-  '/18-Git/': [
-    {
-      text: 'Git',
-      items: [
-        { text: '导读', link: '/18-Git/' },
-        { text: 'git commit规范', link: '/18-Git/git commit规范' },
-      ]
-    },
-  ],
+  '/18-Git/': gitSidebar,
   '/19-Linux/': [
     {
       text: 'Linux',
