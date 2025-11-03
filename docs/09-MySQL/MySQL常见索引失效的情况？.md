@@ -112,12 +112,10 @@ EXPLAIN SELECT * FROM user WHERE name NOT IN ('zs', 'ls');
 ```
 
 :::tip
-IS NULL可以使用索引，IS NOT NULL无法使用索引
+IS NULL可以使用索引，IS NOT NULL无法使用索引。LIKE与NOT LIKE同理
 :::
 
 ## 数据分布不均匀
 
 即使有索引，如果数据分布非常不均匀，MySQL 优化器可能会选择全表扫描而不是使用索引。
-
-
 
