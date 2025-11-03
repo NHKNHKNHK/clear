@@ -17,7 +17,7 @@ export default [
 
             { text: 'MySQL中exists和in的区别？', link: basePath + 'MySQL中exists和in的区别？' },
             { text: 'MySQL在inner join、left join、right join的区别是什么？', link: basePath + 'MySQL在inner join、left join、right join的区别是什么？' },
-            { text: '为什么SQL语句不建议使用多表join', link: basePath + '为什么SQL语句不建议使用多表join' },
+            { text: '为什么SQL语句不建议过多使用多表join', link: basePath + '为什么SQL语句不建议过多使用多表join' },
             { text: 'MySQL的Hash Join是什么？', link: basePath + 'MySQL的Hash Join是什么？' },
             { text: 'MySQL中数据排序的实现原理是什么？', link: basePath + 'MySQL中数据排序的实现原理是什么？' },
             { text: 'MySQL书写顺序与执行顺序', link: basePath + 'MySQL书写顺序与执行顺序' },
@@ -109,6 +109,7 @@ export default [
             { text: 'MySQL是如何保证唯一性索引的唯一性的？', link: basePath + 'MySQL是如何保证唯一性索引的唯一性的？' },
             { text: '唯一索引比普通索引快吗？', link: basePath + '唯一索引比普通索引快吗？' },
             { text: '什么是mysql的三星索引？', link: basePath + '什么是mysql的三星索引？' },
+            
             { text: 'MySQL的explain有哪些字段？哪些是主要的？', link: basePath + 'MySQL的explain有哪些字段？哪些是主要的？' },
             { text: '如何使用MySQL中的explain语句进行查询分析？', link: basePath + '如何使用MySQL中的explain语句进行查询分析？' },
             { text: '用explain分析举一个具体的例子？', link: basePath + '用explain分析举一个具体的例子？' },
