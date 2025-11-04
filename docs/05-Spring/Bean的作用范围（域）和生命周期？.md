@@ -4,6 +4,10 @@
 
 **Bean 的作用范围**
 
+所谓作用域，其实就是说这个东西哪个范围内可以被使用。如我们定义类的成员变量的时候使用的public、private等这些也是作用域的概念。
+
+Spring的Bean的作用域，描述的就是这个Bean在哪个范围内可以被使用。不同的作用域决定了了 Bean 的创建、管理和销毁的方式。
+
 Bean 的作用范围（域）主要有以下几种：
 
 - **singleton**：默认的作用域，整个应用中只有一个实例。
@@ -13,7 +17,17 @@ Bean 的作用范围（域）主要有以下几种：
 - application：每个 ServletContext 创建一个新的实例（仅限 Web 应用）。
 - globalSession：用于 Portlet 应用中的全局会话（较少使用）。
 
-常用的是 **singleton** 和 **prototype**。singleton 是单例的，当 Bean 是无状态的时候，singleton 是最好的选择。如果 Bean 涉及共享数据或有状态信息，singleton 可能不够安全，这时应该使用 prototype 来确保每个请求都有独立的实例。
+一般来说，常用的是 **singleton** 和 **prototype**。singleton 是单例的，当 Bean 是无状态的时候，singleton 是最好的选择。如果 Bean 涉及共享数据或有状态信息，singleton 可能不够安全，这时应该使用 prototype 来确保每个请求都有独立的实例。
+
+我们在代码中，可以在定义一个Bean的时候，通过`@Scope`注解来指定他的作用域：
+
+```java
+@Service
+@Scope("prototype")
+public class HollisTestService{
+    
+}
+```
 
 **Bean 的生命周期**
 
@@ -92,6 +106,12 @@ Bean 的生命周期是指bean从创建到销毁的过程，总体上分为4大�
 ```xml
 <bean id="myBean" class="com.example.MyBean" scope="application"/>
 ```
+
+### 扩展：Websocket（了解）
+
+- 仅在 Web 应用程序中有效。
+- 在 Websocket 的生命周期内，只创建一个 Bean 实例。
+- 适用于websocket级别的共享数据。
 
 ## Bean的生命周期（Lifecycle）
 
@@ -217,6 +237,108 @@ public class MyBean {
 ```
 
 ## 扩展与拔高
+
+### 作用域与循环依赖
+
+Spring在解决循环依赖时，只解决了单例作用域的，别的作用域没有解决。
+
+具体查看：[Spring循环依赖问题是什么？](./Spring循环依赖问题是什么？.md)
+
+### 自定义作用域
+
+除了Spring官方提供的这些作用域以外，我们还可以自定义我们自己的作用域，Spring提供了这方面的支持。
+
+要自定义一个 Spring 的作用域，需要实现 `org.springframework.beans.factory.config.Scope` 接口。这个接口要求实现几个关键方法来管理 Bean 的生命周期。
+
+```java
+public interface Scope {
+
+    Object get(String name, ObjectFactory<?> objectFactory);
+
+    @Nullable
+    Object remove(String name);
+
+    void registerDestructionCallback(String name, Runnable callback);
+
+    @Nullable
+    Object resolveContextualObject(String key);
+
+    @Nullable
+    String getConversationId();
+}
+```
+
+1）实现自定义作用域的类，实现 `Scope` 接口
+
+```java
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.config.Scope;
+
+public class MyCustomScope implements Scope {
+
+    @Override
+    public Object get(String name, ObjectFactory<?> objectFactory) {
+        // 实现获取 Bean 的逻辑
+        return objectFactory.getObject();
+    }
+
+    @Override
+    public Object remove(String name) {
+        // 实现移除 Bean 的逻辑
+        return null;
+    }
+
+    @Override
+    public void registerDestructionCallback(String name, Runnable callback) {
+        // 注册 Bean 销毁时的回调
+    }
+
+    @Override
+    public Object resolveContextualObject(String key) {
+        // 用于解析相关上下文数据
+        return null;
+    }
+
+    @Override
+    public String getConversationId() {
+        // 返回当前会话的 ID
+        return null;
+    }
+}
+```
+
+2）在Spring配置类中注册自定义作用域
+
+我们需要 Spring 配置中注册这个自定义的作用域。这可以通过 `ConfigurableBeanFactory.registerScope` 方法实现。
+
+```java
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public MyCustomScope myCustomScope(ConfigurableBeanFactory beanFactory) {
+        MyCustomScope scope = new MyCustomScope();
+        beanFactory.registerScope("myCustomScope", scope);
+        return scope;
+    }
+}
+```
+
+3）使用自定义作用域
+
+在 Bean 定义中使用自定义的作用域的名称。Spring 容器将会根据你的自定义逻辑来创建和管理这些 Bean。
+
+```java
+@Component
+@Scope("myCustomScope")
+public class MyScopedBean {
+    // ...
+}
+```
 
 ### Bean的生命周期（源码级分析）
 
