@@ -30,6 +30,8 @@ export default [
 
             { text: 'Mysql语句都有哪些种类？', link: basePath + 'Mysql语句都有哪些种类？' },
             { text: 'Mysql查询优化建议？', link: basePath + 'Mysql查询优化建议？' },
+
+
         ]
     },
     {
@@ -109,7 +111,7 @@ export default [
             { text: 'MySQL是如何保证唯一性索引的唯一性的？', link: basePath + 'MySQL是如何保证唯一性索引的唯一性的？' },
             { text: '唯一索引比普通索引快吗？', link: basePath + '唯一索引比普通索引快吗？' },
             { text: '什么是mysql的三星索引？', link: basePath + '什么是mysql的三星索引？' },
-            
+
             { text: 'MySQL的explain有哪些字段？哪些是主要的？', link: basePath + 'MySQL的explain有哪些字段？哪些是主要的？' },
             { text: '如何使用MySQL中的explain语句进行查询分析？', link: basePath + '如何使用MySQL中的explain语句进行查询分析？' },
             { text: '用explain分析举一个具体的例子？', link: basePath + '用explain分析举一个具体的例子？' },
@@ -326,6 +328,8 @@ export default [
         text: '优化',
         collapsed: false,
         items: [
+
+            { text: '约束的分类', link: basePath + '约束的分类' },
             { text: '索引优化与查询优化', link: basePath + '索引优化与查询优化' },
             { text: '数据库的设计规范', link: basePath + '数据库的设计规范' },
             { text: '数据库其他调优策略', link: basePath + '数据库其他调优策略' },
