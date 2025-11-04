@@ -3,7 +3,7 @@ const basePath = '/09-MySQL/'
 
 export default [
     {
-        text: 'SQL基本语法',
+        text: '基础',
         collapsed: false,
         items: [
             { text: 'MySQL', link: basePath + '' },
@@ -35,6 +35,21 @@ export default [
         ]
     },
     {
+        text: '进阶',
+        collapsed: false,
+        items: [
+            { text: '约束的分类', link: basePath + '约束的分类' },
+
+            { text: 'MySQL逻辑架构', link: basePath + 'MySQL逻辑架构' },
+            { text: '数据库缓冲池（buffer pool）', link: basePath + '数据库缓冲池（buffer pool）' },
+            { text: '什么是buffer pool', link: basePath + '什么是bufferpool' },
+            { text: 'buffer pool的读写流程', link: basePath + 'bufferpool的读写流程' },
+            { text: '多个buffer pool实例是否引发并发问题', link: basePath + '多个bufferpool实例是否引发并发问题' },
+            { text: 'buffer pool与query cache的区别', link: basePath + 'bufferpool与querycache的区别' },
+            { text: 'MySQL为什么会有存储碎片？有什么危害？', link: basePath + 'MySQL为什么会有存储碎片？有什么危害？' },
+        ],
+    },
+    {
         text: '数据类型与函数',
         collapsed: false,
         items: [
@@ -56,8 +71,6 @@ export default [
 
         ]
     },
-
-
     {
         text: '索引',
         collapsed: false,
@@ -234,23 +247,6 @@ export default [
         ]
     },
     {
-        text: 'MVCC',
-        collapsed: true,
-        items: [
-            // 概念
-            // 事务id 回滚指针 行id
-            // undo log
-            // read view
-            // 版本链
-            // RR和RC
-            { text: 'MySQL中MVCC是什么？', link: basePath + 'MySQL中MVCC是什么？' },
-            { text: 'MVCC解决了什么问题？', link: basePath + 'MVCC解决了什么问题？' },
-            { text: '如果MySQL没有MVCC，会有什么影响？', link: basePath + '如果MySQL没有MVCC，会有什么影响？' },
-            { text: '什么是当前读与快照读（一致性读）？', link: basePath + '什么是当前读与快照读（一致性读）？' },
-
-        ]
-    },
-    {
         text: '锁',
         collapsed: true,
         items: [
@@ -275,6 +271,23 @@ export default [
             { text: 'MySQL的锁，表级锁是哪一层的锁？', link: basePath + 'MySQL的锁，表级锁是哪一层的锁？' },
             { text: '为什么MyISAM不支持行锁，而InnoDB支持？', link: basePath + '为什么MyISAM不支持行锁，而InnoDB支持？' },
 
+
+        ]
+    },
+    {
+        text: 'MVCC',
+        collapsed: true,
+        items: [
+            // 概念
+            // 事务id 回滚指针 行id
+            // undo log
+            // read view
+            // 版本链
+            // RR和RC
+            { text: 'MySQL中MVCC是什么？', link: basePath + 'MySQL中MVCC是什么？' },
+            { text: 'MVCC解决了什么问题？', link: basePath + 'MVCC解决了什么问题？' },
+            { text: '如果MySQL没有MVCC，会有什么影响？', link: basePath + '如果MySQL没有MVCC，会有什么影响？' },
+            { text: '什么是当前读与快照读（一致性读）？', link: basePath + '什么是当前读与快照读（一致性读）？' },
 
         ]
     },
@@ -312,24 +325,10 @@ export default [
         ]
     },
     {
-        text: '进阶',
-        collapsed: false,
-        items: [
-            { text: 'MySQL逻辑架构', link: basePath + 'MySQL逻辑架构' },
-            { text: '数据库缓冲池（buffer pool）', link: basePath + '数据库缓冲池（buffer pool）' },
-            { text: '什么是buffer pool', link: basePath + '什么是bufferpool' },
-            { text: 'buffer pool的读写流程', link: basePath + 'bufferpool的读写流程' },
-            { text: '多个buffer pool实例是否引发并发问题', link: basePath + '多个bufferpool实例是否引发并发问题' },
-            { text: 'buffer pool与query cache的区别', link: basePath + 'bufferpool与querycache的区别' },
-            { text: 'MySQL为什么会有存储碎片？有什么危害？', link: basePath + 'MySQL为什么会有存储碎片？有什么危害？' },
-        ],
-    },
-    {
         text: '优化',
         collapsed: false,
         items: [
-
-            { text: '约束的分类', link: basePath + '约束的分类' },
+            { text: '性能分析工具的使用', link: basePath + '性能分析工具的使用' },
             { text: '索引优化与查询优化', link: basePath + '索引优化与查询优化' },
             { text: '数据库的设计规范', link: basePath + '数据库的设计规范' },
             { text: '数据库其他调优策略', link: basePath + '数据库其他调优策略' },
