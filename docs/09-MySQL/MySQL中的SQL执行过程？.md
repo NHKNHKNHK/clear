@@ -176,6 +176,8 @@ mysql> show profile cpu,block io for query 6;
 
 profile 与 profiles 都是MySQL中的提供的性能分析工具
 
+具体查看：[性能分析工具的使用——查看SQL执行成本：SHOW PROFILE](./性能分析工具的使用#show-profile)
+
 :::
 
 ## MySQL5.7中SQL执行原理
