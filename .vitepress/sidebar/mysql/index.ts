@@ -3,6 +3,52 @@ const basePath = '/09-MySQL/'
 
 export default [
     {
+        text: '《MySQL简明教程》',
+        collapsed: false,
+        items: [
+            {
+                text: '基础',
+                collapsed: false,
+                items: [
+                    // todo 数据类型
+                    { text: '约束的分类', link: basePath + '约束的分类' },
+
+                ]
+            },
+            {
+                text: '进阶',
+                collapsed: false,
+                items: [
+                    // todo 数据目录
+                    // todo 用户与权限管理
+
+                    { text: 'MySQL逻辑架构', link: basePath + 'MySQL逻辑架构' },
+                    { text: 'MySQL的存储引擎', link: basePath + 'MySQL的存储引擎' },
+                    // todo InnoDB数据存储结构
+                    { text: '索引设计原则', link: basePath + '索引设计原则' },
+                    { text: '哪些情况适合创建索引', link: basePath + '哪些情况适合创建索引' },
+                    { text: '哪些情况不适合创建索引', link: basePath + '哪些情况不适合创建索引' },
+                    { text: '性能分析工具的使用', link: basePath + '性能分析工具的使用' },
+                    { text: '索引优化与查询优化', link: basePath + '索引优化与查询优化' },
+                    { text: '数据库的设计规范', link: basePath + '数据库的设计规范' },
+                    { text: '数据库其他调优策略', link: basePath + '数据库其他调优策略' },
+                    // todo 事务
+                    // todo 锁
+
+                ]
+            },
+            {
+                text: '运维',
+                collapsed: false,
+                items: [
+                    // todo 数据库日志
+                    // todo  主从
+                    // todo 备份与恢复
+                ]
+            }
+        ]
+    },
+    {
         text: '基础',
         collapsed: false,
         items: [
@@ -38,9 +84,6 @@ export default [
         text: '进阶',
         collapsed: false,
         items: [
-            { text: '约束的分类', link: basePath + '约束的分类' },
-
-            { text: 'MySQL逻辑架构', link: basePath + 'MySQL逻辑架构' },
             { text: '数据库缓冲池（buffer pool）', link: basePath + '数据库缓冲池（buffer pool）' },
             { text: '什么是buffer pool', link: basePath + '什么是bufferpool' },
             { text: 'buffer pool的读写流程', link: basePath + 'bufferpool的读写流程' },
@@ -98,9 +141,7 @@ export default [
             { text: '在不同存储引擎中索引的落地方式？', link: basePath + '在不同存储引擎中索引的落地方式？' },
             { text: '什么情况下应不建或少建索引？', link: basePath + '什么情况下应不建或少建索引？' },
             { text: '在建立索引的时，需要考虑哪些因素？', link: basePath + '在建立索引的时，需要考虑哪些因素？' },
-            { text: '索引设计原则', link: basePath + '索引设计原则' },
-            { text: '哪些情况适合创建索引', link: basePath + '哪些情况适合创建索引' },
-            { text: '哪些情况不适合创建索引', link: basePath + '哪些情况不适合创建索引' },
+
             { text: 'MySQL中建立索引需要注意什么？', link: basePath + 'MySQL中建立索引需要注意什么？' },
             { text: 'MySQL常见索引失效的情况？', link: basePath + 'MySQL常见索引失效的情况？' },
             { text: 'MySQL在使用索引一定有效吗？如何排查索引效果？', link: basePath + 'MySQL在使用索引一定有效吗？如何排查索引效果？' },
@@ -123,18 +164,19 @@ export default [
             { text: '唯一索引和主键索引的区别？', link: basePath + '唯一索引和主键索引的区别？' },
             { text: 'MySQL是如何保证唯一性索引的唯一性的？', link: basePath + 'MySQL是如何保证唯一性索引的唯一性的？' },
             { text: '唯一索引比普通索引快吗？', link: basePath + '唯一索引比普通索引快吗？' },
+
             { text: '什么是mysql的三星索引？', link: basePath + '什么是mysql的三星索引？' },
 
             { text: 'MySQL的explain有哪些字段？哪些是主要的？', link: basePath + 'MySQL的explain有哪些字段？哪些是主要的？' },
             { text: '如何使用MySQL中的explain语句进行查询分析？', link: basePath + '如何使用MySQL中的explain语句进行查询分析？' },
             { text: '用explain分析举一个具体的例子？', link: basePath + '用explain分析举一个具体的例子？' },
 
-            { text: '什么是前缀索引？', link: basePath + '什么是前缀索引？' },
             { text: '什么是联合索引（复合索引）？', link: basePath + '什么是联合索引（复合索引）？' },
             { text: 'MySQL的覆盖索引？', link: basePath + 'MySQL的覆盖索引？' },
+            { text: '什么是前缀索引？', link: basePath + '什么是前缀索引？' },
+            { text: '什么是索引下推？', link: basePath + '什么是索引下推？' },
             { text: 'A,B,C三个字段组成联合索引，AB,AC,BC三种情况下查询是否能命中索引？', link: basePath + 'A,B,C三个字段组成联合索引，AB,AC,BC三种情况下查询是否能命中索引？' },
             { text: 'where条件的顺序影响使用索引吗？', link: basePath + 'where条件的顺序影响使用索引吗？' },
-            { text: '什么是索引下推？', link: basePath + '什么是索引下推？' },
 
             { text: 'B+树索引和哈希索引的区别？', link: basePath + 'B+树索引和哈希索引的区别？' },
             { text: '哈希索引的优势及不适用的场景？', link: basePath + '哈希索引的优势及不适用的场景？' },
@@ -154,7 +196,7 @@ export default [
         collapsed: true,
         items: [
 
-            { text: 'MySQL的存储引擎', link: basePath + 'MySQL的存储引擎' },
+
             { text: 'MySQL的存储引擎有哪些？有什么区别？', link: basePath + 'MySQL的存储引擎有哪些？有什么区别？' },
             { text: 'MySQL中InnoDB和MyISAM的区别？', link: basePath + 'MySQL中InnoDB和MyISAM的区别？' },
             { text: 'MySQL中InnoDB和MyISAM的如何选择？', link: basePath + 'MySQL中InnoDB和MyISAM的如何选择？' },
@@ -328,10 +370,7 @@ export default [
         text: '优化',
         collapsed: false,
         items: [
-            { text: '性能分析工具的使用', link: basePath + '性能分析工具的使用' },
-            { text: '索引优化与查询优化', link: basePath + '索引优化与查询优化' },
-            { text: '数据库的设计规范', link: basePath + '数据库的设计规范' },
-            { text: '数据库其他调优策略', link: basePath + '数据库其他调优策略' },
+
 
         ]
     }
