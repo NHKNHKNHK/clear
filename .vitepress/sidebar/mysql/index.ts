@@ -33,6 +33,8 @@ export default [
                     { text: '数据库的设计规范', link: basePath + '数据库的设计规范' },
                     { text: '数据库其他调优策略', link: basePath + '数据库其他调优策略' },
                     // todo 事务
+                    { text: '事务基础', link: basePath + '事务基础' },
+                    { text: 'MySQL事务日志', link: basePath + 'MySQL事务日志' },
                     // todo 锁
 
                 ]
