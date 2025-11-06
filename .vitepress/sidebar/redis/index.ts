@@ -139,6 +139,7 @@ export default [
       { text: 'Redis事务保证原子性吗，支持回滚吗？', link: basePath + 'Redis事务保证原子性吗，支持回滚吗？' },
       { text: 'Redis的事务和关系型数据库有何不同？', link: basePath + 'Redis的事务和关系型数据库有何不同？' },
       { text: 'Redis的lua脚本？', link: basePath + 'Redis的lua脚本？' },
+      { text: '为什么Lua脚本可以保证原子性', link: basePath + '为什么Lua脚本可以保证原子性' },
       { text: 'Redis中如何实现队列和栈的功能？', link: basePath + 'Redis中如何实现队列和栈的功能？' },
       { text: '简述Redis的Ziplist和Quicklist？', link: basePath + '简述Redis的Ziplist和Quicklist？' },
       { text: '什么是Redis的ListPack？', link: basePath + '什么是Redis的ListPack？' },
