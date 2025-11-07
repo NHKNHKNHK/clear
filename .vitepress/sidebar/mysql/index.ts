@@ -17,13 +17,13 @@ export default [
                     { text: '子查询', link: basePath + '子查询' },
                     { text: 'MySQL数据类型', link: basePath + 'MySQL数据类型' },
                     { text: 'MySQL约束', link: basePath + 'MySQL约束' },
-                    { text: '视图', link: basePath + '视图' },
+                    { text: 'MySQL视图', link: basePath + 'MySQL视图' },
                     { text: '存储过程与存储函数', link: basePath + '存储过程与存储函数' },
                     { text: '变量、流程控制与游标', link: basePath + '变量、流程控制与游标' },
                     { text: '触发器', link: basePath + '触发器' },
                     { text: 'MySQL8新特性', link: basePath + 'MySQL8新特性' },
                     { text: 'MySQL窗口函数', link: basePath + 'MySQL窗口函数' },
-                    { text: 'MySQL共用表表达式', link: basePath + 'MySQL共用表表达式' },
+                    { text: 'MySQL公用表表达式', link: basePath + 'MySQL公用表表达式' },
 
                 ]
             },
