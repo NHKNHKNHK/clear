@@ -10,8 +10,20 @@ export default [
                 text: '基础',
                 collapsed: false,
                 items: [
-                    // todo 数据类型
-                    { text: '约束的分类', link: basePath + '约束的分类' },
+                    // todo
+                    { text: '排序与分页', link: basePath + '排序与分页' },
+                    { text: '多表查询', link: basePath + '多表查询' },
+                    { text: '单行函数与聚合函数', link: basePath + '单行函数与聚合函数' },
+                    { text: '子查询', link: basePath + '子查询' },
+                    { text: 'MySQL数据类型', link: basePath + 'MySQL数据类型' },
+                    { text: 'MySQL约束', link: basePath + 'MySQL约束' },
+                    { text: '视图', link: basePath + '视图' },
+                    { text: '存储过程与存储函数', link: basePath + '存储过程与存储函数' },
+                    { text: '变量、流程控制与游标', link: basePath + '变量、流程控制与游标' },
+                    { text: '触发器', link: basePath + '触发器' },
+                    { text: 'MySQL8新特性', link: basePath + 'MySQL8新特性' },
+                    { text: 'MySQL窗口函数', link: basePath + 'MySQL窗口函数' },
+                    { text: 'MySQL共用表表达式', link: basePath + 'MySQL共用表表达式' },
 
                 ]
             },
@@ -19,33 +31,36 @@ export default [
                 text: '进阶',
                 collapsed: false,
                 items: [
-                    // todo 数据目录
-                    // todo 用户与权限管理
-
+                    // todo
+                    { text: 'MySQL数据目录', link: basePath + 'MySQL数据目录' },
+                    { text: '用户与权限管理', link: basePath + '用户与权限管理' },
                     { text: 'MySQL逻辑架构', link: basePath + 'MySQL逻辑架构' },
-                    { text: 'MySQL的存储引擎', link: basePath + 'MySQL的存储引擎' },
-                    // todo InnoDB数据存储结构
+                    { text: 'MySQL存储引擎', link: basePath + 'MySQL存储引擎' },
+                    // todo
+                    { text: 'InnoDB数据页结构', link: basePath + 'InnoDB数据页结构' },
                     { text: '索引设计原则', link: basePath + '索引设计原则' },
                     { text: '哪些情况适合创建索引', link: basePath + '哪些情况适合创建索引' },
                     { text: '哪些情况不适合创建索引', link: basePath + '哪些情况不适合创建索引' },
                     { text: '性能分析工具的使用', link: basePath + '性能分析工具的使用' },
                     { text: '索引优化与查询优化', link: basePath + '索引优化与查询优化' },
+                    // todo
                     { text: '数据库的设计规范', link: basePath + '数据库的设计规范' },
                     { text: '数据库其他调优策略', link: basePath + '数据库其他调优策略' },
-                    // todo 事务
                     { text: '事务基础', link: basePath + '事务基础' },
                     { text: 'MySQL事务日志', link: basePath + 'MySQL事务日志' },
-                    // todo 锁
-
+                    // todo
+                    { text: 'MySQL锁', link: basePath + 'MySQL锁' },
+                    { text: 'MVCC', link: basePath + 'MVCC' },
                 ]
             },
             {
                 text: '运维',
                 collapsed: false,
                 items: [
-                    // todo 数据库日志
-                    // todo  主从
-                    // todo 备份与恢复
+                    // todo
+                    { text: '数据库日志', link: basePath + '数据库日志' },
+                    { text: '备份与恢复', link: basePath + '备份与恢复' },
+                    { text: '主从复制', link: basePath + '主从复制' },
                 ]
             }
         ]
