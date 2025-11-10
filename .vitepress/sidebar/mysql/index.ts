@@ -34,18 +34,20 @@ export default [
                     // todo
                     { text: 'MySQL数据目录', link: basePath + 'MySQL数据目录' },
                     { text: '用户与权限管理', link: basePath + '用户与权限管理' },
+                    
                     { text: 'MySQL逻辑架构', link: basePath + 'MySQL逻辑架构' },
                     { text: 'MySQL存储引擎', link: basePath + 'MySQL存储引擎' },
-                    // todo
                     { text: '索引的数据结构', link: basePath + '索引的数据结构' },
+                    // todo
                     { text: 'InnoDB数据页结构', link: basePath + 'InnoDB数据页结构' },
+                    
                     { text: '索引设计原则', link: basePath + '索引设计原则' },
                     { text: '哪些情况适合创建索引', link: basePath + '哪些情况适合创建索引' },
                     { text: '哪些情况不适合创建索引', link: basePath + '哪些情况不适合创建索引' },
                     { text: '性能分析工具的使用', link: basePath + '性能分析工具的使用' },
                     { text: '索引优化与查询优化', link: basePath + '索引优化与查询优化' },
                     // todo
-                    { text: '数据库的设计规范', link: basePath + '数据库的设计规范' },
+                    { text: '数据库设计规范', link: basePath + '数据库设计规范' },
                     { text: '数据库其他调优策略', link: basePath + '数据库其他调优策略' },
                     { text: '事务基础', link: basePath + '事务基础' },
                     { text: 'MySQL事务日志', link: basePath + 'MySQL事务日志' },
