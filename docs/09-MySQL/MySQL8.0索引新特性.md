@@ -2,12 +2,22 @@
 
 ## 降序索引
 
-在创建索引时，可以指定索引的顺序，即索引值升序或降序
+降序索引以降序存储键值。虽然在语法上，从 MySQL 4 版本开始就已经支持降序索引的语法了，但实际上该 DESC 定义是被忽略的，直到 **MySQL 8.x 版本才开始真正支持降序索引**（仅限于 InnoDB 存储引擎）。
+
+MySQL在**8.0 版本之前创建的仍然是升序索引，使用时进行反向扫描，这大大降低了数据库的效率**。在某些场景下，降序索引意义重大。
+
+例如，如果一个查询，需要对多个列进行排序，且顺序要求不一致，那么使用降序索引将会避免数据库使用额外的文件排序操作，从而提高性能。
+
+**在创建索引时，可以指定索引的顺序，即索引值升序或降序**
 
 可以分别在MySQL5.7、MySQL8.0分别执行如下SQL，在MySQL 5.7中索引依旧是按照升序存储，而在MySQL 8.0中索引则是按照降序存储。
 
-```sql
-CREATE TABLE ts1(a int,b int,index idx_a_b(a,b desc));
+```sql{4}
+CREATE TABLE ts1(
+    a int,
+    b int,
+    index idx_a_b(a,b desc)
+);
 ```
 
 下面可以测试降序索引在执行计划中的表现
@@ -32,7 +42,7 @@ DELIMITER ;
 CALL ts_insert();
 ```
 
-在MySQL 5.7版本中查看数据表ts1的执行计划，结果如下：
+在MySQL 5.7版本中查看数据表ts1的执行计划，SQL语句如下：
 
 ```sql
 EXPLAIN SELECT * FROM ts1 ORDER BY a, b DESC LIMIT 5;
@@ -41,26 +51,24 @@ EXPLAIN SELECT * FROM ts1 ORDER BY a, b DESC LIMIT 5;
 从结果可以看出，执行计划中扫描数为799，而且使用了`Using filesort`
 
 :::tip
-`Using filesort`是MySQL中一种速度比较慢的外部排序，能避免是最好的。多数情况下，管理员可以通过优化索引来尽量避免出现Using filesort，从而提高数据库执行速度。
+`Using filesort`是MySQL中一种速度比较慢的外部排序，能避免是最好的。多数情况下，DBA可以通过优化索引来尽量避免出现Using filesort，从而提高数据库执行速度。
 :::
 
-在MySQL 8.0版本中查看数据表ts1的执行计划。从结果可以看出，执行计划中扫描数为5，而且没有使用Using filesort
+在MySQL 8.0版本中查看数据表ts1的执行计划。从结果可以看出，执行计划中扫描数为5，而且没有使用`Using filesort`
 
 :::warning
 降序索引只对查询中特定的排序顺序有效，如果使用不当，反而查询效率更低。
 
-例如，上述查询排序条件改为order by a desc, b desc，MySQL 5.7的执行计划要明显好于MySQL 8.0
+例如，上述查询排序条件改为`order by a desc, b desc`，MySQL 5.7的执行计划要明显好于MySQL 8.0
 :::
 
-将排序条件修改为order by a desc, b desc后，下面来对比不同版本中执行计划的效果。
+将排序条件修改为`order by a desc, b desc`后，下面来对比不同版本中执行计划的效果。
 
-在MySQL 5.7版本中查看数据表ts1的执行计划，结果如下：
+分别在MySQL 5.7版本、MySQL 8.0版本中查看数据表ts1的执行计划，SQL语句如下：
 
 ```sql
 EXPLAIN SELECT * FROM ts1 ORDER BY a DESC, b DESC LIMIT 5;
 ```
-
-在MySQL 8.0版本中查看数据表ts1的执行计划
 
 从结果可以看出，修改后MySQL 5.7的执行计划要明显好于MySQL 8.0
 
@@ -84,7 +92,7 @@ EXPLAIN SELECT * FROM ts1 ORDER BY a DESC, b DESC LIMIT 5;
 
 （说明：其实这里设置索引的可行性的语法就是设置索引的语法，只不过在后面添加了 INVISIBLE、VISIBLE 关键字）
 
-### 修改索引可见性
+### 修改索引可见性（创建表时直接创建）
 
 在 MySQL 中创建隐藏索引通过 SQL 语句 INVISIBLE 来实现，语法形式如下：
 
@@ -97,6 +105,7 @@ CREATE TABLE tablename(
     INDEX [indexname](propname1 [(length)]) INVISIBLE
 );
 ```
+
 上述语句比普通索引多了一个关键字 INVISIBLE，用来标记索引为不可见索引
 
 示例：在创建班级表 classes 时，在字段 cname 上创建隐藏索引
@@ -167,12 +176,16 @@ ALTER TABLE tablename ALTER INDEX index_name VISIBLE; #切换成非隐藏索引
 
 ### 使隐藏索引对查询优化器可见
 
-在 MySQL 8.x 版本中，为索引提供了一种新的测试方式，可以通过查询优化器的一个开关（use_invisible_indexes）来打开某个设置，使隐藏索引对查询优化器可见。如果 use_invisible_indexes 设置为 off (默认)，优化器会忽略隐藏索引。如果设置为 on，即使隐藏索引不可见，优化器在生成执行计划时仍会考虑使用隐藏索引。
+在 MySQL 8.x 版本中，为索引提供了一种新的测试方式，可以通过查询优化器的一个开关（`use_invisible_indexes`）来打开某个设置，使隐藏索引对查询优化器可见。
+
+- 如果 `use_invisible_indexes` 设置为 `off (默认)`，优化器会忽略隐藏索引。
+- 如果设置为 on，即使隐藏索引不可见，优化器在生成执行计划时仍会考虑使用隐藏索引。
 
 （1）在 MySQL 命令行执行如下命令查看查询优化器的开关设置。
 
 ```sql
 mysql> select @@optimizer_switch \G
+Query OK, 0 rows affected (0.00 sec)
 ```
 
 在输出的结果信息中找到如下属性配置。
@@ -182,3 +195,47 @@ use_invisible_indexes=off
 ```
 
 此属性配置值为 off，说明隐藏索引默认对查询优化器不可见。
+
+（2）使隐藏索引对查询优化器可见，需要在 MySQL 命令行执行如下命令：
+
+```sql
+mysql> set session optimizer_switch="use_invisible_indexes=on";
+Query OK, 0 rows affected (0.00 sec)
+```
+
+SQL 语句执行成功，再次查看查询优化器的开关设置。
+
+```sql
+mysql> select @@optimizer_switch \G
+```
+
+在输出的结果信息中找到如下属性配置。
+
+```txt
+use_invisible_indexes=on
+```
+
+`use_invisible_indexes`属性值设置为“on”，说明隐藏索引对查询优化器可见。
+
+（3）使用EXPLAIN查看以字段invisible_column作为查询条件的索引使用情况。
+
+```sql
+explain select * from test where cname = '高三14班';
+```
+
+查询优化器回使用隐藏索引来查询数据
+
+（4）如果需要使隐藏索引对查询优化器不可见，则只需要执行如下命令即可。
+
+```sql
+mysql> set session optimizer_switch="use_invisible_indexes=off";
+Query OK, 0 rows affected (0.00 sec)
+```
+
+再次查看查询优化器的开关设置。
+
+```sql
+mysql> select @@optimizer_switch \G
+```
+
+此时，`use_invisible_indexes`属性的值已经被设置为 “off”。

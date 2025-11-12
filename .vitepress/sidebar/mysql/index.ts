@@ -34,20 +34,41 @@ export default [
                     // todo
                     { text: 'MySQL数据目录', link: basePath + 'MySQL数据目录' },
                     { text: '用户与权限管理', link: basePath + '用户与权限管理' },
-                    
+
                     { text: 'MySQL逻辑架构', link: basePath + 'MySQL逻辑架构' },
+                    { text: 'MySQL中的SQL执行流程', link: basePath + 'MySQL中的SQL执行流程' },
+                    { text: 'MySQL书写顺序与执行顺序', link: basePath + 'MySQL书写顺序与执行顺序' },
+                    { text: '数据库缓冲池（buffer pool）', link: basePath + '数据库缓冲池（buffer pool）' },
                     { text: 'MySQL存储引擎', link: basePath + 'MySQL存储引擎' },
-                    { text: '索引的数据结构', link: basePath + '索引的数据结构' },
+                    {
+                        text: '索引的数据结构', link: basePath + '索引的数据结构',
+                        items:
+                            [
+                                { text: 'MySQL聚簇索引与非聚簇索引', link: basePath + 'MySQL聚簇索引与非聚簇索引' },
+                                { text: 'InnoDB的B+树索引的注意事项', link: basePath + 'InnoDB的B+树索引的注意事项' },
+                                { text: 'MyIASM中的索引方案', link: basePath + 'MyIASM中的索引方案' },
+                                { text: 'MySQL数据结构选择的合理性', link: basePath + 'MySQL数据结构选择的合理性' },
+                            ],
+                    },
                     // todo
                     { text: 'InnoDB数据页结构', link: basePath + 'InnoDB数据页结构' },
                     
-                    { text: '索引设计原则', link: basePath + '索引设计原则' },
-                    { text: '哪些情况适合创建索引', link: basePath + '哪些情况适合创建索引' },
-                    { text: '哪些情况不适合创建索引', link: basePath + '哪些情况不适合创建索引' },
+                    { text: 'MySQL有哪些索引类型？（索引分类）', link: basePath + 'MySQL有哪些索引类型？（索引分类）' },
+                    { text: '创建、查看、删除索引', link: basePath + '创建、查看、删除索引' },
+                    { text: 'MySQL8.0索引新特性', link: basePath + 'MySQL8.0索引新特性' },
+                    {
+                        text: '索引设计原则',
+                        link: basePath + '索引设计原则',
+                        items: [
+                            { text: '哪些情况适合创建索引', link: basePath + '哪些情况适合创建索引' },
+                            { text: '哪些情况不适合创建索引', link: basePath + '哪些情况不适合创建索引' },
+                        ]
+                    },
                     { text: '性能分析工具的使用', link: basePath + '性能分析工具的使用' },
                     { text: '索引优化与查询优化', link: basePath + '索引优化与查询优化' },
+                    { text: '主键如何设计', link: basePath + '主键如何设计' },
                     // todo
-                    { text: '数据库设计规范', link: basePath + '数据库设计规范' },
+                    { text: '数据库的设计规范', link: basePath + '数据库的设计规范' },
                     { text: '数据库其他调优策略', link: basePath + '数据库其他调优策略' },
                     { text: '事务基础', link: basePath + '事务基础' },
                     { text: 'MySQL事务日志', link: basePath + 'MySQL事务日志' },
@@ -86,8 +107,6 @@ export default [
             { text: '为什么SQL语句不建议过多使用多表join', link: basePath + '为什么SQL语句不建议过多使用多表join' },
             { text: 'MySQL的Hash Join是什么？', link: basePath + 'MySQL的Hash Join是什么？' },
             { text: 'MySQL中数据排序的实现原理是什么？', link: basePath + 'MySQL中数据排序的实现原理是什么？' },
-            { text: 'MySQL书写顺序与执行顺序', link: basePath + 'MySQL书写顺序与执行顺序' },
-            { text: 'MySQL中的SQL执行过程？', link: basePath + 'MySQL中的SQL执行过程？' },
             { text: 'MySQL中一条查询语句是如何执行的？', link: basePath + 'MySQL中一条查询语句是如何执行的？' },
             { text: 'MySQL中一条更新语句是如何执行的？', link: basePath + 'MySQL中一条更新语句是如何执行的？' },
             { text: 'union和union all区别？', link: basePath + 'union和union all区别？' },
@@ -104,7 +123,7 @@ export default [
         text: '进阶',
         collapsed: false,
         items: [
-            { text: '数据库缓冲池（buffer pool）', link: basePath + '数据库缓冲池（buffer pool）' },
+
             { text: '什么是buffer pool', link: basePath + '什么是bufferpool' },
             { text: 'buffer pool的读写流程', link: basePath + 'bufferpool的读写流程' },
             { text: '多个buffer pool实例是否引发并发问题', link: basePath + '多个bufferpool实例是否引发并发问题' },
@@ -145,17 +164,13 @@ export default [
             // 复合索引
             // 索引下推
             { text: '什么是索引？有什么用？', link: basePath + '什么是索引？有什么用？' },
-            { text: 'MySQL聚簇索引与非聚簇索引', link: basePath + 'MySQL聚簇索引与非聚簇索引' },
+
             { text: 'InnoDB的数据页和B+树的关系', link: basePath + 'InnoDB的数据页和B+树的关系' },
             { text: '什么是InnoDB的页分裂和页合并', link: basePath + '什么是InnoDB的页分裂和页合并' },
             { text: '什么是回表查询，怎么减少回表次数？', link: basePath + '什么是回表查询，怎么减少回表次数？' },
-            { text: 'InnoDB的B+树索引的注意事项', link: basePath + 'InnoDB的B+树索引的注意事项' },
+
             { text: '为什么聚集索引，不要选择频繁更新的列？', link: basePath + '为什么聚集索引，不要选择频繁更新的列？' },
-            { text: 'MyIASM中的索引方案', link: basePath + 'MyIASM中的索引方案' },
-            { text: 'MySQL数据结构选择的合理性', link: basePath + 'MySQL数据结构选择的合理性' },
-            { text: 'MySQL有哪些索引类型？（索引分类）', link: basePath + 'MySQL有哪些索引类型？（索引分类）' },
-            { text: '创建、查看、删除索引', link: basePath + '创建、查看、删除索引' },
-            { text: 'MySQL8.0索引新特性', link: basePath + 'MySQL8.0索引新特性' },
+
             { text: 'InnoDB中的索引类型？', link: basePath + 'InnoDB中的索引类型？' },
             { text: '在不同存储引擎中索引的落地方式？', link: basePath + '在不同存储引擎中索引的落地方式？' },
             { text: '什么情况下应不建或少建索引？', link: basePath + '什么情况下应不建或少建索引？' },
@@ -175,7 +190,6 @@ export default [
 
             { text: '什么是自适应hash索引？', link: basePath + '什么是自适应hash索引？' },
 
-            { text: '索引的创建和使用规则？', link: basePath + '索引的创建和使用规则？' },
             { text: '什么是hash索引？', link: basePath + '什么是hash索引？' },
             { text: 'hash索引和B+树索引有什么区别？', link: basePath + 'hash索引和B+树索引有什么区别？' },
             { text: 'InnoDB到底支不支持哈希索引呢？', link: basePath + 'InnoDB到底支不支持哈希索引呢？' },
