@@ -11,6 +11,7 @@ import ormSidebar from './sidebar/orm/index'
 import mysqlSidebar from './sidebar/mysql/index'
 import designPatternSidebar from "./sidebar/design-pattern"
 import gitSidebar from "./sidebar/git/index"
+import linuxSidebar from "./sidebar/linux/index"
 import redisSidebar from './sidebar/redis/index'
 
 export default {
@@ -148,9 +149,7 @@ export default {
       ]
     },
   ],
-  '/09-MySQL/': [
-    ...mysqlSidebar
-  ],
+  '/09-MySQL/': mysqlSidebar,
   '/10-Redis/': redisSidebar,
   '/11-ORM/': ormSidebar,
   '/12-分布式/': [
@@ -279,20 +278,7 @@ export default {
 
   ],
   '/18-Git/': gitSidebar,
-  '/19-Linux/': [
-    {
-      text: 'Linux',
-      items: [
-        { text: '导读', link: '/19-Linux/' },
-      ]
-    },
-    {
-      text: '遇到的问题',
-      items: [
-        { text: '上传文件到Linux文件名乱码', link: '/19-Linux/上传文件到Linux文件名乱码' },
-      ]
-    }
-  ],
+  '/19-Linux/': linuxSidebar,
   '/20-operating-system/': [
     {
       text: '操作系统',
