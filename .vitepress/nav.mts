@@ -3,24 +3,36 @@ export default [
   {
     text: '后端',  // 该部分的标题（可省略）
     items: [
-      { text: 'Java基础', link: '/01-Java基础' },
-      { text: 'Java集合', link: '/02-Java集合篇' },
-      { text: 'JVM篇', link: '/03-JVM篇' },
-      { text: 'Java并发篇', link: '/04-Java并发篇' },
-      { text: 'Spring', link: '/05-Spring' },
-      { text: 'SpringMVC', link: '/06-SpringMVC' },
-      { text: 'SpringBoot', link: '/07-SpringBoot' },
-      { text: 'SpringCloud、微服务', link: '/08-SpringCloud、微服务' },
+      {
+        text: '',
+        items: [
+          { text: 'Java基础', link: '/01-Java基础' },
+          { text: 'Java集合', link: '/02-Java集合篇' },
+          { text: 'JVM篇', link: '/03-JVM篇' },
+          { text: 'Java并发篇', link: '/04-Java并发篇' },
+        ]
+      },
+      {
+        text: '',
+        items: [
+          { text: 'Spring', link: '/05-Spring' },
+          { text: 'SpringMVC', link: '/06-SpringMVC' },
+          { text: 'SpringBoot', link: '/07-SpringBoot' },
+          { text: 'SpringCloud、微服务', link: '/08-SpringCloud、微服务' },
+        ]
+      },
+      {
+        text: '',
+        items: [
+          { text: 'Linux', link: '/19-Linux' },
+          { text: '操作系统', link: '20-operating-system' },
+          { text: '计算机网络', link: '/21-computer-network' },
+          { text: '数据结构', link: '/22-data-structure' },
+        ]
+      },
       { text: '分布式', link: '/12-分布式' },
-
       { text: 'ORM', link: '/11-ORM' },
-
       { text: '问题排除、场景题、性能优化', link: '/17-backend-what' },
-      { text: 'Git', link: '/18-Git' },
-      { text: 'Linux', link: '/19-Linux' },
-      { text: '操作系统', link: '20-operating-system' },
-      { text: '计算机网络', link: '/21-computer-network' },
-      { text: '数据结构', link: '/22-data-structure' },
       { text: '设计模式', link: '/23-设计模式' },
     ]
   },
@@ -73,10 +85,11 @@ export default [
   {
     text: '其他',
     items: [
-      { text: '参考与鸣谢', link: '/thankYou' },
-      { text: 'VitePress Markdown语法扩展', link: '/markdown-examples' },
+      { text: 'Git', link: '/18-Git' },
       { text: 'Docker', link: '/Docker' },
       { text: 'Python', link: '/Python' },
+      { text: 'VitePress Markdown语法扩展', link: '/markdown-examples' },
+      { text: '参考与鸣谢', link: '/thankYou' },
       { text: '其他', link: '/other/wx/wx-play/index' },
       {
         text: '书籍阅读记录',
