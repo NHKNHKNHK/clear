@@ -148,6 +148,7 @@ export default [
       { text: 'synchronized同步锁有哪几种方法？', link: '/04-Java并发篇/synchronized同步锁有哪几种方法？' },
       { text: '如何选择同步锁对象？如何设定同步代码访问？', link: '/04-Java并发篇/如何选择同步锁对象？如何设定同步代码访问？' },
       { text: 'Java中的synchronized是怎么实现的？（底层原理）', link: '/04-Java并发篇/Java中的synchronized是怎么实现的？（底层原理）' },
+      { text: '锁消除与锁膨胀', link: '锁消除与锁膨胀' },
       { text: 'synchronized是可重入锁吗？它的重入实现原理？', link: '/04-Java并发篇/synchronized是可重入锁吗？它的重入实现原理？' },
       { text: 'synchronized能否被打断，什么情况下打断', link: '/04-Java并发篇/synchronized能否被打断，什么情况下打断' },
       { text: 'synchronized的不同作用范围有什么区别', link: '/04-Java并发篇/synchronized的不同作用范围有什么区别' },
