@@ -248,9 +248,3 @@ You can get started using VitePress right away using `npx`!
 npm init
 npx vitepress init
 ```
-
-<div>
-  <p style="color: red;">
-    hahah
-  </p>
-</div>

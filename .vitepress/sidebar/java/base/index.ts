@@ -9,6 +9,7 @@ export default [
     collapsed: false, // 折叠 默认展开，初始页面加载时折叠设置为true
     items: [
       { text: 'index', link: basePath },
+      { text: 'Java与C++的区别', link: basePath + 'Java与C++的区别' },
       { text: 'i++与++i的区别', link: basePath + 'i++与++i的区别' },
       { text: '服务可用性几个9的含义', link: basePath + '服务可用性几个9的含义' },
       { text: 'JDK、JRE、JVM的关系', link: basePath + 'JDK、JRE、JVM的关系' },
@@ -35,7 +36,6 @@ export default [
       { text: '什么是Java的迭代器', link: basePath + '什么是Java的迭代器' },
       { text: '怎么判断一个链表是不是环形链表', link: basePath + '怎么判断一个链表是不是环形链表' },
 
-      { text: 'Java中的参数传递是按值还是按引用', link: basePath + 'Java中的参数传递是按值还是按引用' },
       { text: 'Java中方法参数传值还是传引用', link: basePath + 'Java中方法参数传值还是传引用' },
       { text: 'Java中的可变类与不可变类', link: basePath + 'Java中的可变类与不可变类' },
       { text: 'String对象真的不可变吗', link: basePath + 'String对象真的不可变吗' },
@@ -63,6 +63,7 @@ export default [
     text: 'OOP',
     collapsed: false,
     items: [
+      { text: '如何理解面向对象和面向过程', link: basePath + '如何理解面向对象和面向过程' },
       { text: 'Java三大特性是什么', link: basePath + 'Java三大特性是什么' },
       { text: '什么是封装', link: basePath + '什么是封装' },
       { text: '什么是继承', link: basePath + '什么是继承' },

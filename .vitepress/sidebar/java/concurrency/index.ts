@@ -133,7 +133,7 @@ export default [
       { text: 'reentrantLock的实现原理？', link: '/04-Java并发篇/reentrantLock的实现原理？' },
       { text: '你了解Java中的读写锁吗？', link: '/04-Java并发篇/你了解Java中的读写锁吗？' },
       { text: '乐观锁如果通过数据库实现，并发情况下，数据库如何保证一致', link: '/04-Java并发篇/乐观锁如果通过数据库实现，并发情况下，数据库如何保证一致' },
-      { text: '什么是自旋锁？自旋锁的优缺点', link: '/04-Java并发篇/什么是自旋锁？自旋锁的优缺点' },
+      { text: '什么是自旋锁', link: '/04-Java并发篇/什么是自旋锁' },
       { text: '自旋锁时间阈值', link: '/04-Java并发篇/自旋锁时间阈值' },
       { text: '什么是可重入锁（递归锁）？', link: '/04-Java并发篇/什么是可重入锁（递归锁）？' },
       { text: 'ReentrantLock和synchronized的区别？', link: '/04-Java并发篇/ReentrantLock和synchronized的区别？' },

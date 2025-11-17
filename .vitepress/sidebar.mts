@@ -212,7 +212,7 @@ export default {
         { text: 'Kafka监控工具', link: '/15-MQ/Kafka/learn/02-Kafka监控工具' },
         { text: 'Kafka 常用API操作', link: '/15-MQ/Kafka/learn/03-Kafka 常用API操作' },
         { text: 'Kafak整合Flume', link: '/15-MQ/Kafka/learn/Kafak整合Flume' },
-        { text: '04-KafkaUtils.createDirectStream的消费者LocationStrategies', link: '/15-MQ/Kafka/learn/04-KafkaUtils.createDirectStream的消费者LocationStrategies' },
+        { text: 'KafkaUtils.createDirectStream的消费者LocationStrategies', link: '/15-MQ/Kafka/learn/04-KafkaUtils.createDirectStream的消费者LocationStrategies' },
 
       ],
     },
