@@ -127,7 +127,7 @@ export default [
     text: '锁',
     collapsed: false,
     items: [
-      { text: '一道题搞懂所有锁', link: '/04-Java并发篇/一道题搞懂所有锁' },
+      { text: 'Java中有哪些锁', link: '/04-Java并发篇/Java中有哪些锁' },
       { text: '如何优化Java中的锁？', link: '/04-Java并发篇/如何优化Java中的锁？' },
       { text: 'reentrantLock是如何实现公平锁和非公平锁？', link: '/04-Java并发篇/reentrantLock是如何实现公平锁和非公平锁？' },
       { text: 'reentrantLock的实现原理？', link: '/04-Java并发篇/reentrantLock的实现原理？' },

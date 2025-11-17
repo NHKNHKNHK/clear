@@ -8,7 +8,7 @@ ReentrantLock 需要手动解锁；而synchronized 不需要，它们都是可�
 
 >   性能问题：早期的JDK版本中，synchronized 性能不如 ReentrantLock，但现在基本上性能是差不多的
 
-**锁的获取方式**
+## **锁的获取方式**
 
 -   `synchronized`：
     -   是一种内置的关键字，使用简单，语法上直接加在方法或代码块上。
@@ -17,7 +17,7 @@ ReentrantLock 需要手动解锁；而synchronized 不需要，它们都是可�
     -   是一个显式的锁对象，需要通过`new ReentrantLock()`创建。
     -   需要显式调用`lock()`获取锁和`unlock()`释放锁。
 
-**公平性**
+## **公平性**
 
 -   `synchronized`：不支持公平锁，**默认是非公平**的，即不保证等待时间最长的线程优先获取锁。
 -   `ReentrantLock`：支持公平锁和非公平锁（默认是非公平的）
@@ -27,23 +27,23 @@ ReentrantLock lock = new ReentrantLock();  		// 非公平锁
 ReentrantLock lock = new ReentrantLock(true);   // 公平锁
 ```
 
-**锁的中断**
+## **锁的中断**
 
 -   `synchronized`：**不支持锁中断**，一旦线程进入等待状态，无法通过`Thread.interrupt()`中断。
 -   `ReentrantLock`：支持锁中断，可以使用`tryLock(long timeout, TimeUnit unit)`尝试获取锁，并且可以在等待时响应中断，有效避免死锁
 
-**锁的超时**
+## **锁的超时**
 
 -   `synchronized`：不支持超时机制，如果无法获取锁，线程会一直等待。
 -   `ReentrantLock`：支持超时机制，可以使用`tryLock(long timeout, TimeUnit unit)`在指定时间内尝试获取锁，超时后返回`false`。
 
-**性能**
+## **性能**
 
 -   `synchronized`：在JDK 6之后进行了大量优化，性能已经接近甚至超过`ReentrantLock`，特别是在争用较少的情况下。
 -   `ReentrantLock`：提供了更灵活的控制，但在某些情况下可能会比`synchronized`稍慢，尤其是在争用激烈的情况下。
 
->   扩展
->
+## 扩展
+
 >   synchronized 性能优化
 >
 >   synchronized在JDK1.6之后进行了很多性能优化，主要包括如下：
