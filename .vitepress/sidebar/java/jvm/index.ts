@@ -7,6 +7,7 @@ export default [
       { text: '导航', link: '/03-JVM篇/' },
       { text: 'Java是编译型还是解释型', link: basePath + 'Java是编译型还是解释型' },
       { text: 'Java是如何实现跨平台的？', link: basePath + 'Java是如何实现跨平台的？' },
+      { text: '什么是AOT编译？和JIT有啥区别？', link: basePath + '什么是AOT编译？和JIT有啥区别？' },
       { text: 'Java是如何实现的平台无关', link: basePath + 'Java是如何实现的平台无关' },
       { text: '说说对象的创建过程？', link: basePath + '说说对象的创建过程？' },
       { text: '如何判断对象的存活？解释强引用、软引用、弱引用和虚引用？', link: basePath + '如何判断对象的存活？解释强引用、软引用、弱引用和虚引用？' },
