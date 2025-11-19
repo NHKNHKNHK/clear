@@ -13,6 +13,7 @@ import designPatternSidebar from "./sidebar/design-pattern"
 import gitSidebar from "./sidebar/git/index"
 import linuxSidebar from "./sidebar/linux/index"
 import redisSidebar from './sidebar/redis/index'
+import hadoopSidebar from './sidebar/hadoop/index'
 import flumeSidebar from './sidebar/flume/index'
 
 export default {
@@ -481,19 +482,7 @@ export default {
       ]
     }
   ],
-  '/34-Hadoop/': [
-    {
-      text: 'Hadoop',
-      items: [
-        { text: '什么是Hadoop', link: '/34-Hadoop/什么是Hadoop' },
-        { text: 'Hadoop架构', link: '/34-Hadoop/Hadoop架构' },
-        { text: 'Hadoop常用端口号、配置', link: '/34-Hadoop/Hadoop常用端口号、配置' },
-        { text: 'HDFS文件块大小', link: '/34-Hadoop/HDFS文件块大小' },
-        { text: 'HDFS小文件的危害', link: '/34-Hadoop/HDFS小文件的危害' },
-        { text: 'HDFS小文件怎么解决', link: '/34-Hadoop/HDFS小文件怎么解决' },
-      ]
-    }
-  ],
+  '/hadoop/': hadoopSidebar,
   '/hbase/': [
     {
       text: 'HBase',
