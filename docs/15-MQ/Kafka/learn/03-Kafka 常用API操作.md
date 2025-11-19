@@ -1,14 +1,14 @@
-# 0 Kakfa核心 API 介绍
+# Kafka常用API操作
+
+## 0 Kakfa核心 API 介绍
 
 通过调用 Kafka API 操作 Kafka集群，其核心API主要包括一下5种：
 
--   Producer API（生产者API）：构建应用程序发送数据流到 Kafka 集群中的主题
--   Consumer API（消费者API）：构建应用程序从 Kafka集群 中的主题读取数据流
--   Streams API：构建流处理程序的库，能够处理流式数据
--   Connect API：实现连接器，用于在 Kafka 和其他系统之间可扩展的、可靠的流式传输数据的工具。
--   AdminClient API：构建集群**管理**工具，查看 Kafka 集群组件信息
-
-
+- Producer API（生产者API）：构建应用程序发送数据流到 Kafka 集群中的主题
+- Consumer API（消费者API）：构建应用程序从 Kafka集群 中的主题读取数据流
+- Streams API：构建流处理程序的库，能够处理流式数据
+- Connect API：实现连接器，用于在 Kafka 和其他系统之间可扩展的、可靠的流式传输数据的工具。
+- AdminClient API：构建集群**管理**工具，查看 Kafka 集群组件信息
 
 要想使用这些API，就需要在pom中导入相关依赖
 
@@ -31,7 +31,7 @@
 </dependencies>
 ```
 
-# 1 Producer API
+## 1 Producer API
 
 Producer API是Apache Kafka提供的一组API，用于向Kafka集群发送消息。
 
@@ -41,16 +41,16 @@ Producer API**支持异步和同步发送消息**，同时**还支持消息的�
 
 使用Producer API发送消息的**基本流程**如下：
 
--   创建一个 Producer 实例
-    -   配置Producer的属性，如Kafka集群地址、序列化器等。
--   创建一个 ProducerRecord 对象
-    -   指定要发送的消息的topic、key和value。
--   调用 Producer 的 send() 方法发送消息
-    -   可以选择同步或异步发送。
-    -   如果选择异步发送，可以注册一个回调函数，用于处理发送结果
--   关闭Producer实例，释放资源。
+- 创建一个 Producer 实例
+    - 配置Producer的属性，如Kafka集群地址、序列化器等。
+- 创建一个 ProducerRecord 对象
+    - 指定要发送的消息的topic、key和value。
+- 调用 Producer 的 send() 方法发送消息
+    - 可以选择同步或异步发送。
+    - 如果选择异步发送，可以注册一个回调函数，用于处理发送结果
+- 关闭Producer实例，释放资源。
 
-### Scala演示
+#### Scala演示
 
 ```scala
 package com.clear.kafka.producer
@@ -119,26 +119,25 @@ object ProducerLearning
 }
 ```
 
-### Java演示
+#### Java演示
 
 ```
 
 ```
 
 
-
-# Consumer API
+## Consumer API
 
 ​	Consumer API是Kafka提供的一个Java API，用于从Kafka集群中消费消息。通过Consumer API，可以订阅一个或多个topic，并从中消费消息。Consumer API支持**多线程消费**、消息的**批量拉取**、消息的**自动提交和手动提交**等功能。
 
 使用Consumer API消费消息的基本流程如下：
 
--   创建一个Consumer实例，配置Consumer的属性，如Kafka集群地址、消费者组ID等。
--   订阅一个或多个topic，可以使用正则表达式订阅多个topic。
--   调用Consumer的poll()方法拉取消息，可以指定拉取的最大记录数和超时时间。
--   处理拉取到的消息，可以使用多线程处理消息。
--   提交消费位移，可以选择自动提交或手动提交。
--   关闭Consumer实例，释放资源。
+- 创建一个Consumer实例，配置Consumer的属性，如Kafka集群地址、消费者组ID等。
+- 订阅一个或多个topic，可以使用正则表达式订阅多个topic。
+- 调用Consumer的poll()方法拉取消息，可以指定拉取的最大记录数和超时时间。
+- 处理拉取到的消息，可以使用多线程处理消息。
+- 提交消费位移，可以选择自动提交或手动提交。
+- 关闭Consumer实例，释放资源。
 
 ```scala
 package com.clear.kafka.consumer
@@ -183,7 +182,7 @@ object ConsumerLearning {
 }
 ```
 
-## 自定义Offset消费
+### 自定义Offset消费
 
 ```scala
 package com.clear.kafka.consumer
@@ -251,7 +250,7 @@ object ConsumerLearning2 {
 }
 ```
 
-## 手动offset管理
+### 手动offset管理
 
 为了使我们能够专注于自己的业务逻辑，**Kafka提供了自动提交 offset 的功能**，自动提交 offset的相关参数：
 
@@ -275,8 +274,8 @@ prop.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,"false")
 
 手动提交 offset 的方式有两种：
 
--   **commitSync**（同步提交）
--   **commitAsync**（异步提交）
+- **commitSync**（同步提交）
+- **commitAsync**（异步提交）
 
 两者的相同点是，都会将 **本次 poll 的一批数据最高的偏移量提交**。
 
@@ -357,7 +356,7 @@ object ConsumerLearning2 {
 }
 ```
 
-# KafkaHelper工具类
+## KafkaHelper工具类
 
 在 src/main/sources目录添加两个配置文件
 
@@ -482,19 +481,17 @@ object Test {
 }
 ```
 
+## 自定义分区
 
-
-# 自定义分区
-
-## Scala实现
+### Scala实现
 
 自定义分区器的步骤：
 
-1.  继承 Partitioner 
-2.  实现抽象方法（partition、close、configure）
-3.  编写partition方法，返回分区号
+1. 继承 Partitioner 
+2. 实现抽象方法（partition、close、configure）
+3. 编写partition方法，返回分区号
 
-### 自定义分区器
+#### 自定义分区器
 
 ```scala
 package com.clear.kafka.partitioner
@@ -598,7 +595,7 @@ object PartitionerProducerTest {
 消息发送成功，发到了 0 分区
 ```
 
-### 自定义随机分区器
+#### 自定义随机分区器
 
 ```scala
 package com.clear.kafka.partitioner
@@ -676,7 +673,7 @@ object PartitionerProducerTest {
 消息发送成功，发到了 2 分区
 ```
 
-### 自定义Hash分区器
+#### 自定义Hash分区器
 
 ```scala
 package com.clear.kafka.partitioner
@@ -702,7 +699,7 @@ class HashPartitioner extends Partitioner {
 }
 ```
 
-### 自定义轮询分区器
+#### 自定义轮询分区器
 
 ```scala
 package com.clear.kafka.partitioner
@@ -733,7 +730,7 @@ class RoundRobinPartitioner extends Partitioner {
 }
 ```
 
-## Java实现
+### Java实现
 
 自定义分区器的步骤：
 
@@ -741,7 +738,7 @@ class RoundRobinPartitioner extends Partitioner {
 2.  实现接口的抽象方法（partition、close、configure）
 3.  编写partition方法，返回分区号
 
-### 1）自定义分区器
+#### 1）自定义分区器
 
 ```java
 public class MyPartitioner implements Partitioner {
@@ -780,7 +777,7 @@ public class MyPartitioner implements Partitioner {
 }
 ```
 
-### 2）使用分区器的方法
+#### 2）使用分区器的方法
 
 在生产者的配置中添加分区器参数
 
@@ -792,7 +789,7 @@ Properties properties = new Properties();
 properties.put(ProducerConfig.PARTITIONER_CLASS_CONFIG,"这里填写自定义分区器的全限定名");
 ```
 
-### 3）演示如下
+#### 3）演示如下
 
 ```java
 import org.apache.kafka.clients.producer.*;
@@ -911,7 +908,7 @@ first:0:46
 first:0:47
 ```
 
-## 生产者分区写入策略
+### 生产者分区写入策略
 
 **1）什么是分区**
 
@@ -923,8 +920,8 @@ first:0:47
 
 **2）为什么分区？**
 
--   **方便在集群中扩展**，每个 Partition 可以通过调整以适应它所在的机器，而一个 topic 又可以有多个 Partition 组成，因此整个集群就可以适应任意大小的数据了；
--   **可以提高并发**，因为可以以 Partition 为单位读写了
+- **方便在集群中扩展**，每个 Partition 可以通过调整以适应它所在的机器，而一个 topic 又可以有多个 Partition 组成，因此整个集群就可以适应任意大小的数据了；
+- **可以提高并发**，因为可以以 Partition 为单位读写了
 
 **3）分区的原则**
 
@@ -957,13 +954,13 @@ public ProducerRecord(String topic, V value)
     如果指定特定分区的话，消息是会发送到这个编号的特定分区，但是注意如果你的Topic分区只有默认的1个，而你却要发送到分区1号，此时发送会失败！因为你只有1个分区，即0号分区。所以在构建的topic的时候需要注意。
 ```
 
--   **指明partition**（这里的指明是指第几个分区）的情况下，直接将指明的值作为partition的值
+- **指明partition**（这里的指明是指第几个分区）的情况下，直接将指明的值作为partition的值
 
--   **没有指明partition**的情况下，但是**存在值key**，此时将 **key 的 hash 值与 topic 的 partition总数进行取余**得到partition值
+- **没有指明partition**的情况下，但是**存在值key**，此时将 **key 的 hash 值与 topic 的 partition总数进行取余**得到partition值
 
--   **即没有 partition值又没有key**的情况下，**Kafka采用 Sticky Partition（黏性分区器**），会随机选择一个分区，并尽可能一直使用该分区，待该分区的batch已满或者已完成，Kafka再随机一个分区进行使用
+- **即没有 partition值又没有key**的情况下，**Kafka采用 Sticky Partition（黏性分区器**），会随机选择一个分区，并尽可能一直使用该分区，待该分区的batch已满或者已完成，Kafka再随机一个分区进行使用
 
--   ```java
+- ```java
     org.apache.kafka.clients.producer.UniformStickyPartitioner
     
     public class UniformStickyPartitioner implements Partitioner  //均匀粘性分区器
@@ -1004,8 +1001,7 @@ public ProducerRecord(String topic, V value)
     ```
 
 
-
-### 1 轮询分区
+#### 1 轮询分区
 
 **默认的策略**，也是使用最多的策略，可以**最大限度保证所有消息平均分配到一个分区**
 
@@ -1025,28 +1021,25 @@ public class RoundRobinPartitioner implements Partitioner  // 轮询分区器
 ```
 
 
-
-### 2 随机策略
+#### 2 随机策略
 
 ​	随机策略，每次都随机地将消息分配到每个分区。在较早的版本，默认的分区策略就是随机策略，也是为了将消息均衡地写入到每个分区。但后续轮询策略表现更佳，所以基本上很少会使用随机策略。
 
 
-
-### 3 按key分配策略
+#### 3 按key分配策略
 
 ​	按key分配策略，有可能会出现「数据倾斜」，例如：某个 key 包含了大量的数据，因为key值一样，所有所有的数据将都分配到一个分区中，造成该分区的消息数量远大于其他的分区。
 
 **轮询策略、随机策略**都会导致一个问题，生产到 Kafka 中的数据是 **乱序存储** 的。而按 key 分区可以一定程度上实现数据有序存储——也就是局部有序，但这又可能会导致数据倾斜，所以在实际生产环境中要结合实际情况来做取舍。
 
 
-
-### 4 自定义分区策略
+#### 4 自定义分区策略
 
 自定义分区器的步骤：
 
-1.  实现接口 Partitioner 
-2.  实现接口的抽象方法（partition、close、configure）
-3.  编写partition方法，返回分区号
+1. 实现接口 Partitioner 
+2. 实现接口的抽象方法（partition、close、configure）
+3. 编写partition方法，返回分区号
 
 1）自定义分区器
 
@@ -1099,13 +1092,13 @@ Properties properties = new Properties();
 properties.put(ProducerConfig.PARTITIONER_CLASS_CONFIG,"这里填写自定义分区器的全限定名");
 ```
 
-# Kafka拦截器
+## Kafka拦截器
 
 所谓“拦截器”，就是在消息传输的过程中将其拦截，然后可以对消息进行一些处理。
 
 Kafka的拦截器是在 0.10 版本中添加到，Kafka的**拦截器可以作用在生产阶段**，也可以作用在**消费阶段**。
 
--   如果需要定义生产阶段的拦截器，就要定义一个类，实现`ProducerInterceptor`接口，并实现其中方法。
+- 如果需要定义生产阶段的拦截器，就要定义一个类，实现`ProducerInterceptor`接口，并实现其中方法。
 
     ```java
     org.apache.kafka.clients.producer.ProducerInterceptor
@@ -1113,7 +1106,7 @@ Kafka的拦截器是在 0.10 版本中添加到，Kafka的**拦截器可以作�
     public interface ProducerInterceptor<K, V> extends Configurable
     ```
 
--   如果需要定义消费阶段的拦截器，就要定义一个类，实现`ConusmerInterceptor`接口，并实现其中方法。
+- 如果需要定义消费阶段的拦截器，就要定义一个类，实现`ConusmerInterceptor`接口，并实现其中方法。
 
     ```java
     org.apache.kafka.clients.consumer.ConsumerInterceptor
@@ -1127,9 +1120,9 @@ Kafka的拦截器是在 0.10 版本中添加到，Kafka的**拦截器可以作�
 
 我们也可以将多个拦截器一起使用，组成 拦截器链，这时 `interceptor.classes`属性的value需要填写 一个拦截器集合
 
-## 生产阶段的拦截器
+### 生产阶段的拦截器
 
-### Producer拦截器模板
+#### Producer拦截器模板
 
 ```scala
 import org.apache.kafka.clients.producer.{ProducerInterceptor, ProducerRecord, RecordMetadata}
@@ -1162,7 +1155,7 @@ class MyProducerInterceptor extends ProducerInterceptor[String, String]{
 }
 ```
 
-### 演示
+#### 演示
 
 需求：
 
@@ -1253,9 +1246,9 @@ topic: topic-api2, partition: 2, offset: 7 SUCCEED
 topic: topic-api2, partition: 1, offset: 6 SUCCEED
 ```
 
-## 消费阶段的拦截器
+### 消费阶段的拦截器
 
-### Consumer拦截器模板
+#### Consumer拦截器模板
 
 ```scala
 import org.apache.kafka.clients.consumer.{ConsumerInterceptor, ConsumerRecords, OffsetAndMetadata}
@@ -1283,7 +1276,7 @@ class MyConsumerInterceptor extends ConsumerInterceptor[String,String]{
 }
 ```
 
-### 演示
+#### 演示
 
 需求：
 
@@ -1400,36 +1393,36 @@ topic: topic-api2, partition: 2, offset: 11, key: 2023-06-26, value: hello-world
 
 
 
-# AdminClient API
+## AdminClient API
 
 ​	AdminClient API是Kafka提供的一个Java API，用于管理Kafka集群的元数据信息，包括创建、删除、修改topic、broker、ACL等。通过AdminClient API，可以方便地进行Kafka集群的管理和维护。
 
-## AdminClient 常用API
+### AdminClient 常用API
 
 AdminClient API提供了以下几个主要的方法：
 
--   createTopics()：创建一个或多个topic。
--   deleteTopics()：删除一个或多个topic。
--   describeTopics()：获取一个或多个topic的元数据信息。
--   describeCluster()：获取Kafka集群的元数据信息。
--   createPartitions()：增加一个或多个topic的分区数。
--   alterConfigs()：修改一个或多个broker或topic的配置信息。
--   describeConfigs()：获取一个或多个broker或topic的配置信息。
--   listTopics()：获取Kafka集群中所有的topic列表。
--   listConsumerGroups()：获取Kafka集群中所有的consumer group列表。
--   describeConsumerGroups()：获取一个或多个consumer group的元数据信息。
--   deleteConsumerGroups()：删除一个或多个consumer group。
--   listOffsets()：获取一个或多个partition的offset信息。
--   alterPartitionReassignments()：修改一个或多个partition的reassignment信息。
--   describeLogDirs()：获取一个或多个broker的log directory信息。
--   describeReplicaLogDirs()：获取一个或多个broker的replica log directory信息。
--   describeAcls()：获取一个或多个ACL的元数据信息。
--   createAcls()：创建一个或多个ACL。
--   deleteAcls()：删除一个或多个ACL。
+- createTopics()：创建一个或多个topic。
+- deleteTopics()：删除一个或多个topic。
+- describeTopics()：获取一个或多个topic的元数据信息。
+- describeCluster()：获取Kafka集群的元数据信息。
+- createPartitions()：增加一个或多个topic的分区数。
+- alterConfigs()：修改一个或多个broker或topic的配置信息。
+- describeConfigs()：获取一个或多个broker或topic的配置信息。
+- listTopics()：获取Kafka集群中所有的topic列表。
+- listConsumerGroups()：获取Kafka集群中所有的consumer group列表。
+- describeConsumerGroups()：获取一个或多个consumer group的元数据信息。
+- deleteConsumerGroups()：删除一个或多个consumer group。
+- listOffsets()：获取一个或多个partition的offset信息。
+- alterPartitionReassignments()：修改一个或多个partition的reassignment信息。
+- describeLogDirs()：获取一个或多个broker的log directory信息。
+- describeReplicaLogDirs()：获取一个或多个broker的replica log directory信息。
+- describeAcls()：获取一个或多个ACL的元数据信息。
+- createAcls()：创建一个或多个ACL。
+- deleteAcls()：删除一个或多个ACL。
 
 通过AdminClient API，可以方便地进行Kafka集群的管理和维护，提高了Kafka集群的可靠性和可维护性。
 
-## AdminClientAPI实操
+### AdminClientAPI实操
 
 ```scala
 package com.clear.kafka.admin
@@ -1568,9 +1561,9 @@ object AdminClientAPI {
 
 
 
-# Kafka Connect 
+## Kafka Connect 
 
-## Kafka Connect简介
+### Kafka Connect简介
 
 ​	  **Kafka Connect**是一种用于Apache Kafka 和其他外部系统之间以可伸缩的方式可靠地流式传输工具。它可以通过定义Connectors来**使得向Kafka中移动大量数据或者 Kafka中导出大量数据变得更加简单**。Kafka Connect可以读取数据库中的数据或者应用程序服务器的日志数据，并将其导入到指定的Topic中。可以使得对这些数据做低延迟的流式处理。导出数据的Job可以将Kafka的Topic中的数据递送到辅助存储系统、查询系统或者批处理系统，以便进行脱机处理。
 
@@ -1593,45 +1586,45 @@ Kafka Connect的特征如下：
 
   利用Kafka现有的功能，Kafka Connect是连接流媒体和批量数据系统的理想解决方案。  
 
-## Kafka Connect中的核心概念
+### Kafka Connect中的核心概念
 
 ​	Kafka Connect的核心概念是Connector和Task。Connector是一个独立的Java进程，它负责将数据从外部系统导入到Kafka或将数据从Kafka导出到外部系统。每个Connector都包含一个或多个Task，每个Task负责处理一个特定的数据流。Connector和Task都是可插拔的，可以根据需要添加或删除。
 
 ​	Kafka Connect提供了许多现成的Connector，包括JDBC Connector、HDFS Connector、Elasticsearch Connector等。此外，Kafka Connect还提供了REST API，可以通过API管理Connector和Task。
 
--   Source：负责将外部的数据导入到Kafka的指定Topic中，例如：文件、关系型数据库等
+- Source：负责将外部的数据导入到Kafka的指定Topic中，例如：文件、关系型数据库等
 
--   Sink：负责将Kafka的指定主题的数据导出到外部，例如：文件、关系型数据库等
+- Sink：负责将Kafka的指定主题的数据导出到外部，例如：文件、关系型数据库等
 
--   Task：数据导入到Kafka，或者从Kafka导出数据的具体实现，Source和Sink工作的时候都是一个个的Task
+- Task：数据导入到Kafka，或者从Kafka导出数据的具体实现，Source和Sink工作的时候都是一个个的Task
 
--   Connectors：通过管理任务来协调数据流
+- Connectors：通过管理任务来协调数据流
 
--   Workers：运行Connectors和Task的进程
+- Workers：运行Connectors和Task的进程
 
--   Converters：Kafka Connect和其他存储系统进行数据的导入导出之前转换数据
+- Converters：Kafka Connect和其他存储系统进行数据的导入导出之前转换数据
 
--   Transforms：轻量级的数据调整工具
+- Transforms：轻量级的数据调整工具
 
 
-## Kafka Connect的优点
+### Kafka Connect的优点
 
--   可扩展性：Kafka Connect支持分布式部署，可以轻松地扩展到多个节点。
--   可靠性：Kafka Connect提供了故障转移和恢复机制，确保数据的可靠传输。
--   简单性：Kafka Connect提供了现成的Connector，可以轻松地将数据导入到Kafka或导出到外部系统中，无需编写复杂的代码。
+- 可扩展性：Kafka Connect支持分布式部署，可以轻松地扩展到多个节点。
+- 可靠性：Kafka Connect提供了故障转移和恢复机制，确保数据的可靠传输。
+- 简单性：Kafka Connect提供了现成的Connector，可以轻松地将数据导入到Kafka或导出到外部系统中，无需编写复杂的代码。
 
 总之，Kafka Connect是一个非常有用的工具，可以帮助我们轻松地将数据从外部系统导入到Kafka或将数据从Kafka导
 
 
 
-## Kafka Connect的工作模式
+### Kafka Connect的工作模式
 
 Kafka Connect有两种工作模式：
 
--   Standalone模式
--   Distributed模式
+- Standalone模式
+- Distributed模式
 
-### Standalone模式
+#### Standalone模式
 
 ​	在这种模式下，所有的Worker都在一个进程中执行。这种模式的配置更加简单，比较容易入门、上手使用。适用于只有一个Worker的情况（例如：收集日志文件）。但是这种模式不能享有Kafka Connect的一些高级功能，例如：容错等。
 
@@ -1694,7 +1687,7 @@ file=test.sink.txt
 topics=connect-test
 ```
 
-### Distributed模式
+#### Distributed模式
 
 ​	Distributed模式也就是分布式模式，在这种模式下，Connect可以以集群的方式运行在不同的节点上。不同节点上的Worker需要具有相同的 group.id，并且这个 group.id 不能与消费者组的名字起冲突。在这种集群模式下，Kafka Connect 具有良好的扩展性和容错性。如果一个新的Worker上线，或者一个现有的Worker宕机，则其他的Worker会自动地分配Worker内运行的Connector 和 Task，以动态平衡集群压力。
 
@@ -1774,7 +1767,7 @@ plugin.path=/opt/software/kafka_2.13-3.0.0/plugins
 [nhk@kk01 kafka_2.13-3.0.0]$ scp -r plugins/ kk03:$PWD
 ```
 
-## Kafka REST API
+### Kafka REST API
 
 ​	KafKa Connect在集群模式下的启动，并没有设置输入、输出的属性，而这些Connector都是需要我们后面手动维护的
 
@@ -1848,7 +1841,7 @@ curl -X GET 'http://kk01:8083/connectors/test-file-source/tasks/0/status'
 curl -X GET 'http://kk01:8083/connector-plugins'
 ```
 
-## 第三方插件
+### 第三方插件
 
 ​	Kafka原生只有从本地文件读取数据和将数据导出到本地文件，如果需要更加丰富的第三方功能，可以使用第三方查看来实现。
 
@@ -1856,7 +1849,7 @@ curl -X GET 'http://kk01:8083/connector-plugins'
 
 
 
-# Streams API
+## Streams API
 
 ​	Kafka 在0.10 版本之前，仅作为消息的存储系统，开发者如果要对Kafka集群中的数据进行流式计算，需要借助第三方的流计算框架，在 **0.10 版本之后**，**Kafka内置了一个流式处理框架的客户端 Kafka Stream**，开发者可以直接使用以Kafka 为核心构建流式计算系统。
 
@@ -1884,7 +1877,7 @@ Kafka Streams API的核心概念包括：
 </dependency>
 ```
 
-## 低级Processor API
+### 低级Processor API
 
 需求：词频统计
 
@@ -1988,7 +1981,7 @@ public class App {
 }
 ```
 
-### 测试
+#### 测试
 
 代码编写完成后，在 kk01 节点上创建 test-stream、test-stream-2 主题，命令如下
 
@@ -2018,11 +2011,11 @@ public class App {
 
 如果在kk02（消费者）上看到输出 {spark=1, world=1, scala=1, hello=2}，则说明Kafka Streams成功完成了词频统计需求。
 
-## 高级DSL API
+### 高级DSL API
 
 需求：过滤出前缀为a的消息，并删除前缀
 
-### 编写代码
+#### 编写代码
 
 ```scala
 package com.clear.kafkastreaming;
@@ -2099,7 +2092,7 @@ public class MyStream {
 }
 ```
 
-### 测试
+#### 测试
 
 
 
@@ -2142,4 +2135,3 @@ test-stream>hello
 test-stream-2
 pache
 ```
-

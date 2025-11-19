@@ -1,6 +1,6 @@
-## 什么是Hive
+# 什么是Hive
 
-**1）Hive简介**
+## Hive简介
 
 Hive是由Facebook开源，基于Hadoop的一个**数据仓库工具**，可以**将结构化的数据文件映射为一张表**，并提供类SQL查询功能。
 
@@ -32,7 +32,7 @@ hadoop
 select count(*) from test group by id;
 ```
 
-**2）Hive本质**
+## Hive本质
 
 Hive是一个Hadoop客户端，用于将HQL（Hive SQL）转化成MapReduce程序。
 
