@@ -79,6 +79,7 @@ export default [
       { text: 'Hive', link: '/36-Hive' },
       { text: 'Flink', link: '/38-Flink' },
       { text: 'Scala', link: '/39-Scala' },
+      { text: 'Flume', link: '/flume' },
       { text: '数据同步', link: '/40-data-sync' },
     ]
   },
