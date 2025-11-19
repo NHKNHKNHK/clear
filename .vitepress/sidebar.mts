@@ -13,6 +13,7 @@ import designPatternSidebar from "./sidebar/design-pattern"
 import gitSidebar from "./sidebar/git/index"
 import linuxSidebar from "./sidebar/linux/index"
 import redisSidebar from './sidebar/redis/index'
+import flumeSidebar from './sidebar/flume/index'
 
 export default {
   '/01-Java基础/': javaBaseSidebar,
@@ -625,7 +626,7 @@ export default {
       ]
     },
   ],
-
+  '/flume/': flumeSidebar,
   '/40-data-sync/': [
     {
       text: '数据同步',
