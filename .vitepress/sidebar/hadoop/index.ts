@@ -12,10 +12,12 @@ export default [
       { text: 'Hadoop组成', link: learnPath + 'Hadoop组成' },
       { text: 'Hadoop架构', link: learnPath + 'Hadoop架构' },
       { text: 'Hadoop特征优点', link: learnPath + 'Hadoop特征优点' },
+      { text: 'Hadoop2、3新特性', link: learnPath + 'Hadoop2、3新特性' },
 
 
-      
+
       { text: 'Hadoop序列化机制', link: learnPath + 'Hadoop序列化机制' },
+
     ],
   },
   {
