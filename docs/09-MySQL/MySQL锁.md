@@ -250,3 +250,158 @@ SELECT ... FOR UPDATE;
 - `INSERT`：一般情况下，新插入一条记录的操作并不加锁，通过一种称之为`隐式锁`的结构来保护这条新插入的记录在本事务提交前不被别的事务访问。
 
 ### 从数据操作的粒度划分：表级锁、页级锁、行锁
+
+为了尽可能提高数据库的并发度，每次锁定的数据范围越小越好，理论上每次只锁定当前操作的数据的方案会得到最大的并发度，但是管理锁是很**耗资源**的事情（涉及获取、检查、释放锁等动作）。因此数据库系统需要在**高并发响应**和**系统性能**两方面进行平衡，这样就产生了 “*`锁粒度（Lock granularity）`” 的概念。
+
+对一条记录加锁影响的也只是这条记录而已，我们就说这个锁的粒度比较细；其实一个事务也可以在**表级别**进行加锁，自然就被称之为**表级锁**或者**表锁**，对一个表加锁影响整个表中的记录，我们就说这个锁的粒度比较粗。锁的粒度主要分为表级锁、页级锁和行锁。
+
+#### 1. 表锁（Table Lock） 
+
+该锁会锁定整张表，它是MySQL中最基本的锁策略，并`不依赖于存储引擎`（不管你是 MySQL 的什么存储引擎，对于表锁的策略都是一样的），并且表锁是`开销最少`的策略（因为粒度比较大）。由于表级锁一次会将整个表锁定，所以可以很好的`避免死锁`的问题。当然，锁的粒度大所带来最大的负面影响就是出现锁资源争用的概率也会最高，导致`并发率大打折扣`。
+
+##### ① 表级别的S锁、X锁
+
+在对某个表执行SELECT、INSERT、DELETE、UPDATE语句时，InnoDB存储引擎是不会为这个表添加表级别的`S锁`或者`X锁`的。
+
+在对某个表执行一些诸如`ALTER TABLE`、`DROP TABLE`这类的`DDL`语句时，其他事务对这个表并发执行诸如SELECT、INSERT、DELETE、UPDATE的语句会发生阻塞。
+
+同理，某个事务中对某个表执行SELECT、INSERT、DELETE、UPDATE语句时，在其他会话中对这个表执行`DDL`语句也会发生阻塞。这个过程其实是通过在`server层`使用一种称之为`元数据锁`（英文名：`Metadata Locks`，简称`MDL`）结构来实现的。
+
+一般情况下，不会使用InnoDB存储引擎提供的表级别的`S锁`和`X锁`。只会在一些特殊情况下，比方说`崩溃恢复`过程中用到。比如，在系统变量`autocommit=0，innodb_table_locks = 1`时，`手动`获取InnoDB存储引擎提供的表t 的`S锁`或者`X锁`可以这么写：
+
+- `LOCK TABLES t READ`：InnoDB存储引擎会对表`t`加表级别的`S锁`。
+- `LOCK TABLES t WRITE`：InnoDB存储引擎会对表`t`加表级别的`X锁`。
+
+不过尽量避免在使用 InnoDB 存储引擎的表上使用`LOCK TABLES`这样的手动锁表语句，它们并不会提供什么额外的保护，只是会降低并发能力而已。
+
+因为InnoDB还是实现了更细粒度的**行锁**，关于 InnoDB 表级别的`S`锁和`X`锁大家了解一下就可以了。
+
+---
+
+**举例**：下面我们演示 MyISAM 引擎下的表锁。
+
+**步骤 1：数据准备（创建表并添加数据）**
+
+```sql
+CREATE TABLE mylock(
+id INT NOT NULL PRIMARY KEY auto_increment,
+NAME VARCHAR(20)
+)ENGINE myisam;  # 存储引擎使用 InnoDB也可以，只是不建议
+
+#插入一条数据
+INSERT INTO mylock(NAME) VALUES('a');
+```
+
+**步骤 2：查看表上加过的锁**
+
+```sql
+SHOW OPEN TABLES; #主要关注In_use字段的值
+
+或者
+
+SHOW OPEN TABLES where In_use > 0;
+```
+
+```sql
+mysql> SHOW OPEN TABLES;
++--------------------+---------------------------+--------+-------------+
+| Database           | Table                     | In_use | Name_locked |
++--------------------+---------------------------+--------+-------------+
+| mysql              | column_statistics         | 0      | 0           |
+| test               | mylock                    | 0      | 0           |
+| mysql              | table_stats               | 0      | 0           |
+| mysql              | check_constraints         | 0      | 0           |
+| mysql              | view_table_usage          | 0      | 0           |
+| mysql              | tables_priv               | 0      | 0           |
+| mysql              | column_type_elements      | 0      | 0           |
+| mysql              | foreign_key_column_usage  | 0      | 0           |
+| mysql              | time_zone_name            | 0      | 0           |
+
+...
+
++--------------------+---------------------------+--------+-------------+
+```
+
+```sql
+mysql> SHOW OPEN TABLES where In_use > 0;
+0 row in set (0.01 sec)
+```
+
+上面的结果表明，当前数据库中没有被锁定的表。
+
+**步骤 3：手动增加表锁命令**
+
+```sql
+LOCK TABLES t READ; #存储引擎会对表t加表级别的共享锁。共享锁也叫读锁或 S 锁（Share的缩写）
+LOCK TABLES t WRITE; #存储引擎会对表t加表级别的排他锁。排它锁也叫独占锁、写锁或 X 锁（是eXclusive的缩写）
+```
+
+```sql
+mysql> lock tables mylock write;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SHOW OPEN TABLES where In_use > 0;
++---------------+-------+--------+-------------+
+| Database      | Table | In_use | Name_locked |
++---------------+-------+--------+-------------+
+| test          | mylock| 1      | 0           |
++---------------+-------+--------+-------------+
+1 row in set (0.01 sec)
+```
+
+**步骤 4：释放表锁**
+
+```sql
+UNLOCK TABLES; #使用此命令解锁当前加锁的表
+```
+
+```sql
+mysql> unlock tables;
+Query OK, 0 rows affected (0.01 sec)
+
+#可以看到已经没有In_use>0的数据了
+mysql> SHOW OPEN TABLES where In_use > 0;
+1 row in set (0.01 sec)
+```
+
+**步骤 5：加读锁**
+
+我们为`mylock`表加读锁（**读阻塞写**），观察阻塞的情况，流程如下：
+
+| session_1                                                    | session_2                                                    |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 获得表 mylock 的S锁<br>lock table mylock read;               | 连接终端                                                     |
+| session_1可以查询该表记录<br>select * from mylock;           | session_2也可以查询该表记录<br/>select * from mylock;        |
+| session_1不能查询其他没有被锁定的表<br>例如：select * from user; -- 报错 `Table 'user' was not locked with LOCK TABLES` | session_2可以查询或更新未锁定的表<br/>如：insert into user(id,name,age,sex) values (1,"张三",19,"male"); |
+| session_1中**插入**或者**更新**锁定的表都会提示错误<br>插入报错：`Table 'mylock' was locked with a READ lock and can't be updated`<br>更新报错：`Table 'mylock' was locked with a READ lock and can't be updated` | session_2插入或者更新锁定表会一直**阻塞等待**获得锁<br>例如： insert into mylock(name) values('e'); -- 阻塞等待 |
+| 释放锁<br>unlock tables;                                     | session_2 获得锁，阻塞的语句执行，插入操作完成               |
+
+**步骤 6：加写锁**
+
+为`mylock`表加写锁，观察阻塞的情况，流程如下：
+
+| session_1                                                    | session_2                                                    |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 获得表 mylock 的X锁<br>lock table mylock write;              | 待**session_1**开启X锁后，再连接终端                         |
+| session_1对锁定表的查询 + 更新 + 插入操作都可以执行<br>例如：<br>select * from mylock;<br>update mylock set name='a2' where id=1;<br>insert into mylock(name) values('f'); | session_2对锁定表的查询**阻塞等待**<br>select * from mylock ; |
+| 释放锁<br>unlock tables;                                     | session_2 获得锁，阻塞的语句执行，查询操作完成               |
+
+>   需要说明的是，在锁表前，如果 session_2 有数据缓存，锁表以后，在锁住的表不发生改变的情况下 session_2可以读出缓存数据，一旦数据发生改变，缓存将失效，操作将被阻塞。(MySQL8 没有缓存)
+
+**总结**：
+
+- MyISAM在执行查询语句（SELECT）前，会给涉及的所有表加读锁，在执行增删改操作前，会给涉及的表加写锁。
+- `InnoDB`存储引擎是不会为这个表添加表级别的`读锁`或者`写锁`的。
+
+---
+
+MySQL 的表级锁有两种模式：（以 MyISAM 表进行操作的演示）
+
+- 表共享读锁（Table Read Lock）
+- 表独占写锁（Table Write Lock）
+
+| 锁类型 | 自己可读 | 自己可写 | <font style="color: red;">自己可操作其他表</font> | 他人可读     | 他人可写     |
+| ------ | -------- | -------- | ------------------------------------------------- | ------------ | ------------ |
+| 读锁   | 是       | 否       | 否                                                | 是           | 否，阻塞等待 |
+| 写锁   | 是       | 是       | 否                                                | 否，阻塞等待 | 否，阻塞等待 |
+
