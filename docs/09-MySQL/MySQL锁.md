@@ -280,8 +280,8 @@ SELECT ... FOR UPDATE;
 
 MySQL 的表级锁有两种模式：（以 MyISAM 表进行操作的演示）
 
--   表共享读锁（Table Read Lock）
--   表独占写锁（Table Write Lock）
+- 表共享读锁（Table Read Lock）
+- 表独占写锁（Table Write Lock）
 
 ---
 
@@ -586,3 +586,144 @@ SELECT * FROM teacher WHERE id = 5 FOR UPDATE;
 2. 意向锁之间互不排斥，但除了`IS`与`S`兼容外，意向锁会与**共享锁 / 排他锁**互斥。
 3. `IX`、`IS`是表级锁，不会和行级的`X`、`S`锁发生冲突。只会和表级的`X`、`S`发生冲突。
 4. 意向锁在保证并发性的前提下，实现了**行锁和表锁共存**且满足**事务隔离性**的要求。
+
+##### ③ 自增锁（AUTO-INC锁）
+
+在使用 MySQL 过程中，我们可以为表的某个列添加`AUTO_INCREMENT`属性。举例：
+
+```sql
+CREATE TABLE `teacher` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+```
+
+由于这个表的`id`字段声明了`AUTO_INCREMENT`，意味着在书写插入语句时不需要为其赋值，SQL 语句修改如下所示。
+
+```sql
+INSERT INTO `teacher` (name) VALUES ('zhangsan'), ('lisi');
+```
+
+上边的插入语句并没有为`id`列显式赋值，所以系统会自动为它赋上递增的值，结果如下所示：
+
+```sql
+mysql> select * from teacher;
++----+----------+
+| id | name     |
++----+----------+
+| 1  | zhangsan |
+| 2  | lisi     |
++----+----------+
+2 rows in set (0.00 sec)
+```
+
+---
+
+现在我们看到的上面插入数据只是一种简单的插入模式，所有插入数据的方式总共分为三类：
+
+- `Simple inserts`
+- `Bulk inserts`
+- `Mixed-mode inserts`  
+
+**1. “Simple inserts” （简单插入）**
+
+可以`预先确定要插入的行数`（当语句被初始处理时）的语句。包括没有嵌套子查询的单行和多行`INSERT...VALUES()`和`REPLACE`语句。
+
+**2. “Bulk inserts” （批量插入）**
+
+`事先不知道要插入的行数`（和所需自动递增值的数量）的语句。比如`INSERT ... SELECT`，`REPLACE ... SELECT`和`LOAD DATA`语句，但不包括纯INSERT。 InnoDB在每处理一行，为AUTO_INCREMENT列分配一个新值。
+
+**3. “Mixed-mode inserts” （混合模式插入）**
+
+这些是“Simple inserts”语句但是指定部分新行的自动递增值。例如`INSERT INTO teacher (id,name) VALUES (1,'a'), (NULL,'b'), (5,'c'), (NULL,'d');`只是指定了部分id的值。另一种类型的“混合模式插入”是`INSERT ... ON DUPLICATE KEY UPDATE`。
+
+---
+
+对于上面数据插入的案例，MySQL采用了`自增锁`的方式来实现，**AUTO-INT锁是当向使用含有AUTO_INCREMENT列的表中插入数据时需要获取的一种特殊的表级锁**，在执行插入语句时就在表级别加一个AUTO-INT锁，然后为每条待插入记录的AUTO_INCREMENT修饰的列分配递增的值，在该语句执行结束后，再把AUTO-INT锁释放掉。
+
+**一个事务在持有AUTO-INC锁的过程中，其他事务的插入语句都要被阻塞**，可以保证一个语句中分配的递增值是连续的。也正因为此，其并发性显然并不高，**当我们向一个有AUTO_INCREMENT关键字的主键插入值的时候，每条语句都要对这个表锁进行竞争**，这样的并发潜力其实是很低下的，所以innodb通过`innodb_autoinc_lock_mode`的不同取值来提供不同的锁定机制，来显著提高SQL语句的可伸缩性和性能。
+
+innodb_autoinc_lock_mode有三种取值，分别对应与不同锁定模式：
+
+- `（1）innodb_autoinc_lock_mode = 0(“传统”锁定模式)`
+
+在此锁定模式下，所有类型的insert语句都会获得一个特殊的表级AUTO-INC锁，用于插入具有AUTO_INCREMENT列的表。这种模式其实就如我们上面的例子，即每当执行insert的时候，都会得到一个表级锁(AUTO-INC锁)，使得语句中生成的auto_increment为顺序，且在binlog中重放的时候，可以保证master与slave中数据的auto_increment是相同的。因为是表级锁，当在同一时间多个事务中执行insert的时候，对于AUTO-INC锁的争夺会`限制并发`能力。
+
+- `（2）innodb_autoinc_lock_mode = 1(“连续”锁定模式)`
+
+>  在 MySQL 8.0 之前，连续锁定模式是`默认`的。
+
+在这个模式下，“bulk inserts”仍然使用AUTO-INC表级锁，并保持到语句结束。这适用于所有INSERT ... SELECT，REPLACE ... SELECT和LOAD DATA语句。同一时刻只有一个语句可以持有AUTO-INC锁。
+
+对于“Simple inserts”（要插入的行数事先已知），则通过在`mutex（轻量锁）`的控制下获得所需数量的自动递增值来避免表级AUTO-INC锁， 它只在分配过程的持续时间内保持，而不是直到语句完成。不使用表级AUTO-INC锁，除非AUTO-INC锁由另一个事务保持。如果另一个事务保持AUTO-INC锁，则“Simple inserts”等待AUTO-INC锁，如同它是一个“bulk inserts”。
+
+- `（3）innodb_autoinc_lock_mode = 2(“交错”锁定模式)`
+
+>  从 MySQL 8.0 开始，交错锁模式是`默认`设置。
+
+在这种锁定模式下，所有类INSERT语句都不会使用表级AUTO-INC锁，并且可以同时执行多个语句。这是最快和最可拓展的锁定模式，但是当使用基于语句的复制或恢复方案时，**从二进制日志重播SQL语句时，这是不安全的。**
+
+在此锁定模式下，自动递增值`保证`在所有并发执行的所有类型的insert语句中是`唯一`且`单调递增`的。但是，由于多个语句可以同时生成数字（即，跨语句交叉编号），**为任何给定语句插入的行生成的值可能不是连续的。**
+
+##### ④ 元数据锁（MDL锁）
+
+MySQL5.5引入了meta data lock，简称MDL锁，属于表锁范畴。MDL 的作用是，保证读写的正确性。比如，如果一个查询正在遍历一个表中的数据，而执行期间另一个线程对这个`表结构做变更`，增加了一列，那么查询线程拿到的结果跟表结构对不上，肯定是不行的。
+
+因此，**当对一个表做增删改查操作的时候，加MDL读锁；当要对表做结构变更操作的时候，加MDL写锁。**
+
+---
+
+**举例**：
+
+**会话 A**：从表中查询数据
+
+```sql
+mysql> begin;
+Query OK, 0 rows affected (0.00 sec)
+mysql> select count(1) from teacher; -- 注意此时未提交事务
++----------+
+| count(1) |
++----------+
+| 2        |
++----------+
+1 row in set (7.46 sec)
+```
+
+**会话 B：修改表结构，增加新列**
+
+```sql
+mysql> begin;
+Query OK, 0 rows affected (0.00 sec)
+mysql> alter table teacher add age int not null; -- 阻塞等待
+```
+
+**会话 C：查看当前 MySQL 的进程**
+
+```sql
+mysql> show processlist;
++----+-----------------+-----------+-------+---------+------+---------------------------------+----------------------------------+
+| Id | User            | Host      | db    | Command | Time | State                           | Info                             |
++----+-----------------+-----------+-------+---------+------+---------------------------------+----------------------------------+
+| 5  | event_scheduler | localhost | NULL  | Daemon  | 8205 | Waiting on empty queue          | NULL                             |
+| 8  | root            | localhost | test  | Sleep   | 46   |                                 | NULL                             |
+| 9  | root            | localhost | test  | Query   | 24   | Waiting for table metadata lock | alter table teacher add age int  |
+| 13 | root            | localhost | NULL  | Query   | 0    | init                            | show processlist                 |
++----+-----------------+-----------+-------+---------+------+---------------------------------+----------------------------------+
+4 rows in set (0.00 sec)
+```
+
+通过会话 C 可以看出会话 B 被阻塞，这是由于会话 A 拿到了`teacher`表的**元数据读锁**，会话 B 想申请`teacher`表的**元数据写锁**，由于读写锁互斥，会话 B 需要等待会话 A 释放元数据锁才能执行。
+
+**元数据锁可能带来的问题**
+
+| Session A                      | Session B                          | Session C                |
+| ------------------------------ | ---------------------------------- | ------------------------ |
+| `begin;select * from teacher;` |                                    |                          |
+|                                | `alter table teacher add age int;` |                          |
+|                                |                                    | `select * from teacher;` |
+
+我们可以看到 session A 会对表`teacher`加一个 **MDL读锁**，之后 session B 要加 **MDL写锁**会被`blocked`，因为 session A 的 MDL 读锁还没有释放，而 session C 要在表 `teacher` 上新申请 MDL 读锁的请求也会被 session B 阻塞。
+
+前面我们说了，**所有对表的增删改查操作都需要先申请 MDL读锁**，就都被阻塞，等于这个表现在完全不可读写了。
+
