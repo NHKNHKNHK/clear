@@ -41,29 +41,29 @@ export default [
                     { text: '数据库缓冲池（buffer pool）', link: basePath + '数据库缓冲池（buffer pool）' },
                     { text: 'MySQL存储引擎', link: basePath + 'MySQL存储引擎' },
                     {
-                        text: '索引的数据结构', link: basePath + '索引的数据结构',
-                        items:
-                            [
-                                { text: 'MySQL聚簇索引与非聚簇索引', link: basePath + 'MySQL聚簇索引与非聚簇索引' },
-                                { text: 'InnoDB的B+树索引的注意事项', link: basePath + 'InnoDB的B+树索引的注意事项' },
-                                { text: 'MyIASM中的索引方案', link: basePath + 'MyIASM中的索引方案' },
-                                { text: 'MySQL数据结构选择的合理性', link: basePath + 'MySQL数据结构选择的合理性' },
-                            ],
-                    },
-                    // todo
-                    { text: 'InnoDB数据页结构', link: basePath + 'InnoDB数据页结构' },
-                    
-                    { text: 'MySQL有哪些索引类型？（索引分类）', link: basePath + 'MySQL有哪些索引类型？（索引分类）' },
-                    { text: '创建、查看、删除索引', link: basePath + '创建、查看、删除索引' },
-                    { text: 'MySQL8.0索引新特性', link: basePath + 'MySQL8.0索引新特性' },
-                    {
-                        text: '索引设计原则',
-                        link: basePath + '索引设计原则',
+                        text: '索引',
                         items: [
+                            { text: '索引的数据结构', link: basePath + '索引的数据结构' },
+                            { text: 'MySQL聚簇索引与非聚簇索引', link: basePath + 'MySQL聚簇索引与非聚簇索引' },
+                            { text: 'InnoDB的B+树索引的注意事项', link: basePath + 'InnoDB的B+树索引的注意事项' },
+                            { text: 'MyIASM中的索引方案', link: basePath + 'MyIASM中的索引方案' },
+                            { text: 'MySQL数据结构选择的合理性', link: basePath + 'MySQL数据结构选择的合理性' },
+
+                            { text: 'MySQL有哪些索引类型？（索引分类）', link: basePath + 'MySQL有哪些索引类型？（索引分类）' },
+                            { text: '创建、查看、删除索引', link: basePath + '创建、查看、删除索引' },
+                            { text: 'MySQL8.0索引新特性', link: basePath + 'MySQL8.0索引新特性' },
+                            { text: '索引设计原则', link: basePath + '索引设计原则', },
                             { text: '哪些情况适合创建索引', link: basePath + '哪些情况适合创建索引' },
                             { text: '哪些情况不适合创建索引', link: basePath + '哪些情况不适合创建索引' },
-                        ]
+                            { text: '索引设计原则', link: basePath + '索引设计原则' },
+                            { text: '哪些情况适合创建索引', link: basePath + '哪些情况适合创建索引' },
+                            { text: '哪些情况不适合创建索引', link: basePath + '哪些情况不适合创建索引' },
+                        ],
                     },
+
+                    // todo
+                    { text: 'InnoDB数据页结构', link: basePath + 'InnoDB数据页结构' },
+
                     { text: '性能分析工具的使用', link: basePath + '性能分析工具的使用' },
                     { text: '索引优化与查询优化', link: basePath + '索引优化与查询优化' },
                     { text: '主键如何设计', link: basePath + '主键如何设计' },
@@ -101,17 +101,18 @@ export default [
             { text: '什么是反三范式？', link: basePath + '什么是反三范式？' },
 
             { text: 'MySQL中主键自增（auto_increment）列到达最大值时会发生什么？你会怎么调整', link: basePath + 'MySQL中主键自增（auto_increment）列到达最大值时会发生什么？你会怎么调整' },
-
+            { text: 'drop、delete与truncate的区别？', link: basePath + 'drop、delete与truncate的区别？' },
             { text: 'MySQL中exists和in的区别？', link: basePath + 'MySQL中exists和in的区别？' },
+            { text: '多表查询分类', link: basePath + '多表查询分类' },
             { text: 'MySQL在inner join、left join、right join的区别是什么？', link: basePath + 'MySQL在inner join、left join、right join的区别是什么？' },
             { text: '为什么SQL语句不建议过多使用多表join', link: basePath + '为什么SQL语句不建议过多使用多表join' },
             { text: 'MySQL的Hash Join是什么？', link: basePath + 'MySQL的Hash Join是什么？' },
+            { text: 'on和where的区别', link: basePath + 'on和where的区别' },
             { text: 'MySQL中数据排序的实现原理是什么？', link: basePath + 'MySQL中数据排序的实现原理是什么？' },
             { text: 'MySQL中一条查询语句是如何执行的？', link: basePath + 'MySQL中一条查询语句是如何执行的？' },
             { text: 'MySQL中一条更新语句是如何执行的？', link: basePath + 'MySQL中一条更新语句是如何执行的？' },
             { text: 'union和union all区别？', link: basePath + 'union和union all区别？' },
 
-            { text: '多表查询分类', link: basePath + '多表查询分类' },
 
             { text: 'Mysql语句都有哪些种类？', link: basePath + 'Mysql语句都有哪些种类？' },
             { text: 'Mysql查询优化建议？', link: basePath + 'Mysql查询优化建议？' },
@@ -145,7 +146,6 @@ export default [
             { text: 'MySQL中tinyint的默认位数', link: basePath + 'MySQL中tinyint的默认位数' },
             { text: 'Mysql的常用函数有哪些？', link: basePath + 'Mysql的常用函数有哪些？' },
             { text: 'MySQL中count(*)、count(1)和count(字段名)有什么区别？', link: basePath + 'MySQL中countx、count1和count字段名有什么区别？' },
-            { text: 'drop、delete与truncate的区别？', link: basePath + 'drop、delete与truncate的区别？' },
             { text: 'MySQL中datetime和timestamp类型的区别？', link: basePath + 'MySQL中datetime和timestamp类型的区别？' },
             { text: '在MySQL中，你使用过哪些函数？常用函数？', link: basePath + '在MySQL中，你使用过哪些函数？常用函数？' },
             { text: '在MySQL存储金额数据，应该使用什么数据类型？', link: basePath + '在MySQL存储金额数据，应该使用什么数据类型？' },
@@ -214,12 +214,13 @@ export default [
             { text: 'B+树索引和哈希索引的区别？', link: basePath + 'B+树索引和哈希索引的区别？' },
             { text: '哈希索引的优势及不适用的场景？', link: basePath + '哈希索引的优势及不适用的场景？' },
             { text: 'B树和B+树的区别', link: basePath + 'B树和B+树的区别' },
-            { text: 'b树和b+树的理解？', link: basePath + 'b树和b+树的理解？' },
             { text: '为什么说B+比B树更适合实际应用中作为数据库索引？', link: basePath + '为什么说B+比B树更适合实际应用中作为数据库索引？' },
             { text: 'b树和b+简述MySQL的b+树查询数据的全过程？', link: basePath + '简述MySQL的b+树查询数据的全过程？' },
             { text: '为什么MySQL选择使用B+树作为索引结构？', link: basePath + '为什么MySQL选择使用B+树作为索引结构？' },
 
             { text: '索引跳跃扫描', link: basePath + '索引跳跃扫描' },
+            { text: '什么是索引合并', link: basePath + '什么是索引合并' },
+
 
         ]
     },
@@ -254,6 +255,7 @@ export default [
             { text: 'MySQL默认事务隔离级别是什么？为什么选这个级别？', link: basePath + 'MySQL默认事务隔离级别是什么？为什么选这个级别？' },
             { text: '你们生产环境的MySQL中使用了什么事务隔离级别？为什么？', link: basePath + '你们生产环境的MySQL中使用了什么事务隔离级别？为什么？' },
 
+            { text: 'MySQL中SELECT会用到事务吗', link: basePath + 'MySQL中SELECT会用到事务吗' },
 
             { text: 'MySQL是如何实现事务的？', link: basePath + 'MySQL是如何实现事务的？' },
             { text: 'MySQL中大事务会有哪些影响？', link: basePath + 'MySQL中大事务会有哪些影响？' },
@@ -277,6 +279,13 @@ export default [
             { text: 'MySQL中如何解决数据深度分页的问题？', link: basePath + 'MySQL中如何解决数据深度分页的问题？' },
             { text: '单个索引的大小会对B+树造成什么影响？', link: basePath + '单个索引的大小会对B+树造成什么影响？' },
             { text: 'MySQL是否支持存储emoji', link: basePath + 'MySQL是否支持存储emoji' },
+
+            { text: 'MySQL用了函数一定会索引失效吗', link: basePath + 'MySQL用了函数一定会索引失效吗' },
+            { text: 'a,b两个索引，where条件中同时使用a和b会选择哪个索引？', link: basePath + 'a,b两个索引，where条件中同时使用a和b会选择哪个索引？' },
+            { text: 'MySQL为什么会选错索引，如何解决？', link: basePath + 'MySQL为什么会选错索引，如何解决？' },
+            { text: '索引失效的问题是如何排查的，有那些种情况？', link: basePath + '索引失效的问题是如何排查的，有那些种情况？' },
+
+            { text: 'MySQL为什么会有存储碎片？有什么危害？', link: basePath + 'MySQL为什么会有存储碎片？有什么危害？' }
         ]
     },
     {
