@@ -15,7 +15,7 @@
 
 ### 什么是约束
 
-约束是表级的强制规定。
+约束是表级的强制规定。对表中的字段进行约束
 
 可以在**创建表时规定约束（通过 CREATE TABLE 语句）**，或者在**表创建之后通过 ALTER TABLE 语句规定约束**。
 
@@ -1727,7 +1727,8 @@ mysql> desc employee;
 ```
 
 ```sql
-alter table employee modify tel char(11) default ''  not null;#给tel字段增加默认值约束，并保留非空约束
+#给tel字段增加默认值约束，并保留非空约束
+alter table employee modify tel char(11) default ''  not null; 
 ```
 
 ```sql
@@ -1746,7 +1747,7 @@ mysql> desc employee;
 ### 如何删除默认值约束
 
 ```sql
-alter table 表名称 modify 字段名 数据类型 ;#删除默认值约束，也不保留非空约束
+alter table 表名称 modify 字段名 数据类型 ; #删除默认值约束，也不保留非空约束
 
 alter table 表名称 modify 字段名 数据类型  not null; #删除默认值约束，保留非空约束
 ```
@@ -1773,11 +1774,11 @@ mysql> desc employee;
 
 ### 为什么建表时，加 not null default '' 或 default 0
 
-答：不想让表中出现null值。
+不想让表中出现null值。
 
 ### 为什么不想要 null 的值
 
-答:（1）不好比较。null是一种特殊值，比较时只能用专门的`is null` 和 `is not null`来比较。碰到运算符，通常返回null。
+（1）不好比较。null是一种特殊值，比较时只能用专门的`is null` 和 `is not null`来比较。碰到运算符，通常返回null。
 
 （2）效率不高。影响提高索引效果。因此，我们往往在建表时 `not null default ''` 或 `default 0`
 
