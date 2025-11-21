@@ -42,6 +42,7 @@ export default [
                     { text: 'MySQL存储引擎', link: basePath + 'MySQL存储引擎' },
                     {
                         text: '索引',
+                        collapsed: false,
                         items: [
                             { text: '索引的数据结构', link: basePath + '索引的数据结构' },
                             { text: 'MySQL聚簇索引与非聚簇索引', link: basePath + 'MySQL聚簇索引与非聚簇索引' },
@@ -116,6 +117,7 @@ export default [
 
             { text: 'Mysql语句都有哪些种类？', link: basePath + 'Mysql语句都有哪些种类？' },
             { text: 'Mysql查询优化建议？', link: basePath + 'Mysql查询优化建议？' },
+            { text: 'SQL中PK、UK、CK、FK、DF是什么意思？', link: basePath + 'SQL中PK、UK、CK、FK、DF是什么意思？' },
 
 
         ]
