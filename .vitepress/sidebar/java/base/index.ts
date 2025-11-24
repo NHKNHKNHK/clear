@@ -38,7 +38,6 @@ export default [
 
       { text: 'Java中方法参数传值还是传引用', link: basePath + 'Java中方法参数传值还是传引用' },
       { text: 'Java中的可变类与不可变类', link: basePath + 'Java中的可变类与不可变类' },
-      { text: 'String对象真的不可变吗', link: basePath + 'String对象真的不可变吗' },
       { text: 'Stream流中的map和flatMap方法的区别', link: basePath + 'Stream流中的map和flatMap方法的区别' },
       { text: 'Stream中map、peek、forEach方法的区别', link: basePath + 'Stream中map、peek、forEach方法的区别' },
       { text: 'Java中包装类与基础类型的区别', link: basePath + 'Java中包装类与基础类型的区别' },
@@ -99,6 +98,8 @@ export default [
     collapsed: false,
     items: [
       { text: 'String类可以被继承吗', link: basePath + 'String类可以被继承吗' },
+      { text: 'String为什么设计为不可变的', link: basePath + 'String为什么设计为不可变的' },
+      { text: 'String对象真的不可变吗', link: basePath + 'String对象真的不可变吗' },
       { text: 'String、StringBuffer、StringBuilder、StringJoiner的区别', link: basePath + 'String、StringBuffer、StringBuilder、StringJoiner的区别' },
       { text: 'String有没有长度限制', link: basePath + 'String有没有长度限制' },
       { text: 'String底层实现是怎么样的', link: basePath + 'String底层实现是怎么样的' },
