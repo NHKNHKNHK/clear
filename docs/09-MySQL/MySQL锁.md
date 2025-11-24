@@ -410,29 +410,29 @@ mysql> SHOW OPEN TABLES where In_use > 0;
 
 InnoDB 支持`多粒度锁（multiple granularity locking）`，它允许`行级锁`与`表级锁`共存，而**意向锁**就是其中的一种`表锁`。
 
-1、意向锁的存在是为了`协调行锁和表锁的关系`，支持多粒度（表锁与行锁）的锁并存。
+-   1、意向锁的存在是为了`协调行锁和表锁的关系`，支持多粒度（表锁与行锁）的锁并存。
 
-2、意向锁是一种`不与行级锁冲突的表级锁`，这一点非常重要。
+-   2、意向锁是一种`不与行级锁冲突的表级锁`，这一点非常重要。
 
-3、它存在的意义，表明“某个事务正在某些行持有了锁或该事务准备去持有锁”
+-   3、它存在的意义，表明“某个事务正在某些行持有了锁或该事务准备去持有锁”
 
 意向锁分为两种：
 
 - **意向共享锁**（intention shared lock, IS）：事务有意向对表中的某些行加**共享锁**（S锁）
 
-```mysql
+```sql
 -- 事务要获取某些行的 S 锁，必须先获得表的 IS 锁。 
 SELECT column FROM table ... LOCK IN SHARE MODE;
 ```
 
 - **意向排他锁**（intention exclusive lock, IX）：事务有意向对表中的某些行加**排他锁**（X锁）
 
-```mysql
+```sql
 -- 事务要获取某些行的 X 锁，必须先获得表的 IX 锁。 
 SELECT column FROM table ... FOR UPDATE;
 ```
 
-即：意向锁是由存储引擎`自己维护的`，**用户无法手动操作意向锁**，在为数据行加共享 / 排他锁之前，InooDB 会先获取该数据行`所在数据表的对应意向锁`。
+需要注意的是，意向锁是由存储引擎`自己维护的`，**用户无法手动操作意向锁**，在为数据行加共享 / 排他锁之前，InooDB 会先获取该数据行`所在数据表的对应意向锁`。
 
 ###### 1. 意向锁要解决的问题
 
@@ -475,19 +475,14 @@ INSERT INTO `teacher` VALUES
 
 **注意，此时事务隔离级别为RR，可以通过`SELECT @@transaction_isolation;`查看**
 
-假设事务 A 获取了某一行的排他锁，并未提交，语句如下所示。
+| 事务 A                                                      | 事务 B                                 |
+| ----------------------------------------------------------- | -------------------------------------- |
+| begin;<br/>SELECT * FROM teacher `WHERE id = 6 FOR UPDATE`; |                                        |
+|                                                             | begin;<br/>LOCK TABLES teacher `READ`; |
 
-```sql
-begin;
-SELECT * FROM teacher WHERE id = 6 FOR UPDATE;
-```
+事务 A 获取了某一行的排他锁，并未提交。
 
-事务 B 想要获取`teacher`表的表读锁，语句如下。
-
-```sql
-begin;
-LOCK TABLES teacher READ;
-```
+事务 B 想要获取`teacher`表的表读锁。
 
 因为共享锁与排他锁互斥，所以事务 B 在试图对`teacher`表加共享锁的时候，必须保证两个条件：
 
@@ -1232,7 +1227,7 @@ BLOCKING_OBJECT_INSTANCE_BEGIN: 140562535619104
     select ... for update
     ```
 
-## 其它锁之：全局锁
+## 全局锁
 
 全局锁就是对`整个数据库实例`加锁。当你需要让整个库处于`只读状态`的时候，可以使用这个命令，之后其他线程的以下语句会被阻塞：数据更新语句（数据的增删改）、数据定义语句（包括建表、修改表结构等）和更新类事务的提交语句。全局锁的典型使用`场景`是：做`全库逻辑备份`。
 
@@ -1242,7 +1237,7 @@ BLOCKING_OBJECT_INSTANCE_BEGIN: 140562535619104
 Flush tables with read lock
 ```
 
-## 其它锁之：死锁
+## 死锁
 
 死锁是指两个或多个事务在同一资源上相互占用，并请求锁定对方占用的资源，从而导致恶性循环。
 
@@ -1315,3 +1310,118 @@ Flush tables with read lock
 - 在并发比较高的系统中，不要显式加锁，特别是在事务里显式加锁。如`select ...for update`语句，如果是在事务里运行了`start transaction`或设置了`autocommit`等于 0，那么就会锁定所查找到的记录。
 - 降低隔离级别。如果业务允许，将隔离级别调低也是较好的选择，比如将隔离级别从 RR 调整为 RC，可以避免掉很多因为`gap`锁造成的死锁。
 
+## 锁的内存结构
+
+我们前边说对一条记录加锁的本质就是在内存中创建一个`锁结构`与之关联，那么是不是一个事务对多条记录加锁，就要创建多个锁结构呢？比如：
+
+```sql
+# 事务T1
+SELECT * FROM user LOCK IN SHARE MODE;
+```
+
+理论上创建多个锁结构没问题，但是如果一个事务要获取 10000 条记录的锁，生成 10000 个锁结构也太崩溃了！
+
+所以决定在对不同记录加锁时，如果符合下边这些条件的记录会放到一个锁结构中：
+
+- 在同一个事务中进行加锁操作
+- 被加锁的记录在同一个页面中
+- 加锁的类型是一样的
+- 等待状态是一样的
+
+InnoDB 存储引擎中的锁结构如下：
+
+![](./assets/innodb事务锁结构.png)
+
+结构解析：
+
+`1. 锁所在的事务信息`：
+
+不论是`表锁`还是`行锁`，都是在事务执行过程中生成的，哪个事务生成了这个`锁结构` ，这里就记录这个事务的信息。
+
+> 此`锁所在的事务信息`在内存结构中只是一个指针，通过指针可以找到内存中关于该事务的更多信息，比方说事务id等。
+
+`2. 索引信息`：
+
+对于`行锁`来说，需要记录一下加锁的记录是属于哪个索引的。这里也是一个指针。
+
+`3. 表锁／行锁信息`：
+
+`表锁结构`和`行锁结构`在这个位置的内容是不同的：
+
+- 表锁：记载着是对哪个表加的锁，还有其他的一些信息。
+- 行锁：记载了三个重要的信息：
+  - `Space ID`：记录所在表空间。
+  - `Page Number`：记录所在页号。
+  - `n_bits`：对于行锁来说，一条记录就对应着一个比特位，一个页面中包含很多记录，用不同的比特位来区分到底是哪一条记录加了锁。为此在行锁结构的末尾放置了一堆比特位，这个n_bits 属性代表使用了多少比特位。
+
+> n_bits的值一般都比页面中记录条数多一些。主要是为了之后在页面中插入了新记录后也不至于重新分配锁结构
+
+`4. type_mode`：
+
+这是一个32位的数，被分成了`lock_mode`、`lock_type`和`rec_lock_type`三个部分，如图所示：
+
+![](./assets/innodb事务锁结构-type_mode.png)
+
+- 锁的模式（`lock_mode`），占用低4位，可选的值如下：
+  - `LOCK_IS`（十进制的`0`）：表示共享意向锁，也就是`IS锁`。
+  - `LOCK_IX`（十进制的`1`）：表示独占意向锁，也就是`IX锁`。
+  - `LOCK_S`（十进制的`2`）：表示共享锁，也就是`S锁`。
+  - `LOCK_X`（十进制的`3`）：表示独占锁，也就是`X锁`。
+  - `LOCK_AUTO_INC`（十进制的`4`）：表示`AUTO-INC锁`。
+
+在InnoDB存储引擎中，LOCK_IS，LOCK_IX，LOCK_AUTO_INC都算是表级锁的模式，LOCK_S和 LOCK_X既可以算是表级锁的模式，也可以是行级锁的模式。
+
+- 锁的类型（`lock_type`），占用第5～8位，不过现阶段只有第5位和第6位被使用：
+  - `LOCK_TABLE`（十进制的`16`），也就是当第5个比特位置为1时，表示表级锁。
+  - `LOCK_REC`（十进制的`32`），也就是当第6个比特位置为1时，表示行级锁。
+- 行锁的具体类型（`rec_lock_type`），使用其余的位来表示。只有在 `lock_type`的值为`LOCK_REC`时，也就是只有在该锁为行级锁时，才会被细分为更多的类型：
+  - `LOCK_ORDINARY`（十进制的`0`）：表示`next-key锁`。 
+  - `LOCK_GAP`（十进制的`512`）：也就是当第10个比特位置为1时，表示`gap锁`。 
+  - `LOCK_REC_NOT_GAP`（十进制的`1024`）：也就是当第11个比特位置为1时，表示正经`记录锁`。
+  - `LOCK_INSERT_INTENTION`（十进制的`2048`）：也就是当第12个比特位置为1时，表示插入意向锁。其他的类型：还有一些不常用的类型我们就不多说了。
+- `is_waiting`属性呢？基于内存空间的节省，所以把 is_waiting 属性放到了 type_mode 这个32位的数字中：
+  - `LOCK_WAIT`（十进制的`256`） ：当第9个比特位置为`1`时，表示`is_waiting`为`true`，也就是当前事务尚未获取到锁，处在等待状态；当这个比特位为`0`时，表示`is_waiting`为`false`，也就是当前事务获取锁成功。
+
+`5. 其他信息`：
+
+为了更好的管理系统运行过程中生成的各种锁结构而设计了各种哈希表和链表。
+
+`6. 一堆比特位`：
+
+如果是`行锁结构`的话，在该结构末尾还放置了一堆比特位，比特位的数量是由上边提到的`n_bits`属性表示的。InnoDB数据页中的每条记录在`记录头信息`中都包含一个 heap_no 属性，伪记录`Infimum`的`heap_no`值为`0`，`Supremum`的`heap_no`值为`1`，之后每插入一条记录，`heap_no`值就增1。`锁结构`最后的一堆比特位就对应着一个页面中的记录，一个比特位映射一个`heap_no`，即一个比特位映射到页内的一条记录。
+
+## 锁监控
+
+关于 MySQL 锁的监控，我们一般可以通过检查`InnoDB_row_lock`等状态变量来分析系统上的行锁争夺情况
+
+```sql
+mysql> show status like 'innodb_row_lock%';
++-------------------------------+-------+
+| Variable_name                 | Value |
++-------------------------------+-------+
+| Innodb_row_lock_current_waits | 0     |
+| Innodb_row_lock_time          | 0     |
+| Innodb_row_lock_time_avg      | 0     |
+| Innodb_row_lock_time_max      | 0     |
+| Innodb_row_lock_waits         | 0     |
++-------------------------------+-------+
+5 rows in set (0.01 sec)
+```
+
+对各个状态量的说明如下：
+
+- Innodb_row_lock_current_waits：当前正在等待锁定的数量；
+- `Innodb_row_lock_time`：从系统启动到现在锁定总时间长度；（等待总时长）
+- `Innodb_row_lock_time_avg`：每次等待所花平均时间；（等待平均时长）
+- Innodb_row_lock_time_max：从系统启动到现在等待最常的一次所花的时间；
+- `Innodb_row_lock_waits`：系统启动后到现在总共等待的次数；（等待总次数）
+
+**其他监控方法：**
+
+MySQL把事务和锁的信息记录在了`information_schema`库中，涉及到的三张表分别是`INNODB_TRX`、`INNODB_LOCKS`和`INNODB_LOCK_WAITS`。
+
+`MySQL5.7及之前`，可以通过information_schema.INNODB_LOCKS查看事务的锁情况，但只能看到阻塞事务的锁；如果事务并未被阻塞，则在该表中看不到该事务的锁情况。
+
+MySQL8.0删除了information_schema.INNODB_LOCKS，添加了`performance_schema.data_locks`，可以通过performance_schema.data_locks查看事务的锁情况，和MySQL5.7及之前不同，performance_schema.data_locks不但可以看到阻塞该事务的锁，还可以看到该事务所持有的锁。
+
+同时，information_schema.INNODB_LOCK_WAITS也被`performance_schema.data_lock_waits`所代替。
