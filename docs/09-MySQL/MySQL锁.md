@@ -1233,7 +1233,7 @@ BLOCKING_OBJECT_INSTANCE_BEGIN: 140562535619104
 
 全局锁的命令：
 
-```mysql
+```sql
 Flush tables with read lock
 ```
 

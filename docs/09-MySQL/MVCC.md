@@ -179,7 +179,7 @@ ReadView 就是事务在使用MVCC机制进行快照读操作时产生的读视�
 
 `trx_ids` 是 `trx2、trx3、trx5、trx8` 的集合；系统的最大事务 ID（`low_limit_id`）为 `trx8+1`（前提是此前没有其他新增事务）；活跃的最小事务 ID（`up_limit_id`）为 `trx2`。
 
-![alt text](./assets/readview-1.png.pn)
+![alt text](./assets/readview-1.png)
 
 ### ReadView的规则
 
