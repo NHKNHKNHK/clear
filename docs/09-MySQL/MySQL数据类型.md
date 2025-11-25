@@ -256,12 +256,10 @@ CREATE TABLE test_double1(
 
 DESC test_double1;
 
-INSERT INTO test_double1
-VALUES(123.456,123.456,123.4567,123.45);
+INSERT INTO test_double1 VALUES(123.456,123.456,123.4567,123.45);
 
 #Out of range value for column 'f2' at row 1
-INSERT INTO test_double1
-VALUES(123.456,1234.456,123.4567,123.45); 
+INSERT INTO test_double1 VALUES(123.456,1234.456,123.4567,123.45); 
 
 SELECT * FROM test_double1;
 ```
@@ -354,12 +352,10 @@ CREATE TABLE test_decimal1(
 
 DESC test_decimal1;
 
-INSERT INTO test_decimal1(f1,f2)
-VALUES(123.123,123.456);
+INSERT INTO test_decimal1(f1,f2) VALUES(123.123,123.456);
 
 #Out of range value for column 'f2' at row 1
-INSERT INTO test_decimal1(f2)
-VALUES(1234.34);
+INSERT INTO test_decimal1(f2) VALUES(1234.34);
 ```
 
 ```sql
@@ -408,25 +404,26 @@ mysql> SELECT SUM(f1) = 1.1 FROM test_double2;
 
 > “由于 DECIMAL 数据类型的精准性，在我们的项目中，除了极少数（比如商品编号）用到整数类型外，其他的数值都用的是 DECIMAL，原因就是这个项目所处的零售行业，要求精准，一分钱也不能差。 ” ——来自某项目经理
 
-## 5. 位类型：BIT
+## 位类型：BIT
 
-BIT类型中存储的是二进制值，类似010110。
+BIT类型中存储的是二进制值，类似`010110`。
 
 | 二进制字符串类型 | 长度 | 长度范围     | 占用空间            |
 | ---------------- | ---- | ------------ | ------------------- |
 | BIT(M)           | M    | 1 <= M <= 64 | 约为(M + 7)/8个字节 |
 
-BIT类型，如果没有指定(M)，默认是1位。这个1位，表示只能存1位的二进制值。这里(M)是表示二进制的位数，位数最小值为1，最大值为64。
+BIT类型，如果没有指定(M)，`默认`是`1位`。这个1位，表示只能存1位的二进制值。这里(M)是表示二进制的位数，位数最小值为1，最大值为64。
+
+举例：
 
 ```sql
 CREATE TABLE test_bit1(
-f1 BIT,
-f2 BIT(5),
-f3 BIT(64)
+  f1 BIT,
+  f2 BIT(5),
+  f3 BIT(64)
 );
 
-INSERT INTO test_bit1(f1)
-VALUES(1);
+INSERT INTO test_bit1(f1) VALUES(1);
 
 #Data too long for column 'f1' at row 1
 INSERT INTO test_bit1(f1)
@@ -452,8 +449,7 @@ mysql> SELECT * FROM test_bit1;
 ```
 
 ```sql
-mysql> SELECT BIN(f2),HEX(f2)
-    -> FROM test_bit1;
+mysql> SELECT BIN(f2),HEX(f2) FROM test_bit1;
 +---------+---------+
 | BIN(f2) | HEX(f2) |
 +---------+---------+
@@ -464,8 +460,7 @@ mysql> SELECT BIN(f2),HEX(f2)
 ```
 
 ```sql
-mysql> SELECT f2 + 0
-    -> FROM test_bit1;
+mysql> SELECT f2 + 0 FROM test_bit1;
 +--------+
 | f2 + 0 |
 +--------+
