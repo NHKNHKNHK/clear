@@ -397,14 +397,15 @@ innodb_log_file_size=200M
 
 ![](./assets/redo-log-undo-log.png)
 
-
 ## undo日志
 
 redo log是事务持久性的保证，undo log是事务原子性的保证。在事务中`更新数据`的`前置操作`其实是要先写入一个`undo log`。
 
-> 查询操作不会记录到undo log
->
-> undo log记录的是数据修改前的数据。
+:::tip
+查询操作不会记录到undo log
+
+undo log记录的是数据修改前的数据。
+:::
 
 ### 如何理解undo日志
 
@@ -479,7 +480,7 @@ mysql> show variables like 'innodb_undo_logs';
 
 #### 2.回滚段与事务
 
-下面来介绍回滚段与事务之间的关系：
+回滚段与事务之间的关系：
 
 1. 每个事务只会使用一个回滚段，一个回滚段在同一时刻可能会服务于多个事务。
 
@@ -498,7 +499,8 @@ mysql> show variables like 'innodb_undo_tablespaces';
 +---------------------------+-------+
 1 row in set (0.01 sec)
 
--- undo log 的数量，最少为 2. undo log 的 truncate 操作有 purge 协调线程发起。在 truncate 某个 undo log 表空间的过程中，保证有一个可用的 undo log 可用。
+-- undo log 的数量，最少为 2. undo log 的 truncate 操作有 purge 协调线程发起。
+-- 在 truncate 某个 undo log 表空间的过程中，保证有一个可用的 undo log 可用。
 ```
 
 5. 当事务提交时，InnoDB存储引擎会做以下两件事情：
