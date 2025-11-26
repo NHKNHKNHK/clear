@@ -763,13 +763,13 @@ esac
 
 为
 
-```conf
+```
 restrict 192.168.188.0 mask 255.255.255.0 nomodify notrap
 ```
 
 修改2（集群在局域网中，不使用其他互联网上的时间）
 
-```conf
+```
 server 0.centos.pool.ntp.org iburst
 server 1.centos.pool.ntp.org iburst
 server 2.centos.pool.ntp.org iburst

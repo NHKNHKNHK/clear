@@ -15,10 +15,10 @@ export default [
                     { text: '多表查询', link: basePath + '多表查询' },
                     { text: '单行函数与聚合函数', link: basePath + '单行函数与聚合函数' },
                     { text: '子查询', link: basePath + '子查询' },
-                    { text: 'MySQL数据类型', link: basePath + 'MySQL数据类型' },
 
+                    { text: 'MySQL数据类型', link: basePath + 'MySQL数据类型' },
                     { text: 'MySQL约束', link: basePath + 'MySQL约束' },
-                     // todo
+                    // todo
                     { text: 'MySQL视图', link: basePath + 'MySQL视图' },
                     { text: '存储过程与存储函数', link: basePath + '存储过程与存储函数' },
                     { text: '变量、流程控制与游标', link: basePath + '变量、流程控制与游标' },
@@ -258,6 +258,7 @@ export default [
             { text: '你们生产环境的MySQL中使用了什么事务隔离级别？为什么？', link: basePath + '你们生产环境的MySQL中使用了什么事务隔离级别？为什么？' },
 
             { text: 'MySQL中SELECT会用到事务吗', link: basePath + 'MySQL中SELECT会用到事务吗' },
+            { text: '为什么默认RR，大厂要改成RC', link: basePath + '为什么默认RR，大厂要改成RC' },
 
             { text: 'MySQL是如何实现事务的？', link: basePath + 'MySQL是如何实现事务的？' },
             { text: 'MySQL中大事务会有哪些影响？', link: basePath + 'MySQL中大事务会有哪些影响？' },
@@ -351,7 +352,7 @@ export default [
             { text: 'mysql的行锁和表锁是什么？分别在哪些情况下会出现 ？', link: basePath + 'mysql的行锁和表锁是什么？分别在哪些情况下会出现 ？' },
             { text: 'InnoDB中的表级锁、页级锁、行级锁？', link: basePath + 'InnoDB中的表级锁、页级锁、行级锁？' },
             { text: '行锁的原理及算法？', link: basePath + '行锁的原理及算法？' },
-            { text: 'MySQL的行级锁到底锁的是什么东西？', link: basePath + 'MySQL的行级锁到底锁的是什么东西？' },
+            { text: 'MySQL的行级锁到底锁的是什么东西', link: basePath + 'MySQL的行级锁到底锁的是什么东西' },
             { text: 'mysql什么情况下会产生死锁？', link: basePath + 'mysql什么情况下会产生死锁？' },
             { text: 'MySQL中如果发生死锁如何解决？', link: basePath + 'MySQL中如果发生死锁如何解决？' },
             { text: 'Mysql死锁常见解决方案？', link: basePath + 'Mysql死锁常见解决方案？' },
