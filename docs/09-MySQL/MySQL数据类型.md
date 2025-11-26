@@ -782,3 +782,442 @@ mysql> SELECT UNIX_TIMESTAMP(); -- 获取时间戳
 +------------------+
 1 row in set (0.00 sec)
 ```
+
+## 文本字符串类型
+
+在实际的项目中，我们还经常遇到一种数据，就是字符串数据。
+
+MySQL中，文本字符串总体上分为`CHAR`、`VARCHAR`、`TINYTEXT`、`TEXT`、`MEDIUMTEXT`、`LONGTEXT`、`ENUM`、`SET`等类型。
+
+| 文本字符串类型 | 值的长度 | 长度范围           | 占用的存储空间      |
+| -------------- | -------- | ------------------ | ------------------- |
+| CHAR(M)        | M        | 0 ≤ M ≤ 255        | M 个字节            |
+| VARCHAR(M)     | M        | 0 ≤ M ≤ 65535      | M+1 个字节          |
+| TINYTEXT       | L        | 0 ≤ L ≤ 255        | L+2 个字节          |
+| TEXT           | L        | 0 ≤ L ≤ 65535      | L+2 个字节          |
+| MEDIUMTEXT     | L        | 0 ≤ L ≤ 16777215   | L+3 个字节          |
+| LONGTEXT       | L        | 0 ≤ L ≤ 4294967295 | L+4 个字节          |
+| ENUM           | L        | 1 ≤ L ≤ 65535      | 1 或 2 个字节       |
+| SET            | L        | 0 ≤ L ≤ 64         | 1,2,3,4 或 8 个字节 |
+
+说明：
+
+-   定长数据一般使用`CHAR`，不定长数据一般使用`VARCHAR`
+
+-   使用`TINYTEXT`、`TEXT`、`MEDIUMTEXT`、`LONGTEXT`不需要指定具体长度，由数据决定
+
+### CHAR与VARCHAR类型
+
+CHAR和VARCHAR类型都可以存储比较短的字符串。
+
+| 字符串(文本)类型 | 特点     | 长度 | 长度范围        | 占用的存储空间        |
+| ---------------- | -------- | ---- | --------------- | --------------------- |
+| CHAR(M)          | 固定长度 | M    | 0 <= M <= 255   | M个字节               |
+| VARCHAR(M)       | 可变长度 | M    | 0 <= M <= 65535 | (实际长度 + 1) 个字节 |
+
+**CHAR类型：**
+
+- CHAR(M) 类型一般需要预先定义字符串长度。如果不指定`M`，则表示长度`默认是1个字符`。
+- 如果保存时，数据的实际长度比CHAR类型声明的长度小，则会在`右侧填充空格`以达到指定的长度。当MySQL`检索`CHAR类型的数据`时`，CHAR类型的字段会`去除尾部的空格`。
+- 定义CHAR类型字段时，声明的字段长度即为CHAR类型字段所占的存储空间的字节数。
+
+**举例**：
+
+```sql
+CREATE TABLE test_char1(
+  c1 CHAR,
+  c2 CHAR(5)
+);
+
+DESC test_char1;
+```
+
+```sql
+INSERT INTO test_char1 VALUES('a','Tom');
+
+SELECT c1,CONCAT(c2,'***') FROM test_char1;
+
+INSERT INTO test_char1(c2) VALUES('a  ');
+
+SELECT CHAR_LENGTH(c2) FROM test_char1;
+```
+
+**VARCHAR类型：**
+
+- VARCHAR(M) 定义时，`必须指定`长度`M`，否则报错。
+- MySQL4.0版本以下，varchar(20)：指的是20字节，如果存放UTF8汉字时，只能存6个（每个汉字3字节） ；MySQL5.0版本以上，varchar(20)：指的是20字符。
+- 检索VARCHAR类型的字段数据时，会保留数据尾部的空格。VARCHAR类型的字段所占用的存储空间为字符串实际长度加1个字节。
+
+**举例**：
+
+```sql
+CREATE TABLE test_varchar1(
+  NAME VARCHAR  #错误，必须指定长度
+);
+```
+
+```sql
+#Column length too big for column 'NAME' (max = 21845);
+CREATE TABLE test_varchar2(
+  NAME VARCHAR(65535)  #错误
+);
+```
+
+>   说明：MySQL5.7默认字符集编码为`utf8mb3`，每个字符占据`3`个字节，因此最长字符为`21845`（65535/21845）
+
+```sql
+CREATE TABLE test_varchar3(
+NAME VARCHAR(5)
+);
+
+INSERT INTO test_varchar3 VALUES('你好啊'),('你吃饭了吗');
+
+#Data too long for column 'NAME' at row 1
+INSERT INTO test_varchar3 VALUES('你还没睡吗？');
+```
+
+---
+
+**哪些情况使用 CHAR 或 VARCHAR 更好**
+
+| 类型       | 特点     | 空间上       | 时间上 | 适用场景             |
+| ---------- | -------- | ------------ | ------ | -------------------- |
+| CHAR(M)    | 固定长度 | 浪费存储空间 | 效率高 | 存储不大，速度要求高 |
+| VARCHAR(M) | 可变长度 | 节省存储空间 | 效率低 | 非CHAR的情况         |
+
+情况1：存储很短的信息。比如门牌号码101，201……这样很短的信息应该用char，因为varchar还要占个byte用于存储信息长度，本来打算节约存储的，结果得不偿失。
+
+情况2：固定长度的。比如使用uuid作为主键，那用char应该更合适。因为他固定长度，varchar动态根据长度的特性就消失了，而且还要占个长度信息。
+
+情况3：十分频繁改变的column。因为varchar每次存储都要有额外的计算，得到长度等工作，如果一个非常频繁改变的，那就要有很多的精力用于计算，而这些对于char来说是不需要的。
+
+情况4：具体存储引擎中的情况：
+
+- `MyISAM` 数据存储引擎和数据列：MyISAM数据表，最好使用固定长度(CHAR)的数据列代替可变长度(VARCHAR)的数据列。这样使得整个表静态化，从而使`数据检索更快`，用空间换时间。
+
+- `MEMORY` 存储引擎和数据列：MEMORY数据表目前都使用固定长度的数据行存储，因此无论使用CHAR或VARCHAR列都没有关系，两者都是作为CHAR类型处理的。
+- `InnoDB`存储引擎，建议使用VARCHAR类型。因为对于InnoDB数据表，内部的行存储格式并没有区分固定长度和可变长度列（所有数据行都使用指向数据列值的头指针），而且**主要影响性能的因素是数据行使用的存储总量**，由于char平均占用的空间多于varchar，所以除了简短并且固定长度的，其他考虑varchar。这样节省空间，对磁盘I/O和数据存储总量比较好。
+
+### TEXT类型
+
+在MySQL中，TEXT用来保存文本类型的字符串，总共包含4种类型，分别为`TINYTEXT`、`TEXT`、`MEDIUMTEXT` 和 `LONGTEXT` 类型。
+
+在向TEXT类型的字段保存和查询数据时，系统自动按照实际长度存储，不需要预先定义长度。这一点和 VARCHAR类型相同。
+
+每种TEXT类型保存的数据长度和所占用的存储空间不同，如下：
+
+| 文本字符串类型 | 特点               | 长度 | 长度范围                         | 占用的存储空间 |
+| -------------- | ------------------ | ---- | -------------------------------- | -------------- |
+| TINYTEXT       | 小文本、可变长度   | L    | 0 <= L <= 255                    | L + 2 个字节   |
+| TEXT           | 文本、可变长度     | L    | 0 <= L <= 65535                  | L + 2 个字节   |
+| MEDIUMTEXT     | 中等文本、可变长度 | L    | 0 <= L <= 16777215               | L + 3 个字节   |
+| LONGTEXT       | 大文本、可变长度   | L    | 0 <= L<= 4294967295（相当于4GB） | L + 4 个字节   |
+
+**由于实际存储的长度不确定，MySQL 不允许 TEXT 类型的字段做主键**。遇到这种情况，你只能采用 CHAR(M)，或者 VARCHAR(M)。
+
+**举例：**
+
+创建数据表：
+
+```sql
+CREATE TABLE test_text(
+  tx TEXT
+);
+```
+
+```sql
+INSERT INTO test_text VALUES('clear2   ');
+
+SELECT CHAR_LENGTH(tx) FROM test_text; -- 查询到10
+```
+
+说明在保存和查询数据时，并没有删除TEXT类型的数据尾部的空格。
+
+**开发中经验：**
+
+-   TEXT文本类型，可以存比较大的文本段，搜索速度稍慢，因此如果不是特别大的内容，建议使用CHAR，VARCHAR来代替。
+-   还有TEXT类型不用加默认值，加了也没用。
+-   而且text和blob类型的数据删除后容易导致“空洞”，使得文件碎片比较多，所以频繁使用的表不建议包含TEXT类型字段，建议单独分出去，单独用一个表。
+
+## ENUM类型
+
+`ENUM`类型也叫作枚举类型，ENUM类型的取值范围需要在定义字段时进行指定。设置字段值时，ENUM类型只允许从成员中选取单个值，不能一次选取多个值。
+
+其所需要的存储空间由定义ENUM类型时指定的成员个数决定。
+
+| 文本字符串类型 | 长度 | 长度范围        | 占用的存储空间 |
+| -------------- | ---- | --------------- | -------------- |
+| ENUM           | L    | 1 <= L <= 65535 | 1或2个字节     |
+
+- 当ENUM类型包含1～255个成员时，需要1个字节的存储空间；
+
+- 当ENUM类型包含256～65535个成员时，需要2个字节的存储空间。
+- ENUM类型的成员个数的上限为65535个。
+
+**举例**：
+
+创建表如下：
+
+```sql
+CREATE TABLE test_enum(
+  season ENUM('春','夏','秋','冬','unknow')
+);
+```
+
+添加数据：
+
+```sql
+INSERT INTO test_enum VALUES('春'),('秋');
+
+# 忽略大小写
+INSERT INTO test_enum VALUES('UNKNOW');
+
+# 允许按照角标的方式获取指定索引位置的枚举值
+INSERT INTO test_enum VALUES('1'),(3);
+
+# Data truncated for column 'season' at row 1
+INSERT INTO test_enum VALUES('ab');
+
+# 当ENUM类型的字段没有声明为NOT NULL时，插入NULL也是有效的
+INSERT INTO test_enum VALUES(NULL);
+```
+
+## SET类型
+
+SET表示一个字符串对象，可以包含0个或多个成员，但成员个数的上限为`64`。设置字段值时，可以取取值范围内的 0 个或多个值。
+
+当SET类型包含的成员个数不同时，其所占用的存储空间也是不同的，具体如下：
+
+| 成员个数范围（L表示实际成员个数） | 占用的存储空间 |
+| --------------------------------- | -------------- |
+| 1 <= L <= 8                       | 1个字节        |
+| 9 <= L <= 16                      | 2个字节        |
+| 17 <= L <= 24                     | 3个字节        |
+| 25 <= L <= 32                     | 4个字节        |
+| 33 <= L <= 64                     | 8个字节        |
+
+SET类型在存储数据时成员个数越多，其占用的存储空间越大。注意：SET类型在选取成员时，可以一次选择多个成员，这一点与ENUM类型不同。
+
+**举例**：
+
+创建表：
+
+```sql
+CREATE TABLE test_set(
+  s SET ('A', 'B', 'C')
+);
+```
+
+向表中插入数据：
+
+```sql
+INSERT INTO test_set (s) VALUES ('A'), ('A,B');
+
+#插入重复的SET类型成员时，MySQL会自动删除重复的成员
+INSERT INTO test_set (s) VALUES ('A,B,C,A');
+
+#向SET类型的字段插入SET成员中不存在的值时，MySQL会抛出错误。
+INSERT INTO test_set (s) VALUES ('A,B,C,D');
+
+SELECT *
+FROM test_set;
+```
+
+举例：
+
+```sql
+CREATE TABLE temp_mul(
+gender ENUM('男','女'),
+hobby SET('吃饭','睡觉','打豆豆','写代码')
+);
+```
+
+```sql
+INSERT INTO temp_mul VALUES('男','睡觉,打豆豆'); #成功
+
+# Data truncated for column 'gender' at row 1
+INSERT INTO temp_mul VALUES('男,女','睡觉,写代码'); #失败
+
+# Data truncated for column 'gender' at row 1
+INSERT INTO temp_mul VALUES('妖','睡觉,写代码');#失败
+
+
+INSERT INTO temp_mul VALUES('男','睡觉,写代码,吃饭'); #成功
+```
+
+## 10. 二进制字符串类型
+
+MySQL中的二进制字符串类型主要存储一些二进制数据，比如可以存储图片、音频和视频等二进制数据。
+
+MySQL中支持的二进制字符串类型主要包括BINARY、VARBINARY、TINYBLOB、BLOB、MEDIUMBLOB 和 LONGBLOB类型。
+
+#### BINARY与VARBINARY类型
+
+BINARY和VARBINARY类似于CHAR和VARCHAR，只是它们存储的是二进制字符串。
+
+BINARY (M)为固定长度的二进制字符串，M表示最多能存储的字节数，取值范围是0~255个字符。如果未指定(M)，表示只能存储`1个字节`。例如BINARY (8)，表示最多能存储8个字节，如果字段值不足(M)个字节，将在右边填充'\0'以补齐指定长度。
+
+VARBINARY (M)为可变长度的二进制字符串，M表示最多能存储的字节数，总字节数不能超过行的字节长度限制65535，另外还要考虑额外字节开销，VARBINARY类型的数据除了存储数据本身外，还需要1或2个字节来存储数据的字节数。VARBINARY类型`必须指定(M)`，否则报错。
+
+| 二进制字符串类型 | 特点     | 值的长度             | 占用空间  |
+| ---------------- | -------- | -------------------- | --------- |
+| BINARY(M)        | 固定长度 | M （0 <= M <= 255）  | M个字节   |
+| VARBINARY(M)     | 可变长度 | M（0 <= M <= 65535） | M+1个字节 |
+
+举例：
+
+创建表：
+
+```sql
+CREATE TABLE test_binary1(
+f1 BINARY,
+f2 BINARY(3),
+# f3 VARBINARY,
+f4 VARBINARY(10)
+);
+```
+
+添加数据：
+
+```sql
+INSERT INTO test_binary1(f1,f2)
+VALUES('a','a');
+
+INSERT INTO test_binary1(f1,f2)
+VALUES('尚','尚');#失败
+```
+
+```sql
+INSERT INTO test_binary1(f2,f4)
+VALUES('ab','ab');
+
+mysql> SELECT LENGTH(f2),LENGTH(f4)
+    -> FROM test_binary1;
++------------+------------+
+| LENGTH(f2) | LENGTH(f4) |
++------------+------------+
+|          3 |       NULL |
+|          3 |          2 |
++------------+------------+
+2 rows in set (0.00 sec)
+```
+
+#### BLOB类型
+
+BLOB是一个`二进制大对象`，可以容纳可变数量的数据。
+
+MySQL中的BLOB类型包括TINYBLOB、BLOB、MEDIUMBLOB和LONGBLOB 4种类型，它们可容纳值的最大长度不同。可以存储一个二进制的大对象，比如`图片`、`音频`和`视频`等。
+
+需要注意的是，在实际工作中，往往不会在MySQL数据库中使用BLOB类型存储大对象数据，通常会将图片、音频和视频文件存储到`服务器的磁盘上`，并将图片、音频和视频的访问路径存储到MySQL中。
+
+| 二进制字符串类型 | 值的长度 | 长度范围                          | 占用空间     |
+| ---------------- | -------- | --------------------------------- | ------------ |
+| TINYBLOB         | L        | 0 <= L <= 255                     | L + 1 个字节 |
+| BLOB             | L        | 0 <= L <= 65535（相当于64KB）     | L + 2 个字节 |
+| MEDIUMBLOB       | L        | 0 <= L <= 16777215 （相当于16MB） | L + 3 个字节 |
+| LONGBLOB         | L        | 0 <= L <= 4294967295（相当于4GB） | L + 4 个字节 |
+
+举例：
+
+```sql
+CREATE TABLE test_blob1(
+id INT,
+img MEDIUMBLOB
+);
+```
+
+**TEXT和BLOB的使用注意事项：**
+
+在使用text和blob字段类型时要注意以下几点，以便更好的发挥数据库的性能。
+
+① BLOB和TEXT值也会引起自己的一些问题，特别是执行了大量的删除或更新操作的时候。删除这种值会在数据表中留下很大的"`空洞`"，以后填入这些"空洞"的记录可能长度不同。为了提高性能，建议定期使用 OPTIMIZE TABLE 功能对这类表进行`碎片整理`。
+
+② 如果需要对大文本字段进行模糊查询，MySQL 提供了`前缀索引`。但是仍然要在不必要的时候避免检索大型的BLOB或TEXT值。例如，SELECT * 查询就不是很好的想法，除非你能够确定作为约束条件的WHERE子句只会找到所需要的数据行。否则，你可能毫无目的地在网络上传输大量的值。
+
+③ 把BLOB或TEXT列`分离到单独的表`中。在某些环境中，如果把这些数据列移动到第二张数据表中，可以让你把原数据表中的数据列转换为固定长度的数据行格式，那么它就是有意义的。这会`减少主表中的碎片`，使你得到固定长度数据行的性能优势。它还使你在主数据表上运行 SELECT * 查询的时候不会通过网络传输大量的BLOB或TEXT值。
+
+## 11. JSON 类型
+
+JSON（JavaScript Object Notation）是一种轻量级的`数据交换格式`。简洁和清晰的层次结构使得 JSON 成为理想的数据交换语言。它易于人阅读和编写，同时也易于机器解析和生成，并有效地提升网络传输效率。**JSON 可以将 JavaScript 对象中表示的一组数据转换为字符串，然后就可以在网络或者程序之间轻松地传递这个字符串，并在需要的时候将它还原为各编程语言所支持的数据格式。**
+
+在MySQL 5.7中，就已经支持JSON数据类型。在MySQL 8.x版本中，JSON类型提供了可以进行自动验证的JSON文档和优化的存储结构，使得在MySQL中存储和读取JSON类型的数据更加方便和高效。
+创建数据表，表中包含一个JSON类型的字段 js 。
+
+```sql
+CREATE TABLE test_json(
+js json
+
+);
+```
+
+向表中插入JSON数据。
+
+```sql
+INSERT INTO test_json (js) 
+VALUES ('{"name":"songhk", "age":18, "address":{"province":"beijing", "city":"beijing"}}');
+```
+
+查询t19表中的数据。
+
+```sql
+mysql> SELECT *
+    -> FROM test_json;
+```
+
+!
+
+当需要检索JSON类型的字段中数据的某个具体值时，可以使用“->”和“->>”符号。
+
+```sql
+mysql> SELECT js -> '$.name' AS NAME,js -> '$.age' AS age ,js -> '$.address.province' AS province, js -> '$.address.city' AS city
+    -> FROM test_json;
++----------+------+-----------+-----------+
+| NAME     | age  | province  | city      |
++----------+------+-----------+-----------+
+| "songhk" | 18   | "beijing" | "beijing" |
++----------+------+-----------+-----------+
+1 row in set (0.00 sec)
+```
+
+通过“->”和“->>”符号，从JSON字段中正确查询出了指定的JSON数据的值。
+
+## 12. 空间类型
+
+MySQL 空间类型扩展支持地理特征的生成、存储和分析。这里的地理特征表示世界上具有位置的任何东西，可以是一个实体，例如一座山；可以是空间，例如一座办公楼；也可以是一个可定义的位置，例如一个十字路口等等。MySQL中使用`Geometry（几何）`来表示所有地理特征。Geometry指一个点或点的集合，代表世界上任何具有位置的事物。
+
+MySQL的空间数据类型（Spatial Data Type）对应于OpenGIS类，包括单值类型：GEOMETRY、POINT、LINESTRING、POLYGON以及集合类型：MULTIPOINT、MULTILINESTRING、MULTIPOLYGON、GEOMETRYCOLLECTION 。
+
+- Geometry是所有空间集合类型的基类，其他类型如POINT、LINESTRING、POLYGON都是Geometry的子类。
+  - Point，顾名思义就是点，有一个坐标值。例如POINT(121.213342 31.234532)，POINT(30 10)，坐标值支持DECIMAL类型，经度（longitude）在前，维度（latitude）在后，用空格分隔。
+  - LineString，线，由一系列点连接而成。如果线从头至尾没有交叉，那就是简单的（simple）；如果起点和终点重叠，那就是封闭的（closed）。例如LINESTRING(30 10,10 30,40 40)，点与点之间用逗号分隔，一个点中的经纬度用空格分隔，与POINT格式一致。
+  - Polygon，多边形。可以是一个实心平面形，即没有内部边界，也可以有空洞，类似纽扣。最简单的就是只有一个外边界的情况，例如POLYGON((0 0,10 0,10 10, 0 10))。
+
+下面展示几种常见的几何图形元素：
+
+!
+
+- MultiPoint、MultiLineString、MultiPolygon、GeometryCollection 这4种类型都是集合类，是多个Point、LineString或Polygon组合而成。
+
+下面展示的是多个同类或异类几何图形元素的组合：
+
+!
+
+## 小结及选择建议
+
+在定义数据类型时，如果确定是`整数`，就用`INT`； 如果是`小数`，一定用定点数类型 `DECIMAL(M,D)`； 如果是日期与时间，就用 `DATETIME`。 
+
+这样做的好处是，首先确保你的系统不会因为数据类型定义出错。不过，凡事都是有两面的，可靠性好，并不意味着高效。比如，TEXT 虽然使用方便，但是效率不如 CHAR(M) 和 VARCHAR(M)。
+
+关于字符串的选择，建议参考如下阿里巴巴的《Java开发手册》规范：
+
+**阿里巴巴《Java开发手册》之MySQL数据库：**
+
+- 任何字段如果为非负数，必须是 UNSIGNED
+- 【`强制`】小数类型为 DECIMAL，禁止使用 FLOAT 和 DOUBLE。 
+  - 说明：在存储的时候，FLOAT 和 DOUBLE 都存在精度损失的问题，很可能在比较值的时候，得到不正确的结果。如果存储的数据范围超过 DECIMAL 的范围，建议将数据拆成整数和小数并分开存储。
+- 【`强制`】如果存储的字符串长度几乎相等，使用 CHAR 定长字符串类型。 
+- 【`强制`】VARCHAR 是可变长字符串，不预先分配存储空间，长度不要超过 5000。如果存储长度大于此值，定义字段类型为 TEXT，独立出来一张表，用主键来对应，避免影响其它字段索引效率。
+
+## 扩展
+
+### MySQL数据类型与Java数据类型的对应关系
