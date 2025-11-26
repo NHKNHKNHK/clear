@@ -802,9 +802,9 @@ MySQL中，文本字符串总体上分为`CHAR`、`VARCHAR`、`TINYTEXT`、`TEXT
 
 说明：
 
--   定长数据一般使用`CHAR`，不定长数据一般使用`VARCHAR`
+- 定长数据一般使用`CHAR`，不定长数据一般使用`VARCHAR`
 
--   使用`TINYTEXT`、`TEXT`、`MEDIUMTEXT`、`LONGTEXT`不需要指定具体长度，由数据决定
+- 使用`TINYTEXT`、`TEXT`、`MEDIUMTEXT`、`LONGTEXT`不需要指定具体长度，由数据决定
 
 ### CHAR与VARCHAR类型
 
@@ -935,9 +935,9 @@ SELECT CHAR_LENGTH(tx) FROM test_text; -- 查询到10
 
 **开发中经验：**
 
--   TEXT文本类型，可以存比较大的文本段，搜索速度稍慢，因此如果不是特别大的内容，建议使用CHAR，VARCHAR来代替。
--   还有TEXT类型不用加默认值，加了也没用。
--   而且text和blob类型的数据删除后容易导致“空洞”，使得文件碎片比较多，所以频繁使用的表不建议包含TEXT类型字段，建议单独分出去，单独用一个表。
+- TEXT文本类型，可以存比较大的文本段，搜索速度稍慢，因此如果不是特别大的内容，建议使用CHAR，VARCHAR来代替。
+- 还有TEXT类型不用加默认值，加了也没用。
+- 而且text和blob类型的数据删除后容易导致“空洞”，使得文件碎片比较多，所以频繁使用的表不建议包含TEXT类型字段，建议单独分出去，单独用一个表。
 
 ## ENUM类型
 
@@ -1045,17 +1045,17 @@ INSERT INTO temp_mul VALUES('妖','睡觉,写代码');#失败
 INSERT INTO temp_mul VALUES('男','睡觉,写代码,吃饭'); #成功
 ```
 
-## 10. 二进制字符串类型
+## 二进制字符串类型
 
 MySQL中的二进制字符串类型主要存储一些二进制数据，比如可以存储图片、音频和视频等二进制数据。
 
 MySQL中支持的二进制字符串类型主要包括BINARY、VARBINARY、TINYBLOB、BLOB、MEDIUMBLOB 和 LONGBLOB类型。
 
-#### BINARY与VARBINARY类型
+### BINARY与VARBINARY类型
 
 BINARY和VARBINARY类似于CHAR和VARCHAR，只是它们存储的是二进制字符串。
 
-BINARY (M)为固定长度的二进制字符串，M表示最多能存储的字节数，取值范围是0~255个字符。如果未指定(M)，表示只能存储`1个字节`。例如BINARY (8)，表示最多能存储8个字节，如果字段值不足(M)个字节，将在右边填充'\0'以补齐指定长度。
+BINARY(M)为固定长度的二进制字符串，`M`表示最多能存储的字节数，取值范围是0~255个字符。如果未指定M，表示只能存储`1个字节`。例如BINARY (8)，表示最多能存储8个字节，如果字段值不足M个字节，将在右边填充`\0`以补齐指定长度。
 
 VARBINARY (M)为可变长度的二进制字符串，M表示最多能存储的字节数，总字节数不能超过行的字节长度限制65535，另外还要考虑额外字节开销，VARBINARY类型的数据除了存储数据本身外，还需要1或2个字节来存储数据的字节数。VARBINARY类型`必须指定(M)`，否则报错。
 
@@ -1064,35 +1064,29 @@ VARBINARY (M)为可变长度的二进制字符串，M表示最多能存储的字
 | BINARY(M)        | 固定长度 | M （0 <= M <= 255）  | M个字节   |
 | VARBINARY(M)     | 可变长度 | M（0 <= M <= 65535） | M+1个字节 |
 
-举例：
-
-创建表：
+**举例**：
 
 ```sql
 CREATE TABLE test_binary1(
-f1 BINARY,
-f2 BINARY(3),
-# f3 VARBINARY,
-f4 VARBINARY(10)
+  f1 BINARY,
+  f2 BINARY(3),
+  # f3 VARBINARY, -- 不注释比报错，必须指定长度
+  f4 VARBINARY(10)
 );
 ```
 
 添加数据：
 
 ```sql
-INSERT INTO test_binary1(f1,f2)
-VALUES('a','a');
+INSERT INTO test_binary1(f1,f2) VALUES('a','a');
 
-INSERT INTO test_binary1(f1,f2)
-VALUES('尚','尚');#失败
+INSERT INTO test_binary1(f1,f2) VALUES('尚','尚');#失败
 ```
 
 ```sql
-INSERT INTO test_binary1(f2,f4)
-VALUES('ab','ab');
+INSERT INTO test_binary1(f2,f4) VALUES('ab','ab');
 
-mysql> SELECT LENGTH(f2),LENGTH(f4)
-    -> FROM test_binary1;
+mysql> SELECT LENGTH(f2),LENGTH(f4) FROM test_binary1;
 +------------+------------+
 | LENGTH(f2) | LENGTH(f4) |
 +------------+------------+
@@ -1102,7 +1096,7 @@ mysql> SELECT LENGTH(f2),LENGTH(f4)
 2 rows in set (0.00 sec)
 ```
 
-#### BLOB类型
+### BLOB类型
 
 BLOB是一个`二进制大对象`，可以容纳可变数量的数据。
 
@@ -1121,52 +1115,56 @@ MySQL中的BLOB类型包括TINYBLOB、BLOB、MEDIUMBLOB和LONGBLOB 4种类型，
 
 ```sql
 CREATE TABLE test_blob1(
-id INT,
-img MEDIUMBLOB
+  id INT,
+  img MEDIUMBLOB
 );
 ```
+
+> 说明：我们不能通过SQL的方式直接存入二进制对象，一般是通过流的方式写入，比如使用Java API写入
 
 **TEXT和BLOB的使用注意事项：**
 
 在使用text和blob字段类型时要注意以下几点，以便更好的发挥数据库的性能。
 
-① BLOB和TEXT值也会引起自己的一些问题，特别是执行了大量的删除或更新操作的时候。删除这种值会在数据表中留下很大的"`空洞`"，以后填入这些"空洞"的记录可能长度不同。为了提高性能，建议定期使用 OPTIMIZE TABLE 功能对这类表进行`碎片整理`。
+- ① BLOB和TEXT值也会引起自己的一些问题，特别是执行了大量的删除或更新操作的时候。删除这种值会在数据表中留下很大的"`空洞`"，以后填入这些"空洞"的记录可能长度不同。为了提高性能，建议定期使用 `OPTIMIZE TABLE` 功能对这类表进行`碎片整理`。
 
-② 如果需要对大文本字段进行模糊查询，MySQL 提供了`前缀索引`。但是仍然要在不必要的时候避免检索大型的BLOB或TEXT值。例如，SELECT * 查询就不是很好的想法，除非你能够确定作为约束条件的WHERE子句只会找到所需要的数据行。否则，你可能毫无目的地在网络上传输大量的值。
+- ② 如果需要对大文本字段进行模糊查询，MySQL 提供了`前缀索引`。但是仍然要在不必要的时候避免检索大型的BLOB或TEXT值。
+  - 例如，SELECT * 查询就不是很好的想法，除非你能够确定作为约束条件的WHERE子句只会找到所需要的数据行。否则，你可能毫无目的地在网络上传输大量的值。
 
-③ 把BLOB或TEXT列`分离到单独的表`中。在某些环境中，如果把这些数据列移动到第二张数据表中，可以让你把原数据表中的数据列转换为固定长度的数据行格式，那么它就是有意义的。这会`减少主表中的碎片`，使你得到固定长度数据行的性能优势。它还使你在主数据表上运行 SELECT * 查询的时候不会通过网络传输大量的BLOB或TEXT值。
+- ③ 把BLOB或TEXT列`分离到单独的表`中。在某些环境中，如果把这些数据列移动到第二张数据表中，可以让你把原数据表中的数据列转换为固定长度的数据行格式，那么它就是有意义的。这会`减少主表中的碎片`，使你得到固定长度数据行的性能优势。它还使你在主数据表上运行 SELECT * 查询的时候不会通过网络传输大量的BLOB或TEXT值。
 
-## 11. JSON 类型
+## JSON 类型
 
 JSON（JavaScript Object Notation）是一种轻量级的`数据交换格式`。简洁和清晰的层次结构使得 JSON 成为理想的数据交换语言。它易于人阅读和编写，同时也易于机器解析和生成，并有效地提升网络传输效率。**JSON 可以将 JavaScript 对象中表示的一组数据转换为字符串，然后就可以在网络或者程序之间轻松地传递这个字符串，并在需要的时候将它还原为各编程语言所支持的数据格式。**
 
-在MySQL 5.7中，就已经支持JSON数据类型。在MySQL 8.x版本中，JSON类型提供了可以进行自动验证的JSON文档和优化的存储结构，使得在MySQL中存储和读取JSON类型的数据更加方便和高效。
-创建数据表，表中包含一个JSON类型的字段 js 。
+在MySQL 5.7中，就已经支持JSON数据类型。
+
+在MySQL 8.x版本中，JSON类型提供了可以进行自动验证的JSON文档和优化的存储结构，使得在MySQL中存储和读取JSON类型的数据更加方便和高效。
+
+**举例**：
+
+创建数据表，表中包含一个JSON类型的字段 js 
 
 ```sql
 CREATE TABLE test_json(
-js json
-
+  js json
 );
 ```
 
-向表中插入JSON数据。
+向表中插入JSON数据
 
 ```sql
 INSERT INTO test_json (js) 
-VALUES ('{"name":"songhk", "age":18, "address":{"province":"beijing", "city":"beijing"}}');
+VALUES ('{"name":"ninghk", "age":18, "address":{"province":"beijing", "city":"beijing"}}');
 ```
 
-查询t19表中的数据。
+查询表中的数据
 
 ```sql
-mysql> SELECT *
-    -> FROM test_json;
+SELECT * FROM test_json;
 ```
 
-!
-
-当需要检索JSON类型的字段中数据的某个具体值时，可以使用“->”和“->>”符号。
+当需要检索JSON类型的字段中数据的某个具体值时，可以使用“`->`”和“`->>`”符号。
 
 ```sql
 mysql> SELECT js -> '$.name' AS NAME,js -> '$.age' AS age ,js -> '$.address.province' AS province, js -> '$.address.city' AS city
@@ -1174,14 +1172,14 @@ mysql> SELECT js -> '$.name' AS NAME,js -> '$.age' AS age ,js -> '$.address.prov
 +----------+------+-----------+-----------+
 | NAME     | age  | province  | city      |
 +----------+------+-----------+-----------+
-| "songhk" | 18   | "beijing" | "beijing" |
+| "ninghk" | 18   | "beijing" | "beijing" |
 +----------+------+-----------+-----------+
 1 row in set (0.00 sec)
 ```
 
-通过“->”和“->>”符号，从JSON字段中正确查询出了指定的JSON数据的值。
+通过“`->`”和“`->>`”符号，从JSON字段中正确查询出了指定的JSON数据的值。
 
-## 12. 空间类型
+## 空间类型
 
 MySQL 空间类型扩展支持地理特征的生成、存储和分析。这里的地理特征表示世界上具有位置的任何东西，可以是一个实体，例如一座山；可以是空间，例如一座办公楼；也可以是一个可定义的位置，例如一个十字路口等等。MySQL中使用`Geometry（几何）`来表示所有地理特征。Geometry指一个点或点的集合，代表世界上任何具有位置的事物。
 
@@ -1192,19 +1190,11 @@ MySQL的空间数据类型（Spatial Data Type）对应于OpenGIS类，包括单
   - LineString，线，由一系列点连接而成。如果线从头至尾没有交叉，那就是简单的（simple）；如果起点和终点重叠，那就是封闭的（closed）。例如LINESTRING(30 10,10 30,40 40)，点与点之间用逗号分隔，一个点中的经纬度用空格分隔，与POINT格式一致。
   - Polygon，多边形。可以是一个实心平面形，即没有内部边界，也可以有空洞，类似纽扣。最简单的就是只有一个外边界的情况，例如POLYGON((0 0,10 0,10 10, 0 10))。
 
-下面展示几种常见的几何图形元素：
-
-!
-
 - MultiPoint、MultiLineString、MultiPolygon、GeometryCollection 这4种类型都是集合类，是多个Point、LineString或Polygon组合而成。
-
-下面展示的是多个同类或异类几何图形元素的组合：
-
-!
 
 ## 小结及选择建议
 
-在定义数据类型时，如果确定是`整数`，就用`INT`； 如果是`小数`，一定用定点数类型 `DECIMAL(M,D)`； 如果是日期与时间，就用 `DATETIME`。 
+在定义数据类型时，如果确定是`整数`，就用`INT`； 如果是`小数`，一定用定点数类型 `DECIMAL(M,D)`； 如果是日期与时间，就用 `DATETIME`。
 
 这样做的好处是，首先确保你的系统不会因为数据类型定义出错。不过，凡事都是有两面的，可靠性好，并不意味着高效。比如，TEXT 虽然使用方便，但是效率不如 CHAR(M) 和 VARCHAR(M)。
 
@@ -1213,10 +1203,10 @@ MySQL的空间数据类型（Spatial Data Type）对应于OpenGIS类，包括单
 **阿里巴巴《Java开发手册》之MySQL数据库：**
 
 - 任何字段如果为非负数，必须是 UNSIGNED
-- 【`强制`】小数类型为 DECIMAL，禁止使用 FLOAT 和 DOUBLE。 
-  - 说明：在存储的时候，FLOAT 和 DOUBLE 都存在精度损失的问题，很可能在比较值的时候，得到不正确的结果。如果存储的数据范围超过 DECIMAL 的范围，建议将数据拆成整数和小数并分开存储。
-- 【`强制`】如果存储的字符串长度几乎相等，使用 CHAR 定长字符串类型。 
-- 【`强制`】VARCHAR 是可变长字符串，不预先分配存储空间，长度不要超过 5000。如果存储长度大于此值，定义字段类型为 TEXT，独立出来一张表，用主键来对应，避免影响其它字段索引效率。
+- <span style="color: var(--alibaba-qiangzhi-text-color);">【强制】</span>小数类型为 DECIMAL，禁止使用 FLOAT 和 DOUBLE。
+  - <span style="color: var(--alibaba-shuoming-text-color);">说明：</span>在存储的时候，FLOAT 和 DOUBLE 都存在精度损失的问题，很可能在比较值的时候，得到不正确的结果。如果存储的数据范围超过 DECIMAL 的范围，建议将数据拆成整数和小数并分开存储。
+- <span style="color: var(--alibaba-qiangzhi-text-color);">【强制】</span>如果存储的字符串长度几乎相等，使用 CHAR 定长字符串类型。
+- <span style="color: var(--alibaba-qiangzhi-text-color);">【强制】</span>VARCHAR 是可变长字符串，不预先分配存储空间，长度不要超过 5000。如果存储长度大于此值，定义字段类型为 TEXT，独立出来一张表，用主键来对应，避免影响其它字段索引效率。
 
 ## 扩展
 
