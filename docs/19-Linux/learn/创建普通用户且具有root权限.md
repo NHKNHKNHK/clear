@@ -29,4 +29,4 @@ nhk ALL=(ALL) NOPASSWD: ALL
 
 注意：
 
-​	nhk ALL=(ALL) NOPASSWD: ALL 这一行不要直接放到root行下面，因为所有用户都属于wheel组，你先配置了nhk具有免密功能，但是程序执行到%wheel行时，该功能又被覆盖回需要密码。所以nhk要放到%wheel这行下面。
+​`nhk ALL=(ALL) NOPASSWD: ALL` 这一行不要直接放到root行下面，因为所有用户都属于wheel组，你先配置了nhk具有免密功能，但是程序执行到%wheel行时，该功能又被覆盖回需要密码。所以nhk要放到%wheel这行下面。

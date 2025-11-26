@@ -1,6 +1,6 @@
 # Hadoop2、3新特性
 
-## 1 Hadoop2.0新特性
+## Hadoop2.0新特性
 
 Hadoop1.0与Hadoop2.0的区别
 
@@ -9,26 +9,26 @@ Hadoop1.0与Hadoop2.0的区别
 | HDFS      | NameNode存在单点故障的风险                 | HDFS引入了高可用机制           |
 | MapReduce | JobTracker存在断电故障风险，且内存扩展受限 | 引入了一个资源管理调度框架YARN |
 
-### 1.1 HDFS存在的问题
+### HDFS存在的问题
 
-1.  NameNode单点故障使其难以应用于在线场景
-2.  NameNode压力过大，且内存受限，影响系统扩展性
+1. NameNode单点故障使其难以应用于在线场景
+2. NameNode压力过大，且内存受限，影响系统扩展性
 
-### 1.2 MapReduce存在在问题
+### MapReduce存在在问题
 
-1.  JobTracker单点故障
-2.  JobTracker访问压力大，影响系统扩张性
-3.  难以支持除MapReduce之外的计算框架，如Spark、Strom、Tez等
+1. JobTracker单点故障
+2. JobTracker访问压力大，影响系统扩张性
+3. 难以支持除MapReduce之外的计算框架，如Spark、Strom、Tez等
 
-### 1.3 HDFS2.0解决HDFS1.0中的问题
+### HDFS2.0解决HDFS1.0中的问题
 
--   解决单点故障。HDFS HA有两个NameNode，如果活跃的NameNode发生故障，则切换到备用NameNode。
--   解决内存受限问题。HDFS Federation（联邦）水平扩展方案支持多个NameNode，每个NameNode分管一部分目录，所有NameNode共享所有DataNode存储资源
--   仅是架构上发生了变化，使用方式不变，对HDFS使用者透明
+- 解决单点故障。HDFS HA有两个NameNode，如果活跃的NameNode发生故障，则切换到备用NameNode。
+- 解决内存受限问题。HDFS Federation（联邦）水平扩展方案支持多个NameNode，每个NameNode分管一部分目录，所有NameNode共享所有DataNode存储资源
+- 仅是架构上发生了变化，使用方式不变，对HDFS使用者透明
 
 
 
-## 2 Hadoop 3.0新特性
+## Hadoop 3.0新特性
 
 Hadoop 3.0在功能和性能方面，对hadoop内核进行了多项重大改进，主要包括：
 
@@ -50,15 +50,15 @@ Hadoop3.x中Hdfs在可靠性和支持能力上作出很大改观：
 
 **HDFS纠删码**
 
--   在Hadoop3.X中，HDFS实现了Erasure Coding这个新功能。Erasure coding纠删码技术简称EC，是一种数据保护技术.最早用于通信行业中数据传输中的数据恢复，是一种编码容错技术。
--   它通过在原始数据中加入新的校验数据，使得各个部分的数据产生关联性。在一定范围的数据出错情况下，通过纠删码技术都可以进行恢复。
--   hadoop-3.0之前，HDFS存储方式为每一份数据存储3份，这也使得存储利用率仅为1/3，hadoop-3.0引入纠删码技术(EC技术)，实现1份数据+0.5份冗余校验数据存储方式。
--   与副本相比纠删码是一种更节省空间的数据持久化存储方法。标准编码(比如Reed-Solomon(10,4))会有1.4 倍的空间开销；然而HDFS副本则会有3倍的空间开销。
+- 在Hadoop3.X中，HDFS实现了Erasure Coding这个新功能。Erasure coding纠删码技术简称EC，是一种数据保护技术.最早用于通信行业中数据传输中的数据恢复，是一种编码容错技术。
+- 它通过在原始数据中加入新的校验数据，使得各个部分的数据产生关联性。在一定范围的数据出错情况下，通过纠删码技术都可以进行恢复。
+- hadoop-3.0之前，HDFS存储方式为每一份数据存储3份，这也使得存储利用率仅为1/3，hadoop-3.0引入纠删码技术(EC技术)，实现1份数据+0.5份冗余校验数据存储方式。
+- 与副本相比纠删码是一种更节省空间的数据持久化存储方法。标准编码(比如Reed-Solomon(10,4))会有1.4 倍的空间开销；然而HDFS副本则会有3倍的空间开销。
 
 **支持多个NameNodes** 
 
--   ​     最初的HDFS NameNode high-availability实现仅仅提供了一个active NameNode和一个Standby NameNode；并且通过将编辑日志复制到三个JournalNodes上，这种架构能够容忍系统中的任何一个节点的失败。
--   ​    然而，一些部署需要更高的容错度。我们可以通过这个新特性来实现，其允许用户运行多个Standby NameNode。比如通过配置三个NameNode和五个JournalNodes，这个系统可以容忍2个节点的故障，而不是仅仅一个节点。
+- ​     最初的HDFS NameNode high-availability实现仅仅提供了一个active NameNode和一个Standby NameNode；并且通过将编辑日志复制到三个JournalNodes上，这种架构能够容忍系统中的任何一个节点的失败。
+- ​    然而，一些部署需要更高的容错度。我们可以通过这个新特性来实现，其允许用户运行多个Standby NameNode。比如通过配置三个NameNode和五个JournalNodes，这个系统可以容忍2个节点的故障，而不是仅仅一个节点。
 
 **MapReduce**
 
@@ -74,8 +74,8 @@ Hadoop3.x中的MapReduce添加了Map输出collector的本地实现，对于shuff
 
 **默认端口更改**
 
--   ​    在hadoop3.x之前，多个Hadoop服务的默认端口都属于Linux的临时端口范围（32768-61000）。这就意味着用户的服务在启动的时候可能因为和其他应用程序产生端口冲突而无法启动。
--   ​    现在这些可能会产生冲突的端口已经不再属于临时端口的范围，这些端口的改变会影响NameNode, Secondary NameNode, DataNode以及KMS。与此同时，官方文档也进行了相应的改变，具体可以参见 HDFS-9427以及HADOOP-12811。 
+- ​    在hadoop3.x之前，多个Hadoop服务的默认端口都属于Linux的临时端口范围（32768-61000）。这就意味着用户的服务在启动的时候可能因为和其他应用程序产生端口冲突而无法启动。
+- ​    现在这些可能会产生冲突的端口已经不再属于临时端口的范围，这些端口的改变会影响NameNode, Secondary NameNode, DataNode以及KMS。与此同时，官方文档也进行了相应的改变，具体可以参见 HDFS-9427以及HADOOP-12811。 
 
 Namenode ports: 50470 --> 9871, 50070--> 9870, 8020 --> 9820
 
@@ -91,24 +91,24 @@ YARN 资源模型（YARN resource model）已被推广为支持用户自定义�
 
 比如集群管理员可以定义诸如 GPUs、软件许可证（software licenses）或本地附加存储器（locally-attached storage）之类的资源。YARN 任务可以根据这些资源的可用性进行调度。
 
-### 2.1 短路本地读取（Short Circuit Local Reads）
+### 短路本地读取（Short Circuit Local Reads）
 
--   在HDFS中，不管是Local Reads（DFSClient和DataNode在同一个节点）还是Remtoe Reads（DFSClient和DataNode不在同一个节点），底层处理方式都是先有DataNode读取数据，然后再通过PRC（基于TCP）把数据传给DFSClient。这个处理是比较简单的，但是需要DataNode在中间做一次中转，性能会受到影响。
--   尤其**Local Reads的时候，既然DFSClient和数据是在一个机器上面，那么很自然的想法，就是让DFSClient绕开Datanode自己去读取数据**。所谓的“短路”读取绕过了DataNode，从而允许客户端直接读取文件。显然，这仅在客户端与数据位于同一机器的情况下才可行。短路读取为许多应用提供了显着的性能提升。
+- 在HDFS中，不管是Local Reads（DFSClient和DataNode在同一个节点）还是Remtoe Reads（DFSClient和DataNode不在同一个节点），底层处理方式都是先有DataNode读取数据，然后再通过PRC（基于TCP）把数据传给DFSClient。这个处理是比较简单的，但是需要DataNode在中间做一次中转，性能会受到影响。
+- 尤其**Local Reads的时候，既然DFSClient和数据是在一个机器上面，那么很自然的想法，就是让DFSClient绕开Datanode自己去读取数据**。所谓的“短路”读取绕过了DataNode，从而允许客户端直接读取文件。显然，这仅在客户端与数据位于同一机器的情况下才可行。短路读取为许多应用提供了显着的性能提升。
 
-#### 2.1.1 老版本的实现
+#### 老版本的实现
 
--   lHDFS-2246这个JIRA中，工程师们的想法是既然读取数据DFSClient和数据在同一台机器上，那么Datanode就**把数据在文件系统中的路径，从什么地方开始读(offset)和需要读取多少(length)等信息告诉DFSClient，然后DFSClient去打开文件自己读取**。
--   想法很好，问题在于配置复杂以及安全问题
--   首先是配置问题，因为是让DFSClient自己打开文件读取数据，那么就需要配置一个白名单，定义哪些用户拥有访问Datanode的数据目录权限。
--   如果有新用户加入，那么就得修改白名单。需要注意的是，这里是允许客户端访问Datanode的数据目录，也就意味着，任何用户拥有了这个权限，就可以访问目录下其他数据，从而导致了安全漏洞。
--   因此，**这个实现已经不建议使用了**。
+- lHDFS-2246这个JIRA中，工程师们的想法是既然读取数据DFSClient和数据在同一台机器上，那么Datanode就**把数据在文件系统中的路径，从什么地方开始读(offset)和需要读取多少(length)等信息告诉DFSClient，然后DFSClient去打开文件自己读取**。
+- 想法很好，问题在于配置复杂以及安全问题
+- 首先是配置问题，因为是让DFSClient自己打开文件读取数据，那么就需要配置一个白名单，定义哪些用户拥有访问Datanode的数据目录权限。
+- 如果有新用户加入，那么就得修改白名单。需要注意的是，这里是允许客户端访问Datanode的数据目录，也就意味着，任何用户拥有了这个权限，就可以访问目录下其他数据，从而导致了安全漏洞。
+- 因此，**这个实现已经不建议使用了**。
 
-#### 2.1.2 安全性改进版的实现
+#### 安全性改进版的实现
 
--   在HDFS-347中，提出了一种新的解决方案，让短路本地读取数据更加安全
--   在Linux中，有个技术叫做**Unix Domain Socket**。Unix Domain Socket是一种**进程间的通讯方式**，它使得同一个机器上的两个进程能以Socket的方式通讯。
--   它带来的另一大好处是，利用它两个进程除了可以传递普通数据外，还可以**在进程间传递文件描述符**
+- 在HDFS-347中，提出了一种新的解决方案，让短路本地读取数据更加安全
+- 在Linux中，有个技术叫做**Unix Domain Socket**。Unix Domain Socket是一种**进程间的通讯方式**，它使得同一个机器上的两个进程能以Socket的方式通讯。
+- 它带来的另一大好处是，利用它两个进程除了可以传递普通数据外，还可以**在进程间传递文件描述符**
 
 1）假设机器上的两个用户A和B，A拥有访问某个文件的权限而B没有，而B又需要访问这个文件
 
@@ -116,7 +116,7 @@ YARN 资源模型（YARN resource model）已被推广为支持用户自定义�
 
 3）在HDFS的场景里面，A就是Datanode，B就是DFSClient，需要读取的文件就是Datanode数据目录中的某个文件
 
-#### **2.1. 3短路本地读取的实现**
+#### 短路本地读取的实现
 
 **1）配置 libhadoop.so**
 
@@ -140,8 +140,8 @@ PMDK:    false The native code was built without PMDK support.
 
 ​	**2）配置 hdfs-site.xml**
 
--   dfs.client.read.shortcircuit 是打开短路本地读取功能的开关
--   dfs.domain.socket.path 是DataNode和DFSClient之间沟通的Socket的本地路径
+- dfs.client.read.shortcircuit 是打开短路本地读取功能的开关
+- dfs.domain.socket.path 是DataNode和DFSClient之间沟通的Socket的本地路径
 
 ```xml
 <property>
@@ -153,7 +153,7 @@ PMDK:    false The native code was built without PMDK support.
 </property>
 ```
 
--   还需要确保Socket本地路径提前创建好
+- 还需要确保Socket本地路径提前创建好
 
 ```shell
 mkdir -p /var/lib/hadoop-hdfs
@@ -232,11 +232,11 @@ Local Read Bytes:109028097
 
 ```
 
-### 1.3 HDFS Block负载平衡器 Balancer（hadoop3.0）
+### HDFS Block负载平衡器 Balancer（hadoop3.0）
 
--   HDFS数据可能并不总是在DataNode之间均匀分布。一个常见的原因是向现有群集中添加了新的DataNode。HDFS提供了一个**Balancer程序**，分析block放置信息并且**在整个DataNode节点之间平衡数据**，直到被视为平衡为止。
--   所谓的平衡指的是**每个DataNode的利用率**（本机已用空间与本机总容量之比）与**集群的利用率**（HDFS整体已用空间与HDFS集群总容量的比）之间相差不超过给定阈值百分比。 
--   平衡器无法在单个DataNode上的各个卷（磁盘）之间进行平衡。
+- HDFS数据可能并不总是在DataNode之间均匀分布。一个常见的原因是向现有群集中添加了新的DataNode。HDFS提供了一个**Balancer程序**，分析block放置信息并且**在整个DataNode节点之间平衡数据**，直到被视为平衡为止。
+- 所谓的平衡指的是**每个DataNode的利用率**（本机已用空间与本机总容量之比）与**集群的利用率**（HDFS整体已用空间与HDFS集群总容量的比）之间相差不超过给定阈值百分比。 
+- 平衡器无法在单个DataNode上的各个卷（磁盘）之间进行平衡。
 
 **命令行配置**
 
@@ -266,47 +266,47 @@ hdfs dfsadmin -setBalancerBandwidth   newbandwidth
 
 2）运行Balancer
 
--   默认参数运行：
+- 默认参数运行：
 
     ```shell
     hdfs balancer
     
     ```
 
--   指定阈值运行：
+- 指定阈值运行：
 
     ```shell
     hdfs balancer -threshold 5     # Balancer将以阈值5％运行（默认值10%）。
     
     ```
 
--   这意味着程序将确保**每个DataNode上的磁盘使用量与群集中的总体使用量相差不超过5％**。例如，如果集群中所有DataNode的总体使用率是集群磁盘总存储容量的40％，则程序将确保每个DataNode的磁盘使用率在该DataNode磁盘存储容量的35％至45％之间。
+- 这意味着程序将确保**每个DataNode上的磁盘使用量与群集中的总体使用量相差不超过5％**。例如，如果集群中所有DataNode的总体使用率是集群磁盘总存储容量的40％，则程序将确保每个DataNode的磁盘使用率在该DataNode磁盘存储容量的35％至45％之间。
 
     
 
-### 1.4 磁盘均衡器 HDFS Disk Balancer（hadoop3.0）
+### 磁盘均衡器 HDFS Disk Balancer（hadoop3.0）
 
--   相比较于个人PC，服务器一般可以通过挂载多块磁盘来扩大单机的存储能力。
--   在Hadoop HDFS中，DataNode负责最终数据block的存储，在所在机器上的磁盘之间分配数据块。当写入新block时，DataNode将根据选择策略（**循环策略**或**可用空间策略**）来选择block的磁盘（卷）。
--   **循环策略**：他将新block均匀分布在可用磁盘上。**默认此策略**。
--   **可用空间策略**：此策略将数据写入具有更多可用空间（按百分比）的磁盘。
--   在长期运行的群集中**采用循环策略**时，DataNode**有时会不均匀地填充其存储目录**（磁盘/卷），从而导致某些磁盘已满而其他磁盘却很少使用的情况。发生这种情况的原因可能是由于大量的写入和删除操作，也可能是由于更换了磁盘。
--   另外，如果我们使用**基于可用空间的选择策略**，则每个新写入将进入新添加的空磁盘，从而使该期间的其他磁盘处于空闲状态。这将**在新磁盘上创建瓶颈**。
--   因此，需要一种**Intra DataNode Balancing（DataNode内数据块的均匀分布）来解决Intra-DataNode偏斜**（磁盘上块的不均匀分布），这种偏斜是由于磁盘更换或随机写入和删除而发生的。
--   因此，**Hadoop 3.0中引入了一个名为Disk Balancer**的工具，该工具专注于在DataNode内分发数据。
+- 相比较于个人PC，服务器一般可以通过挂载多块磁盘来扩大单机的存储能力。
+- 在Hadoop HDFS中，DataNode负责最终数据block的存储，在所在机器上的磁盘之间分配数据块。当写入新block时，DataNode将根据选择策略（**循环策略**或**可用空间策略**）来选择block的磁盘（卷）。
+- **循环策略**：他将新block均匀分布在可用磁盘上。**默认此策略**。
+- **可用空间策略**：此策略将数据写入具有更多可用空间（按百分比）的磁盘。
+- 在长期运行的群集中**采用循环策略**时，DataNode**有时会不均匀地填充其存储目录**（磁盘/卷），从而导致某些磁盘已满而其他磁盘却很少使用的情况。发生这种情况的原因可能是由于大量的写入和删除操作，也可能是由于更换了磁盘。
+- 另外，如果我们使用**基于可用空间的选择策略**，则每个新写入将进入新添加的空磁盘，从而使该期间的其他磁盘处于空闲状态。这将**在新磁盘上创建瓶颈**。
+- 因此，需要一种**Intra DataNode Balancing（DataNode内数据块的均匀分布）来解决Intra-DataNode偏斜**（磁盘上块的不均匀分布），这种偏斜是由于磁盘更换或随机写入和删除而发生的。
+- 因此，**Hadoop 3.0中引入了一个名为Disk Balancer**的工具，该工具专注于在DataNode内分发数据。
 
 **HDFS Disk Balancer简介**
 
--   **HDFS disk balancer**是Hadoop 3中引入的命令行工具，用于平衡DataNode中的数据在磁盘之间分布不均匀问题。 这里要特别注意，HDFS disk balancer与HDFS Balancer是不同的： 
--   HDFS disk balancer针对给定的DataNode进行操作，并将块从一个磁盘移动到另一个磁盘,是DataNode内部数据在不同磁盘间平衡；
--   HDFS Balancer平衡了DataNode节点之间的分布。
+- **HDFS disk balancer**是Hadoop 3中引入的命令行工具，用于平衡DataNode中的数据在磁盘之间分布不均匀问题。 这里要特别注意，HDFS disk balancer与HDFS Balancer是不同的： 
+- HDFS disk balancer针对给定的DataNode进行操作，并将块从一个磁盘移动到另一个磁盘,是DataNode内部数据在不同磁盘间平衡；
+- HDFS Balancer平衡了DataNode节点之间的分布。
 
 **HDFS Disk Balancer功能** ——**数据传播报告**
 
 ​    为了衡量集群中哪些计算机遭受数据分布不均的影响，磁盘平衡器定义了**Volume Data Density metric**（卷/磁盘数据密度度量标准）和**Node Data Density metric**（节点数据密度度量标准）。
 
--   卷（磁盘）数据密度：比较同台机器上不同卷之间的数据分布情况。
--   节点数据密度：比较的是不同机器之间的。
+- 卷（磁盘）数据密度：比较同台机器上不同卷之间的数据分布情况。
+- 节点数据密度：比较的是不同机器之间的。
 
 **1）Volume data density metric（卷数据密度）计算**
 
@@ -337,19 +337,19 @@ Node Data Density（节点数据密度）= **该节点上所以的volume data de
 
 如上述例子中的节点数据密度=|0.2|+|0.45|+|-0.15|+|-0.25|=1.05
 
--   ​    较低的node Data Density值表示该机器节点具有较好的扩展性，而较高的值表示节点具有更倾斜的数据分布。
--   一旦有了volume Data Density和node Data Density，就可以找到集群中数据分布倾斜的节点和机器上数据分步倾斜的磁盘。
+- ​    较低的node Data Density值表示该机器节点具有较好的扩展性，而较高的值表示节点具有更倾斜的数据分布。
+- 一旦有了volume Data Density和node Data Density，就可以找到集群中数据分布倾斜的节点和机器上数据分步倾斜的磁盘。
 
 **HDFS Disk Balancer功能** ——**磁盘平衡**
 
--   当指定某个DataNode节点进行disk数据平衡，就可以先计算或读取当前的volume Data Density（磁卷数据密度）。
--   有了这些信息，我们可以轻松地确定哪些卷已超量配置，哪些卷已不足。
--   为了将数据从一个卷移动到DataNode中的另一个卷，Hadoop开发实现了基于RPC协议的Disk Balancer。
+- 当指定某个DataNode节点进行disk数据平衡，就可以先计算或读取当前的volume Data Density（磁卷数据密度）。
+- 有了这些信息，我们可以轻松地确定哪些卷已超量配置，哪些卷已不足。
+- 为了将数据从一个卷移动到DataNode中的另一个卷，Hadoop开发实现了基于RPC协议的Disk Balancer。
 
 **HDFS Disk Balancer开启**
 
--   HDFS Disk Balancer通过创建计划进行操作，该计划是一组语句，描述应在两个磁盘之间移动多少数据，然后在DataNode上执行该组语句。计划包含多个移动步骤。计划中的每个移动步骤都具有目标磁盘，源磁盘的地址。移动步骤还具有要移动的字节数。该计划是针对可操作的DataNode执行的。
--   默认情况下，Hadoop群集上已经启用了Disk Balancer功能。通过在hdfs-site.xml中调整**dfs.disk.balancer.enabled**参数值，选择在Hadoop中是否启用磁盘平衡器。
+- HDFS Disk Balancer通过创建计划进行操作，该计划是一组语句，描述应在两个磁盘之间移动多少数据，然后在DataNode上执行该组语句。计划包含多个移动步骤。计划中的每个移动步骤都具有目标磁盘，源磁盘的地址。移动步骤还具有要移动的字节数。该计划是针对可操作的DataNode执行的。
+- 默认情况下，Hadoop群集上已经启用了Disk Balancer功能。通过在hdfs-site.xml中调整**dfs.disk.balancer.enabled**参数值，选择在Hadoop中是否启用磁盘平衡器。
 
 **HDFS Disk Balancer相关命令**
 
@@ -411,25 +411,24 @@ No plan generated. DiskBalancing not needed for node: kk01 threshold used: 10.0
 
 ```
 
-
-### 1.5 纠删码技术 Erasure Coding（hadoop3.0）
+### 纠删码技术 Erasure Coding（hadoop3.0）
 
 **背景：3副本策略的弊端**
 
--   为了提供容错能力，HDFS会根据replication factor（复制因子）在不同的DataNode上复制文件块。
--   默认复制因子为3（注意这里的3指的是1+2=3，不是额外3个），则原始块除外，还将有额外两个副本。每个副本使用100％的存储开销，因此导致200％的存储开销。这些副本也消耗其他资源，例如网络带宽。
--   在复制因子为N时，存在N-1个容错能力，但存储效率仅为1/N。
+- 为了提供容错能力，HDFS会根据replication factor（复制因子）在不同的DataNode上复制文件块。
+- 默认复制因子为3（注意这里的3指的是1+2=3，不是额外3个），则原始块除外，还将有额外两个副本。每个副本使用100％的存储开销，因此导致200％的存储开销。这些副本也消耗其他资源，例如网络带宽。
+- 在复制因子为N时，存在N-1个容错能力，但存储效率仅为1/N。
 
 **Erasure Coding（EC）简介**
 
--   **纠删码技术（Erasure coding）简称EC**，是一种编码容错技术。最早用于通信行业，数据传输中的数据恢复。它通过**对数据进行分块，然后计算出校验数据，使得各个部分的数据产生关联性**。当一部分数据块丢失时，可以通过剩余的数据块和校验块计算出丢失的数据块。
--   Hadoop 3.0 之后引入了纠删码技术（Erasure Coding），它可以提高50%以上的存储利用率，并且保证数据的可靠性。
+- **纠删码技术（Erasure coding）简称EC**，是一种编码容错技术。最早用于通信行业，数据传输中的数据恢复。它通过**对数据进行分块，然后计算出校验数据，使得各个部分的数据产生关联性**。当一部分数据块丢失时，可以通过剩余的数据块和校验块计算出丢失的数据块。
+- Hadoop 3.0 之后引入了纠删码技术（Erasure Coding），它可以提高50%以上的存储利用率，并且保证数据的可靠性。
 
 **Reed-Solomon（RS）码**
 
--   Reed-Solomon（RS）码是常用的一种纠删码，它有两个参数k和m，记为RS(k，m)。
--   k个数据块组成一个向量被乘上一个生成矩阵（Generator Matrix）GT从而得到一个码字（codeword）向量，该向量由k个数据块（d0,d1..d3）和m个校验块（c0,c1）构成。
--   如果数据块丢失，可以用GT逆矩阵乘以码字向量来恢复出丢失的数据块。
+- Reed-Solomon（RS）码是常用的一种纠删码，它有两个参数k和m，记为RS(k，m)。
+- k个数据块组成一个向量被乘上一个生成矩阵（Generator Matrix）GT从而得到一个码字（codeword）向量，该向量由k个数据块（d0,d1..d3）和m个校验块（c0,c1）构成。
+- 如果数据块丢失，可以用GT逆矩阵乘以码字向量来恢复出丢失的数据块。
 
 **RS码通俗解释**
 
@@ -477,15 +476,15 @@ GT矩阵       Data矩阵         parity
 
 **1）集群和硬件配置**
 
--   ​    编码和解码工作会消耗HDFS客户端和DataNode上的额外**CPU**。
--   ​    纠删码文件也分布在整个机架上，以实现机架容错。这意味着在读写条带化文件时，大多数操作都是在机架上进行的。因此，**网络带宽**也非常重要。
--   ​    对于机架容错，拥有**足够数量的机架**也很重要，每个机架所容纳的块数不超过EC奇偶校验块的数。机架数量=（数据块+奇偶校验块）/奇偶校验块后取整。
+- ​    编码和解码工作会消耗HDFS客户端和DataNode上的额外**CPU**。
+- ​    纠删码文件也分布在整个机架上，以实现机架容错。这意味着在读写条带化文件时，大多数操作都是在机架上进行的。因此，**网络带宽**也非常重要。
+- ​    对于机架容错，拥有**足够数量的机架**也很重要，每个机架所容纳的块数不超过EC奇偶校验块的数。机架数量=（数据块+奇偶校验块）/奇偶校验块后取整。
 
 ​    比如对于EC策略RS（6,3），这意味着最少3个机架（由（6 + 3）/ 3 = 3计算），理想情况下为9个或更多，以处理计划内和计划外的停机。对于机架数少于奇偶校验单元数的群集，HDFS无法维持机架容错能力，但仍将尝试在多个节点之间分布条带化文件以保留节点级容错能力。因此，建议设置具有类似数量的DataNode的机架。
 
 **2）纠删码策略设置**
 
--   ​    纠删码策略由参数dfs.namenode.ec.system.default.policy指定，默认是**RS-6-3-1024k**，其他策略默认是禁用的。
+- ​    纠删码策略由参数dfs.namenode.ec.system.default.policy指定，默认是**RS-6-3-1024k**，其他策略默认是禁用的。
 
 ​    可以通过以下命令启用策略集
 
@@ -498,9 +497,9 @@ hdfs ec [-enablePolicy -policy <policyName>]
 
 默认RS编解码器在HDFS本机实现利用Intel ISA-L库来改善编码和解码的计算。要启用和使用Intel ISA-L，需要执行三个步骤。
 
-1.  建立ISA-L库
-2.  使用ISA-L支持构建Hadoop
-3.  使用-Dbundle.isal将isal.lib目录的内容复制到最终的tar文件中。使用tar文件部署Hadoop。确保ISA-L在HDFS客户端和DataNode上可用。
+1. 建立ISA-L库
+2. 使用ISA-L支持构建Hadoop
+3. 使用-Dbundle.isal将isal.lib目录的内容复制到最终的tar文件中。使用tar文件部署Hadoop。确保ISA-L在HDFS客户端和DataNode上可用。
 
 版本
 
@@ -566,8 +565,6 @@ openssl: true /lib64/libcrypto.so
 ISA-L:   true /lib64/libisal.so.2     ------------->  Shows that ISA-L is loaded.
 
 ```
-
-
 
 **4）EC命令**
 

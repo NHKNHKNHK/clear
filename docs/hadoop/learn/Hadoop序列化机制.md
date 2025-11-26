@@ -1,20 +1,18 @@
-# 1 Hadoop序列化机制
+# Hadoop序列化机制
 
 序列化(serialization)是将在内存中的**结构化对象**转换为**字节序列**以便于进行网络传输或写入持久存储的过程。
 
 反序列化(Deserialization)是将字节续写转为一系列内存中的结构化对象的过程，重新创建该对象。
 
-## 1.1 Java序列化
+## Java序列化
 
--   在Java中，万物皆对象。在开发程序中，经常会遇到以下场景：
+- 在Java中，万物皆对象。在开发程序中，经常会遇到以下场景：
+  - 跨进程、跨网络传递对象
+  - 将对象数据持久化存储
 
-    ​	跨进程、跨网络传递对象
+- 这就需要又一种可以在两端传输数据的协议
 
-    ​	将对象数据持久化存储
-
--   这就需要又一种可以在两端传输数据的协议
-
--   Java序列化就是为了解决这个问题而产生
+- Java序列化就是为了解决这个问题而产生
 
 Java对象序列化机制，就是**把对象表示成一个二进制的字节数组**，里面包含了对象的数据，对象的类型，对象内部的数据的类型信息等等。通过保存或者转移这些二进制数组**达到持久化、传递的目的**。
 
@@ -29,7 +27,7 @@ public interface Serializable {
 }
 ```
 
-## 1.2 Hadoop序列化
+## Hadoop序列化
 
 **Hadoop**序列化没有采用Java的序列化机制，而是**实现了自己的序列化机制`Writable`。**
 
@@ -37,14 +35,14 @@ public interface Serializable {
 
 **Hadoop序列化的特点：**
 
--   紧凑：高效使用存储空间
--   快速：读写数据的额外开销小
--   互操作：支持多语言的互操作
+- 紧凑：高效使用存储空间
+- 快速：读写数据的额外开销小
+- 互操作：支持多语言的互操作
 
 Hadoop通过**Writable接口实现序列化机制**，接口提供了两个方法**write**和**readToFields**
 
--   ​	write叫序列化方法，用于把对象指定的字段写出去
--   ​	readTofields叫反序列化，用于从字节流中读取字段重构对象
+- ​write叫序列化方法，用于把对象指定的字段写出去
+- ​readTofields叫反序列化，用于从字节流中读取字段重构对象
 
 ```java
 public interface Writable {
@@ -69,7 +67,7 @@ public interface WritableComparable<T> extends Writable, Comparable<T> {
 }
 ```
 
-## 1.3 Hadoop封装的数据类型
+## Hadoop封装的数据类型
 
 Hadoop提供了如下内容的数据类型，**这些数据类型都实现了WritableComparable接口**，以便用这些类型定义的数据可以被序列化进行网络传输和文件存储，以及进行大小比较。
 
@@ -86,7 +84,7 @@ Hadoop提供了如下内容的数据类型，**这些数据类型都实现了Wri
 | ArrayWritable    | array        |
 | **NullWritable** | null         |
 
-## 1.4 自定义bean对象实现序列化接口（Writable）
+## 自定义bean对象实现序列化接口（Writable）
 
 在开发中，常用的基本序列化类型不能满足要求时，需要自定义对象并实现序列化接口（如：在Hadoop框架内部传递一个bean对象）
 
@@ -96,7 +94,7 @@ Hadoop提供了如下内容的数据类型，**这些数据类型都实现了Wri
 
 2）反序列化时，需要反射调用空参构造函数，所以必须有空参构造
 
-3）重写序列化方法	
+3）重写序列化方法
 
 4）重写反序列化方法
 
@@ -191,4 +189,3 @@ public class CovidCountBean implements WritableComparable<CovidCountBean> {
     }
 }
 ```
-
