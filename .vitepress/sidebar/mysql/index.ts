@@ -234,9 +234,8 @@ export default [
 
 
             { text: 'MySQL的存储引擎有哪些？有什么区别？', link: basePath + 'MySQL的存储引擎有哪些？有什么区别？' },
-            { text: 'MySQL中InnoDB和MyISAM的区别？', link: basePath + 'MySQL中InnoDB和MyISAM的区别？' },
-            { text: 'MySQL中InnoDB和MyISAM的如何选择？', link: basePath + 'MySQL中InnoDB和MyISAM的如何选择？' },
-            { text: 'MySQL的innodb和myisam索引的区别', link: basePath + 'MySQL的innodb和myisam索引的区别' },
+            { text: 'MySQL的InnoDB和MyISAM的区别', link: basePath + 'MySQL的InnoDB和MyISAM的区别' },
+            { text: 'MySQL中InnoDB和MyISAM的如何选择', link: basePath + 'MySQL中InnoDB和MyISAM的如何选择' },
             { text: '存储引擎应该如何选择？', link: basePath + '存储引擎应该如何选择？' },
             { text: 'InnoDB引擎的4大特性？', link: basePath + 'InnoDB引擎的4大特性？' },
             { text: 'InnoDB 的双写缓冲是什么？', link: basePath + 'InnoDB 的双写缓冲是什么？' },
