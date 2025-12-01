@@ -1,8 +1,22 @@
 const basePath = '/03-JVM篇/';
+const learnPath = '03-JVM篇/learn/';
 
 export default [
   {
+    text: '《JVM简明教程》',
+    collapsed: false,
+    items: [
+      { text: '什么是虚拟机', link: learnPath + '什么是虚拟机' },
+      { text: 'JVM的整体结构', link: learnPath + 'JVM的整体结构' },
+      { text: 'JVM的架构模型', link: learnPath + 'JVM的架构模型' },
+      { text: 'JVM的架构模型', link: learnPath + 'JVM的架构模型' },
+      { text: 'JVM的生命周期', link: learnPath + 'JVM的生命周期' },
+      { text: 'JVM的发展历程', link: learnPath + 'JVM的发展历程' },
+    ]
+  },
+  {
     text: 'JVM',
+    collapsed: false,
     items: [
       { text: '导航', link: '/03-JVM篇/' },
       { text: 'Java是编译型还是解释型', link: basePath + 'Java是编译型还是解释型' },
