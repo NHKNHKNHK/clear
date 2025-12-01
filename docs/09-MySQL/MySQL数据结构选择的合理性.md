@@ -44,7 +44,7 @@ Hash索引存在很多限制，相比之下在数据库中 B+树索引的使用�
 
 MySQL中的 Memory存储引擎支持 Hash存储，如果我们需要用到临时表，就可以选择Memory存储引擎，把某个字段设置为Hash索引，比如字符串类型的字段，进行 Hash 计算之后长度可以缩短到几个字节。当字段的重复度低，而且经常需要进行`等值查询`的时候，采用 Hash 索引是个不错的选择。
 
-另外，InnoDB 本身不支持 Hash 索引，但是提供[`自适应 Hash 索引（Adaptive Hash Index）`](./什么是自适应hash索引？.md)。
+另外，InnoDB 本身不支持 Hash 索引，但是提供[`自适应 Hash 索引（Adaptive Hash Index）`](./什么是自适应Hash索引.md)。
 
 那么**什么情况下才会使用自适应 Hash 索引呢？**
 

@@ -190,11 +190,11 @@ export default [
             { text: 'MySQL的主键一定是自增的吗？', link: basePath + 'MySQL的主键一定是自增的吗？' },
             { text: 'InnoDB为什么使用B+树实现索引？', link: basePath + 'InnoDB为什么使用B+树实现索引？' },
 
-            { text: '什么是自适应hash索引？', link: basePath + '什么是自适应hash索引？' },
-
-            { text: '什么是hash索引？', link: basePath + '什么是hash索引？' },
-            { text: 'hash索引和B+树索引有什么区别？', link: basePath + 'hash索引和B+树索引有什么区别？' },
+            { text: '什么是Hash索引', link: basePath + '什么是hash索引？' },
+            { text: 'Hash索引和B+树索引的区别', link: basePath + 'Hash索引和B+树索引的区别' },
             { text: 'InnoDB到底支不支持哈希索引呢？', link: basePath + 'InnoDB到底支不支持哈希索引呢？' },
+            { text: '什么是自适应Hash索引', link: basePath + '什么是自适应Hash索引' },
+
             { text: '什么是唯一索引？', link: basePath + '什么是唯一索引？' },
             { text: '唯一索引和主键索引的区别？', link: basePath + '唯一索引和主键索引的区别？' },
             { text: 'MySQL是如何保证唯一性索引的唯一性的？', link: basePath + 'MySQL是如何保证唯一性索引的唯一性的？' },
