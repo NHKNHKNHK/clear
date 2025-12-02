@@ -1,4 +1,4 @@
-# MySQL中InnoDB和MyISAM的如何选择？
+# MySQL中InnoDB和MyISAM的如何选择
 
 很多人对 InnoDB 和 MyISAM 的取舍存在疑问，到底选择哪个比较好呢？
 

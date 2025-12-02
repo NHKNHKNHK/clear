@@ -8,7 +8,7 @@ MySQL5.5之前，默认的存储引擎是MyISAM，从5.5之后，默认的是Inn
 
 MyISAM 适用于**读多**写少的场景，如数据仓库、日志分析等；InnoDB 适用于事务密集型和高并发场景，如在线交易系统、社交网络等。
 
-> 关于更多MySQL中InnoDB和MyISAM的如何选择的细节可以查看：[MySQL中InnoDB和MyISAM的如何选择？](./MySQL中InnoDB和MyISAM的如何选择？.md)
+> 关于更多MySQL中InnoDB和MyISAM的如何选择的细节可以查看：[MySQL中InnoDB和MyISAM的如何选择？](./MySQL中InnoDB和MyISAM的如何选择.md)
 
 ## 主要区别
 

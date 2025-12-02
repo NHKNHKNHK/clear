@@ -233,7 +233,7 @@ Federated 引擎是访问其他 MySQL 服务器的一个`代理`，尽管该引�
 
 ## InnoDB和MyISAM如何选择
 
-> [MySQL中InnoDB和MyISAM的如何选择？](./MySQL中InnoDB和MyISAM的如何选择？)
+> [MySQL中InnoDB和MyISAM的如何选择](./MySQL中InnoDB和MyISAM的如何选择)
 
 ## 扩展
 
