@@ -12,20 +12,20 @@ hero:
     alt: logo
   }
   actions:
-    # - theme: brand
-    #   text: Clear的Gitee（给个star吧）
-    #   link: https://gitee.com/ninghongkang
-    # - theme: alt
-    #   text: API Examples
-    #   link: /api-examples
-    #   target: _blank
-    #   rel: noopener
-    # - theme: alt
-    #   text: 面试题库
-    #   link: /api-examples
-    # - theme: alt
-    #   text: 支持老哥
-    #   link: /zhichi
+    - theme: brand
+      text: Clear的Gitee（给个star吧）
+      link: https://gitee.com/ninghongkang/easy-interview
+    - theme: alt
+      text: API Examples
+      link: /api-examples
+      target: _blank
+      rel: noopener
+    - theme: alt
+      text: 面试题库
+      link: /api-examples
+    - theme: alt
+      text: 支持老哥
+      link: /zhichi
 
 features:
   - title: Java基础
@@ -135,7 +135,7 @@ features:
       width: 40
       height: 40
   - title: MongoDB
-    link: /16-MongoDB
+    link: /mongo
     icon: 
       dark: /svg/mongodb-dark.svg
       light: /svg/mongodb-light.svg

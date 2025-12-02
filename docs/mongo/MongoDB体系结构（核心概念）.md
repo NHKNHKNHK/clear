@@ -8,7 +8,7 @@ mongodb中可以建立多个数据库。每一个库都有自己的集合和权�
 
 ## **Collection**
 
-集合就是 MongoDB 文档组，类似于 RDBMS**（关系数据库管理系统：RelationalDatabase Management System）**中的表的概念。
+集合就是 MongoDB 文档组，类似于 RDBMS（关系数据库管理系统：RelationalDatabase Management System）中的表的概念。
 
 集合存在于数据库中，一个库中可以创建多个集合。每个集合没有固定的结构，这意味着你在对集合可以插入不同格式和类型的数据，但通常情况下我们插入集合的数据都会有一定的关联性。
 
@@ -20,4 +20,3 @@ mongodb中可以建立多个数据库。每一个库都有自己的集合和权�
 ```json
 {"site":"www.clear.com","name":"nhk"}
 ```
-

@@ -67,7 +67,7 @@ export default [
           { text: 'RabbitMQ', link: '/15-MQ/RabbitMQ' },
         ]
       },
-      { text: 'MongoDB', link: '/16-MongoDB' },
+      { text: 'MongoDB', link: '/mongo' },
     ]
   },
   {

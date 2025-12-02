@@ -9,6 +9,7 @@ import springMvcSidebar from './sidebar/springmvc/index'
 import springBootSidebar from './sidebar/springboot/index'
 import ormSidebar from './sidebar/orm/index'
 import mysqlSidebar from './sidebar/mysql/index'
+import mongoSidebar from './sidebar/mongo/index'
 import designPatternSidebar from "./sidebar/design-pattern"
 import gitSidebar from "./sidebar/git/index"
 import linuxSidebar from "./sidebar/linux/index"
@@ -226,18 +227,7 @@ export default {
       ]
     },
   ],
-  '/16-MongoDB/': [
-    {
-      text: 'MongoDB',
-      items: [
-        { text: '导读', link: '/16-MongoDB/' },
-        { text: '什么是MongoDB', link: '/16-MongoDB/什么是MongoDB' },
-        { text: 'RDBMS与MongoDB对比', link: '/16-MongoDB/RDBMS与MongoDB对比' },
-        { text: 'MongoDB体系结构（核心概念）', link: '/16-MongoDB/MongoDB体系结构（核心概念）' },
-        { text: 'MongoDB数据模型', link: '/16-MongoDB/MongoDB数据模型' },
-      ]
-    },
-  ],
+  '/16-MongoDB/': mongoSidebar,
   '/17-backend-what/': [
     {
       text: '常识题',

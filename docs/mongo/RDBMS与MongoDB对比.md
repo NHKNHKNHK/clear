@@ -10,5 +10,3 @@
 | table joins  |                  | 表连接,MongoDB不支持                    |
 |              | 嵌入文档         | MongoDB**通过嵌入式文档来替代多表连接** |
 | primary key  | primary key      | 主键,**MongoDB自动将_id字段设置为主键** |
-
-

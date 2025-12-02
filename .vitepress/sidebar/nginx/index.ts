@@ -2,7 +2,7 @@ const bashPath = '/nginx/'
 
 export default [
   {
-    text: '《Linux简明教程》',
+    text: 'Nginx',
     items: [
       { text: '导读', link: bashPath + '' },
       { text: '通过 yum 方式安装 Nginx', link: bashPath + 'install-nginx' },
