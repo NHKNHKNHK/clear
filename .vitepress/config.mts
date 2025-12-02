@@ -200,6 +200,13 @@ export default withDrawio(defineConfig({
     ssr: {
 
     },
+    css: {
+      preprocessorOptions: {
+        // 解决 legacy JS API Deprecation Warning
+        // 参考自 https://element-plus.org/zh-CN/guide/installation
+        scss: { api: 'modern-compiler' },
+      }
+    }
 
   },
 
