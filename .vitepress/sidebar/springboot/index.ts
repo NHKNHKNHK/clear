@@ -51,7 +51,7 @@ export default [
       // 热部署
       // 整合redis
       // 如何jar包启动
-      { text: 'SpringBoot处理处理跨域请求（CORS）？', link: basePath + 'SpringBoot处理处理跨域请求（CORS）？' },
+      { text: 'SpringBoot处理处理跨域请求（CORS）', link: basePath + 'SpringBoot处理处理跨域请求（CORS）' },
       { text: '在SpringBoot中你是怎么使用拦截器的？', link: basePath + '在SpringBoot中你是怎么使用拦截器的？' },
       { text: 'SpringBoot中如何实现定时任务？', link: basePath + 'SpringBoot中如何实现定时任务？' },
       { text: 'SpringBoot中如何实现异步处理？', link: basePath + 'SpringBoot中如何实现异步处理？' },

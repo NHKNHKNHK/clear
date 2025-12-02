@@ -81,7 +81,7 @@ AS 查询语句
 ```sql
 CREATE VIEW empvu80
 AS 
-SELECT  employee_id, last_name, salary
+SELECT  employee_id, last_name, salary # 查询语句中的字段的会作为视图中的字段
 FROM    employees
 WHERE   department_id = 80;
 ```
@@ -89,7 +89,7 @@ WHERE   department_id = 80;
 查询视图：
 
 ```sql
-SELECT * FROM salvu80;
+SELECT * FROM empvu80;
 ```
 
 <!-- <img src="images/1555430882363.png" alt="1555430882363" style="zoom:80%;" /> -->
@@ -97,7 +97,7 @@ SELECT * FROM salvu80;
 举例：
 
 ```sql
-CREATE VIEW emp_year_salary (ename,year_salary)
+CREATE VIEW emp_year_salary (ename,year_salary) # 小括号内的字段个数要与SELECT语句中的字段个数一致
 AS 
 SELECT ename,salary*12*(1+IFNULL(commission_pct,0))
 FROM t_employee;
@@ -117,7 +117,7 @@ WHERE   department_id = 50;
 
 说明2：在创建视图时，没有在视图名后面指定字段列表，则视图中字段列表默认和SELECT语句中的字段列表一致。如果SELECT语句中给字段取了别名，那么视图中的字段名和别名相同。
 
-### 3.2 创建多表联合视图
+### 创建多表联合视图
 
 举例：
 
@@ -138,8 +138,7 @@ ON t_employee.did = t_department.did;
 ```
 
 ```sql
-CREATE VIEW	dept_sum_vu
-(name, minsal, maxsal, avgsal)
+CREATE VIEW dept_sum_vu (name, minsal, maxsal, avgsal) # 视图中的字段在基表中可能没用对应的字段
 AS 
 SELECT d.department_name, MIN(e.salary), MAX(e.salary),AVG(e.salary)
 FROM employees e, departments d
@@ -151,7 +150,7 @@ GROUP BY  d.department_name;
 
 我们经常需要输出某个格式的内容，比如我们想输出员工姓名和对应的部门名，对应格式为 emp_name(department_name)，就可以使用视图来完成数据格式化的操作：
 
-```sql
+```sql{3}
 CREATE VIEW emp_depart
 AS
 SELECT CONCAT(last_name,'(',department_name,')') AS emp_dept
@@ -159,7 +158,7 @@ FROM employees e JOIN departments d
 WHERE e.department_id = d.department_id
 ```
 
-### 3.3 基于视图创建视图
+### 基于视图创建视图
 
 当我们创建好一张视图之后，还可以在它的基础上继续创建视图。
 
@@ -173,36 +172,38 @@ FROM emp_dept INNER JOIN emp_year_salary
 ON emp_dept.ename = emp_year_salary.ename;
 ```
 
-## 4. 查看视图
+## 查看视图
 
-语法1：查看数据库的表对象、视图对象
+- 语法1：查看数据库的表对象、视图对象
 
 ```sql
 SHOW TABLES;
 ```
 
-语法2：查看视图的结构
+- 语法2：查看视图的结构
 
 ```sql
-DESC / DESCRIBE 视图名称;
+DESC 视图名称;
+-- 或
+DESCRIBE 视图名称;
 ```
 
-语法3：查看视图的属性信息
+- 语法3：查看视图的属性信息
 
 ```sql
 # 查看视图信息（显示数据表的存储引擎、版本、数据行数和数据大小等）
 SHOW TABLE STATUS LIKE '视图名称'\G
 ```
 
-执行结果显示，注释Comment为VIEW，说明该表为视图，其他的信息为NULL，说明这是一个虚表。
+说明：执行结果显示，`Comment`为`VIEW`，说明该表为视图，其他的信息为NULL，说明这是一个`虚表`。
 
-语法4：查看视图的详细定义信息
+- 语法4：查看视图的详细定义信息
 
 ```sql
 SHOW CREATE VIEW 视图名称;
 ```
 
-## 5. 更新视图的数据
+## 更新视图的数据
 
 ### 5.1 一般情况
 
@@ -224,19 +225,19 @@ Query OK, 1 row affected (0.01 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
 
 mysql> SELECT ename,tel FROM emp_tel WHERE ename = '孙洪亮';
-+---------+-------------+
-| ename	  | tel         |
-+---------+-------------+
-| 	孙洪亮 | 13789091234 |
-+---------+-------------+
++--------+-------------+
+| ename  | tel         |
++--------+-------------+
+| 孙洪亮  | 13789091234 |
++--------+-------------+
 1 row in set (0.00 sec)
 
 mysql> SELECT ename,tel FROM t_employee WHERE ename = '孙洪亮';
-+---------+-------------+
-| ename   | tel         |
-+---------+-------------+
-| 孙洪亮 	| 13789091234 |
-+---------+-------------+
++--------+-------------+
+| ename  | tel         |
++--------+-------------+
+| 孙洪亮  | 13789091234 |
++--------+-------------+
 1 row in set (0.00 sec)
 
 ```
@@ -245,11 +246,11 @@ mysql> SELECT ename,tel FROM t_employee WHERE ename = '孙洪亮';
 
 ```sql
 mysql> SELECT ename,tel FROM emp_tel WHERE ename = '孙洪亮';
-+---------+-------------+
-| ename  	| tel           |
-+---------+-------------+
-| 孙洪亮 	| 13789091234 |
-+---------+-------------+
++--------+-------------+
+| ename  | tel           |
++--------+-------------+
+| 孙洪亮 | 13789091234 |
++--------+-------------+
 1 row in set (0.00 sec)
 
 mysql> DELETE FROM emp_tel  WHERE ename = '孙洪亮';

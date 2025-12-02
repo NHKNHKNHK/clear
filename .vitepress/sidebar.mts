@@ -13,6 +13,7 @@ import designPatternSidebar from "./sidebar/design-pattern"
 import gitSidebar from "./sidebar/git/index"
 import linuxSidebar from "./sidebar/linux/index"
 import redisSidebar from './sidebar/redis/index'
+import nginxSidebar from './sidebar/nginx/index'
 import hadoopSidebar from './sidebar/hadoop/index'
 import flumeSidebar from './sidebar/flume/index'
 
@@ -468,20 +469,7 @@ export default {
       ]
     }
   ],
-  '/nginx/': [
-    {
-      text: 'Nginx',
-      items: [
-        { text: '导读', link: '/nginx/' },
-        { text: '通过 yum 方式安装 Nginx', link: '/nginx/install-nginx' },
-        { text: 'Nginx的常用命令？', link: '/nginx/Nginx的常用命令？' },
-        { text: 'Nginx 配置文件解读', link: '/nginx/nginx-config' },
-        { text: '单服务器如何部署多个网站？', link: '/nginx/multi-deploy' },
-        { text: 'Nginx配置Gzip压缩', link: '/nginx/nginx-gzip' },
-        { text: 'Nginx如何实现跨域访问？', link: '/nginx/Nginx如何实现跨域访问？' },
-      ]
-    }
-  ],
+  '/nginx/': nginxSidebar,
   '/hadoop/': hadoopSidebar,
   '/hbase/': [
     {
