@@ -227,7 +227,7 @@ export default {
       ]
     },
   ],
-  '/16-MongoDB/': mongoSidebar,
+  '/mongo/': mongoSidebar,
   '/17-backend-what/': [
     {
       text: '常识题',

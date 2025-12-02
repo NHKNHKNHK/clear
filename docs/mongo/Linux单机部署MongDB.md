@@ -161,4 +161,3 @@ rm -f /mongodb/single/data/db/*.lock
 ```shell
 /usr/local/mongdb/bin/mongod --repair --dbpath=/mongodb/single/data/db
 ```
-
