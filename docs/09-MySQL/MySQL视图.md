@@ -27,7 +27,7 @@
 
 - 视图是一种`虚拟表`，本身是`不具有数据`的，占用很少的内存空间，它是 SQL 中的一个重要概念。
 
-- **视图建立在已有表的基础上**, 视图赖以建立的这些表称为**基表**。
+- **视图建立在已有表的基础上**, 视图赖以建立的这些表称为`基表`。
 
 ![](./assets/视图.png)
 
@@ -91,8 +91,6 @@ WHERE   department_id = 80;
 ```sql
 SELECT * FROM empvu80;
 ```
-
-<!-- <img src="images/1555430882363.png" alt="1555430882363" style="zoom:80%;" /> -->
 
 举例：
 
@@ -205,7 +203,7 @@ SHOW CREATE VIEW 视图名称;
 
 ## 更新视图的数据
 
-### 5.1 一般情况
+### 一般情况
 
 MySQL支持使用INSERT、UPDATE和DELETE语句对视图中的数据进行插入、更新和删除操作。当视图中的数据发生变化时，数据表中的数据也会发生变化，反之亦然。
 
@@ -216,10 +214,11 @@ mysql> SELECT ename,tel FROM emp_tel WHERE ename = '孙洪亮';
 +---------+-------------+
 | ename   | tel         |
 +---------+-------------+
-| 孙洪亮 	| 13789098765 |
+| 孙洪亮   | 13789098765 |
 +---------+-------------+
 1 row in set (0.01 sec)
 
+-- 更新视图数据
 mysql> UPDATE emp_tel SET tel = '13789091234' WHERE ename = '孙洪亮';
 Query OK, 1 row affected (0.01 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
@@ -232,6 +231,7 @@ mysql> SELECT ename,tel FROM emp_tel WHERE ename = '孙洪亮';
 +--------+-------------+
 1 row in set (0.00 sec)
 
+-- 查看基表数据
 mysql> SELECT ename,tel FROM t_employee WHERE ename = '孙洪亮';
 +--------+-------------+
 | ename  | tel         |
@@ -264,11 +264,13 @@ Empty set (0.00 sec)
 
 ```
 
-### 5.2 不可更新的视图
+### 不可更新的视图 :star:
 
-要使视图可更新，视图中的行和底层基本表中的行之间必须存在`一对一`的关系。另外当视图定义出现如下情况时，视图不支持更新操作：
+要使视图可更新，视图中的行和底层基本表（基表）中的行之间必须存在`一对一`的关系。
 
-- 在定义视图的时候指定了“ALGORITHM = TEMPTABLE”，视图将不支持INSERT和DELETE操作；
+另外当视图定义出现如下情况时，视图不支持更新操作：
+
+- 在定义视图的时候指定了`ALGORITHM = TEMPTABLE`，视图将不支持INSERT和DELETE操作；
 - 视图中不包含基表中所有被定义为非空又未指定默认值的列，视图将不支持INSERT操作；
 - 在定义视图的SELECT语句中使用了`JOIN联合查询`，视图将不支持INSERT和DELETE操作；
 - 在定义视图的SELECT语句后的字段列表中使用了`数学表达式`或`子查询`，视图将不支持INSERT，也不支持UPDATE使用了数学表达式、子查询的字段值；
@@ -280,41 +282,43 @@ Empty set (0.00 sec)
 举例：
 
 ```sql
+-- 创建视图
 mysql> CREATE OR REPLACE VIEW emp_dept
     -> (ename,salary,birthday,tel,email,hiredate,dname)
     -> AS SELECT ename,salary,birthday,tel,email,hiredate,dname
     -> FROM t_employee INNER JOIN t_department
     -> ON t_employee.did = t_department.did ;
 Query OK, 0 rows affected (0.01 sec)
-
 ```
 
 ```sql
+-- 插入数据（向视图中插入数据）
 mysql> INSERT INTO emp_dept(ename,salary,birthday,tel,email,hiredate,dname)
     -> VALUES('张三',15000,'1995-01-08','18201587896',
     -> 'zs@atguigu.com','2022-02-14','新部门');
     
-#ERROR 1393 (HY000): Can not modify more than one base table through a join view 'atguigu_chapter9.emp_dept'
-
+#ERROR 1393 (HY000): Can not modify more than one base table through a join view 'test.emp_dept'
 ```
 
 从上面的SQL执行结果可以看出，在定义视图的SELECT语句中使用了JOIN联合查询，视图将不支持更新操作。
 
-> 虽然可以更新视图数据，但总的来说，视图作为`虚拟表`，主要用于`方便查询`，不建议更新视图的数据。**对视图数据的更改，都是通过对实际数据表里数据的操作来完成的。**
+### 小结
 
-## 6. 修改、删除视图
+虽然可以更新视图数据，但总的来说，视图作为`虚拟表`，主要用于`方便查询`，不建议更新视图的数据。**对视图数据的更改，都是通过对实际数据表里数据的操作来完成的。**
 
-### 6.1 修改视图
+## 修改、删除视图
 
-方式1：使用CREATE **OR REPLACE** VIEW 子句**修改视图**
+### 修改视图
+
+方式1：使用CREATE `OR REPLACE` VIEW 子句**修改视图**
 
 ```sql
 CREATE OR REPLACE VIEW empvu80
-(id_number, name, sal, department_id)
+  (id_number, name, sal, department_id)
 AS 
-SELECT  employee_id, first_name || ' ' || last_name, salary, department_id
-FROM employees
-WHERE department_id = 80;
+  SELECT  employee_id, first_name || ' ' || last_name, salary, department_id
+  FROM employees
+  WHERE department_id = 80;
 ```
 
 > 说明：CREATE VIEW 子句中各列的别名应和子查询中各列相对应。
@@ -329,31 +333,33 @@ AS
 查询语句
 ```
 
-### 6.2 删除视图
+### 删除视图
 
-- 删除视图只是删除视图的定义，并不会删除基表的数据。
+删除视图只是删除视图的定义，并不会删除基表的数据。
 
-- 删除视图的语法是：
+删除视图的语法是：
 
-  ```sql
-  DROP VIEW IF EXISTS 视图名称;
-  ```
+```sql
+DROP VIEW IF EXISTS 视图名称;
 
-  ```sql
-  DROP VIEW IF EXISTS 视图名称1,视图名称2,视图名称3,...;
-  ```
+DROP VIEW IF EXISTS 视图名称1,视图名称2,视图名称3,...;
+```
 
-- 举例：
+举例：
 
-  ```sql
-  DROP VIEW empvu80;
-  ```
+```sql
+DROP VIEW empvu80;
+```
 
-- 说明：基于视图a、b创建了新的视图c，如果将视图a或者视图b删除，会导致视图c的查询失败。这样的视图c需要手动删除或修改，否则影响使用。
+:::tip
 
-## 7. 总结
+说明：基于视图a、b创建了新的视图c，如果将视图a或者视图b删除，会导致视图c的查询失败。这样的视图c需要手动删除或修改，否则影响使用。
 
-### 7.1 视图优点
+:::
+
+## 总结
+
+### 视图优点
 
 **1. 操作简单**
 
@@ -367,8 +373,6 @@ AS
 
 MySQL将用户对数据的`访问限制`在某些数据的结果集上，而这些数据的结果集可以使用视图来实现。用户不必直接查询或操作数据表。这也可以理解为视图具有`隔离性`。视图相当于在用户和实际的数据表之间加了一层虚拟表。
 
-<!-- ![image-20211010211744459](images/image-20211010211744459.png) -->
-
 同时，MySQL可以根据权限将用户对数据的访问限制在某些视图上，**用户不需要查询数据表，可以直接通过视图获取数据表中的信息**。这在一定程度上保障了数据表中数据的安全性。
 
 **4. 适应灵活多变的需求**
@@ -377,11 +381,10 @@ MySQL将用户对数据的`访问限制`在某些数据的结果集上，而这�
 **5. 能够分解复杂的查询逻辑**
 数据库中如果存在复杂的查询逻辑，则可以将问题进行分解，创建多个视图获取数据，再将创建的多个视图结合起来，完成复杂的查询逻辑。
 
-### 7.2 视图不足
+### 视图不足
 
 如果我们在实际数据表的基础上创建了视图，那么，**如果实际数据表的结构变更了，我们就需要及时对相关的视图进行相应的维护**。特别是嵌套的视图（就是在视图的基础上创建视图），维护会变得比较复杂，`可读性不好`，容易变成系统的潜在隐患。因为创建视图的 SQL 查询可能会对字段重命名，也可能包含复杂的逻辑，这些都会增加维护的成本。
 
 实际项目中，如果视图过多，会导致数据库维护成本的问题。
 
 所以，在创建视图的时候，你要结合实际项目需求，综合考虑视图的优点和不足，这样才能正确使用视图，使系统整体达到最优。
-
