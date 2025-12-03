@@ -1,4 +1,4 @@
-# char和varchar的区别？
+# char和varchar的区别
 
 ## 口语化
 
