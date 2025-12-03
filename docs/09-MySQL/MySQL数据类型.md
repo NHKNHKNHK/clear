@@ -1231,59 +1231,59 @@ MySQL的空间数据类型（Spatial Data Type）对应于OpenGIS类，包括单
 
 以下是日常开发中最常用的映射关系，兼顾 **JDBC 标准映射**、**MyBatis 常用映射** 及实际业务场景（如 null 兼容、精度适配），按 MySQL 数据类型分类整理：
 
-| MySQL 数据类型                    | 核心 Java 数据类型                      | 补充说明（适用场景 / 注意事项）                              |
-| --------------------------------- | --------------------------------------- | ------------------------------------------------------------ |
-| **整数类型**                      |                                         |                                                              |
-| TINYINT(1)                        | boolean/Boolean                         | 常用于存储布尔值（MySQL 无原生 boolean，用 0/1 表示 false/true），Boolean 支持 null |
-| TINYINT                           | byte/Byte                               | 范围 -128~127（有符号），无符号用 Short/Integer              |
-| SMALLINT                          | short/Short                             | 范围 -32768~32767，无符号用 Integer                          |
-| MEDIUMINT                         | int/Integer                             | MySQL 特有类型，Java 无对应中等整数，直接用 int 适配         |
-| INT/INTEGER                       | int/Integer                             | 最常用整数类型，Integer 支持 null（推荐业务场景使用）        |
-| BIGINT                            | long/Long                               | 存储大整数（如订单号、ID），Long 支持 null，避免超出 int 范围（-2³¹~2³¹-1） |
-| **浮点 / 小数类型**               |                                         |                                                              |
-| FLOAT                             | float/Float                             | 单精度浮点，精度有限（约 6-7 位有效数字），不建议存储金额    |
-| DOUBLE                            | double/Double                           | 双精度浮点，精度高于 FLOAT（约 15-17 位有效数字），仍不建议存储金额 |
-| DECIMAL(M,D)/NUMERIC(M,D)         | java.math.BigDecimal                    | 高精度小数（M 总长度，D 小数位数），**推荐存储金额、税率等需精确计算的数据**，避免浮点误差 |
-| **字符串 / 文本类型**             |                                         |                                                              |
-| CHAR(M)                           | String                                  | 固定长度字符串（M≤255），适合短文本（如手机号、身份证号），Java 中统一用 String 接收 |
-| VARCHAR(M)                        | String                                  | 可变长度字符串（M≤65535），最常用文本类型（如姓名、描述），String 适配所有场景 |
-| TINYTEXT                          | String                                  | 短文本（≤255 字符），Java 无对应类型，用 String 接收         |
-| TEXT                              | String                                  | 普通文本（≤65535 字符），适合较长文本（如备注），String 适配 |
-| MEDIUMTEXT                        | String                                  | 中等文本（≤16M 字符），如文章内容，String 或 char []（极少用） |
-| LONGTEXT                          | String                                  | 长文本（≤4G 字符），如日志、大文档，建议避免直接映射为 String（可分片处理） |
-| ENUM (' 值 1',' 值 2'...)         | String / 自定义枚举类                   | 枚举类型，直接用 String 接收枚举值，或映射为 Java 枚举类（MyBatis 需配置类型处理器） |
-| SET (' 值 1',' 值 2'...)          | String/List\<String>                     | 多值枚举（最多 64 个值），用 String 接收（逗号分隔），或通过 MyBatis 映射为 List\<String> |
-| **日期 / 时间类型**               |                                         |                                                              |
-| DATE                              | java.time.LocalDate                     | 仅日期（yyyy-MM-dd），JDK8+ 推荐用 LocalDate（替代 java.sql.Date） |
-| TIME                              | java.time.LocalTime                     | 仅时间（HH:mm:ss），JDK8+ 推荐用 LocalTime（替代 java.sql.Time） |
-| DATETIME                          | java.time.LocalDateTime                 | 日期 + 时间（yyyy-MM-dd HH:mm:ss），JDK8+ 首选，无时区依赖（替代 java.sql.Timestamp） |
-| TIMESTAMP                         | java.time.Instant                       | 时间戳（含时区，底层存储为 Unix 时间戳），JDK8+ 用 Instant 接收，需处理时区转换 |
-| YEAR                              | int/Integer/Year                        | 年份（格式 YYYY），用 int 接收年份值，或 JDK8+ Year 类       |
-| **二进制类型**                    |                                         |                                                              |
-| BINARY(M)                         | byte[]                                  | 固定长度二进制数据（如哈希值），映射为 byte 数组             |
-| VARBINARY(M)                      | byte[]                                  | 可变长度二进制数据，映射为 byte 数组                         |
-| BLOB/TINYBLOB/MEDIUMBLOB/LONGBLOB | byte[]                                  | 二进制大对象（如图片、文件），映射为 byte []，大文件建议用文件存储（数据库存路径） |
-| **其他类型**                      |                                         |                                                              |
-| BIT                               | boolean/Byte/Integer                    | 位类型（BIT (1) 对应 boolean，BIT (n>1) 对应 Byte/Integer）  |
-| JSON                              | String/Map<String, Object>/ 自定义 POJO | JSON 类型，用 String 接收原始 JSON 串，或通过 MyBatis 映射为 Map/POJO（需依赖类型处理器） |
+| MySQL 数据类型                       | 核心 Java 数据类型                      | 补充说明（适用场景 / 注意事项）                              |
+| ------------------------------------ | --------------------------------------- | ------------------------------------------------------------ |
+| **整数类型**                         |                                         |                                                              |
+| TINYINT(1)                           | boolean/Boolean                         | 常用于存储布尔值（MySQL 无原生 boolean，用 0/1 表示 false/true），Boolean 支持 null |
+| TINYINT                              | byte/Byte                               | 范围 -128~127（有符号），无符号用 Short/Integer              |
+| SMALLINT                             | short/Short                             | 范围 -32768~32767，无符号用 Integer                          |
+| MEDIUMINT                            | int/Integer                             | MySQL 特有类型，Java 无对应中等整数，直接用 int 适配         |
+| INT/INTEGER                          | int/Integer                             | 最常用整数类型，Integer 支持 null（推荐业务场景使用）        |
+| BIGINT                               | long/Long                               | 存储大整数（如订单号、ID），Long 支持 null，避免超出 int 范围（-2³¹~2³¹-1） |
+| **浮点 / 小数类型**                  |                                         |                                                              |
+| FLOAT                                | float/Float                             | 单精度浮点，精度有限（约 6-7 位有效数字），不建议存储金额    |
+| DOUBLE                               | double/Double                           | 双精度浮点，精度高于 FLOAT（约 15-17 位有效数字），仍不建议存储金额 |
+| DECIMAL(M,D)/NUMERIC(M,D)            | java.math.BigDecimal                    | 高精度小数（M 总长度，D 小数位数），**推荐存储金额、税率等需精确计算的数据**，避免浮点误差 |
+| **字符串 / 文本类型**                |                                         |                                                              |
+| CHAR(M)                              | String                                  | 固定长度字符串（M≤255），适合短文本（如手机号、身份证号），Java 中统一用 String 接收 |
+| VARCHAR(M)                           | String                                  | 可变长度字符串（M≤65535），最常用文本类型（如姓名、描述），String 适配所有场景 |
+| TINYTEXT                             | String                                  | 短文本（≤255 字符），Java 无对应类型，用 String 接收         |
+| TEXT                                 | String                                  | 普通文本（≤65535 字符），适合较长文本（如备注），String 适配 |
+| MEDIUMTEXT                           | String                                  | 中等文本（≤16M 字符），如文章内容，String 或 char []（极少用） |
+| LONGTEXT                             | String                                  | 长文本（≤4G 字符），如日志、大文档，建议避免直接映射为 String（可分片处理） |
+| ENUM (' 值 1',' 值 2'...)            | String / 自定义枚举类                   | 枚举类型，直接用 String 接收枚举值，或映射为 Java 枚举类（MyBatis 需配置类型处理器） |
+| SET (' 值 1',' 值 2'...)             | String/List\<String>                    | 多值枚举（最多 64 个值），用 String 接收（逗号分隔），或通过 MyBatis 映射为 List\<String> |
+| **日期 / 时间类型**                  |                                         |                                                              |
+| DATE                                 | java.time.LocalDate                     | 仅日期（yyyy-MM-dd），JDK8+ 推荐用 LocalDate（替代 java.sql.Date） |
+| TIME                                 | java.time.LocalTime                     | 仅时间（HH:mm:ss），JDK8+ 推荐用 LocalTime（替代 java.sql.Time） |
+| DATETIME                             | java.time.LocalDateTime                 | 日期 + 时间（yyyy-MM-dd HH:mm:ss），JDK8+ 首选，无时区依赖（替代 java.sql.Timestamp） |
+| TIMESTAMP                            | java.time.Instant                       | 时间戳（含时区，底层存储为 Unix 时间戳），JDK8+ 用 Instant 接收，需处理时区转换 |
+| YEAR                                 | int/Integer/Year                        | 年份（格式 YYYY），用 int 接收年份值，或 JDK8+ Year 类       |
+| **二进制类型**                       |                                         |                                                              |
+| BINARY(M)                            | byte[]                                  | 固定长度二进制数据（如哈希值），映射为 byte 数组             |
+| VARBINARY(M)                         | byte[]                                  | 可变长度二进制数据，映射为 byte 数组                         |
+| BLOB/TINYBLOB<br>MEDIUMBLOB/LONGBLOB | byte[]                                  | 二进制大对象（如图片、文件），映射为 byte []，大文件建议用文件存储（数据库存路径） |
+| **其他类型**                         |                                         |                                                              |
+| BIT                                  | boolean/Byte/Integer                    | 位类型（BIT (1) 对应 boolean，BIT (n>1) 对应 Byte/Integer）  |
+| JSON                                 | String/Map\<String, Object>/ 自定义 POJO | JSON 类型，用 String 接收原始 JSON 串，或通过 MyBatis 映射为 Map/POJO（需依赖类型处理器） |
 
-## 关键注意事项
+**关键注意事项**：
 
-1.  **null 兼容**：MySQL 字段允许为 null 时，Java 需用**包装类**（如 Integer、Long）而非基本类型（int、long），否则会抛出空指针异常。
+1. **null 兼容**：MySQL 字段允许为 null 时，Java 中需用null匹配，否则会抛出空指针异常。
 
-2.  精度适配：
+2. 精度适配：
 
     - 金额、税率等精确计算场景，强制用 `BigDecimal` 映射 DECIMAL，避免 float/double 浮点误差；
     - 大整数（如超过 2³¹-1 的 ID）必须用 `Long`，否则会溢出。
 
-3.  **日期类型推荐**：JDK8+ 优先使用 `java.time` 包下的类（LocalDate、LocalDateTime 等），替代旧的 `java.sql.Date/Time/Timestamp`（前者线程安全、API 更友好）。
+3. **日期类型推荐**：JDK8+ 优先使用 `java.time` 包下的类（LocalDate、LocalDateTime 等），替代旧的 `java.sql.Date/Time/Timestamp`（前者线程安全、API 更友好）。
 
-4.  MyBatis 特殊处理：
+4. MyBatis 特殊处理：
 
     - 枚举（ENUM）、JSON 类型需配置**类型处理器**（TypeHandler）；
     - 大文本（LONGTEXT）、大二进制（LONGBLOB）建议配合 `fetchType="lazy"` 延迟加载，避免性能问题。
 
-5.  避免不合理映射：
+5. 避免不合理映射：
 
     - 不要用 String 映射 BIGINT（可能导致数字解析错误）；
     - 不要用 double 映射 DECIMAL（丢失精度）；

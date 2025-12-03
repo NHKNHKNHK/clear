@@ -1,3 +1,3 @@
-# 导读
+# 设计模式
 
-[设计模式](https://nhknhknhk.github.io/DesignPatterns/)
+如果想详细了解设计模式，请访问我的博客：[设计模式](https://nhknhknhk.github.io/DesignPatterns/)
