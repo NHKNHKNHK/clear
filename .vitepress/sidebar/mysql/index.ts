@@ -11,7 +11,6 @@ export default [
                 collapsed: false,
                 items: [
                     // todo
-                    { text: '排序与分页', link: basePath + '排序与分页' },
                     { text: '多表查询', link: basePath + '多表查询' },
                     { text: '单行函数与聚合函数', link: basePath + '单行函数与聚合函数' },
                     { text: '子查询', link: basePath + '子查询' },
