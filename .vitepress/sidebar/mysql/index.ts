@@ -185,7 +185,9 @@ export default [
             { text: 'MySQL索引最左前缀匹配原则？', link: basePath + 'MySQL索引最左前缀匹配原则？' },
             { text: 'MySQL索引一定遵循最左前缀匹配吗？', link: basePath + 'MySQL索引一定遵循最左前缀匹配吗？' },
 
+            { text: '为什么建议使用自增主键作为索引', link: basePath + '为什么建议使用自增主键作为索引' },
             { text: 'MySQL的主键一定是自增的吗？', link: basePath + 'MySQL的主键一定是自增的吗？' },
+            { text: '使用int自增主键后最大id=10，删除id=10，再添加一条记录id是几？', link: basePath + '使用int自增主键后最大id=10，删除id=10，再添加一条记录id是几？' },
             { text: 'InnoDB为什么使用B+树实现索引？', link: basePath + 'InnoDB为什么使用B+树实现索引？' },
 
             { text: '什么是Hash索引', link: basePath + '什么是hash索引？' },

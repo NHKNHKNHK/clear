@@ -1213,7 +1213,7 @@ MySQL的空间数据类型（Spatial Data Type）对应于OpenGIS类，包括单
 
 ### int(1)与int(11)的区别
 
-> ![MySQL中int(1)和int(11)的区别](./MySQL中int(1)和int(11)的区别)
+> [MySQL中int(1)和int(11)的区别](./MySQL中int(1)和int(11)的区别)
 
 ### MySQL中int(11)的11表示什么
 
