@@ -1,11 +1,8 @@
 # MySQL窗口函数
 
+## 使用窗口函数前后对比
 
-## 2. 新特性1：窗口函数
-
-### 2.1 使用窗口函数前后对比
-
-假设我现在有这样一个数据表，它显示了某购物网站在每个城市每个区的销售额：
+设我现在有这样一个数据表，它显示了某购物网站在每个城市每个区的销售额：
 
 ```sql
 CREATE TABLE sales(
@@ -133,7 +130,7 @@ mysql> SELECT city AS 城市,county AS 区,sales_value AS 区销售额,
 
 使用窗口函数，只用了一步就完成了查询。而且，由于没有用到临时表，执行的效率也更高了。很显然，**在这种需要用到分组统计的结果对每一条记录进行计算的场景下，使用窗口函数更好**。
 
-### 2.2 窗口函数分类
+## 窗口函数分类
 
 MySQL从8.0版本开始支持窗口函数。窗口函数的作用类似于在查询中对数据进行分组，不同的是，分组操作会把分组的结果聚合成一条记录，而窗口函数是将结果置于每一条数据记录中。
 
@@ -142,13 +139,25 @@ MySQL从8.0版本开始支持窗口函数。窗口函数的作用类似于在查
 - 静态窗口函数的窗口大小是固定的，不会因为记录的不同而不同；
 - 动态窗口函数的窗口大小会随着记录的不同而变化。
 
-MySQL官方网站窗口函数的网址为https://dev.mysql.com/doc/refman/8.0/en/window-function-descriptions.html#function_row-number。
+MySQL官方网站窗口函数的网址为：https://dev.mysql.com/doc/refman/8.0/en/window-function-descriptions.html#function_row-number。
 
 窗口函数总体上可以分为序号函数、分布函数、前后函数、首尾函数和其他函数，如下表：
 
-<!-- ![image-20211012162944536](images/image-20211012162944536.png) -->
+| 函数分类 | 函数               | 函数说明                                         |
+| -------- | ------------------ | ------------------------------------------------ |
+| 序号函数 | ROW_NUMBER()       | 顺序排序                                         |
+|          | RANK()             | 并列排序，会跳过重复的序号，比如序号为 1、1、3   |
+|          | DENSE_RANK()       | 并列排序，不会跳过重复的序号，比如序号为 1、1、2 |
+| 分布函数 | PERCENT_RANK()     | 等级值百分比                                     |
+|          | CUME_DIST()        | 累积分布值                                       |
+| 前后函数 | LAG(expr, n)       | 返回当前行的前 n 行的 expr 的值                  |
+|          | LEAD(expr, n)      | 返回当前行的后 n 行的 expr 的值                  |
+| 首尾函数 | FIRST_VALUE(expr)  | 返回第一个 expr 的值                             |
+|          | LAST_VALUE(expr)   | 返回最后一个 expr 的值                           |
+| 其他函数 | NTH_VALUE(expr, n) | 返回第 n 个 expr 的值                            |
+|          | NTILE(n)           | 将分区中的有序数据分为 n 个桶，记录桶编号        |
 
-### 2.3 语法结构
+## 语法结构
 
 窗口函数的语法结构是：
 
@@ -170,7 +179,7 @@ MySQL官方网站窗口函数的网址为https://dev.mysql.com/doc/refman/8.0/en
 - ORDER BY子句：指定窗口函数按照哪些字段进行排序。执行排序操作使窗口函数按照排序后的数据记录的顺序进行编号。
 - FRAME子句：为分区中的某个子集定义规则，可以用来作为滑动窗口使用。
 
-### 2.4 分类讲解
+## 分类讲解
 
 创建表：
 
@@ -208,7 +217,7 @@ VALUES
 
 下面针对goods表中的数据来验证每个窗口函数的功能。
 
-#### 1. 序号函数
+### 序号函数
 
 **1．ROW_NUMBER()函数**
 
@@ -365,7 +374,7 @@ mysql> SELECT *
 
 可以看到，使用DENSE_RANK()函数得出的行号为1、2、2、3，相同价格的商品序号相同，后面的商品序号是连续的，并且没有跳过重复的序号。
 
-#### 2. 分布函数
+### 分布函数
 
 **1．PERCENT_RANK()函数**
 
@@ -435,7 +444,7 @@ mysql> SELECT CUME_DIST() OVER(PARTITION BY category_id ORDER BY price ASC) AS c
 12 rows in set (0.00 sec)
 ```
 
-#### 3. 前后函数
+### 前后函数
 
 **1．LAG(expr,n)函数**
 
@@ -498,7 +507,7 @@ mysql> SELECT id, category, NAME, behind_price, price,behind_price - price AS di
 12 rows in set (0.00 sec)
 ```
 
-#### 4. 首尾函数
+### 首尾函数
 
 **1．FIRST_VALUE(expr)函数**
 
@@ -556,7 +565,7 @@ mysql> SELECT id, category, NAME, price, stock,LAST_VALUE(price) OVER w AS last_
 12 rows in set (0.00 sec)
 ```
 
-#### 5. 其他函数
+### 其他函数
 
 **1．NTH_VALUE(expr,n)函数**
 
@@ -615,6 +624,6 @@ mysql> SELECT NTILE(3) OVER w AS nt,id, category, NAME, price
 12 rows in set (0.00 sec)
 ```
 
-### 2.5 小 结
+## 小 结
 
 窗口函数的特点是可以分组，而且可以在分组内排序。另外，窗口函数不会因为分组而减少原表中的行数，这对我们在原表数据的基础上进行统计和排序非常有用。
